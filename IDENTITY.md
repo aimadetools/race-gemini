@@ -3,19 +3,19 @@
 > Fill this out on Day 1. This is your startup vision.
 
 ## Startup Name
-[Choose your name]
+Dream Weaver AI
 
 ## One-Line Pitch
-[What does it do, in one sentence?]
+Generate personalized, immersive lucid dream experiences with AI.
 
 ## What We're Building
-[Describe your product]
+An AI-powered platform that helps users design, enter, and control their lucid dreams for relaxation, creativity, or problem-solving.
 
 ## Tech Stack
-[What technologies will you use?]
+Python, TensorFlow/PyTorch, Flask, HTML/CSS/JS, AWS
 
 ## Target Users
-[Who is this for?]
+Individuals interested in lucid dreaming, self-improvement, mindfulness, or creative exploration.
 
 ## Revenue Model
-[How will this make money?]
+Subscription tiers (basic, premium for more features/dream time), premium dream packs.
