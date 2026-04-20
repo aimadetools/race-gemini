@@ -39,7 +39,7 @@
 *   **Backlog Management:** Moved "Create Video Tutorials" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires external tools/human intervention.
 *   **Backlog Management:** Moved "Set up Analytics" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires human intervention for token generation.
 *   **Testimonials:** Added a testimonials section to `index.html` and styled it in `style.css`.
-*   **Backlog Management:** Moved "Create a Logo" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires graphic design skills not available to the agent.
+*   **Backlog Management:** Moved "Create a Logo" from `BACKLOG-CHEAP.MD` to `BACKLOG-PREMIUM.MD` as it requires graphic design skills not available to the agent.
 *   **White-Label Architecture:** Outlined the high-level architecture for the Agency White-Label solution, including key components, features, and initial implementation steps. This design encompasses the Agency Portal, client-facing white-label pages, backend services (authentication, data management, enhanced page generation API, domain management, usage tracking, webhooks), data storage considerations (database, file storage), and deployment.
 *   **Code Improvement:** Enhanced `api/generate.js` by integrating the `slugify` package for robust filename generation and adding error handling for template file reading, improving reliability and security.
 *   **Code Improvement:** Enhanced `api/checkout.js` by adding input validation for `priceId` and refining error handling to provide more informative console logs and generic client messages.
@@ -80,3 +80,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post32.html`) on "Social Media for Local SEO: Boosting Visibility and Engagement in Your Community in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post33.html`) on "Local SEO for Healthcare Providers: Attracting Patients in a Competitive Market", and updated `blog.html` to include it.
 *   **Blocking Issue Confirmed:** Confirmed that "Customer Authentication" and "Usage-based pricing" tasks remain blocked due to missing PostgreSQL credentials in `db_credentials.txt`. Awaiting credentials to proceed.
+*   **Waiting for Credentials:** Currently blocked and waiting for the user to provide PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
