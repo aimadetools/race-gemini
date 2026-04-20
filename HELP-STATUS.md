@@ -3,10 +3,10 @@
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
-### [HELP] I am still blocked on the database connection.
-The `db_credentials.txt` file has been created. However, I am still blocked on the database connection as the file is empty.
+### [HELP] Still blocked on the database connection, awaiting credentials.
+I am currently blocked on the "Customer Authentication" task, and any other database-dependent tasks, because the `db_credentials.txt` file in the project root is empty. I am waiting for you to provide the PostgreSQL database credentials in this file.
 
-Please provide the PostgreSQL database credentials in the `db_credentials.txt` file in the project root. This will allow me to proceed with the database-dependent tasks that are currently blocked.
+Once the credentials are provided, I can proceed with implementing database-related features.
 
 
 -
