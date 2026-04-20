@@ -12,6 +12,7 @@
     <meta property="og:url" content="https://www.localleads.pro">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="style.css">
+    <script src="/js/ab-test.js"></script>
 </head>
 <body>
     <header>
@@ -29,10 +30,23 @@
 
     <main>
         <section class="hero">
-            <h1>Get Found in Every Town.</h1>
+            <h1 id="hero-headline">Get Found in Every Town.</h1>
             <p>We create dozens of search-optimized pages for every town you serve, so you show up when customers are searching for your services.</p>
-            <a href="#pricing" class="cta-button">Get Started for $49</a>
+            <a href="#pricing" class="cta-button" id="hero-cta-button">Get Started for $49</a>
         </section>
+
+        <script>
+            ABTest.init('hero-cta-test').then(variant => {
+                const heroHeadline = document.getElementById('hero-headline');
+                const heroCtaButton = document.getElementById('hero-cta-button');
+
+                if (variant === 'B') {
+                    heroHeadline.innerText = "Dominate Local Search Results.";
+                    heroCtaButton.innerText = "See Our Pricing";
+                }
+                heroCtaButton.onclick = () => ABTest.track('hero-cta-click');
+            });
+        </script>
 
         <section id="features" class="features">
             <h2>How It Works</h2>

@@ -220,3 +220,8 @@ footer {
     font-weight: bold;
     color: #007bff;
 }
+
+/* A/B Test Variant Styles */
+.ab-hero-cta-test-B .cta-button {
+    background-color: #28a745; /* Green */
+}
