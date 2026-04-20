@@ -62,3 +62,4 @@
 *   **Code Improvement:** Defined `templatePath` and standardized error responses in `api/generate.js`, also fixing a critical bug.
 *   **Blocking Issue Identified:** Identified that "Customer Authentication" and other database-dependent tasks are blocked due to missing PostgreSQL credentials in `db_credentials.txt`. Updated `HELP-STATUS.md` to communicate this to the user and await credentials.
 *   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` to reflect that "Usage-based pricing" is also blocked by missing database credentials.
+*   **Blog Post:** Wrote a new blog post (`blog/post17.html`) on "AI-Powered Local SEO: Leveraging Machine Learning for Hyper-Local Visibility in 2026", updated `blog.html` to include it and reflect its metadata.
