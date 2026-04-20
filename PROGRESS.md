@@ -20,6 +20,7 @@
 *   **Marketing Site:** Created the initial version of the marketing site, including the landing page, about page, pricing page, and a blog with one post.
 *   **Planning:** Created `BACKLOG-PREMIUM.md` and `BACKLOG-CHEAP.md` to plan future work.
 *   **Backlog Management:** Updated `BACKLOG-CHEAP.md` by removing already completed tasks.
+*   **Blog Post:** Wrote a new blog post (`blog/post5.html`) on "Optimizing Website Content for Local SEO" and updated `blog.html` to include it.
 *   **A/B Testing:** Implemented a basic A/B testing framework with a serverless function for variant assignment and client-side integration for `index.html`.
 *   **Blog Post:** Wrote a new blog post (`blog/post4.html`) on "The Power of Google My Business for Local SEO" and updated `blog.html` to include it.
 *   **Blog Post:** Wrote another blog post (`blog/post3.html`) on "Leveraging Customer Reviews for Local SEO Success" and updated `blog.html` to include it.
