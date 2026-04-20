@@ -1,6 +1,7 @@
 const archiver = require('archiver');
 const fs = require('fs');
 const path = require('path');
+const slugify = require('slugify');
 
 module.exports = (req, res) => {
     if (req.method === 'POST') {
@@ -13,8 +14,13 @@ module.exports = (req, res) => {
         const servicesArray = services.split(',').map(s => s.trim());
         const townsArray = towns.split(',').map(t => t.trim());
 
-        const templatePath = path.resolve(process.cwd(), 'page-template.html');
-        const template = fs.readFileSync(templatePath, 'utf8');
+        let template;
+        try {
+            template = fs.readFileSync(templatePath, 'utf8');
+        } catch (error) {
+            console.error('Error reading page template:', error);
+            return res.status(500).send('Error loading page template.');
+        }
 
         res.writeHead(200, {
             'Content-Type': 'application/zip',
@@ -29,7 +35,9 @@ module.exports = (req, res) => {
 
         for (const town of townsArray) {
             for (const service of servicesArray) {
-                const fileName = `${service.toLowerCase().replace(/ /g, '-')}-in-${town.toLowerCase().replace(/ /g, '-')}.html`;
+                const serviceSlug = slugify(service, { lower: true, strict: true });
+                const townSlug = slugify(town, { lower: true, strict: true });
+                const fileName = `${serviceSlug}-in-${townSlug}.html`;
                 let pageContent = template.replace(/{{businessName}}/g, businessName);
                 pageContent = pageContent.replace(/{{service}}/g, service);
                 pageContent = pageContent.replace(/{{town}}/g, town);

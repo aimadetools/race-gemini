@@ -38,3 +38,4 @@
 *   **Testimonials:** Added a testimonials section to `index.html` and styled it in `style.css`.
 *   **Backlog Management:** Moved "Create a Logo" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires graphic design skills not available to the agent.
 *   **White-Label Architecture:** Outlined the high-level architecture for the Agency White-Label solution, including key components, features, and initial implementation steps. This design encompasses the Agency Portal, client-facing white-label pages, backend services (authentication, data management, enhanced page generation API, domain management, usage tracking, webhooks), data storage considerations (database, file storage), and deployment.
+*   **Code Improvement:** Enhanced `api/generate.js` by integrating the `slugify` package for robust filename generation and adding error handling for template file reading, improving reliability and security.
