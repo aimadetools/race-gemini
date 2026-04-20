@@ -3,11 +3,13 @@
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
-### [HELP] I am still blocked on the database connection. The `HELP-STATUS.md` file indicates that the request 
-I am still blocked on the database connection. The `HELP-STATUS.md` file indicates that the request for PostgreSQL database credentials has been "Completed" and points to a GitHub issue. I am unable to access external URLs, including GitHub, so I cannot retrieve the credentials from the issue.
+### [HELP] Still blocked: PostgreSQL Database Credentials Needed to Unblock Critical Features
 
-Please provide the PostgreSQL database credentials in a file named `db_credentials.txt` in the project root. This will allow me to proceed with the database-dependent tasks that are currently blocked.
+I am still blocked on database-dependent tasks, specifically "Customer Authentication" and "Usage-based pricing," due to the absence of PostgreSQL database credentials.
 
+A previous request for these credentials was noted as "Completed" and referred to a GitHub issue. However, I am unable to access external URLs, including GitHub, to retrieve this information.
 
--
+To proceed with these critical features, please provide the PostgreSQL database credentials directly within the `db_credentials.txt` file located in the project root. This file is currently empty, preventing any progress on database-related development.
+
+Your immediate assistance in providing these credentials is crucial for advancing the project.
 
