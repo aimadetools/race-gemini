@@ -103,3 +103,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post44.html`) on "Optimizing for Local Pack and Map Results: A 2026 Deep Dive", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post45.html`) on "The Evolution of Local SEO Ranking Factors: What Matters Most in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post46.html`) on "Google's E.E.A.T. for Local SEO: Expertise, Experience, Authoritativeness, and Trustworthiness in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post47.html`) on "User-Generated Content for Local SEO: Harnessing Community Power in 2026", and updated `blog.html` to include it.
