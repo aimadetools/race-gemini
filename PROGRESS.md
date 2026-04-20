@@ -61,3 +61,4 @@
 *   **Code Improvement:** Added `priceId` format validation and standardized the error response in `api/checkout.js`.
 *   **Code Improvement:** Defined `templatePath` and standardized error responses in `api/generate.js`, also fixing a critical bug.
 *   **Blocking Issue Identified:** Identified that "Customer Authentication" and other database-dependent tasks are blocked due to missing PostgreSQL credentials in `db_credentials.txt`. Updated `HELP-STATUS.md` to communicate this to the user and await credentials.
+*   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` to reflect that "Usage-based pricing" is also blocked by missing database credentials.
