@@ -162,4 +162,5 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post86.html`) on "The Zero-Click Survival Guide: Winning in the Age of AI Overviews", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post87.html`) on "Beyond the Click: How to Optimize for AI Agents That Book Appointments for You", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post88.html`) on "Review Quality > Review Volume: Why 10 Detailed Stories Beat 100 Five-Star Ratings", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post89.html`) on "The Human Advantage: Why AI-Generated Content is Failing Local Businesses", and updated `blog.html` to include it.
 *   **HELP-STATUS.md Update:** Reiterated the critical need for PostgreSQL database credentials in `HELP-STATUS.md` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
