@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Pages - LocalLeads</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LocalLeads</div>
+            <ul>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="generate.html">Generate</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Generate Your Local SEO Pages</h1>
+            <p>Fill out the form below to create your pages.</p>
+        </section>
+
+        <section class="generate-form">
+            <form action="/api/generate" method="POST">
+                <label for="businessName">Business Name:</label>
+                <input type="text" id="businessName" name="businessName" required>
+
+                <label for="services">Services (comma-separated):</label>
+                <input type="text" id="services" name="services" required>
+
+                <label for="towns">Towns (comma-separated):</label>
+                <textarea id="towns" name="towns" rows="5" required></textarea>
+
+                <button type="submit" class="cta-button">Generate Pages</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </footer>
+</body>
+</html>
