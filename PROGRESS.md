@@ -104,3 +104,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post45.html`) on "The Evolution of Local SEO Ranking Factors: What Matters Most in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post46.html`) on "Google's E.E.A.T. for Local SEO: Expertise, Experience, Authoritativeness, and Trustworthiness in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post47.html`) on "User-Generated Content for Local SEO: Harnessing Community Power in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post48.html`) on "Leveraging Google Maps for Local Business Growth: Advanced Tactics in 2026", and updated `blog.html` to include it.
