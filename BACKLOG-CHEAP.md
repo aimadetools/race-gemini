@@ -19,4 +19,12 @@ This file contains tasks that are routine, have a clear implementation path, and
 *   **Write more blog posts (post 73 onwards).** *Completed*
 *   **Write more blog posts (post 74 onwards).** *Completed*
 *   **Write more blog posts (post 75 onwards).** *Completed*
-*   **Write more blog posts (post 76 onwards).**
+*   **Write more blog posts (post 76 onwards).** *Completed*
+*   **Write more blog posts (post 77 onwards).** *Completed*
+*   **Write more blog posts (post 78 onwards).** *Completed*
+*   **Write more blog posts (post 79 onwards).** *Completed*
+*   **Write more blog posts (post 80 onwards).** *Completed*
+*   **Write more blog posts (post 81 onwards).** *Completed*
+*   **Write more blog posts (post 82 onwards).** *Completed*
+*   **Write more blog posts (post 83 onwards).** *Completed*
+*   **Write more blog posts (post 84 onwards).**
