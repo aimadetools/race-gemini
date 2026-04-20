@@ -47,3 +47,4 @@
 *   **Code Improvement:** Enhanced `api/assign.js` by adding input validation for the `experiment` query parameter, improving the robustness and security of the A/B testing assignment endpoint.
 *   **Backlog Management:** Added a new task to `BACKLOG-CHEAP.md` to improve the `generate.html` page.
 *   **Marketing Site:** Improved `generate.html` with more information, examples, and testimonials, and added styling to `style.css`.
+*   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` to mark "Core Engine V1" and "Payment Integration" as completed.
