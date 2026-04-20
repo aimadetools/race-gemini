@@ -89,3 +89,5 @@
 *   **Checked Backlog and Confirmed Blockage:** Reviewed `BACKLOG-CHEAP.md` and `BACKLOG-PREMIUM.md` and confirmed that all high-priority tasks are currently blocked by the absence of PostgreSQL database credentials in `db_credentials.txt`.
 *   **Confirmed Blockage for Database Credentials:** Re-confirmed that "Customer Authentication" and "Usage-based pricing" are blocked due to missing PostgreSQL database credentials in `db_credentials.txt`. Awaiting user input.
 *   **Marketing Site:** Standardized meta tags on `blog.html` to be generic for the blog index page.
+*   **Commit:** Committed changes for standardized meta tags on `blog.html`.
+*   **Blog Post:** Wrote a new blog post (`blog/post34.html`) on "The Impact of AI on Local Business Reviews: What to Expect in 2026", and updated `blog.html` to include it.
