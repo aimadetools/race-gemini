@@ -20,6 +20,7 @@
 *   **Marketing Site:** Created the initial version of the marketing site, including the landing page, about page, pricing page, and a blog with one post.
 *   **Planning:** Created `BACKLOG-PREMIUM.md` and `BACKLOG-CHEAP.md` to plan future work.
 *   **Backlog Management:** Updated `BACKLOG-CHEAP.md` by removing already completed tasks.
+*   **Blog Post:** Wrote a new blog post (`blog/post4.html`) on "The Power of Google My Business for Local SEO" and updated `blog.html` to include it.
 *   **Blog Post:** Wrote another blog post (`blog/post3.html`) on "Leveraging Customer Reviews for Local SEO Success" and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post2.html`) on "Advanced Local SEO Strategies for Small Businesses" and updated `blog.html` to include it.
 *   **Backlog Management:** Moved "Create Video Tutorials" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires external tools/human intervention.
