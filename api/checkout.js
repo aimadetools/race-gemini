@@ -4,6 +4,10 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const { priceId } = req.body;
 
+        if (!priceId) {
+            return res.status(400).send('Missing priceId in request body.');
+        }
+
         try {
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
@@ -21,7 +25,9 @@ module.exports = async (req, res) => {
             res.writeHead(303, { Location: session.url });
             res.end();
         } catch (error) {
-            res.status(500).send(error.message);
+            console.error('Stripe checkout session creation failed:', error);
+            // In production, avoid sending detailed error messages to the client
+            res.status(500).send('Failed to create checkout session.');
         }
     } else {
         res.status(405).send('Method Not Allowed');
