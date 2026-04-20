@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
         } catch (err) {
             console.error('Stripe Webhook Error:', err.message);
             // In production, avoid sending detailed error messages to the client
-            return res.status(400).send('Webhook Error: Signature verification failed.');
+            return res.status(400).json({ message: 'Webhook Error: Signature verification failed.' });
         }
 
         if (event.type === 'checkout.session.completed') {

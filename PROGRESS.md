@@ -60,3 +60,4 @@
 *   **Code Improvement:** Added basic validation for email and business phone fields in `api/audit.js`.
 *   **Code Improvement:** Added `priceId` format validation and standardized the error response in `api/checkout.js`.
 *   **Code Improvement:** Defined `templatePath` and standardized error responses in `api/generate.js`, also fixing a critical bug.
+*   **Code Improvement:** Standardized error response to JSON format in `api/webhook.js`.
