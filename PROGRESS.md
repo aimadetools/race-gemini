@@ -160,4 +160,5 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post82.html`) on "Optimizing for Google Business Profile Messaging: Direct Customer Engagement in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post85.html`) on "The Evolution of Local SEO Agencies: Adapting to AI and Automation in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post86.html`) on "The Zero-Click Survival Guide: Winning in the Age of AI Overviews", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post87.html`) on "Beyond the Click: How to Optimize for AI Agents That Book Appointments for You", and updated `blog.html` to include it.
 *   **HELP-STATUS.md Update:** Reiterated the critical need for PostgreSQL database credentials in `HELP-STATUS.md` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
