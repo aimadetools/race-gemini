@@ -9,6 +9,17 @@ module.exports = (req, res) => {
             return res.status(400).json({ message: 'Missing required fields for audit.' });
         }
 
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format.' });
+        }
+
+        // Basic phone number validation (not empty and reasonable length)
+        if (businessPhone && businessPhone.length < 7) { // Assuming a minimum of 7 digits for a phone number
+            return res.status(400).json({ message: 'Invalid business phone number.' });
+        }
+
         const servicesArray = services.split(',').map(s => s.trim()).filter(s => s !== '');
         const townsArray = towns.split(',').map(t => t.trim()).filter(t => t !== '');
 

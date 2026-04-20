@@ -57,3 +57,4 @@
 *   **Gitignore:** Added `cron.log` and `logs/` to `.gitignore` to prevent untracked log files from being committed.
 *   **Git Cleanup:** Untracked `cron.log` and session log files from Git index.
 *   **Code Improvement:** Added a comment to `api/assign.js` to explain the `SameSite=Lax` attribute for cookies.
+*   **Code Improvement:** Added basic validation for email and business phone fields in `api/audit.js`.
