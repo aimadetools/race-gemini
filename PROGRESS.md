@@ -55,3 +55,4 @@
 *   **Database Credentials:** Created an empty `db_credentials.txt` file to unblock the "Customer Authentication" task.
 *   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` and `HELP-STATUS.md` to clarify the ongoing blockage of "Customer Authentication" due to missing credentials in `db_credentials.txt`.
 *   **Gitignore:** Added `cron.log` and `logs/` to `.gitignore` to prevent untracked log files from being committed.
+*   **Git Cleanup:** Untracked `cron.log` and session log files from Git index.
