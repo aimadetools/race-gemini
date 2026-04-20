@@ -81,3 +81,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post33.html`) on "Local SEO for Healthcare Providers: Attracting Patients in a Competitive Market", and updated `blog.html` to include it.
 *   **Blocking Issue Confirmed:** Confirmed that "Customer Authentication" and "Usage-based pricing" tasks remain blocked due to missing PostgreSQL credentials in `db_credentials.txt`. Awaiting credentials to proceed.
 *   **Waiting for Credentials:** Currently blocked and waiting for the user to provide PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
+*   **Reiterated Database Credential Need:** Updated `HELP-STATUS.md` to reiterate the critical need for PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
