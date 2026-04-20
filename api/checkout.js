@@ -5,7 +5,12 @@ module.exports = async (req, res) => {
         const { priceId } = req.body;
 
         if (!priceId) {
-            return res.status(400).send('Missing priceId in request body.');
+            return res.status(400).json({ message: 'Missing priceId in request body.' });
+        }
+
+        // Basic validation for priceId format (e.g., price_123xyz)
+        if (!/^price_[a-zA-Z0-9]+$/.test(priceId)) {
+            return res.status(400).json({ message: 'Invalid priceId format.' });
         }
 
         try {
