@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Local SEO Audit - LocalLeads</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LocalLeads</div>
+            <ul>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="generate.html">Generate</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Get Your Free Local SEO Audit</h1>
+            <p>Discover how many potential customers you're missing out on and unlock your local search potential.</p>
+        </section>
+
+        <section class="audit-form-section">
+            <div class="container">
+                <h2>Start Your Audit</h2>
+                <form id="auditForm">
+                    <div class="form-step active" id="step1">
+                        <h3>Step 1: Your Business Information</h3>
+                        <label for="auditBusinessName">Business Name:</label>
+                        <input type="text" id="auditBusinessName" name="businessName" placeholder="e.g., 'Smith's Plumbing'" required>
+
+                        <label for="auditBusinessAddress">Business Address:</label>
+                        <input type="text" id="auditBusinessAddress" name="businessAddress" placeholder="e.g., '123 Main St, Springfield, IL'" required>
+
+                        <label for="auditBusinessPhone">Business Phone (optional):</label>
+                        <input type="tel" id="auditBusinessPhone" name="businessPhone" placeholder="e.g., '555-123-4567'">
+
+                        <button type="button" class="next-step cta-button">Next</button>
+                    </div>
+
+                    <div class="form-step" id="step2">
+                        <h3>Step 2: Your Target Services & Locations</h3>
+                        <label for="auditServices">Key Services You Offer (comma-separated):</label>
+                        <input type="text" id="auditServices" name="services" placeholder="e.g., 'plumbing repair, water heater installation'" required>
+
+                        <label for="auditTowns">Towns/Cities You Serve (comma-separated):</label>
+                        <textarea id="auditTowns" name="towns" rows="5" placeholder="e.g., 'Springfield, Shelbyville, Capital City'" required></textarea>
+
+                        <button type="button" class="prev-step cta-button secondary-button">Previous</button>
+                        <button type="button" class="next-step cta-button">Next</button>
+                    </div>
+
+                    <div class="form-step" id="step3">
+                        <h3>Step 3: Your Contact Information</h3>
+                        <label for="auditName">Your Name:</label>
+                        <input type="text" id="auditName" name="name" required>
+
+                        <label for="auditEmail">Your Email:</label>
+                        <input type="email" id="auditEmail" name="email" placeholder="you@example.com" required>
+
+                        <button type="button" class="prev-step cta-button secondary-button">Previous</button>
+                        <button type="submit" class="cta-button">Get My Free Audit</button>
+                    </div>
+                </form>
+                <div id="auditResults" style="display:none;">
+                    <h2>Audit Results</h2>
+                    <p>Thank you for submitting your information. We are generating your personalized SEO audit report. You will receive an email shortly with detailed insights on your local search potential.</p>
+                    <p>In the meantime, explore how LocalLeads can help you capture more local customers:</p>
+                    <a href="generate.html" class="cta-button">Generate Local Pages Now</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const auditForm = document.getElementById('auditForm');
+            const formSteps = document.querySelectorAll('.form-step');
+            const auditResults = document.getElementById('auditResults');
+            let currentStep = 0;
+
+            function showStep(stepIndex) {
+                formSteps.forEach((step, index) => {
+                    if (index === stepIndex) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+            }
+
+            auditForm.addEventListener('click', (event) => {
+                if (event.target.classList.contains('next-step')) {
+                    // Basic validation before moving to next step
+                    const currentActiveStep = formSteps[currentStep];
+                    const inputs = currentActiveStep.querySelectorAll('input[required], textarea[required]');
+                    let allValid = true;
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.reportValidity();
+                            allValid = false;
+                        }
+                    });
+                    if (allValid) {
+                        currentStep++;
+                        showStep(currentStep);
+                    }
+                } else if (event.target.classList.contains('prev-step')) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+
+            auditForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(auditForm);
+                const data = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch('/api/audit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+
+                    if (response.ok) {
+                        auditForm.style.display = 'none';
+                        auditResults.style.display = 'block';
+                    } else {
+                        alert('There was an error processing your audit. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error submitting audit:', error);
+                    alert('There was an error submitting your audit. Please check your connection and try again.');
+                }
+            });
+
+            showStep(currentStep); // Initialize form to first step
+        });
+    </script>
+</body>
+</html>

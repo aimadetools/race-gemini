@@ -265,3 +265,90 @@ footer {
 .ab-hero-cta-test-B .cta-button {
     background-color: #28a745; /* Green */
 }
+
+/* Audit Form Specific Styles */
+.audit-form-section {
+    padding: 2rem 1rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.audit-form-section .container {
+    background-color: #1f1f1f;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.audit-form-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+#auditForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-step {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-step.active {
+    display: flex;
+}
+
+.form-step h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #007bff;
+}
+
+.audit-form-section label {
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.audit-form-section input,
+.audit-form-section textarea {
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    width: -webkit-fill-available;
+}
+
+.audit-form-section button.cta-button {
+    margin-top: 1rem;
+    width: fit-content;
+    align-self: center;
+}
+
+.audit-form-section .secondary-button {
+    background-color: #6c757d;
+}
+
+.audit-form-section .secondary-button:hover {
+    background-color: #5a6268;
+}
+
+#auditResults {
+    text-align: center;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+}
+
+#auditResults h2 {
+    color: #28a745;
+}
+
+#auditResults p {
+    margin-bottom: 1.5rem;
+}
