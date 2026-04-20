@@ -5,3 +5,5 @@ npm-debug.log
 package-lock.json
 .vercel
 .env*.local
+cron.log
+logs/
