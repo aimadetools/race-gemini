@@ -3,12 +3,15 @@ const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
 
+// Define the path to the page template
+const templatePath = path.join(process.cwd(), 'page-template.html');
+
 module.exports = (req, res) => {
     if (req.method === 'POST') {
         const { businessName, services, towns } = req.body;
 
         if (!businessName || !services || !towns) {
-            return res.status(400).send('Missing required fields');
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
         const servicesArray = services.split(',').map(s => s.trim());
@@ -19,7 +22,7 @@ module.exports = (req, res) => {
             template = fs.readFileSync(templatePath, 'utf8');
         } catch (error) {
             console.error('Error reading page template:', error);
-            return res.status(500).send('Error loading page template.');
+            return res.status(500).json({ message: 'Error loading page template.' });
         }
 
         res.writeHead(200, {
