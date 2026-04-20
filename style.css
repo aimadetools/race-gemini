@@ -220,6 +220,7 @@ h2 {
     background-color: #1f1f1f;
     color: #ffffff;
     font-family: 'Inter', sans-serif;
+    width: -webkit-fill-available;
 }
 
 footer {
@@ -259,6 +260,44 @@ footer {
 .testimonials .card .author {
     font-weight: bold;
     color: #007bff;
+}
+
+/* FAQ Section */
+.faq {
+    padding: 4rem 1rem;
+    max-width: 800px; /* Slightly narrower for FAQ content */
+    margin: 0 auto;
+}
+
+.faq h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.faq-item {
+    background-color: #1f1f1f;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.faq-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.faq-item h3 {
+    color: #007bff;
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+}
+
+.faq-item p {
+    line-height: 1.6;
+    margin-bottom: 0;
 }
 
 /* A/B Test Variant Styles */
@@ -351,4 +390,136 @@ footer {
 
 #auditResults p {
     margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    /* Navigation */
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    nav ul li {
+        width: 100%;
+    }
+
+    /* Hero Section */
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero .cta-button {
+        display: block;
+        margin: 1rem auto;
+        max-width: 250px;
+    }
+
+    /* General Headings */
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card Layouts */
+    .feature-cards,
+    .testimonial-cards,
+    .price-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .card {
+        max-width: 90%;
+    }
+
+    /* FAQ Section */
+    .faq {
+        padding: 2rem 1rem;
+    }
+
+    .faq-item h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Forms */
+    .generate-form,
+    .audit-form-section {
+        padding: 1rem;
+    }
+
+    .audit-form-section .container {
+        padding: 1.5rem;
+    }
+}
+
+/* Sticky CTA Bar */
+.sticky-cta-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1f1f1f; /* Dark background */
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1000; /* Ensure it stays on top */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+.sticky-cta-bar p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.sticky-cta-bar .cta-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+/* Adjust body padding for sticky bar */
+body {
+    padding-bottom: 70px; /* Adjust this value based on the height of your sticky bar */
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 768px) {
+    .sticky-cta-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.8rem;
+    }
+
+    .sticky-cta-bar p {
+        font-size: 1rem;
+    }
+
+    .sticky-cta-bar .cta-button {
+        width: 90%;
+        max-width: 300px;
+        font-size: 0.85rem;
+    }
+
+    body {
+        padding-bottom: 150px; /* More padding for stacked buttons */
+    }
 }

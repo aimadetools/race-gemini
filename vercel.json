@@ -1,0 +1,11 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "preview": false,
+      "production": true
+    }
+  },
+  "rewrites": [
+    { "source": "/:path((?!static$).*)", "destination": "/404.html" }
+  ]
+}

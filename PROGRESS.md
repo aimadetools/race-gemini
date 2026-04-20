@@ -117,3 +117,21 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post58.html`) on "Leveraging Google's AI Overviews for Local SEO: Strategies for Featured Snippets in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post59.html`) on "Local SEO for Service Businesses: Attracting and Converting Customers in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post60.html`) on "The Role of User Intent in Local SEO: Understanding What Your Customers Really Want in 2026", and updated `blog.html` to include it.
+*   **Backlog Management:** Added new marketing site and UX improvement tasks to `BACKLOG-CHEAP.md` to diversify efforts while awaiting database credentials.
+*   **Blocked - Awaiting Database Credentials:** All further development on database-dependent tasks is blocked as PostgreSQL database credentials are required in `db_credentials.txt`. Proceeding with marketing site and UX improvements.
+*   **Marketing Site & UX Improvements:**
+    *   Enhanced `index.html` (Landing Page) Content: Improved headlines, calls to action, and benefit-driven copy. Adjusted A/B test for hero CTA.
+    *   Added FAQ Section to `index.html` and styled it in `style.css`.
+    *   Optimized Images: Reviewed and confirmed no display images required optimization.
+    *   Improved Mobile Responsiveness: Added media queries to `style.css` for better mobile layout.
+    *   Accessibility Improvements: Reviewed `audit.html` and `generate.html` forms and confirmed good basic accessibility.
+    *   Created/Enhanced "How It Works" Section: Updated the existing section on `index.html` with more descriptive content.
+    *   Reviewed and Updated `about.html`: Expanded mission and values, added calls to action.
+    *   Internal Linking Strategy for Blog: Implemented a robust internal linking strategy across all blog posts (`blog/post*.html`) for key terms like "LocalLeads", "local SEO", "generate pages", "free audit", and "pricing plans".
+*   **Backlog Management:** `BACKLOG-CHEAP.md` was found to be empty. Generated new marketing site and UX improvement tasks.
+*   **Marketing Site & UX Improvements (Second Batch):**
+    *   Added a "Why Choose Us" Section to `index.html`, highlighting unique selling propositions and benefits.
+    *   Enhanced `pricing.html` with more descriptive copy and elaborated benefits for each tier.
+    *   Implemented a "Call to Action" Bar (Sticky/Fixed Footer) across `index.html` with relevant CTAs.
+    *   Reviewed and improved `success.html` to provide clear next steps and reinforce value.
+    *   Created a dedicated `404.html` error page and configured `vercel.json` to use it.
