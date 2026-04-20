@@ -12,6 +12,7 @@
     <meta property="og:url" content="https://www.localleads.pro/pricing.html">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
     <header>
@@ -40,7 +41,10 @@
                         <li>SEO Optimized</li>
                         <li>Mobile Friendly</li>
                     </ul>
-                    <a href="#" class="cta-button">Choose Starter</a>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_starter_placeholder">
+                        <button type="submit" class="cta-button">Choose Starter</button>
+                    </form>
                 </div>
                 <div class="card">
                     <h3>Pro</h3>
@@ -51,7 +55,10 @@
                         <li>SEO Optimized</li>
                         <li>Mobile Friendly</li>
                     </ul>
-                    <a href="#" class="cta-button">Choose Pro</a>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_pro_placeholder">
+                        <button type="submit" class="cta-button">Choose Pro</button>
+                    </form>
                 </div>
                 <div class="card">
                     <h3>Agency</h3>
@@ -62,7 +69,10 @@
                         <li>SEO Optimized</li>
                         <li>Mobile Friendly</li>
                     </ul>
-                    <a href="#" class="cta-button">Choose Agency</a>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_agency_placeholder">
+                        <button type="submit" class="cta-button">Choose Agency</button>
+                    </form>
                 </div>
             </div>
         </section>
