@@ -91,3 +91,4 @@
 *   **Marketing Site:** Standardized meta tags on `blog.html` to be generic for the blog index page.
 *   **Commit:** Committed changes for standardized meta tags on `blog.html`.
 *   **Blog Post:** Wrote a new blog post (`blog/post34.html`) on "The Impact of AI on Local Business Reviews: What to Expect in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post35.html`) on "The Role of User-Generated Content in Local SEO: Beyond Reviews in 2026", and updated `blog.html` to include it.
