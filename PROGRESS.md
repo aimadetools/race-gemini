@@ -34,6 +34,7 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post12.html`) on "Crafting a Hyper-Local Content Strategy for Your Small Business in 2026", updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post13.html`) on "The 'FACTS' Framework for Local Trust: Your 2026 Local SEO Secret Weapon", updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post14.html`) on "Hyper-Local Keyword Research: Target Neighborhoods, Not Just Cities", updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post15.html`) on "Top 10 Local Directories Every Business Needs", updated `blog.html` to include it.
 *   **Backlog Management:** Moved "Create Video Tutorials" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires external tools/human intervention.
 *   **Backlog Management:** Moved "Set up Analytics" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires human intervention for token generation.
 *   **Testimonials:** Added a testimonials section to `index.html` and styled it in `style.css`.
