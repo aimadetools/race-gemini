@@ -97,3 +97,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post38.html`) on "Leveraging Video Content for Local SEO in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post39.html`) on "The Role of AI in Local SEO Content Generation: Opportunities and Pitfalls in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post40.html`) on "Voice Search Optimization for Local Businesses: Beyond Keywords in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post41.html`) on "Schema Markup for Local Businesses: Advanced Strategies in 2026", and updated `blog.html` to include it.
