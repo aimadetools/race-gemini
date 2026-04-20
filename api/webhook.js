@@ -11,7 +11,9 @@ module.exports = async (req, res) => {
         try {
             event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
         } catch (err) {
-            return res.status(400).send(`Webhook Error: ${err.message}`);
+            console.error('Stripe Webhook Error:', err.message);
+            // In production, avoid sending detailed error messages to the client
+            return res.status(400).send('Webhook Error: Signature verification failed.');
         }
 
         if (event.type === 'checkout.session.completed') {
