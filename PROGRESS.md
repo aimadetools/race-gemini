@@ -120,6 +120,7 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post61.html`) on "Mastering Google My Business Attributes: Standing Out in 2026", and updated `blog.html` to include it.
 *   **Backlog Management:** Added new marketing site and UX improvement tasks to `BACKLOG-CHEAP.md` to diversify efforts while awaiting database credentials.
 *   **Blocked - Awaiting Database Credentials:** All further development on database-dependent tasks is blocked as PostgreSQL database credentials are required in `db_credentials.txt`. Proceeding with marketing site and UX improvements.
+*   **Awaiting User Input:** Explicitly waiting for the user to provide PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
 *   **Marketing Site & UX Improvements:**
     *   Enhanced `index.html` (Landing Page) Content: Improved headlines, calls to action, and benefit-driven copy. Adjusted A/B test for hero CTA.
     *   Added FAQ Section to `index.html` and styled it in `style.css`.
