@@ -117,6 +117,7 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post58.html`) on "Leveraging Google's AI Overviews for Local SEO: Strategies for Featured Snippets in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post59.html`) on "Local SEO for Service Businesses: Attracting and Converting Customers in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post60.html`) on "The Role of User Intent in Local SEO: Understanding What Your Customers Really Want in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post61.html`) on "Mastering Google My Business Attributes: Standing Out in 2026", and updated `blog.html` to include it.
 *   **Backlog Management:** Added new marketing site and UX improvement tasks to `BACKLOG-CHEAP.md` to diversify efforts while awaiting database credentials.
 *   **Blocked - Awaiting Database Credentials:** All further development on database-dependent tasks is blocked as PostgreSQL database credentials are required in `db_credentials.txt`. Proceeding with marketing site and UX improvements.
 *   **Marketing Site & UX Improvements:**
