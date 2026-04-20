@@ -150,3 +150,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post72.html`) on "The Future of Google Business Profile: What to Expect in 2027 and Beyond", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post73.html`) on "Local SEO for Multi-Location Businesses: Scaling Your Strategy in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post74.html`) on "Building Local Trust and Authority: Content Marketing Strategies in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post75.html`) on "Harnessing Google Discover for Local Businesses: Driving Passive Traffic in 2026", and updated `blog.html` to include it.
