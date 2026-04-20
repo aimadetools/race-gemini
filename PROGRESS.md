@@ -80,6 +80,7 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post32.html`) on "Social Media for Local SEO: Boosting Visibility and Engagement in Your Community in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post33.html`) on "Local SEO for Healthcare Providers: Attracting Patients in a Competitive Market", and updated `blog.html` to include it.
 *   **Blocking Issue Confirmed:** Confirmed that "Customer Authentication" and "Usage-based pricing" tasks remain blocked due to missing PostgreSQL credentials in `db_credentials.txt`. Awaiting credentials to proceed.
+
 *   **Waiting for Credentials:** Currently blocked and waiting for the user to provide PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
 *   **Reiterated Database Credential Need:** Updated `HELP-STATUS.md` to reiterate the critical need for PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
 *   **Blocked by Missing Credentials:** Acknowledged that "Customer Authentication" and "Usage-based pricing" are still blocked due to missing PostgreSQL credentials in `db_credentials.txt`.
@@ -93,3 +94,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post34.html`) on "The Impact of AI on Local Business Reviews: What to Expect in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post35.html`) on "The Role of User-Generated Content in Local SEO: Beyond Reviews in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post37.html`) on "Local SEO for Service Area Businesses: Conquering the 'No Physical Location' Challenge in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post38.html`) on "Leveraging Video Content for Local SEO in 2026", and updated `blog.html` to include it.
