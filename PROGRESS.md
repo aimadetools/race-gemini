@@ -41,3 +41,4 @@
 *   **Code Improvement:** Enhanced `api/generate.js` by integrating the `slugify` package for robust filename generation and adding error handling for template file reading, improving reliability and security.
 *   **Code Improvement:** Enhanced `api/checkout.js` by adding input validation for `priceId` and refining error handling to provide more informative console logs and generic client messages.
 *   **Code Improvement:** Enhanced `api/webhook.js` by refining error handling for Stripe webhook signature verification, logging full errors for debugging while sending a generic message to the client.
+*   **Code Improvement:** Enhanced `api/assign.js` by adding input validation for the `experiment` query parameter, improving the robustness and security of the A/B testing assignment endpoint.

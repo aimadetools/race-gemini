@@ -4,6 +4,12 @@ export default function handler(req, res) {
     return res.status(400).json({ error: 'Experiment name is required' });
   }
 
+  // Basic validation for experiment name
+  if (!/^[a-zA-Z0-9_-]+$/.test(experiment)) {
+    return res.status(400).json({ error: 'Invalid experiment name format' });
+  }
+
+
   // Check for existing cookie
   const cookies = req.headers.cookie || '';
   const cookieName = `ab_${experiment}`;
