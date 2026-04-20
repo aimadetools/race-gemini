@@ -11,4 +11,5 @@ This file contains tasks that are routine, have a clear implementation path, and
 *   **Write more blog posts (post 65 onwards).** *Completed*
 *   **Write more blog posts (post 66 onwards).** *Completed*
 *   **Write more blog posts (post 67 onwards).** *Completed*
-*   **Write more blog posts (post 68 onwards).**
+*   **Write more blog posts (post 68 onwards).** *Completed*
+*   **Write more blog posts (post 69 onwards).**
