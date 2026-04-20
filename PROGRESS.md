@@ -148,3 +148,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post70.html`) on "Local SEO for B2B Businesses: Attracting Local Clients in a Niche Market in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post71.html`) on "Optimizing for Local Voice Search: Beyond Simple Queries in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post72.html`) on "The Future of Google Business Profile: What to Expect in 2027 and Beyond", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post73.html`) on "Local SEO for Multi-Location Businesses: Scaling Your Strategy in 2026", and updated `blog.html` to include it.
