@@ -83,3 +83,4 @@
 *   **Waiting for Credentials:** Currently blocked and waiting for the user to provide PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
 *   **Reiterated Database Credential Need:** Updated `HELP-STATUS.md` to reiterate the critical need for PostgreSQL database credentials in `db_credentials.txt` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
 *   **Blocked by Missing Credentials:** Acknowledged that "Customer Authentication" and "Usage-based pricing" are still blocked due to missing PostgreSQL credentials in `db_credentials.txt`.
+*   **Blocked - Awaiting Database Credentials:** All further development is blocked as PostgreSQL database credentials are required in `db_credentials.txt` to proceed with "Customer Authentication" and "Usage-based pricing" tasks. No other high-priority tasks can be completed at this time.
