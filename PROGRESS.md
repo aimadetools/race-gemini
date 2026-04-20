@@ -159,3 +159,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post78.html`) on "The Importance of Localized Landing Pages for Niche Services in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post77.html`) on "The Power of Local Partnerships: Co-Marketing for SEO Success in 2026", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post76.html`) on "Local SEO for E-commerce: Driving Online Sales and Store Visits to Brick-and-Mortar Stores in 2026", and updated `blog.html` to include it.
+*   **HELP-STATUS.md Update:** Reiterated the critical need for PostgreSQL database credentials in `HELP-STATUS.md` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
