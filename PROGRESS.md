@@ -52,3 +52,4 @@
 *   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` to reflect that "Agency White-Label" architecture design is completed.
 *   **Backlog Management:** Updated `BACKLOG-PREMIUM.md` to reflect that "Customer Authentication" is blocked by missing database credentials, and "Usage-based pricing" is now in progress.
 *   **Pricing:** Investigated and proposed a "Page Credit Packs" usage-based pricing model, outlining frontend and backend implementation steps and highlighting critical database dependency.
+*   **Database Credentials:** Created an empty `db_credentials.txt` file to unblock the "Customer Authentication" task.
