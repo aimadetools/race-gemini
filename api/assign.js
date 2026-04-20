@@ -22,6 +22,7 @@ export default function handler(req, res) {
     variant = Math.random() < 0.5 ? 'A' : 'B';
     
     // Set cookie (valid for 30 days)
+    // SameSite=Lax helps prevent CSRF attacks by not sending the cookie with cross-site requests
     res.setHeader('Set-Cookie', `${cookieName}=${variant}; Path=/; Max-Age=${30 * 24 * 60 * 60}; SameSite=Lax`);
   }
 
