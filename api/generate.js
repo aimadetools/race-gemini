@@ -1,4 +1,6 @@
 const archiver = require('archiver');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = (req, res) => {
     if (req.method === 'POST') {
@@ -10,6 +12,9 @@ module.exports = (req, res) => {
 
         const servicesArray = services.split(',').map(s => s.trim());
         const townsArray = towns.split(',').map(t => t.trim());
+
+        const templatePath = path.resolve(process.cwd(), 'page-template.html');
+        const template = fs.readFileSync(templatePath, 'utf8');
 
         res.writeHead(200, {
             'Content-Type': 'application/zip',
@@ -25,20 +30,10 @@ module.exports = (req, res) => {
         for (const town of townsArray) {
             for (const service of servicesArray) {
                 const fileName = `${service.toLowerCase().replace(/ /g, '-')}-in-${town.toLowerCase().replace(/ /g, '-')}.html`;
-                const pageContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${businessName} - ${service} in ${town}</title>
-</head>
-<body>
-    <h1>${businessName}</h1>
-    <h2>${service} in ${town}</h2>
-    <p>Looking for the best ${service} in ${town}? Look no further! ${businessName} offers top-notch ${service} services to the residents of ${town}.</p>
-</body>
-</html>`;
+                let pageContent = template.replace(/{{businessName}}/g, businessName);
+                pageContent = pageContent.replace(/{{service}}/g, service);
+                pageContent = pageContent.replace(/{{town}}/g, town);
+                
                 archive.append(pageContent, { name: fileName });
             }
         }
