@@ -189,3 +189,34 @@ footer {
     border-top: 1px solid #333;
     margin-top: 4rem;
 }
+
+/* Testimonials Section */
+.testimonials {
+    padding: 4rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.testimonial-cards {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.testimonials .card {
+    max-width: 350px;
+}
+
+.testimonials .card p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.testimonials .card .author {
+    font-weight: bold;
+    color: #007bff;
+}

@@ -19,3 +19,9 @@
 *   **Documentation:** Updated the `README.md` file with information about the project, including the current status and how to get started.
 *   **Marketing Site:** Created the initial version of the marketing site, including the landing page, about page, pricing page, and a blog with one post.
 *   **Planning:** Created `BACKLOG-PREMIUM.md` and `BACKLOG-CHEAP.md` to plan future work.
+*   **Backlog Management:** Updated `BACKLOG-CHEAP.md` by removing already completed tasks.
+*   **Blog Post:** Wrote a new blog post (`blog/post2.html`) on "Advanced Local SEO Strategies for Small Businesses" and updated `blog.html` to include it.
+*   **Backlog Management:** Moved "Create Video Tutorials" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires external tools/human intervention.
+*   **Backlog Management:** Moved "Set up Analytics" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires human intervention for token generation.
+*   **Testimonials:** Added a testimonials section to `index.html` and styled it in `style.css`.
+*   **Backlog Management:** Moved "Create a Logo" from `BACKLOG-CHEAP.md` to `BACKLOG-PREMIUM.md` as it requires graphic design skills not available to the agent.
