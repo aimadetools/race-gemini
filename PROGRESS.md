@@ -173,3 +173,4 @@
     *   **Frontend Integration:** Updated `generate.html` to handle authentication tokens.
     *   **Styling:** Added styles for new authentication pages to `style.css`.
     *   **Status:** Implementation is complete but remains untested and therefore unverified pending database credentials.
+*   **Dynamic Navigation:** Implemented a dynamic navigation bar that shows "Dashboard" and "Logout" links if a user is authenticated, and "Login/Signup" otherwise. This was applied to all pages.

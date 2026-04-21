@@ -72,6 +72,18 @@ nav a:hover {
     background-color: #0056b3;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    height: 1.2em;
+    display: block;
+}
+
+.button:disabled, .cta-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 .features, .pricing {
     padding: 4rem 1rem;
     max-width: 1200px;
