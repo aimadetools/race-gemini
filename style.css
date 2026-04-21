@@ -522,4 +522,74 @@ body {
     body {
         padding-bottom: 150px; /* More padding for stacked buttons */
     }
-}
+    }
+
+    /* Auth Forms */
+    .auth-forms {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    padding: 2rem 1rem;
+    flex-wrap: wrap;
+    }
+
+    .form-container {
+    background-color: #1f1f1f;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    }
+
+    .form-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    }
+
+    .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    }
+
+    .form-container .form-group {
+    display: flex;
+    flex-direction: column;
+    }
+
+    .form-container label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    }
+
+    .form-container input {
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    }
+
+    .form-container .button {
+    margin-top: 1rem;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    }
+
+    .form-container .button:hover {
+    background-color: #0056b3;
+    }
+
+    .form-container p {
+    margin-top: 1rem;
+    text-align: center;
+    min-height: 1.2em;
+    }

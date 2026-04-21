@@ -47,9 +47,12 @@
 
         <section class="generate-form">
             <p class="form-description">Fill out the form below to get started. Be as specific as possible with your services and list all target towns for best results.</p>
-            <form action="/api/generate" method="POST">
+            <form id="generate-form">
                 <label for="businessName">Business Name:</label>
                 <input type="text" id="businessName" name="businessName" placeholder="e.g., 'Smith's Plumbing & Heating'" required>
+
+                <label for="zipCode">Business Zip Code:</label>
+                <input type="text" id="zipCode" name="zipCode" placeholder="e.g., '90210'" required>
 
                 <label for="services">Services (comma-separated):</label>
                 <input type="text" id="services" name="services" placeholder="e.g., 'plumbing repair, water heater installation, drain cleaning'" required>
@@ -75,5 +78,43 @@
     <footer>
         <p>&copy; 2026 LocalLeads. All rights reserved.</p>
     </footer>
+    <script>
+        document.getElementById('generate-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            const token = localStorage.getItem('token');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'localleads-pages.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                const result = await response.json();
+                alert(result.message || 'An error occurred.');
+            }
+        });
+    </script>
 </body>
 </html>

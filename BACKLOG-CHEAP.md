@@ -30,3 +30,7 @@ This file contains tasks that are routine, have a clear implementation path, and
 *   **Write more blog posts (post 88 onwards).** *Completed*
 *   **Write more blog posts (post 89 onwards).** *Completed*
 *   **Write more blog posts (post 90 onwards).**
+*   **Dynamic Navigation Bar:** Update the navigation bar to dynamically show "Dashboard" or "Login/Signup" based on authentication status.
+*   **Enhanced Form Feedback:** Add more comprehensive error handling and user feedback to the `auth.html` and `generate.html` pages.
+*   **Usage-Based Pricing Placeholder:** Create a placeholder page for the "Usage-based pricing" feature.
+*   **Write more blog posts (post 92 onwards).**

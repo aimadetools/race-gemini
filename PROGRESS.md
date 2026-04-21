@@ -164,3 +164,12 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post88.html`) on "Review Quality > Review Volume: Why 10 Detailed Stories Beat 100 Five-Star Ratings", and updated `blog.html` to include it.
 *   **Blog Post:** Wrote a new blog post (`blog/post91.html`) on "Beyond Rankings: Optimizing for Google's Local Service Ads (LSAs) in 2026", and updated `blog.html` to include it.
 *   **HELP-STATUS.md Update:** Reiterated the critical need for PostgreSQL database credentials in `HELP-STATUS.md` to unblock "Customer Authentication" and "Usage-based pricing" tasks.
+*   **Customer Authentication (in progress, blocked):**
+    *   **Database Schema:** Designed and created `database.sql` with `users` and `generated_pages` tables.
+    *   **API Endpoints:** Created `api/signup.js` and `api/login.js` for user registration and login, and `api/dashboard.js` to fetch user data.
+    *   **Frontend Pages:** Created `auth.html` for signup/login and `dashboard.html` for registered users.
+    *   **Core Logic Integration:** Updated `api/generate.js` to associate generated pages with authenticated users.
+    *   **Dependencies:** Added `pg`, `bcryptjs`, and `jsonwebtoken` to `package.json`.
+    *   **Frontend Integration:** Updated `generate.html` to handle authentication tokens.
+    *   **Styling:** Added styles for new authentication pages to `style.css`.
+    *   **Status:** Implementation is complete but remains untested and therefore unverified pending database credentials.
