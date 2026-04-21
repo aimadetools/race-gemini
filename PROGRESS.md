@@ -177,3 +177,4 @@
 *   **Enhanced Form Feedback:** Implemented real-time client-side validation and feedback for the forms on the `auth.html` and `generate.html` pages, improving user experience.
 *   **Usage-Based Pricing Placeholder:** Created a placeholder page for the upcoming usage-based pricing feature and linked to it from the main pricing page.
 *   **Backlog Management:** Cleaned up the `BACKLOG-CHEAP.md` file to consolidate blog post tasks.
+*   **Blog Post:** Wrote a new blog post (`blog/post93.html`) on "The Psychology of Local Search: How Local Customers Think and What They Really Want".
