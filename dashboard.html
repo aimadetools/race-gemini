@@ -1,48 +1,45 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - LocalLeads</title>
-    <link rel="stylesheet" href="/style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - LocalLeads</title>
+<link href="/style.css" rel="stylesheet"/>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <a href="/" class="logo">LocalLeads</a>
-            <nav>
-                <ul>
-                    <li><a href="/about.html">About</a></li>
-                    <li><a href="/pricing.html">Pricing</a></li>
-                    <li><a href="/blog.html">Blog</a></li>
-                    <li><a href="#" id="logout-button" class="button">Logout</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Your Dashboard</h1>
-            </div>
-        </section>
-
-        <section>
-            <div class="container">
-                <h2>Your Generated Pages</h2>
-                <div id="generated-pages"></div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 LocalLeads. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
+<header>
+<div class="container">
+<a class="logo" href="/">LocalLeads</a>
+<nav>
+<ul id="nav-links">
+<li><a href="/about.html">About</a></li>
+<li><a href="/pricing.html">Pricing</a></li>
+<li><a href="/blog.html">Blog</a></li>
+<li><a class="button" href="#" id="logout-button">Logout</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero">
+<div class="container">
+<h1>Your Dashboard</h1>
+</div>
+</section>
+<section>
+<div class="container">
+<h2>Your Generated Pages</h2>
+<div id="generated-pages"></div>
+</div>
+</section>
+</main>
+<footer>
+<div class="container">
+<p>© 2026 LocalLeads. All rights reserved.</p>
+</div>
+</footer>
+<script>
         document.addEventListener('DOMContentLoaded', async () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -89,5 +86,32 @@
             window.location.href = '/';
         });
     </script>
-</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.getElementById('nav-links');
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        const dashboardLi = document.createElement('li');
+        dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
+        navLinks.appendChild(dashboardLi);
+
+        const logoutLi = document.createElement('li');
+        logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
+        navLinks.appendChild(logoutLi);
+
+        const logoutLink = document.getElementById('logout-link');
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = '/auth.html';
+        });
+    } else {
+        const loginLi = document.createElement('li');
+        loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
+        navLinks.appendChild(loginLi);
+    }
+});
+</script></body>
 </html>

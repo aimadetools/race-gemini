@@ -1,69 +1,90 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Power of Google My Business for Local SEO - LocalLeads Blog</title>
-    <meta name="description" content="Understand the critical role of Google My Business in local SEO and how to optimize your profile for maximum visibility.">
-    <meta name="keywords" content="google my business, local seo, gmb optimization, local business listing">
-    <meta property="og:title" content="The Power of Google My Business for Local SEO - LocalLeads Blog">
-    <meta property="og:description" content="Understand the critical role of Google My Business in local SEO and how to optimize your profile for maximum visibility.">
-    <meta property="og:image" content="https://www.localleads.pro/og-image.png">
-    <meta property="og:url" content="https://www.localleads.pro/blog/post4.html">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="../style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Power of Google My Business for Local SEO - LocalLeads Blog</title>
+<meta content="Understand the critical role of Google My Business in local SEO and how to optimize your profile for maximum visibility." name="description"/>
+<meta content="google my business, local seo, gmb optimization, local business listing" name="keywords"/>
+<meta content="The Power of Google My Business for Local SEO - LocalLeads Blog" property="og:title"/>
+<meta content="Understand the critical role of Google My Business in local SEO and how to optimize your profile for maximum visibility." property="og:description"/>
+<meta content="https://www.localleads.pro/og-image.png" property="og:image"/>
+<meta content="https://www.localleads.pro/blog/post4.html" property="og:url"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link href="../style.css" rel="stylesheet"/>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">LocalLeads</div>
-            <ul>
-                <li><a href="../index.html#features">Features</a></li>
-                <li><a href="../pricing.html">Pricing</a></li>
-                <li><a href="../about.html">About</a></li>
-                <li><a href="../blog.html">Blog</a></li>
-                <li><a href="../generate.html">Generate</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+<nav>
+<div class="logo">LocalLeads</div>
+<ul id="nav-links">
+<li><a href="../index.html#features">Features</a></li>
+<li><a href="../pricing.html">Pricing</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../blog.html">Blog</a></li>
+<li><a href="../generate.html">Generate</a></li>
+</ul>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1>The Power of Google My Business for Local SEO</h1>
+</section>
+<section class="blog-content">
+<p>In the world of local search engine optimization, Google My Business (GMB) is an undisputed powerhouse. For any local business aiming to attract nearby customers, an optimized GMB profile isn't just an advantage—it's a necessity.</p>
+<h2>What is Google My Business?</h2>
+<p>Google My Business is a free tool that allows businesses to manage their online presence across Google, including Search and Maps. By claiming and verifying your business, you can provide detailed information to potential customers and significantly influence your visibility in local search results.</p>
+<h2>Why is GMB So Critical for <a href="../index.html">Local SEO</a>?</h2>
+<ul>
+<li><strong>Local Pack Dominance:</strong> When users search for local services (e.g., "plumbers near me"), Google often displays a "Local Pack" – a map with three local business listings. A well-optimized GMB profile is your ticket to appearing in this highly coveted section.</li>
+<li><strong>Direct Customer Engagement:</strong> GMB allows customers to find your address, phone number, website, business hours, and even ask questions directly. It acts as a mini-website within Google's ecosystem.</li>
+<li><strong>Reviews and Reputation:</strong> GMB is the primary platform for customer reviews, which are crucial for building trust and directly influence local search rankings. Responding to reviews, both positive and negative, shows excellent customer service.</li>
+<li><strong>Insights and Analytics:</strong> The GMB dashboard provides valuable insights into how customers are finding your business, where they are coming from, and what actions they take (e.g., website visits, phone calls, direction requests).</li>
+<li><strong>Posts and Offers:</strong> You can use GMB to publish updates, offers, events, and new products directly to your profile, keeping your audience informed and engaged.</li>
+</ul>
+<h2>Optimizing Your Google My Business Profile</h2>
+<p>To leverage GMB's full potential, ensure your profile is complete and accurate:</p>
+<ol>
+<li><strong>Claim and Verify:</strong> This is the first and most crucial step.</li>
+<li><strong>Complete All Sections:</strong> Fill out every piece of information requested—business name, address, phone number, website, business hours, categories, services, products, and a compelling description.</li>
+<li><strong>High-Quality Photos:</strong> Upload attractive photos of your business, products, and team. Businesses with photos receive more requests for directions and clicks to their websites.</li>
+<li><strong>Encourage and Respond to Reviews:</strong> Actively ask satisfied customers for reviews and respond to every single one professionally.</li>
+<li><strong>Utilize GMB Posts:</strong> Regularly create posts to highlight promotions, new services, or company news.</li>
+<li><strong>Q&amp;A Section:</strong> Monitor and answer questions in the Q&amp;A section to provide helpful information to potential customers.</li>
+</ol>
+<p>An optimized Google My Business profile is foundational for any local SEO strategy, helping your business stand out and attract the local customers you need to grow. Pair this with location-specific pages generated by <a href="../index.html">LocalLeads</a>, and you'll create an unstoppable local online presence!</p>
+</section>
+</main>
+<footer>
+<p>© 2026 LocalLeads. All rights reserved.</p>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.getElementById('nav-links');
+    const token = localStorage.getItem('token');
 
-    <main>
-        <section class="hero">
-            <h1>The Power of Google My Business for Local SEO</h1>
-        </section>
+    if (token) {
+        const dashboardLi = document.createElement('li');
+        dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
+        navLinks.appendChild(dashboardLi);
 
-        <section class="blog-content">
-            <p>In the world of local search engine optimization, Google My Business (GMB) is an undisputed powerhouse. For any local business aiming to attract nearby customers, an optimized GMB profile isn't just an advantage—it's a necessity.</p>
+        const logoutLi = document.createElement('li');
+        logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
+        navLinks.appendChild(logoutLi);
 
-            <h2>What is Google My Business?</h2>
-            <p>Google My Business is a free tool that allows businesses to manage their online presence across Google, including Search and Maps. By claiming and verifying your business, you can provide detailed information to potential customers and significantly influence your visibility in local search results.</p>
-
-            <h2>Why is GMB So Critical for <a href="../index.html">Local SEO</a>?</h2>
-            <ul>
-                <li><strong>Local Pack Dominance:</strong> When users search for local services (e.g., "plumbers near me"), Google often displays a "Local Pack" – a map with three local business listings. A well-optimized GMB profile is your ticket to appearing in this highly coveted section.</li>
-                <li><strong>Direct Customer Engagement:</strong> GMB allows customers to find your address, phone number, website, business hours, and even ask questions directly. It acts as a mini-website within Google's ecosystem.</li>
-                <li><strong>Reviews and Reputation:</strong> GMB is the primary platform for customer reviews, which are crucial for building trust and directly influence local search rankings. Responding to reviews, both positive and negative, shows excellent customer service.</li>
-                <li><strong>Insights and Analytics:</strong> The GMB dashboard provides valuable insights into how customers are finding your business, where they are coming from, and what actions they take (e.g., website visits, phone calls, direction requests).</li>
-                <li><strong>Posts and Offers:</strong> You can use GMB to publish updates, offers, events, and new products directly to your profile, keeping your audience informed and engaged.</li>
-            </ul>
-
-            <h2>Optimizing Your Google My Business Profile</h2>
-            <p>To leverage GMB's full potential, ensure your profile is complete and accurate:</p>
-            <ol>
-                <li><strong>Claim and Verify:</strong> This is the first and most crucial step.</li>
-                <li><strong>Complete All Sections:</strong> Fill out every piece of information requested—business name, address, phone number, website, business hours, categories, services, products, and a compelling description.</li>
-                <li><strong>High-Quality Photos:</strong> Upload attractive photos of your business, products, and team. Businesses with photos receive more requests for directions and clicks to their websites.</li>
-                <li><strong>Encourage and Respond to Reviews:</strong> Actively ask satisfied customers for reviews and respond to every single one professionally.</li>
-                <li><strong>Utilize GMB Posts:</strong> Regularly create posts to highlight promotions, new services, or company news.</li>
-                <li><strong>Q&A Section:</strong> Monitor and answer questions in the Q&A section to provide helpful information to potential customers.</li>
-            </ol>
-
-            <p>An optimized Google My Business profile is foundational for any local SEO strategy, helping your business stand out and attract the local customers you need to grow. Pair this with location-specific pages generated by <a href="../index.html">LocalLeads</a>, and you'll create an unstoppable local online presence!</p>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
-    </footer>
-</body>
+        const logoutLink = document.getElementById('logout-link');
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = '/auth.html';
+        });
+    } else {
+        const loginLi = document.createElement('li');
+        loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
+        navLinks.appendChild(loginLi);
+    }
+});
+</script></body>
 </html>

@@ -1,38 +1,64 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful - LocalLeads</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Successful - LocalLeads</title>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">LocalLeads</div>
-            <ul>
-                <li><a href="index.html#features">Features</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="generate.html">Generate</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+<nav>
+<div class="logo">LocalLeads</div>
+<ul id="nav-links">
+<li><a href="index.html#features">Features</a></li>
+<li><a href="pricing.html">Pricing</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="blog.html">Blog</a></li>
+<li><a href="generate.html">Generate</a></li>
+</ul>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1>Payment Successful!</h1>
+<p>Thank you for your purchase. Your local SEO pages are being generated right now!</p>
+<p><strong>What happens next?</strong> You will receive an email shortly with a link to download your professionally optimized local SEO pages. Please check your inbox (and spam folder) in the next few minutes.</p>
+<p>In the meantime, why not learn more about local SEO, or explore other ways LocalLeads can help your business?</p>
+<a class="cta-button" href="blog.html">Visit Our Blog</a>
+<a class="cta-button secondary-button" href="generate.html">Generate More Pages</a>
+</section>
+</main>
+<footer>
+<p>© 2026 LocalLeads. All rights reserved.</p>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.getElementById('nav-links');
+    const token = localStorage.getItem('token');
 
-    <main>
-        <section class="hero">
-            <h1>Payment Successful!</h1>
-            <p>Thank you for your purchase. Your local SEO pages are being generated right now!</p>
-            <p><strong>What happens next?</strong> You will receive an email shortly with a link to download your professionally optimized local SEO pages. Please check your inbox (and spam folder) in the next few minutes.</p>
-            <p>In the meantime, why not learn more about local SEO, or explore other ways LocalLeads can help your business?</p>
-            <a href="blog.html" class="cta-button">Visit Our Blog</a>
-            <a href="generate.html" class="cta-button secondary-button">Generate More Pages</a>
-        </section>
-    </main>
+    if (token) {
+        const dashboardLi = document.createElement('li');
+        dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
+        navLinks.appendChild(dashboardLi);
 
-    <footer>
-        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
-    </footer>
-</body>
+        const logoutLi = document.createElement('li');
+        logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
+        navLinks.appendChild(logoutLi);
+
+        const logoutLink = document.getElementById('logout-link');
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = '/auth.html';
+        });
+    } else {
+        const loginLi = document.createElement('li');
+        loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
+        navLinks.appendChild(loginLi);
+    }
+});
+</script></body>
 </html>

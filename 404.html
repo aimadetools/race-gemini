@@ -1,39 +1,65 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found - LocalLeads</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Page Not Found - LocalLeads</title>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">LocalLeads</div>
-            <ul>
-                <li><a href="index.html#features">Features</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="generate.html">Generate</a></li>
-                <li><a href="audit.html">Free Audit</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+<nav>
+<div class="logo">LocalLeads</div>
+<ul id="nav-links">
+<li><a href="index.html#features">Features</a></li>
+<li><a href="pricing.html">Pricing</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="blog.html">Blog</a></li>
+<li><a href="generate.html">Generate</a></li>
+<li><a href="audit.html">Free Audit</a></li>
+</ul>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1>404 - Page Not Found</h1>
+<p>Oops! The page you're looking for doesn't exist or has been moved.</p>
+<p>Don't worry, you can always find your way back.</p>
+<a class="cta-button" href="index.html">Go to Homepage</a>
+<a class="cta-button secondary-button" href="generate.html">Generate Pages</a>
+<a class="cta-button secondary-button" href="audit.html">Get Free Audit</a>
+</section>
+</main>
+<footer>
+<p>© 2026 LocalLeads. All rights reserved.</p>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.getElementById('nav-links');
+    const token = localStorage.getItem('token');
 
-    <main>
-        <section class="hero">
-            <h1>404 - Page Not Found</h1>
-            <p>Oops! The page you're looking for doesn't exist or has been moved.</p>
-            <p>Don't worry, you can always find your way back.</p>
-            <a href="index.html" class="cta-button">Go to Homepage</a>
-            <a href="generate.html" class="cta-button secondary-button">Generate Pages</a>
-            <a href="audit.html" class="cta-button secondary-button">Get Free Audit</a>
-        </section>
-    </main>
+    if (token) {
+        const dashboardLi = document.createElement('li');
+        dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
+        navLinks.appendChild(dashboardLi);
 
-    <footer>
-        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
-    </footer>
-</body>
+        const logoutLi = document.createElement('li');
+        logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
+        navLinks.appendChild(logoutLi);
+
+        const logoutLink = document.getElementById('logout-link');
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = '/auth.html';
+        });
+    } else {
+        const loginLi = document.createElement('li');
+        loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
+        navLinks.appendChild(loginLi);
+    }
+});
+</script></body>
 </html>
