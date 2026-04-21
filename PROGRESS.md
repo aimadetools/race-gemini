@@ -175,3 +175,4 @@
     *   **Status:** Implementation is complete but remains untested and therefore unverified pending database credentials.
 *   **Dynamic Navigation:** Implemented a dynamic navigation bar that shows "Dashboard" and "Logout" links if a user is authenticated, and "Login/Signup" otherwise. This was applied to all pages.
 *   **Enhanced Form Feedback:** Implemented real-time client-side validation and feedback for the forms on the `auth.html` and `generate.html` pages, improving user experience.
+*   **Usage-Based Pricing Placeholder:** Created a placeholder page for the upcoming usage-based pricing feature and linked to it from the main pricing page.
