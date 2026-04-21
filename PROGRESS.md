@@ -188,3 +188,16 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post101.html`) on "Local SEO for Plumbers: How to Get More Leads in 2026".
 *   **Blog Post:** Wrote a new blog post (`blog/post102.html`) on "Local SEO for Electricians: How to Power Up Your Lead Generation in 2026".
 *   **Blog Post:** Wrote a new blog post (`blog/post103.html`) on "Local SEO for HVAC Companies: How to Heat Up Your Lead Generation in 2026".
+*   **Blog Post:** Wrote a new blog post (`blog/post104.html`) on "Local SEO for Roofers: How to Get on Top of Search Results in 2026", and updated `blog.html` to include it.
+*   **Blog Post:** Wrote a new blog post (`blog/post105.html`) on "Leveraging Local SEO for Pet Care Businesses: Attracting and Retaining Clients in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post106.html`) on "Local SEO for Artisans and Crafters: Showcasing Your Unique Creations Locally in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post107.html`) on "Local SEO for Educational Institutions: Attracting Students and Community Engagement in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post108.html`) on "Local SEO for Tourism and Hospitality: Attracting Travelers and Boosting Bookings in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post109.html`) on "Local SEO for Professional Services: Accountants, Consultants, and Agencies in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post110.html`) on "Local SEO for Automotive Businesses: Driving Traffic to Dealerships and Repair Shops in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post111.html`) on "Local SEO for Health and Wellness Businesses: Gyms, Spas, and Clinics in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post112.html`) on "Local SEO for Home Services: Cleaners, Landscapers, and Repair in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post113.html`) on "Local SEO for Retail Businesses: Driving Foot Traffic and Online Sales in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post114.html`) on "Local SEO for Food and Beverage Businesses: Restaurants, Cafes, and Bars in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post115.html`) on "Local SEO for Arts and Entertainment: Theatres, Galleries, and Music Venues in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post116.html`) on "Local SEO for Nonprofit Organizations: Increasing Awareness and Engagement in 2026", and updated `blog.html` to include it and reflect its metadata.
