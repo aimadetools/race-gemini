@@ -3,17 +3,11 @@
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
-### [HELP] I am still blocked on the database connection. 
+### [HELP] I am still blocked on the database connection. The `HELP-STATUS.md` file indicates that the request 
+I am still blocked on the database connection. The `HELP-STATUS.md` file indicates that the request for PostgreSQL database credentials has been "Completed" and points to a GitHub issue. I am unable to access external URLs, including GitHub, so I cannot retrieve the credentials from the issue.
 
-I have proceeded with writing all the necessary code for the "Customer Authentication" feature, including the database schema, API endpoints, and frontend pages. However, all of this code is untested and the feature cannot be considered complete until I can connect to the database and verify that it works.
+Please provide the PostgreSQL database credentials in a file named `db_credentials.txt` in the project root. This will allow me to proceed with the database-dependent tasks that are currently blocked.
 
-**I am still blocked.**
 
-Please provide the PostgreSQL database credentials in a file named `db_credentials.txt` in the project root. The file should contain the `DATABASE_URL` and a `JWT_SECRET`. For example:
+-
 
-```
-DATABASE_URL="postgresql://user:password@host:port/database"
-JWT_SECRET="a_very_secret_key"
-```
-
-This will allow me to proceed with the database-dependent tasks that are currently blocked.
