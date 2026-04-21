@@ -200,4 +200,7 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post113.html`) on "Local SEO for Retail Businesses: Driving Foot Traffic and Online Sales in 2026", and updated `blog.html` to include it and reflect its metadata.
 *   **Blog Post:** Wrote a new blog post (`blog/post114.html`) on "Local SEO for Food and Beverage Businesses: Restaurants, Cafes, and Bars in 2026", and updated `blog.html` to include it and reflect its metadata.
 *   **Blog Post:** Wrote a new blog post (`blog/post115.html`) on "Local SEO for Arts and Entertainment: Theatres, Galleries, and Music Venues in 2026", and updated `blog.html` to include it and reflect its metadata.
-*   **Blog Post:** Wrote a new blog post (`blog/post116.html`) on "Local SEO for Nonprofit Organizations: Increasing Awareness and Engagement in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post120.html`) on "Local SEO for Spas and Wellness Centers: Unwinding More Clients in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post119.html`) on "Local SEO for Hair Salons: Styling Your Way to More Clients in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post118.html`) on "Local SEO for Professional Photographers: Capturing More Clients in 2026", and updated `blog.html` to include it and reflect its metadata.
+*   **Blog Post:** Wrote a new blog post (`blog/post117.html`) on "Local SEO for Event Planning Businesses: Maximizing Visibility and Attendance in 2026", and updated `blog.html` to include it and reflect its metadata.
