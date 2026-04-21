@@ -185,3 +185,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post98.html`) on "Local SEO for Lawyers: How to Attract More Clients in 2026".
 *   **Blog Post:** Wrote a new blog post (`blog/post99.html`) on "Local SEO for Real Estate Agents: A 2026 Guide to Generating Leads".
 *   **Blog Post:** Wrote a new blog post (`blog/post100.html`) on "Local SEO for Dentists: How to Attract More Patients in 2026".
+*   **Blog Post:** Wrote a new blog post (`blog/post101.html`) on "Local SEO for Plumbers: How to Get More Leads in 2026".
