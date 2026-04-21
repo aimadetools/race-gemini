@@ -183,3 +183,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post96.html`) on "The Future of Local Search: Voice, AI, and the Connected Car".
 *   **Blog Post:** Wrote a new blog post (`blog/post97.html`) on "Local SEO for Restaurants: A Recipe for Success in 2026".
 *   **Blog Post:** Wrote a new blog post (`blog/post98.html`) on "Local SEO for Lawyers: How to Attract More Clients in 2026".
+*   **Blog Post:** Wrote a new blog post (`blog/post99.html`) on "Local SEO for Real Estate Agents: A 2026 Guide to Generating Leads".
