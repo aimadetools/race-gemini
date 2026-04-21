@@ -180,3 +180,4 @@
 *   **Blog Post:** Wrote a new blog post (`blog/post93.html`) on "The Psychology of Local Search: How Local Customers Think and What They Really Want".
 *   **Blog Post:** Wrote a new blog post (`blog/post94.html`) on "Local SEO for Contractors: A 2026 Blueprint for Success".
 *   **Blog Post:** Wrote a new blog post (`blog/post95.html`) on "How to Use Local Content to Build a Moat Around Your Service Area".
+*   **Blog Post:** Wrote a new blog post (`blog/post96.html`) on "The Future of Local Search: Voice, AI, and the Connected Car".
