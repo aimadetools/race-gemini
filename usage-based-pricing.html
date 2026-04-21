@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage-Based Pricing - LocalLeads</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LocalLeads</div>
+            <ul id="nav-links">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="generate.html">Generate</a></li>
+                <li><a href="audit.html">Free Audit</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Usage-Based Pricing</h1>
+            <p>A new, flexible pricing model is coming soon!</p>
+        </section>
+
+        <section>
+            <div class="container">
+                <h2>Pay for what you use</h2>
+                <p>We are working on a new pricing model that will allow you to pay for credits to generate pages. This will be a great option for users who don't need a large number of pages at once.</p>
+                <p>Stay tuned for more details!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.getElementById('nav-links');
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                const dashboardLi = document.createElement('li');
+                dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
+                navLinks.appendChild(dashboardLi);
+
+                const logoutLi = document.createElement('li');
+                logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
+                navLinks.appendChild(logoutLi);
+
+                const logoutLink = document.getElementById('logout-link');
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userId');
+                    window.location.href = '/auth.html';
+                });
+            } else {
+                const loginLi = document.createElement('li');
+                loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
+                navLinks.appendChild(loginLi);
+            }
+        });
+    </script>
+</body>
+</html>
