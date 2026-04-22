@@ -23,6 +23,7 @@
 <ul id="nav-links">
 <li><a href="index.html#features">Features</a></li>
 <li><a href="pricing.html">Pricing</a></li>
+<li><a href="buy-credits.html">Buy Credits</a></li>
 <li><a href="about.html">About</a></li>
 <li><a href="blog.html">Blog</a></li>
 <li><a href="generate.html">Generate</a></li>
@@ -35,6 +36,16 @@
 <h1>Blog</h1>
 </section>
 <section class="blog-posts">
+<div class="post">
+<h2><a href="blog/post168.html">The Top 5 Free Tools for Local SEO</a></h2>
+<p>Discover the best free tools to boost your local SEO and attract more customers in your area.</p>
+<a href="blog/post168.html">Read More</a>
+</div>
+<div class="post">
+<h2><a href="blog/post167.html">Local SEO for Educational Institutions: Attracting Students and Community Engagement in 2026.</a></h2>
+<p>Discover how educational institutions can leverage local SEO in 2026 to enhance their online visibility, attract prospective students, and foster community engagement.</p>
+<a href="blog/post167.html">Read More</a>
+</div>
 <div class="post">
 <h2><a href="blog/post166.html">Local SEO for Artisans and Crafters: Showcasing Your Unique Creations Locally in 2026.</a></h2>
 <p>Discover how artisans and crafters can leverage local SEO in 2026 to enhance their online visibility, attract more local buyers, and showcase their unique creations.</p>
@@ -833,33 +844,6 @@
 <footer>
 <p>© 2026 LocalLeads. All rights reserved.</p>
 </footer>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.getElementById('nav-links');
-    const token = localStorage.getItem('token');
-
-    if (token) {
-        const dashboardLi = document.createElement('li');
-        dashboardLi.innerHTML = '<a href="/dashboard.html">Dashboard</a>';
-        navLinks.appendChild(dashboardLi);
-
-        const logoutLi = document.createElement('li');
-        logoutLi.innerHTML = '<a href="#" id="logout-link">Logout</a>';
-        navLinks.appendChild(logoutLi);
-
-        const logoutLink = document.getElementById('logout-link');
-        logoutLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
-            window.location.href = '/auth.html';
-        });
-    } else {
-        const loginLi = document.createElement('li');
-        loginLi.innerHTML = '<a href="/auth.html">Login/Signup</a>';
-        navLinks.appendChild(loginLi);
-    }
-});
-</script></body>
+<script src="/js/nav.js"></script></body>
 </html>
 

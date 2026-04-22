@@ -1,13 +1,6 @@
-const { Pool } = require('pg');
+const { kv } = require('@vercel/kv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -21,11 +14,16 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    const user = rows[0];
+    const userId = await kv.get(`user:email:${email}`);
+
+    if (!userId) {
+      return res.status(401).send({ message: 'Invalid credentials' });
+    }
+
+    const user = await kv.hgetall(userId);
 
     if (!user) {
-      return res.status(401).send({ message: 'Invalid credentials' });
+        return res.status(401).send({ message: 'Invalid credentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
@@ -34,7 +32,7 @@ module.exports = async (req, res) => {
       return res.status(401).send({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 

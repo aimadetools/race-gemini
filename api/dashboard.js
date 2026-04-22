@@ -1,12 +1,5 @@
-const { Pool } = require('pg');
+const { kv } = require('@vercel/kv');
 const jwt = require('jsonwebtoken');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -25,12 +18,25 @@ module.exports = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    const { rows } = await pool.query(
-      'SELECT business_name, zip_code, created_at FROM generated_pages WHERE user_id = $1 ORDER BY created_at DESC',
-      [userId]
-    );
+    const user = await kv.hgetall(userId);
 
-    res.status(200).json(rows);
+    if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+    }
+
+    const pageIds = await kv.lrange(`user:${userId}:pages`, 0, -1);
+
+    const pages = [];
+    for (const pageId of pageIds) {
+        const page = await kv.hgetall(pageId);
+        pages.push(page);
+    }
+
+    res.status(200).json({
+        email: user.email,
+        credits: user.credits,
+        pages: pages
+    });
   } catch (error) {
     console.error(error);
     if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {

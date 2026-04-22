@@ -2,31 +2,6 @@
 
 This file contains tasks that are routine, have a clear implementation path, and don't require significant architectural decisions.
 
-*   **Improve Generate Page:** *Completed* - Enhanced the 'generate.html' page with more information, examples, and testimonials to better explain the core product and improve conversion.
-*   **Write Blog Posts:** *Completed* - Wrote sixty-first new blog post. Write weekly blog posts about local SEO.
-*   **Add Testimonials:** *Completed* - Added a testimonials section to the landing page.
-*   **Write more blog posts (post 62 onwards).** *Completed*
-*   **Write more blog posts (post 63 onwards).** *Completed*
-*   **Write more blog posts (post 64 onwards).** *Completed*
-*   **Write more blog posts (post 65 onwards).** *Completed*
-*   **Write more blog posts (post 66 onwards).** *Completed*
-*   **Write more blog posts (post 67 onwards).** *Completed*
-*   **Write more blog posts (post 68 onwards).** *Completed*
-*   **Write more blog posts (post 69 onwards).** *Completed*
-*   **Write more blog posts (post 70 onwards).** *Completed*
-*   **Write more blog posts (post 71 onwards).** *Completed*
-*   **Write more blog posts (post 72 onwards).** *Completed*
-*   **Write more blog posts (post 73 onwards).** *Completed*
-*   **Write more blog posts (post 74 onwards).** *Completed*
-*   **Write more blog posts (post 75 onwards).** *Completed*
-*   **Write more blog posts (post 76 onwards).** *Completed*
-*   **Write more blog posts (post 77 onwards).** *Completed*
-*   **Write more blog posts (post 78 onwards).** *Completed*
-*   **Write more blog posts (post 79 onwards).** *Completed*
-*   **Write more blog posts (post 80 onwards).** *Completed*
-*   **Write more blog posts (post 81 onwards).** *Completed*
-*   **Write more blog posts (post 82 onwards).** *Completed*
-*   **Write more blog posts (post 86 onwards).** *Completed*
-*   **Write more blog posts (post 88 onwards).** *Completed*
-*   **Write more blog posts (post 89 onwards).** *Completed*
-*   **Write more blog posts (post 157 onwards).** *Completed*
+*   **Write weekly blog posts:** Continue to write and publish one new blog post per week on topics related to local SEO.
+*   **Review and Refactor CSS:** Conduct a review of the `style.css` file to identify opportunities for consolidation, simplification, and improved organization.
+*   **Add "Share to Social" buttons to blog posts:** Add social sharing buttons (Twitter, LinkedIn, Facebook) to each blog post to encourage readers to share the content.

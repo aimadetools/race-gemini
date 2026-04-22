@@ -96,13 +96,6 @@ h2 {
     margin-bottom: 2rem;
 }
 
-.feature-cards, .price-cards {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
 .card {
     background-color: #1f1f1f;
     padding: 2rem;
@@ -115,6 +108,13 @@ h2 {
 .card:hover {
     transform: translateY(-10px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.feature-cards, .price-cards, .testimonial-cards {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .card h3 {
@@ -605,6 +605,33 @@ body {
     text-align: center;
     min-height: 1.2em;
     }
+
+.auth-forms {
+    gap: 2rem; /* More space between forms */
+}
+
+.form-container input {
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-container input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+.form-container .button:hover {
+    background-color: #0056b3;
+    transform: scale(1.02); /* Slight zoom on hover */
+}
+
+.error-message {
+    color: #ff4d4d; /* Brighter red for errors */
+    font-size: 0.9em;
+    min-height: 1.2em; /* Keep space even if empty */
+    text-align: left;
+    margin-top: 0.25rem;
+}
 
 .coming-soon-card {
     background-color: #1f1f1f;

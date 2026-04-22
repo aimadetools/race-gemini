@@ -2,15 +2,8 @@ const archiver = require('archiver');
 const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
-const { Pool } = require('pg');
+const { kv } = require('@vercel/kv');
 const jwt = require('jsonwebtoken');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -31,59 +24,77 @@ module.exports = async (req, res) => {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 userId = decoded.userId;
             } catch (error) {
-                // Invalid token, proceed as anonymous
+                return res.status(401).json({ message: 'Invalid or expired token' });
             }
+        } else {
+            return res.status(401).json({ message: 'Authorization header missing' });
         }
-
 
         const servicesArray = services.split(',').map(s => s.trim());
         const townsArray = towns.split(',').map(t => t.trim());
+        const pagesToGenerate = servicesArray.length * townsArray.length;
 
-        let template;
         try {
-            template = fs.readFileSync(templatePath, 'utf8');
-        } catch (error) {
-            console.error('Error reading page template:', error);
-            return res.status(500).json({ message: 'Error loading page template.' });
-        }
+            const user = await kv.hgetall(userId);
 
-        if (userId) {
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            if (user.credits < pagesToGenerate) {
+                return res.status(402).json({ message: 'Insufficient credits' });
+            }
+
+            let template;
             try {
-                await pool.query(
-                    'INSERT INTO generated_pages (user_id, business_name, zip_code) VALUES ($1, $2, $3)',
-                    [userId, businessName, zipCode]
-                );
+                template = fs.readFileSync(templatePath, 'utf8');
             } catch (error) {
-                console.error('Error saving generated page to database:', error);
-                // Decide if you want to stop the process or just log the error
+                console.error('Error reading page template:', error);
+                return res.status(500).json({ message: 'Error loading page template.' });
             }
-        }
 
-        res.writeHead(200, {
-            'Content-Type': 'application/zip',
-            'Content-Disposition': 'attachment; filename="localleads-pages.zip"'
-        });
+            res.writeHead(200, {
+                'Content-Type': 'application/zip',
+                'Content-Disposition': 'attachment; filename="localleads-pages.zip"'
+            });
 
-        const archive = archiver('zip', {
-            zlib: { level: 9 }
-        });
+            const archive = archiver('zip', {
+                zlib: { level: 9 }
+            });
 
-        archive.pipe(res);
+            archive.pipe(res);
 
-        for (const town of townsArray) {
-            for (const service of servicesArray) {
-                const serviceSlug = slugify(service, { lower: true, strict: true });
-                const townSlug = slugify(town, { lower: true, strict: true });
-                const fileName = `${serviceSlug}-in-${townSlug}.html`;
-                let pageContent = template.replace(/{{businessName}}/g, businessName);
-                pageContent = pageContent.replace(/{{service}}/g, service);
-                pageContent = pageContent.replace(/{{town}}/g, town);
-                
-                archive.append(pageContent, { name: fileName });
+            for (const town of townsArray) {
+                for (const service of servicesArray) {
+                    const pageId = `page:${Date.now()}${Math.random()}`;
+                    const serviceSlug = slugify(service, { lower: true, strict: true });
+                    const townSlug = slugify(town, { lower: true, strict: true });
+                    const fileName = `${serviceSlug}-in-${townSlug}.html`;
+                    let pageContent = template.replace(/{{businessName}}/g, businessName);
+                    pageContent = pageContent.replace(/{{service}}/g, service);
+                    pageContent = pageContent.replace(/{{town}}/g, town);
+                    
+                    archive.append(pageContent, { name: fileName });
+
+                    await kv.hset(pageId, {
+                        businessName,
+                        service,
+                        town,
+                        zipCode,
+                        createdAt: new Date().toISOString()
+                    });
+                    await kv.lpush(`user:${userId}:pages`, pageId);
+                }
             }
-        }
 
-        archive.finalize();
+            await kv.hincrby(userId, 'credits', -pagesToGenerate);
+
+            archive.finalize();
+
+        } catch (error) {
+            console.error('Error generating pages:', error);
+            return res.status(500).json({ message: 'Error generating pages' });
+        }
 
     } else {
         res.status(405).send('Method Not Allowed');

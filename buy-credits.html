@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Credits - LocalLeads</title>
+    <meta name="description" content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business.">
+    <meta name="keywords" content="buy credits, local seo, page generation, localleads">
+    <meta property="og:title" content="Buy Credits - LocalLeads">
+    <meta property="og:description" content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business.">
+    <meta property="og:image" content="https://www.localleads.pro/og-image.png">
+    <meta property="og:url" content="https://www.localleads.pro/buy-credits.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">LocalLeads</div>
+            <ul id="nav-links">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+<li><a href="buy-credits.html">Buy Credits</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="generate.html">Generate</a></li>
+                <li><a href="audit.html">Free Audit</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="pricing" id="buy-credits">
+            <h2>Purchase Page Credits</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+                Need more pages? Top up your account with our credit packs. Each credit allows you to generate one hyper-local, SEO-optimized page for your business.
+            </p>
+
+            <div class="price-cards">
+                <div class="card">
+                    <h3>10 Credits</h3>
+                    <p class="price">$10</p>
+                    <p>($1.00 per page)</p>
+                    <ul>
+                        <li>Generate 10 hyper-local pages.</li>
+                        <li>Perfect for small top-ups.</li>
+                    </ul>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_credits_10_placeholder">
+                        <button type="submit" class="cta-button">Buy 10 Credits</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>50 Credits</h3>
+                    <p class="price">$45</p>
+                    <p>($0.90 per page)</p>
+                    <ul>
+                        <li>Generate 50 hyper-local pages.</li>
+                        <li>Great value for growing businesses.</li>
+                    </ul>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_credits_50_placeholder">
+                        <button type="submit" class="cta-button">Buy 50 Credits</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>100 Credits</h3>
+                    <p class="price">$80</p>
+                    <p>($0.80 per page)</p>
+                    <ul>
+                        <li>Generate 100 hyper-local pages.</li>
+                        <li>Best value for maximum reach.</li>
+                    </ul>
+                    <form action="/api/checkout" method="POST">
+                        <input type="hidden" name="priceId" value="price_credits_100_placeholder">
+                        <button type="submit" class="cta-button">Buy 100 Credits</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </footer>
+
+    <script src="/js/nav.js"></script>
+</body>
+</html>
