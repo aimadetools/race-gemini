@@ -58,7 +58,7 @@ nav a:hover {
     margin: 0 auto 2rem;
 }
 
-.cta-button {
+.button {
     background-color: #007bff;
     color: #ffffff;
     padding: 0.8rem 1.5rem;
@@ -68,7 +68,7 @@ nav a:hover {
     transition: background-color 0.3s;
 }
 
-.cta-button:hover {
+.button:hover {
     background-color: #0056b3;
 }
 
@@ -79,7 +79,7 @@ nav a:hover {
     display: block;
 }
 
-.button:disabled, .cta-button:disabled {
+.button:disabled, .button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
@@ -224,8 +224,8 @@ h2 {
     font-weight: bold;
 }
 
-.generate-form input,
-.generate-form textarea {
+
+.form-input {
     padding: 0.8rem;
     border-radius: 5px;
     border: 1px solid #333;
@@ -313,7 +313,7 @@ footer {
 }
 
 /* A/B Test Variant Styles */
-.ab-hero-cta-test-B .cta-button {
+.ab-hero-cta-test-B .button {
     background-color: #28a745; /* Green */
 }
 
@@ -364,30 +364,14 @@ footer {
     margin-top: 0.5rem;
 }
 
-.audit-form-section input,
-.audit-form-section textarea {
-    padding: 0.8rem;
-    border-radius: 5px;
-    border: 1px solid #333;
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    width: -webkit-fill-available;
-}
 
-.audit-form-section button.cta-button {
+
+.audit-form-section button.button {
     margin-top: 1rem;
     width: fit-content;
     align-self: center;
 }
 
-.audit-form-section .secondary-button {
-    background-color: #6c757d;
-}
-
-.audit-form-section .secondary-button:hover {
-    background-color: #5a6268;
-}
 
 #auditResults {
     text-align: center;
@@ -433,7 +417,7 @@ footer {
         margin-bottom: 1.5rem;
     }
 
-    .hero .cta-button {
+    .hero .button {
         display: block;
         margin: 1rem auto;
         max-width: 250px;
@@ -503,7 +487,7 @@ footer {
     font-weight: bold;
 }
 
-.sticky-cta-bar .cta-button {
+.sticky-cta-bar .button {
     padding: 0.7rem 1.2rem;
     font-size: 0.9rem;
 }
@@ -525,7 +509,7 @@ body {
         font-size: 1rem;
     }
 
-    .sticky-cta-bar .cta-button {
+    .sticky-cta-bar .button {
         width: 90%;
         max-width: 300px;
         font-size: 0.85rem;
@@ -574,27 +558,16 @@ body {
     font-weight: bold;
     }
 
-    .form-container input {
-    padding: 0.8rem;
-    border-radius: 5px;
-    border: 1px solid #333;
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    }
+    
 
-    .form-container .button {
-    margin-top: 1rem;
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    border: none;
-    cursor: pointer;
-    }
+    
+.button-secondary {
+    background-color: #6c757d;
+}
+
+.button-secondary:hover {
+    background-color: #5a6268;
+}
 
     .form-container .button:hover {
     background-color: #0056b3;
@@ -643,8 +616,87 @@ body {
     border: 2px dashed #007bff;
 }
 
+
+.social-share {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.social-share h3 {
+    margin-bottom: 1rem;
+}
+
+.social-share a {
+    display: inline-block;
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.social-share a[href*="twitter.com"] {
+    background-color: #1da1f2;
+}
+
+.social-share a[href*="linkedin.com"] {
+    background-color: #0077b5;
+}
+
+.social-share a[href*="facebook.com"] {
+    background-color: #1877f2;
+}
+
+.social-share a:hover {
+    transform: scale(1.05);
+}
+
 .coming-soon-card h3 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     color: #007bff;
+}
+
+.social-share {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.social-share h3 {
+    margin-bottom: 1rem;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.social-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.social-button.twitter {
+    background-color: #1da1f2;
+}
+
+.social-button.linkedin {
+    background-color: #0077b5;
+}
+
+.social-button.facebook {
+    background-color: #1877f2;
+}
+
+.social-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

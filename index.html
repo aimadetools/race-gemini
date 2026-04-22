@@ -34,13 +34,13 @@
 <section class="hero">
 <h1 id="hero-headline">Dominate Your Local Market, Effortlessly.</h1>
 <p>We build hyper-local, SEO-optimized landing pages for every town you serve, ensuring your business appears exactly when potential customers are searching for you.</p>
-<a class="cta-button" href="pricing.html" id="hero-cta-button">View Pricing Plans</a>
-<a class="cta-button secondary-button" href="audit.html">Get Free Audit</a>
+<a class="button" href="pricing.html" id="hero-button">View Pricing Plans</a>
+<a class="button button-secondary" href="audit.html">Get Free Audit</a>
 </section>
 <script>
             ABTest.init('hero-cta-test').then(variant => {
                 const heroHeadline = document.getElementById('hero-headline');
-                const heroCtaButton = document.getElementById('hero-cta-button');
+                const heroCtaButton = document.getElementById('hero-button');
 
                 if (variant === 'B') {
                     heroHeadline.innerText = "Get More Local Customers, Guaranteed.";
@@ -130,8 +130,8 @@
 </footer>
 <div class="sticky-cta-bar">
 <p>Ready to get more local customers?</p>
-<a class="cta-button" href="generate.html">Generate Pages Now</a>
-<a class="cta-button secondary-button" href="audit.html">Get Free Audit</a>
+<a class="button" href="generate.html">Generate Pages Now</a>
+<a class="button button-secondary" href="audit.html">Get Free Audit</a>
 </div>
 <script src="/js/nav.js"></script></body>
 </html>
