@@ -68,78 +68,18 @@
 </div>
 </section>
 </main>
+<div class="sticky-cta-bar">
+    <p>Ready to get more local customers?</p>
+    <a class="button" href="generate.html">Generate Pages Now</a>
+    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
+</div>
 <footer>
-<p>© 2026 LocalLeads. All rights reserved.</p>
+    <div class="container">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </div>
 </footer>
-<script>
-        const businessName = document.getElementById('businessName');
-        const zipCode = document.getElementById('zipCode');
-        const services = document.getElementById('services');
-        const towns = document.getElementById('towns');
-        const generateButton = document.getElementById('generate-button');
-        
-        const businessNameError = document.getElementById('businessName-error');
-        const zipCodeError = document.getElementById('zipCode-error');
-        const servicesError = document.getElementById('services-error');
-        const townsError = document.getElementById('towns-error');
-
-        function validateForm() {
-            const isBusinessNameValid = businessName.value.trim() !== '';
-            const isZipCodeValid = zipCode.value.trim() !== '';
-            const isServicesValid = services.value.trim() !== '';
-            const isTownsValid = towns.value.trim() !== '';
-
-            businessNameError.textContent = isBusinessNameValid ? '' : 'Business name is required.';
-            zipCodeError.textContent = isZipCodeValid ? '' : 'Zip code is required.';
-            servicesError.textContent = isServicesValid ? '' : 'Services are required.';
-            townsError.textContent = isTownsValid ? '' : 'Towns are required.';
-
-            generateButton.disabled = !(isBusinessNameValid && isZipCodeValid && isServicesValid && isTownsValid);
-        }
-
-        businessName.addEventListener('input', validateForm);
-        zipCode.addEventListener('input', validateForm);
-        services.addEventListener('input', validateForm);
-        towns.addEventListener('input', validateForm);
-
-
-        document.getElementById('generate-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
-            const headers = {
-                'Content-Type': 'application/json'
-            };
-
-            const token = localStorage.getItem('token');
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'localleads-pages.zip';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            } else {
-                const result = await response.json();
-                alert(result.message || 'An error occurred.');
-            }
-        });
-    </script>
 <script src="/js/nav.js"></script>
-<script src="/js/analytics.js"></script></body>
+<script src="/js/analytics.js"></script>
+<script src="/js/scroll-to-top.js"></script>
+</body>
 </html>

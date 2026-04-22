@@ -69,139 +69,18 @@
 </div>
 </section>
 </main>
-<footer>
-<div class="container">
-<p>© 2026 LocalLeads. All rights reserved.</p>
+<div class="sticky-cta-bar">
+    <p>Ready to get more local customers?</p>
+    <a class="button" href="generate.html">Generate Pages Now</a>
+    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
 </div>
+<footer>
+    <div class="container">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </div>
 </footer>
-<script>
-        const signupEmail = document.getElementById('signup-email');
-        const signupPassword = document.getElementById('signup-password');
-        const signupButton = document.getElementById('signup-button');
-        const signupEmailError = document.getElementById('signup-email-error');
-        const signupPasswordError = document.getElementById('signup-password-error');
-
-        const loginEmail = document.getElementById('login-email');
-        const loginPassword = document.getElementById('login-password');
-        const loginButton = document.getElementById('login-button');
-        const loginEmailError = document.getElementById('login-email-error');
-        const loginPasswordError = document.getElementById('login-password-error');
-
-        function validateEmail(email) {
-            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(String(email).toLowerCase());
-        }
-
-        function validatePassword(password) {
-            return password.length >= 8;
-        }
-
-        function updateSignupButtonState() {
-            const isEmailValid = validateEmail(signupEmail.value);
-            const isPasswordValid = validatePassword(signupPassword.value);
-            signupButton.disabled = !(isEmailValid && isPasswordValid);
-        }
-
-        function updateLoginButtonState() {
-            const isEmailValid = validateEmail(loginEmail.value);
-            const isPasswordValid = loginPassword.value.length > 0; // Just check if not empty for login
-            loginButton.disabled = !(isEmailValid && isPasswordValid);
-        }
-
-        signupEmail.addEventListener('input', () => {
-            if (!validateEmail(signupEmail.value)) {
-                signupEmailError.textContent = 'Please enter a valid email address.';
-            } else {
-                signupEmailError.textContent = '';
-            }
-            updateSignupButtonState();
-        });
-
-        signupPassword.addEventListener('input', () => {
-            if (!validatePassword(signupPassword.value)) {
-                signupPasswordError.textContent = 'Password must be at least 8 characters long.';
-            } else {
-                signupPasswordError.textContent = '';
-            }
-            updateSignupButtonState();
-        });
-
-        loginEmail.addEventListener('input', () => {
-            if (!validateEmail(loginEmail.value)) {
-                loginEmailError.textContent = 'Please enter a valid email address.';
-            } else {
-                loginEmailError.textContent = '';
-            }
-            updateLoginButtonState();
-        });
-
-        loginPassword.addEventListener('input', () => {
-            if (loginPassword.value.length === 0) {
-                loginPasswordError.textContent = 'Password is required.';
-            } else {
-                loginPasswordError.textContent = '';
-            }
-            updateLoginButtonState();
-        });
-
-
-        document.getElementById('signup-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = signupEmail.value;
-            const password = signupPassword.value;
-            const messageEl = document.getElementById('signup-message');
-
-            try {
-                const res = await fetch('/api/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }),
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    localStorage.setItem('token', data.token);
-                    messageEl.textContent = 'Signup successful! You can now login.';
-                    messageEl.style.color = 'green';
-                } else {
-                    messageEl.textContent = data.message;
-                    messageEl.style.color = 'red';
-                }
-            } catch (error) {
-                messageEl.textContent = 'An error occurred. Please try again.';
-                messageEl.style.color = 'red';
-            }
-        });
-
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = loginEmail.value;
-            const password = loginPassword.value;
-            const messageEl = document.getElementById('login-message');
-
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }),
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    localStorage.setItem('token', data.token);
-                    window.location.href = '/dashboard.html';
-                } else {
-                    messageEl.textContent = data.message;
-                    messageEl.style.color = 'red';
-                }
-            } catch (error) {
-                messageEl.textContent = 'An error occurred. Please try again.';
-                messageEl.style.color = 'red';
-            }
-        });
-    </script>
 <script src="/js/nav.js"></script>
-<script src="/js/analytics.js"></script></body>
+<script src="/js/analytics.js"></script>
+<script src="/js/scroll-to-top.js"></script>
+</body>
 </html>

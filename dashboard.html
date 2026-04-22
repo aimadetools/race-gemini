@@ -46,58 +46,18 @@
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 LocalLeads. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/auth.html';
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/dashboard', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (res.status === 401) {
-                    localStorage.removeItem('token');
-                    window.location.href = '/auth.html';
-                    return;
-                }
-
-                if (res.ok) {
-                    const data = await res.json();
-                    
-                    document.getElementById('user-email').textContent = data.email;
-                    document.getElementById('user-credits').textContent = data.credits;
-
-                    const pagesContainer = document.getElementById('generated-pages');
-                    if (data.pages.length === 0) {
-                        pagesContainer.innerHTML = '<p>You have not generated any pages yet.</p>';
-                    } else {
-                        const ul = document.createElement('ul');
-                        data.pages.forEach(page => {
-                            const li = document.createElement('li');
-                            li.textContent = `${page.businessName} - ${page.service} in ${page.town}`;
-                            ul.appendChild(li);
-                        });
-                        pagesContainer.appendChild(ul);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching dashboard data:', error);
-            }
-        });
-    </script>
-    <script src="/js/nav.js"></script>
-    <script src="/js/analytics.js"></script>
+<div class="sticky-cta-bar">
+    <p>Ready to get more local customers?</p>
+    <a class="button" href="generate.html">Generate Pages Now</a>
+    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
+</div>
+<footer>
+    <div class="container">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </div>
+</footer>
+<script src="/js/nav.js"></script>
+<script src="/js/analytics.js"></script>
+<script src="/js/scroll-to-top.js"></script>
 </body>
 </html>

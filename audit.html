@@ -68,77 +68,18 @@
 </div>
 </section>
 </main>
+<div class="sticky-cta-bar">
+    <p>Ready to get more local customers?</p>
+    <a class="button" href="generate.html">Generate Pages Now</a>
+    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
+</div>
 <footer>
-<p>© 2026 LocalLeads. All rights reserved.</p>
+    <div class="container">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+    </div>
 </footer>
-<script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const auditForm = document.getElementById('auditForm');
-            const formSteps = document.querySelectorAll('.form-step');
-            const auditResults = document.getElementById('auditResults');
-            let currentStep = 0;
-
-            function showStep(stepIndex) {
-                formSteps.forEach((step, index) => {
-                    if (index === stepIndex) {
-                        step.classList.add('active');
-                    } else {
-                        step.classList.remove('active');
-                    }
-                });
-            }
-
-            auditForm.addEventListener('click', (event) => {
-                if (event.target.classList.contains('next-step')) {
-                    // Basic validation before moving to next step
-                    const currentActiveStep = formSteps[currentStep];
-                    const inputs = currentActiveStep.querySelectorAll('input[required], textarea[required]');
-                    let allValid = true;
-                    inputs.forEach(input => {
-                        if (!input.value.trim()) {
-                            input.reportValidity();
-                            allValid = false;
-                        }
-                    });
-                    if (allValid) {
-                        currentStep++;
-                        showStep(currentStep);
-                    }
-                } else if (event.target.classList.contains('prev-step')) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-
-            auditForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const formData = new FormData(auditForm);
-                const data = Object.fromEntries(formData.entries());
-
-                try {
-                    const response = await fetch('/api/audit', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    });
-
-                    if (response.ok) {
-                        auditForm.style.display = 'none';
-                        auditResults.style.display = 'block';
-                    } else {
-                        alert('There was an error processing your audit. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error submitting audit:', error);
-                    alert('There was an error submitting your audit. Please check your connection and try again.');
-                }
-            });
-
-            showStep(currentStep); // Initialize form to first step
-        });
-    </script>
 <script src="/js/nav.js"></script>
-<script src="/js/analytics.js"></script></body>
+<script src="/js/analytics.js"></script>
+<script src="/js/scroll-to-top.js"></script>
+</body>
 </html>
