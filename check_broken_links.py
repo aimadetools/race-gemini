@@ -30,37 +30,31 @@ def check_internal_links(base_path="."):
                 # Resolve from the project's base path
                 return os.path.join(base_project_path, parsed.path.lstrip('/'))
             else: # Relative path
-                resolved_path = os.path.abspath(os.path.join(os.path.dirname(current_file_path), parsed.path))
+                current_dir = os.path.dirname(current_file_path)
+                target_filename = parsed.path
                 
-                # Special handling for blog posts linking to other blog posts with "../postX.html"
-                # If the current file is in the 'blog' directory and the resolved_path points to the root,
-                # check if the file exists in the 'blog' directory instead.
-                current_file_dir_name = os.path.basename(os.path.dirname(current_file_path))
-                if current_file_dir_name == "blog" and \
-                   os.path.dirname(resolved_path) == base_project_path and \
-                   not os.path.exists(resolved_path):
-                    
-                    potential_blog_path = os.path.join(os.path.dirname(current_file_path), os.path.basename(resolved_path))
-                    if os.path.exists(potential_blog_path):
-                        return potential_blog_path
+                # Handle cases like '../postX.html' from within 'blog/' directory
+                if target_filename.startswith('..') and os.path.basename(current_dir) == "blog":
+                    potential_path_in_same_dir = os.path.join(current_dir, os.path.basename(target_filename))
+                    if os.path.exists(potential_path_in_same_dir):
+                        return os.path.abspath(potential_path_in_same_dir)
 
-                return resolved_path
+                # Default relative path resolution
+                return os.path.abspath(os.path.join(current_dir, target_filename))
+
 
 
         # Check <a> tags for href
         for a_tag in soup.find_all('a', href=True):
             link = a_tag['href']
-            target_path = resolve_path(link, html_file, base_path)
-            if target_path:
-                # Normalize the path for consistent checks
-                target_path = os.path.abspath(target_path) 
-                
-                if not os.path.exists(target_path):
+            resolved_path = resolve_path(link, html_file, base_path)
+            if resolved_path:
+                if not os.path.exists(resolved_path):
                     # Special handling for / to index.html
-                    if target_path == os.path.abspath(base_path) and not os.path.exists(os.path.join(target_path, 'index.html')):
+                    if resolved_path == os.path.abspath(base_path) and not os.path.exists(os.path.join(resolved_path, 'index.html')):
                         broken_links.append((html_file, link, "Internal file not found (index.html missing in root)"))
-                    elif os.path.isdir(target_path):
-                        if not os.path.exists(os.path.join(target_path, 'index.html')):
+                    elif os.path.isdir(resolved_path):
+                        if not os.path.exists(os.path.join(resolved_path, 'index.html')):
                             broken_links.append((html_file, link, "Internal directory link without index.html"))
                     else:
                         broken_links.append((html_file, link, "Internal file not found"))
@@ -68,19 +62,17 @@ def check_internal_links(base_path="."):
         # Check <link> tags for href (CSS, favicons etc.)
         for link_tag in soup.find_all('link', href=True):
             link = link_tag['href']
-            target_path = resolve_path(link, html_file, base_path)
-            if target_path:
-                target_path = os.path.abspath(target_path)
-                if not os.path.exists(target_path):
+            resolved_path = resolve_path(link, html_file, base_path)
+            if resolved_path:
+                if not os.path.exists(resolved_path):
                     broken_links.append((html_file, link, "Internal stylesheet/resource not found"))
 
         # Check <img> tags for src
         for img_tag in soup.find_all('img', src=True):
             link = img_tag['src']
-            target_path = resolve_path(link, html_file, base_path)
-            if target_path:
-                target_path = os.path.abspath(target_path)
-                if not os.path.exists(target_path):
+            resolved_path = resolve_path(link, html_file, base_path)
+            if resolved_path:
+                if not os.path.exists(resolved_path):
                     broken_links.append((html_file, link, "Internal image not found"))
     
     if broken_links:
