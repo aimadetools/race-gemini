@@ -1,0 +1,22 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required for authentication
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Required to deploy to an organization
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Required to deploy to a project
+          vercel-args: '${{ github.ref == "refs/heads/main" && "--prod" || "" }}' # Deploy to production for main branch, preview for others

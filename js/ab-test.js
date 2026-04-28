@@ -21,8 +21,13 @@ const ABTest = {
 
   track(goalName) {
     console.log(`[AB-Test] Tracking goal: ${goalName} for variant: ${this.variant}`);
-    // Here you would integrate with GA, Plausible, or a custom endpoint
-    // fetch('/api/track', { method: 'POST', body: JSON.stringify({ goal: goalName, variant: this.variant }) });
+    fetch('/api/track', { 
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ goal: goalName, variant: this.variant }) 
+    }).catch(err => console.error('Failed to track A/B test goal:', err));
   }
 };
 

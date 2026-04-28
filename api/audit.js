@@ -1,23 +1,27 @@
 const fs = require('fs');
 const path = require('path');
+import { kv } from '@vercel/kv';
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
 module.exports = (req, res) => {
     if (req.method === 'POST') {
         const { businessName, businessAddress, businessPhone, services, towns, name, email } = req.body;
 
         if (!businessName || !businessAddress || !services || !towns || !name || !email) {
-            return res.status(400).json({ message: 'Missing required fields for audit.' });
+            return res.status(400).json({ message: 'All fields are required for the audit. Please fill them out.' });
         }
 
         // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format.' });
+            return res.status(400).json({ message: 'Please enter a valid email address.' });
         }
 
         // Basic phone number validation (not empty and reasonable length)
         if (businessPhone && businessPhone.length < 7) { // Assuming a minimum of 7 digits for a phone number
-            return res.status(400).json({ message: 'Invalid business phone number.' });
+            return res.status(400).json({ message: 'Please enter a valid business phone number.' });
         }
 
         const servicesArray = services.split(',').map(s => s.trim()).filter(s => s !== '');
@@ -25,7 +29,11 @@ module.exports = (req, res) => {
 
         const potentialPages = servicesArray.length * townsArray.length;
 
+        // Generate a unique ID for the audit
+        const auditId = nanoid();
+
         const auditData = {
+            id: auditId,
             timestamp: new Date().toISOString(),
             businessName,
             businessAddress,
@@ -41,19 +49,19 @@ module.exports = (req, res) => {
             }
         };
 
-        // Log the audit data to cron.log for now, as database is unavailable
-        const logFilePath = path.join(process.cwd(), 'cron.log');
-        fs.appendFile(logFilePath, JSON.stringify(auditData) + '
-', (err) => {
-            if (err) {
-                console.error('Failed to write audit data to cron.log:', err);
-                // Still send success to client if log fails, as it's not critical for immediate user feedback
-            }
-        });
-
+        // Store the audit data in Vercel KV
+        try {
+            await kv.set(`audit:${auditId}`, JSON.stringify(auditData));
+            console.log(`Audit data stored in Vercel KV with ID: ${auditId}`);
+        } catch (error) {
+            console.error('Failed to store audit data in Vercel KV:', error);
+            // Decide how to handle this error. For now, we'll proceed but it's noted.
+        }
+        
         res.status(200).json({ 
-            message: 'Audit submitted successfully. Check your email for results.',
-            auditSummary: auditData.auditSummary
+            message: 'Audit submitted successfully. Your audit ID is ' + auditId,
+            auditSummary: auditData.auditSummary,
+            auditId: auditId
         });
 
     } else {

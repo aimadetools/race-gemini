@@ -7,3 +7,8 @@ package-lock.json
 .env*.local
 cron.log
 logs/
+gemini_api_key.txt
+paypal_credentials.txt
+venv/
+venv-image-optimization/
+venv-*/

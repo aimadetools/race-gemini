@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Agency Dashboard - LocalLeads
+  </title>
+  <meta content="Manage your clients and their local SEO pages." name="description"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
+    <div class="container">
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a href="/agency-dashboard.html">
+        Dashboard
+       </a>
+      </li>
+      <li>
+       <a href="#" id="logout-link">
+        Logout
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="dashboard">
+    <h2>
+     Agency Dashboard
+    </h2>
+    <div class="agency-stats">
+     <div class="stat-card">
+      <h4>
+       Total Clients
+      </h4>
+      <p id="total-clients">
+      </p>
+     </div>
+     <div class="stat-card">
+      <h4>
+       Total Pages Generated
+      </h4>
+      <p id="total-pages-generated">
+      </p>
+     </div>
+    </div>
+    <div id="agency-info">
+     <p>
+      <strong>
+       Agency:
+      </strong>
+      <span id="agency-name">
+      </span>
+     </p>
+     <p>
+      <strong>
+       Email:
+      </strong>
+      <span id="agency-email">
+      </span>
+     </p>
+     <p>
+      <strong>
+       Credits:
+      </strong>
+      <span id="agency-credits">
+      </span>
+     </p>
+    </div>
+    <h3>
+     Clients
+    </h3>
+    <div class="table-responsive">
+     <table id="client-list">
+      <thead>
+       <tr>
+        <th>
+         Name
+        </th>
+        <th>
+         Email
+        </th>
+        <th>
+         Pages Generated
+        </th>
+        <th>
+         Credits
+        </th>
+        <th>
+        </th>
+       </tr>
+      </thead>
+      <tbody>
+      </tbody>
+     </table>
+    </div>
+    <h3>
+     Assign Credits
+    </h3>
+    <form id="assign-credits-form">
+     <div class="form-group">
+      <label for="client-select">
+       Select Client
+      </label>
+      <select id="client-select" name="client-select" required="">
+      </select>
+     </div>
+     <div class="form-group">
+      <label for="credits-to-assign">
+       Credits to Assign
+      </label>
+      <input id="credits-to-assign" min="1" name="credits-to-assign" required="" type="number"/>
+     </div>
+     <div class="form-group">
+      <button class="button" type="submit">
+       Assign Credits
+      </button>
+     </div>
+    </form>
+    <p id="assign-credits-success-message" style="color: green;">
+    </p>
+    <h3>
+     Add New Client
+    </h3>
+    <form id="add-client-form">
+     <div class="form-group">
+      <label for="client-name">
+       Client Name
+      </label>
+      <input autocomplete="name" id="client-name" name="client-name" required="" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="client-email">
+       Client Email
+      </label>
+      <input autocomplete="email" id="client-email" name="client-email" required="" type="email"/>
+     </div>
+     <div class="form-group">
+      <button class="button" type="submit">
+       Add Client
+      </button>
+     </div>
+    </form>
+    <p class="error-message" id="error-message">
+    </p>
+   </section>
+   <section class="dashboard">
+    <h3>
+     Subscription
+    </h3>
+    <p>
+     <strong>
+      Status:
+     </strong>
+     <span id="subscription-status">
+     </span>
+    </p>
+    <p>
+     <strong>
+      Plan:
+     </strong>
+     <span id="subscription-plan">
+      N/A
+     </span>
+    </p>
+    <p>
+     <strong>
+      Monthly Credits:
+     </strong>
+     <span id="subscription-monthly-credits">
+      N/A
+     </span>
+    </p>
+    <p>
+     <strong>
+      Renewal Date:
+     </strong>
+     <span id="subscription-renewal-date">
+      N/A
+     </span>
+    </p>
+    <a class="button" href="/agency-subscription.html">
+     Manage Subscription
+    </a>
+   </section>
+   <section class="dashboard">
+    <h3>
+     Custom Branding
+    </h3>
+    <div id="agency-logo-container">
+     <img alt="Agency Logo" id="agency-logo-preview" loading="lazy" src="" style="max-width: 200px; display: none;"/>
+    </div>
+    <form id="branding-form">
+     <div class="form-group">
+      <label for="logo-url">
+       Logo URL
+      </label>
+      <input autocomplete="url" id="logo-url" name="logo-url" type="url"/>
+     </div>
+     <div class="form-group">
+      <label for="primary-color">
+       Primary Color
+      </label>
+      <input id="primary-color" name="primary-color" type="color"/>
+     </div>
+     <div class="form-group">
+      <button class="button" type="submit">
+       Save Branding
+      </button>
+     </div>
+    </form>
+    <p id="branding-success-message" style="color: green;">
+    </p>
+   </section>
+   <section class="dashboard">
+    <h3>
+     Billing History
+    </h3>
+    <button class="button" id="refresh-billing-history">
+     Refresh History
+    </button>
+    <table id="billing-history-table">
+     <thead>
+      <tr>
+       <th>
+        Date
+       </th>
+       <th>
+        Credits
+       </th>
+       <th>
+        Amount
+       </th>
+       <th>
+        Status
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+     </tbody>
+    </table>
+   </section>
+  </main>
+  <footer>
+   <div class="container">
+    <p>
+     © 2026 LocalLeads. All rights reserved.
+    </p>
+   </div>
+  </footer>
+  <script>
+   const agencyName = document.getElementById('agency-name');
+const agencyEmail = document.getElementById('agency-email');
+const agencyCredits = document.getElementById('agency-credits');
+const clientList = document.getElementById('client-list');
+const addClientForm = document.getElementById('add-client-form');
+const errorMessage = document.getElementById('error-message');
+const brandingForm = document.getElementById('branding-form');
+const logoUrlInput = document.getElementById('logo-url');
+const primaryColorInput = document.getElementById('primary-color');
+const agencyLogoPreview = document.getElementById('agency-logo-preview');
+const brandingSuccessMessage = document.getElementById('branding-success-message');
+const assignCreditsForm = document.getElementById('assign-credits-form');
+const clientSelect = document.getElementById('client-select');
+const creditsToAssignInput = document.getElementById('credits-to-assign');
+const assignCreditsSuccessMessage = document.getElementById('assign-credits-success-message');
+const billingHistoryTableBody = document.querySelector('#billing-history-table tbody');
+const refreshBillingHistoryButton = document.getElementById('refresh-billing-history');
+
+const subscriptionStatus = document.getElementById('subscription-status');
+const subscriptionPlan = document.getElementById('subscription-plan');
+const subscriptionMonthlyCredits = document.getElementById('subscription-monthly-credits');
+const subscriptionRenewalDate = document.getElementById('subscription-renewal-date');
+
+async function fetchBillingHistory() {
+    const response = await fetch('/api/get-agency-billing-history');
+    if (response.ok) {
+        const data = await response.json();
+        billingHistoryTableBody.innerHTML = '';
+        data.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(transaction.date).toLocaleDateString()}</td><td>${transaction.credits}</td><td>$${(transaction.amount / 100).toFixed(2)} ${transaction.currency.toUpperCase()}</td><td>${transaction.payment_status}</td>
+            `;
+            billingHistoryTableBody.appendChild(row);
+        });
+    }
+}
+
+async function fetchDashboard() {
+    const response = await fetch('/api/agency-dashboard');
+    if (response.ok) {
+        const data = await response.json();
+        agencyName.textContent = data.agencyName;
+        agencyEmail.textContent = data.email;
+        agencyCredits.textContent = data.credits;
+        subscriptionStatus.textContent = data.subscriptionStatus;
+        subscriptionPlan.textContent = data.planName || 'N/A';
+        subscriptionMonthlyCredits.textContent = data.monthlyCredits !== undefined ? data.monthlyCredits : 'N/A';
+        subscriptionRenewalDate.textContent = data.renewalDate ? new Date(data.renewalDate).toLocaleDateString() : 'N/A';
+totalClients.textContent = data.totalClients;
+totalPagesGenerated.textContent = data.totalPagesGenerated;
+if (data.logoUrl) {
+agencyLogoPreview.src = data.logoUrl;
+agencyLogoPreview.style.display = 'block';
+}
+logoUrlInput.value = data.logoUrl || '';
+primaryColorInput.value = data.primaryColor || '#000000';
+const clientListBody = clientList.querySelector('tbody');
+clientListBody.innerHTML = '';
+clientSelect.innerHTML = '';
+data.clients.forEach(client => {
+const clientRow = document.createElement('tr');
+clientRow.innerHTML = `
+<td>${client.name}</td><td>${client.email}</td><td>${client.pagesGenerated}</td><td>${client.credits}</td><td><a href="client-details.html?id=${client.id}" class="button">View</a></td>
+`;
+clientListBody.appendChild(clientRow);
+const option = document.createElement('option');
+option.value = client.id;
+option.textContent = `${client.name} (${client.email})`;
+clientSelect.appendChild(option);
+});
+} else {
+window.location.href = 'agency-login.html';
+}
+}
+addClientForm.addEventListener('submit', async (e) => {
+e.preventDefault();
+errorMessage.textContent = '';
+const clientName = document.getElementById('client-name').value;
+const clientEmail = document.getElementById('client-email').value;
+const response = await fetch('/api/add-client', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ clientName, clientEmail }),
+});
+if (response.ok) {
+fetchDashboard();
+addClientForm.reset();
+} else {
+const { message } = await response.json();
+errorMessage.textContent = message;
+}
+});
+brandingForm.addEventListener('submit', async(e) => {
+e.preventDefault();
+brandingSuccessMessage.textContent = '';
+const logoUrl = logoUrlInput.value;
+const primaryColor = primaryColorInput.value;
+const response = await fetch('/api/update-agency-branding', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ logoUrl, primaryColor }),
+});
+if (response.ok) {
+brandingSuccessMessage.textContent = "Branding updated successfully!";
+if (logoUrl) {
+agencyLogoPreview.src = logoUrl;
+agencyLogoPreview.style.display = 'block';
+} else {
+agencyLogoPreview.style.display = 'none';
+}
+} else {
+const { message } = await response.json();
+errorMessage.textContent = message;
+}
+});
+assignCreditsForm.addEventListener('submit', async(e) => {
+e.preventDefault();
+assignCreditsSuccessMessage.textContent = '';
+errorMessage.textContent = '';
+const clientId = clientSelect.value;
+const credits = creditsToAssignInput.value;
+const response = await fetch('/api/assign-credits', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ clientId, credits }),
+});
+if (response.ok) {
+assignCreditsSuccessMessage.textContent = "Credits assigned successfully!";
+fetchDashboard();
+assignCreditsForm.reset();
+} else {
+const { message } = await response.json();
+errorMessage.textContent = message;
+}
+});
+refreshBillingHistoryButton.addEventListener('click', fetchBillingHistory);
+document.getElementById('logout-link').addEventListener('click', async () => {
+await fetch('/api/logout', { method: 'POST' });
+window.location.href = 'index.html';
+});
+fetchDashboard();
+fetchBillingHistory();
+  </script>
+  <script src="/js/app.js">
+  </script>
+ </body>
+</html>
+ript&gt;

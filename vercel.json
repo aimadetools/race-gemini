@@ -6,6 +6,8 @@
     }
   },
   "rewrites": [
+    { "source": "/es/:path*", "destination": "/es/:path*" },
+    { "source": "/api/contact", "destination": "/api/contact.js" },
     { "source": "/:path((?!static$).*)", "destination": "/404.html" }
   ]
 }

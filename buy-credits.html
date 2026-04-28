@@ -1,100 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Credits - LocalLeads</title>
-    <meta name="description" content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business.">
-    <meta name="keywords" content="buy credits, local seo, page generation, localleads">
-    <meta property="og:title" content="Buy Credits - LocalLeads">
-    <meta property="og:description" content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business.">
-    <meta property="og:image" content="https://www.localleads.pro/og-image.png">
-    <meta property="og:url" content="https://www.localleads.pro/buy-credits.html">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://js.stripe.com/v3/"></script>
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">LocalLeads</div>
-            <ul id="nav-links">
-                <li><a href="index.html#features">Features</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-<li><a href="buy-credits.html">Buy Credits</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="generate.html">Generate</a></li>
-                <li><a href="audit.html">Free Audit</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section class="pricing" id="buy-credits">
-            <h2>Purchase Page Credits</h2>
-            <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
-                Need more pages? Top up your account with our credit packs. Each credit allows you to generate one hyper-local, SEO-optimized page for your business.
-            </p>
-
-            <div class="price-cards">
-                <div class="card">
-                    <h3>10 Credits</h3>
-                    <p class="price">$10</p>
-                    <p>($1.00 per page)</p>
-                    <ul>
-                        <li>Generate 10 hyper-local pages.</li>
-                        <li>Perfect for small top-ups.</li>
-                    </ul>
-                    <form action="/api/checkout" method="POST">
-                        <input type="hidden" name="priceId" value="price_credits_10_placeholder">
-                        <button type="submit" class="button">Buy 10 Credits</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h3>50 Credits</h3>
-                    <p class="price">$45</p>
-                    <p>($0.90 per page)</p>
-                    <ul>
-                        <li>Generate 50 hyper-local pages.</li>
-                        <li>Great value for growing businesses.</li>
-                    </ul>
-                    <form action="/api/checkout" method="POST">
-                        <input type="hidden" name="priceId" value="price_credits_50_placeholder">
-                        <button type="submit" class="button">Buy 50 Credits</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h3>100 Credits</h3>
-                    <p class="price">$80</p>
-                    <p>($0.80 per page)</p>
-                    <ul>
-                        <li>Generate 100 hyper-local pages.</li>
-                        <li>Best value for maximum reach.</li>
-                    </ul>
-                    <form action="/api/checkout" method="POST">
-                        <input type="hidden" name="priceId" value="price_credits_100_placeholder">
-                        <button type="submit" class="button">Buy 100 Credits</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
-
-<div class="sticky-cta-bar">
-    <p>Ready to get more local customers?</p>
-    <a class="button" href="generate.html">Generate Pages Now</a>
-    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
-</div>
-<footer>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Buy Credits - LocalLeads
+  </title>
+  <meta content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business." name="description"/>
+  <meta content="buy credits, local seo, page generation, localleads" name="keywords"/>
+  <meta content="Buy Credits - LocalLeads" property="og:title"/>
+  <meta content="Purchase page credits for LocalLeads to generate more hyper-local SEO pages for your business." property="og:description"/>
+  <meta content="https://www.localleads.pro/og-image.png" property="og:image"/>
+  <meta content="https://www.localleads.pro/buy-credits.html" property="og:url"/>
+  <meta content="summary_large_image" name="twitter:card"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
     <div class="container">
-        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a href="/generate.html">
+        Generate Pages
+       </a>
+      </li>
+      <li>
+       <a href="/pricing.html">
+        Pricing
+       </a>
+      </li>
+      <li>
+       <a href="/blog.html">
+        Blog
+       </a>
+      </li>
+      <li>
+       <a href="/about.html">
+        About
+       </a>
+      </li>
+      <li>
+       <a href="/audit.html">
+        Free Audit
+       </a>
+      </li>
+      <li>
+       <a href="/contact.html">
+        Contact
+       </a>
+      </li>
+      <li>
+       <a href="/auth.html">
+        Login/Signup
+       </a>
+      </li>
+      <li>
+       <a href="/buy-credits.html">
+        Buy Credits
+       </a>
+      </li>
+     </ul>
     </div>
-</footer>
-<script src="/js/nav.js"></script>
-<script src="/js/analytics.js"></script>
-<script src="/js/scroll-to-top.js"></script>
-</body>
+   </nav>
+  </header>
+  <main>
+   <section class="pricing" id="buy-credits">
+    <h2>
+     Purchase Page Credits
+    </h2>
+    <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+     Need more pages? Top up your account with our credit packs. Each credit allows you to generate one hyper-local, SEO-optimized page for your business.
+    </p>
+    <div class="price-cards">
+     <div class="card" data-credits="10" data-price="10" data-stripe-price-id="price_1PKyXqJd7gZvY2J8c6Z1Yq2L">
+      <h3>
+       10 Credits
+      </h3>
+      <p class="price">
+       $10
+      </p>
+      <p>
+       ($1.00 per page)
+      </p>
+      <ul>
+       <li>
+        Generate 10 hyper-local pages.
+       </li>
+       <li>
+        Perfect for small top-ups.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyXqJd7gZvY2J8c6Z1Yq2L"/>
+       <input name="credits" type="hidden" value="10"/>
+       <button class="button" type="submit">
+        Buy with Card
+       </button>
+      </form>
+      <div id="paypal-button-container-10">
+      </div>
+     </div>
+     <div class="card" data-credits="50" data-price="45" data-stripe-price-id="price_1PKyYJJd7gZvY2J8c6Z1Yq2M">
+      <h3>
+       50 Credits
+      </h3>
+      <p class="price">
+       $45
+      </p>
+      <p>
+       ($0.90 per page)
+      </p>
+      <ul>
+       <li>
+        Generate 50 hyper-local pages.
+       </li>
+       <li>
+        Great value for growing businesses.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyYJJd7gZvY2J8c6Z1Yq2M"/>
+       <input name="credits" type="hidden" value="50"/>
+       <button class="button" type="submit">
+        Buy with Card
+       </button>
+      </form>
+      <div id="paypal-button-container-50">
+      </div>
+     </div>
+     <div class="card" data-credits="100" data-price="80" data-stripe-price-id="price_1PKyZJJd7gZvY2J8c6Z1Yq2N">
+      <h3>
+       100 Credits
+      </h3>
+      <p class="price">
+       $80
+      </p>
+      <p>
+       ($0.80 per page)
+      </p>
+      <ul>
+       <li>
+        Generate 100 hyper-local pages.
+       </li>
+       <li>
+        Best value for maximum reach.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyZJJd7gZvY2J8c6Z1Yq2N"/>
+       <input name="credits" type="hidden" value="100"/>
+       <button class="button" type="submit">
+        Buy with Card
+       </button>
+      </form>
+      <div id="paypal-button-container-100">
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <div class="sticky-cta-bar">
+   <p>
+    Ready to get more local customers?
+   </p>
+   <a class="button" href="generate.html">
+    Generate Pages Now
+   </a>
+   <a class="button button-secondary" href="audit.html">
+    Get Free Audit
+   </a>
+  </div>
+  <footer>
+   <div class="container">
+    <p>
+     © 2026 LocalLeads. All rights reserved.
+    </p>
+   </div>
+  </footer>
+  <script data-sdk-integration-source="developer-studio" src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID">
+  </script>
+  <script>
+   fetch('/api/paypal-client-id')
+.then(response => response.json())
+.then(data => {
+const script = document.querySelector('script[src*="paypal.com/sdk/js"]');
+script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}`;
+});
+function renderPayPalButton(containerId, credits, price) {
+paypal.Buttons({
+createOrder: function(data, actions) {
+return fetch('/api/paypal-checkout', {
+method: 'post',
+headers: {
+'content-type': 'application/json'
+},
+body: JSON.stringify({
+purchase_units: [{
+amount: {
+value: price
+}
+}]
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+return data.orderID;
+});
+},
+onApprove: function(data, actions) {
+return fetch('/api/paypal-capture', {
+method: 'post',
+headers: {
+'content-type': 'application/json'
+},
+body: JSON.stringify({
+orderID: data.orderID,
+credits: credits
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+window.location.href = 'success.html';
+});
+}
+}).render(`#${containerId}`);
+}
+document.addEventListener('DOMContentLoaded', function() {
+renderPayPalButton('paypal-button-container-10', '10', '10.00');
+renderPayPalButton('paypal-button-container-50', '50', '45.00');
+renderPayPalButton('paypal-button-container-100', '100', '80.00');
+});
+  </script>
+  <script src="/js/app.js">
+  </script>
+ </body>
 </html>

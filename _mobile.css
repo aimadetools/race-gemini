@@ -1,0 +1,453 @@
+/* Sticky CTA Bar */
+.sticky-cta-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1f1f1f; /* Dark background */
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1000; /* Ensure it stays on top */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sticky-cta-bar.visible {
+    transform: translateY(0);
+}
+
+.sticky-cta-bar p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.sticky-cta-bar .button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+/* Adjust body padding for sticky bar */
+body {
+    padding-bottom: 70px; /* Adjust this value based on the height of your sticky bar */
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 768px) {
+    .sticky-cta-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.8rem;
+    }
+
+    .sticky-cta-bar p {
+        font-size: 1rem;
+    }
+
+    .sticky-cta-bar .button {
+        width: 90%;
+        max-width: 300px;
+        font-size: 0.85rem;
+    }
+
+    body {
+        padding-bottom: 150px; /* More padding for stacked buttons */
+    }
+}
+
+#scrollToTopBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position */
+    bottom: 90px; /* Adjust based on sticky CTA bar height */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 999; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: #007bff; /* Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    width: 50px; /* Make it square for circular shape */
+    height: 50px; /* Make it square for circular shape */
+    border-radius: 50%; /* Make it circular */
+    font-size: 18px; /* Increase font size */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex; /* Use flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+#scrollToTopBtn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    #scrollToTopBtn {
+        bottom: 170px; /* Adjust position for stacked sticky CTA on mobile */
+        right: 20px;
+        width: 45px; /* Slightly smaller for tablets */
+        height: 45px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    #scrollToTopBtn {
+        bottom: 170px; /* Keep consistent with 768px for now */
+        right: 15px;
+        width: 40px; /* Even smaller for phones */
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+/* Cookie Consent Banner */
+#cookieConsentBanner {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#cookieConsentBanner p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+#cookieConsentBanner a {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+#cookieConsentBanner button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#cookieConsentBanner button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    #cookieConsentBanner {
+        flex-direction: column;
+        padding: 0.8rem;
+    }
+
+    #cookieConsentBanner p {
+        font-size: 0.85rem;
+    }
+
+    #cookieConsentBanner button {
+        width: 90%;
+        max-width: 200px;
+        font-size: 0.85rem;
+    }
+}
+
+
+/* Mobile Nav Overlay */
+#mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Below the nav menu but above content */
+    display: none; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+#mobile-nav-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    display: none; /* Hidden by default, shown on small screens */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001; /* Ensure it's above other content */
+}
+
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animation for hamburger icon */
+.hamburger-menu.open .bar:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+
+.hamburger-menu.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.open .bar:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+
+/* Mobile Navigation Styles */
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: flex;
+    }
+
+    /* Style for the container that slides in */
+    .mobile-menu-container {
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 85%; /* Adjusted for better use of space on smaller screens */
+        max-width: 300px; /* Prevent it from getting too wide on larger mobile devices */
+        background-color: #1f1f1f; /* Same as header background */
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px; /* Space for close button */
+        transform: translateX(100%); /* Hide by default */
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+    }
+
+    .mobile-menu-container.active {
+        transform: translateX(0); /* Show when active */
+    }
+
+    /* Styles for the ul inside the mobile-menu-container */
+    nav .mobile-menu-container ul#nav-menu {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 1.5rem;
+        padding: 0; /* Reset default ul padding */
+        width: 100%; /* Take full width of container */
+        margin-top: 30px; /* Space below close button */
+    }
+
+    nav .mobile-menu-container ul#nav-menu li {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0; /* Reset default li margin */
+    }
+
+    nav .mobile-menu-container ul#nav-menu a {
+        padding: 0.8rem 1rem;
+        display: block;
+        width: 100%;
+        transition: background-color 0.2s;
+        color: #ffffff; /* Ensure links are white */
+    }
+
+    nav .mobile-menu-container ul#nav-menu a:hover {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+
+    .close-menu-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        z-index: 1001; /* Ensure close button is above menu items */
+    }
+
+    /* Adjust main nav items when menu is open to prevent interaction */
+    body.menu-open {
+        overflow: hidden; /* Prevent scrolling when menu is open */
+    }
+    /* Ensure the logo remains visible */
+    header nav .container {
+        z-index: 1002; /* Ensure header content is above the overlay and menu */
+        position: relative; /* Needed for z-index to work */
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 1.5rem; /* Adjust container padding for slightly larger screens */
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    .feature-cards,
+    .price-cards,
+    .testimonial-cards,
+    .how-it-works .steps {
+        gap: 1.5rem;
+    }
+
+    .card, .how-it-works .step {
+        max-width: 45%; /* Allow two cards per row */
+    }
+
+    .about-content, .blog-content, .faq, .generate-form, .audit-form-section {
+        max-width: 700px; /* Slightly reduce max-width for content */
+    }
+}
+
+@media (max-width: 768px) {
+
+
+    /* Hero Section */
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero .button {
+        display: block;
+        margin: 1rem auto;
+        max-width: 250px;
+    }
+
+    /* General Headings */
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card Layouts */
+    .feature-cards,
+    .testimonial-cards,
+    .price-cards,
+    .how-it-works .steps {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .card, .how-it-works .step {
+        max-width: 90%; /* One card per row */
+    }
+
+    /* FAQ Section */
+    .faq {
+        padding: 2rem 1rem;
+    }
+
+    .faq-item h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Forms */
+    .generate-form,
+    .audit-form-section {
+        padding: 1rem;
+    }
+
+    .audit-form-section .container {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 0.9rem; /* Smaller base font size for very small screens */
+    }
+
+    .container {
+        padding: 0 1rem; /* Tighter padding for very small screens */
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.9rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    .card, .how-it-works .step {
+        padding: 1.5rem;
+        max-width: 95%;
+    }
+
+    .form-input, .button {
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .sticky-cta-bar p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-columns {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-col {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .social-icons a {
+        margin-right: 0;
+    }
+}

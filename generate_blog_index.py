@@ -6,25 +6,11 @@ def generate_blog_index():
     blog_dir = "blog/"
     blog_index_file = "blog.html"
     
-    # Read the existing blog.html to get header/footer content
-    with open(blog_index_file, 'r', encoding='utf-8') as f:
-        blog_html_template = f.read()
+    blog_dir = "blog/"
+    blog_index_file = "blog.html"
 
-    # Split the template into before and after the main content section
-    main_start_tag = '<main class="container blog-list">'
-    main_end_tag = '</main>'
-    
-    pre_main_content = ""
-    post_main_content = ""
-
-    if main_start_tag in blog_html_template and main_end_tag in blog_html_template:
-        pre_main_content = blog_html_template.split(main_start_tag, 1)[0] + main_start_tag
-        post_main_content = main_end_tag + blog_html_template.split(main_end_tag, 1)[1]
-    else:
-        # Fallback if the main tags are not exactly as expected, or for first run
-        # This will wrap the entire generated content in main tags
-        print(f"Warning: '{main_start_tag}' or '{main_end_tag}' not found in '{blog_index_file}'. Generating full file.")
-        pre_main_content = """<!DOCTYPE html>
+    # Define fallback content
+    fallback_pre_main_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,21 +21,28 @@ def generate_blog_index():
     <meta property="og:title" content="Blog - LocalLeads">
     <meta property="og:description" content="Stay updated with the latest in local SEO strategies, tips, and insights from LocalLeads.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.localleads.com/blog.html">
-    <link rel="canonical" href="https://www.localleads.com/blog.html">
+    <meta property="og:url" content="/blog.html">
+    <link rel="canonical" href="/blog.html">
     <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
     <header>
         <nav>
             <div class="container">
                 <a href="/" class="logo">LocalLeads</a>
-                <ul class="nav-links">
+                <div class="hamburger-menu" id="hamburger-icon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul id="nav-menu" class="nav-links">
                     <li><a href="/generate.html">Generate Pages</a></li>
                     <li><a href="/pricing.html">Pricing</a></li>
                     <li><a href="/blog.html">Blog</a></li>
                     <li><a href="/about.html">About</a></li>
                     <li><a href="/audit.html">Free Audit</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
                     <li><a href="/auth.html">Login/Signup</a></li>
                     <li><a href="/buy-credits.html">Buy Credits</a></li>
                 </ul>
@@ -57,18 +50,100 @@ def generate_blog_index():
         </nav>
     </header>
     <main class="container blog-list">
+        <div class="blog-search-container">
+            <input type="text" id="blog-search" placeholder="Search blog posts...">
+        </div>
 """
-        post_main_content = """
+    fallback_post_main_content = """
     </main>
 
+    <div class="sticky-cta-bar">
+        <p>Ready to get more local customers?</p>
+        <a class="button" href="generate.html">Generate Pages Now</a>
+        <a class="button button-secondary" href="audit.html">Get Free Audit</a>
+    </div>
     <footer>
         <div class="container">
-            <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <h3>LocalLeads</h3>
+                    <p>Dominate your local market, effortlessly.</p>
+                    <div class="social-icons">
+                        <a href="https://twitter.com/LocalLeadsApp" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com/company/localleads" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://facebook.com/LocalLeadsApp" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('blog-search');
+            const blogPosts = document.querySelectorAll('.blog-preview');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                blogPosts.forEach(post => {
+                    const title = post.querySelector('h2 a').textContent.toLowerCase();
+                    const description = post.querySelector('p').textContent.toLowerCase();
+
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        post.style.display = ''; // Show the post
+                    } else {
+                        post.style.display = 'none'; // Hide the post
+                    }
+                });
+            });
+        });
+    </script>
     <script src="/js/nav.js"></script>
+    <script src="/js/analytics.js"></script>
+    <script src="/js/scroll-to-top.js"></script>
+    <script src="/js/cookie-consent.js"></script>
 </body>
 </html>"""
+
+    pre_main_content = fallback_pre_main_content
+    post_main_content = fallback_post_main_content
+
+    # Read the existing blog.html to get header/footer content, if it exists
+    if os.path.exists(blog_index_file):
+        with open(blog_index_file, 'r', encoding='utf-8') as f:
+            blog_html_template = f.read()
+
+        main_start_tag = '<main class="container blog-list">'
+        main_end_tag = '</main>'
+
+        if main_start_tag in blog_html_template and main_end_tag in blog_html_template:
+            pre_main_content = blog_html_template.split(main_start_tag, 1)[0] + main_start_tag
+            post_main_content = main_end_tag + blog_html_template.split(main_end_tag, 1)[1]
+        else:
+            print(f"Warning: '{main_start_tag}' or '{main_end_tag}' not found in '{blog_index_file}'. Using full fallback.")
+    else:
+        print(f"Info: '{blog_index_file}' not found. Creating a new one with fallback content.")
+
 
 
     blog_posts_data = []

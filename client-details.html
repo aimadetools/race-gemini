@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Client Details - LocalLeads
+  </title>
+  <meta content="Manage and view detailed information about your clients, including their generated pages and service history, on your agency dashboard." name="description"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
+    <div class="container">
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a href="/agency-dashboard.html">
+        Dashboard
+       </a>
+      </li>
+      <li>
+       <a href="#" id="logout-link">
+        Logout
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="dashboard">
+    <h2>
+     Client Details
+    </h2>
+    <div id="client-info">
+     <p>
+      <strong>
+       Name:
+      </strong>
+      <span id="client-name">
+      </span>
+     </p>
+     <p>
+      <strong>
+       Email:
+      </strong>
+      <span id="client-email">
+      </span>
+     </p>
+     <p>
+      <strong>
+       Credits:
+      </strong>
+      <span id="client-credits">
+       0
+      </span>
+     </p>
+    </div>
+    <div class="assign-credits-section">
+     <h3>
+      Assign Credits
+     </h3>
+     <form id="assign-credits-form">
+      <div class="form-group">
+       <label for="assign-credits-amount">
+        Number of Credits:
+       </label>
+       <input class="form-input" id="assign-credits-amount" min="1" required="" type="number"/>
+      </div>
+      <button class="button" type="submit">
+       Assign Credits
+      </button>
+      <p class="success-message" id="assign-credits-message">
+      </p>
+     </form>
+    </div>
+    <div class="edit-client-section">
+     <h3>
+      Edit Client Details
+     </h3>
+     <form id="edit-client-form">
+      <div class="form-group">
+       <label for="edit-client-name">
+        Client Name:
+       </label>
+       <input class="form-input" id="edit-client-name" required="" type="text"/>
+      </div>
+      <div class="form-group">
+       <label for="edit-client-email">
+        Client Email:
+       </label>
+       <input class="form-input" id="edit-client-email" required="" type="email"/>
+      </div>
+      <button class="button" type="submit">
+       Update Client
+      </button>
+      <button class="button button-secondary" id="delete-client-button" type="button">
+       Delete Client
+      </button>
+      <p class="success-message" id="edit-client-message">
+      </p>
+     </form>
+    </div>
+    <h3>
+     Generated Pages
+    </h3>
+    <table id="generated-pages">
+     <thead>
+      <tr>
+       <th>
+        Service
+       </th>
+       <th>
+        Town
+       </th>
+       <th>
+        Created At
+       </th>
+       <th>
+        Link
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+     </tbody>
+    </table>
+   </section>
+  </main>
+  <footer>
+   <div class="container">
+    <p>
+     © 2026 LocalLeads. All rights reserved.
+    </p>
+   </div>
+  </footer>
+  <script>
+   const clientNameDisplay = document.getElementById('client-name');
+const clientEmailDisplay = document.getElementById('client-email');
+const clientCreditsDisplay = document.getElementById('client-credits');
+const generatedPages = document.getElementById('generated-pages');
+
+const assignCreditsForm = document.getElementById('assign-credits-form');
+const assignCreditsAmount = document.getElementById('assign-credits-amount');
+const assignCreditsMessage = document.getElementById('assign-credits-message');
+
+const editClientNameInput = document.getElementById('edit-client-name');
+const editClientEmailInput = document.getElementById('edit-client-email');
+const editClientForm = document.getElementById('edit-client-form');
+const editClientMessage = document.getElementById('edit-client-message');
+const deleteClientButton = document.getElementById('delete-client-button');
+
+let currentClientId = null;
+
+async function fetchClientDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientId = urlParams.get('id');
+    currentClientId = clientId; // Store for update function
+
+    const response = await fetch(`/api/client-details?id=${clientId}`);
+    if (response.ok) {
+        const data = await response.json();
+        clientNameDisplay.textContent = data.name;
+        clientEmailDisplay.textContent = data.email;
+        clientCreditsDisplay.textContent = data.credits || 0;
+
+        // Populate edit form fields
+        editClientNameInput.value = data.name;
+        editClientEmailInput.value = data.email;
+
+        const generatedPagesBody = generatedPages.querySelector('tbody');
+        generatedPagesBody.innerHTML = '';
+        data.pages.forEach(page => {
+            const pageRow = document.createElement('tr');
+            pageRow.innerHTML = `
+                <td>${page.service}</td><td>${page.town}</td><td>${new Date(page.createdAt).toLocaleDateString()}</td><td><a href="/${data.id}/${page.fileName}" target="_blank">View</a></td>
+            `;
+            generatedPagesBody.appendChild(pageRow);
+        });
+    } else {
+        window.location.href = 'agency-dashboard.html';
+    }
+}
+
+assignCreditsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    assignCreditsMessage.textContent = ''; // Clear previous messages
+
+    const credits = assignCreditsAmount.value;
+
+    if (!currentClientId) {
+        assignCreditsMessage.textContent = 'Error: Client ID not found.';
+        assignCreditsMessage.style.color = 'red';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/assign-credits', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientId: currentClientId,
+                credits: credits
+            }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            assignCreditsMessage.textContent = data.message || 'Credits assigned successfully!';
+            assignCreditsMessage.style.color = 'green';
+            // Refresh client details to show updated credit balance
+            fetchClientDetails();
+        } else {
+            assignCreditsMessage.textContent = data.message || 'Failed to assign credits.';
+            assignCreditsMessage.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error assigning credits:', error);
+        assignCreditsMessage.textContent = 'An unexpected error occurred.';
+        assignCreditsMessage.style.color = 'red';
+    }
+});
+
+
+editClientForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    editClientMessage.textContent = ''; // Clear previous messages
+
+    const updatedName = editClientNameInput.value;
+    const updatedEmail = editClientEmailInput.value;
+
+    if (!currentClientId) {
+        editClientMessage.textContent = 'Error: Client ID not found.';
+        editClientMessage.style.color = 'red';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/update-client', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientId: currentClientId,
+                name: updatedName,
+                email: updatedEmail
+            }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            editClientMessage.textContent = data.message || 'Client updated successfully!';
+            editClientMessage.style.color = 'green';
+            // Refresh displayed client info
+            clientNameDisplay.textContent = updatedName;
+            clientEmailDisplay.textContent = updatedEmail;
+        } else {
+            editClientMessage.textContent = data.message || 'Failed to update client.';
+            editClientMessage.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error updating client:', error);
+        editClientMessage.textContent = 'An unexpected error occurred.';
+        editClientMessage.style.color = 'red';
+    }
+});
+
+deleteClientButton.addEventListener('click', async () => {
+    if (!currentClientId) {
+        editClientMessage.textContent = 'Error: Client ID not found for deletion.';
+        editClientMessage.style.color = 'red';
+        return;
+    }
+
+    if (confirm('Are you sure you want to delete this client and all their associated data? This action cannot be undone.')) {
+        try {
+            const response = await fetch('/api/delete-client', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clientId: currentClientId }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message || 'Client deleted successfully!');
+                window.location.href = 'agency-dashboard.html'; // Redirect to dashboard
+            } else {
+                editClientMessage.textContent = data.message || 'Failed to delete client.';
+                editClientMessage.style.color = 'red';
+            }
+        } catch (error) {
+            console.error('Error deleting client:', error);
+            editClientMessage.textContent = 'An unexpected error occurred during client deletion.';
+            editClientMessage.style.color = 'red';
+        }
+    }
+});
+
+document.getElementById('logout-link').addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = 'index.html';
+});
+
+fetchClientDetails();
+  </script>
+  <script src="/js/app.js">
+  </script>
+ </body>
+</html>

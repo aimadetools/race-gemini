@@ -1,107 +1,435 @@
 <!DOCTYPE html>
-
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Pricing - LocalLeads</title>
-<meta content="Simple, one-time pricing for LocalLeads. Get 50, 200, or 1000 search-optimized pages for your local business." name="description"/>
-<meta content="pricing, local seo cost, small business marketing packages" name="keywords"/>
-<meta content="Pricing - LocalLeads" property="og:title"/>
-<meta content="Simple, one-time pricing for LocalLeads. Get 50, 200, or 1000 search-optimized pages for your local business." property="og:description"/>
-<meta content="https://www.localleads.pro/og-image.png" property="og:image"/>
-<meta content="https://www.localleads.pro/pricing.html" property="og:url"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<link href="style.css" rel="stylesheet"/>
-<script src="https://js.stripe.com/v3/"></script>
-</head>
-<body>
-<header>
-<nav>
-<div class="logo">LocalLeads</div>
-<ul id="nav-links">
-<li><a href="index.html#features">Features</a></li>
-<li><a href="pricing.html">Pricing</a></li>
-<li><a href="buy-credits.html">Buy Credits</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="blog.html">Blog</a></li>
-<li><a href="generate.html">Generate</a></li>
-<li><a href="audit.html">Free Audit</a></li>
-</ul>
-</nav>
-</header>
-<main>
-<section class="pricing" id="pricing">
-<h2>Simple, One-Time Pricing: Get Found, Stay Found.</h2>
-<p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">Invest once for lasting local SEO impact. Choose the plan that fits your business needs and get a powerful suite of SEO-optimized landing pages designed to capture customers in every town you serve. No subscriptions, just results.</p>
-<div class="price-cards">
-<div class="card">
-<h3>Starter</h3>
-<p class="price">$49</p>
-<p>One-Time Fee</p>
-<ul>
-<li><strong>Up to 50 Hyper-Local Pages:</strong> Target your core service areas effectively.</li>
-<li><strong>Built-in SEO Optimization:</strong> Pages designed to rank high in local search results.</li>
-<li><strong>Mobile-First &amp; Responsive Design:</strong> Flawless experience on any device.</li>
-<li>Ideal for new businesses or highly focused local services.</li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_starter_placeholder"/>
-<button class="button" type="submit">Choose Starter</button>
-</form>
-</div>
-<div class="card">
-<h3>Pro</h3>
-<p class="price">$99</p>
-<p>One-Time Fee</p>
-<ul>
-<li><strong>Up to 200 Hyper-Local Pages:</strong> Expand your reach across more towns and services.</li>
-<li><strong>Advanced SEO Structuring:</strong> Deeper optimization for competitive keywords.</li>
-<li><strong>Mobile-First &amp; Responsive Design:</strong> Ensures accessibility and performance.</li>
-<li>Includes everything in Starter, plus extended coverage.</li>
-<li>Perfect for growing businesses looking for wider local dominance.</li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_pro_placeholder"/>
-<button class="button" type="submit">Choose Pro</button>
-</form>
-</div>
-<div class="card">
-<h3>Agency</h3>
-<p class="price">$249</p>
-<p>One-Time Fee</p>
-<ul>
-<li><strong>Up to 1000 Hyper-Local Pages:</strong> Maximize your presence across entire regions.</li>
-<li><strong>Comprehensive SEO Strategy:</strong> Tailored for extensive geographic and service targeting.</li>
-<li><strong>Mobile-First &amp; Responsive Design:</strong> Top-tier user experience across all devices.</li>
-<li>Includes all Pro features, scaled for ultimate local market saturation.</li>
-<li>Best for multi-location businesses or marketing agencies.</li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_agency_placeholder"/>
-<button class="button" type="submit">Choose Agency</button>
-</form>
-</div>
-</div>
-<div class="coming-soon-card">
-<h3>Usage-Based Pricing is Coming Soon!</h3>
-<p>We're excited to announce that a new, flexible pricing model is on its way. With usage-based pricing, you'll be able to purchase credits and generate pages as you need them. It's the perfect solution for businesses with fluctuating needs or those who want to start small and scale up over time.</p>
-<a href="usage-based-pricing.html" class="button">Learn More</a>
-</div>
-</section>
-</main>
-<div class="sticky-cta-bar">
-    <p>Ready to get more local customers?</p>
-    <a class="button" href="generate.html">Generate Pages Now</a>
-    <a class="button button-secondary" href="audit.html">Get Free Audit</a>
-</div>
-<footer>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   LocalLeads Pricing: Affordable Plans for Local SEO &amp; More Customers
+  </title>
+  <meta content="Explore LocalLeads' transparent, one-time pricing. Choose from Starter, Pro, or Agency plans for SEO-optimized pages that drive local traffic. No hidden fees!" name="description"/>
+  <meta content="pricing, local seo cost, small business marketing packages" name="keywords"/>
+  <meta content="LocalLeads Pricing: Affordable Plans for Local SEO &amp; More Customers" property="og:title"/>
+  <meta content="Explore LocalLeads' transparent, one-time pricing. Choose from Starter, Pro, or Agency plans to get SEO-optimized pages that drive local traffic and grow your business. No hidden fees!" property="og:description"/>
+  <meta content="https://www.localleads.pro/og-image.png" property="og:image"/>
+  <meta content="https://www.localleads.pro/pricing.html" property="og:url"/>
+  <meta content="summary_large_image" name="twitter:card"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <script type="application/ld+json">
+   {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localleads.pro/images/logo.png","url": "https://www.localleads.pro","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localleads.pro/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com/LocalLeadsApp","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
+  </script>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
     <div class="container">
-        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button aria-label="Close mobile menu" id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a data-i18n-key="header_generate_pages" href="/generate.html">
+        Generate Pages
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_pricing" href="/pricing.html">
+        Pricing
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_blog" href="/blog.html">
+        Blog
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_about" href="/about.html">
+        About
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_audit" href="/audit.html">
+        Free Audit
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_contact" href="/contact.html">
+        Contact
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_login_signup" href="/auth.html">
+        Login/Signup
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_buy_credits" href="/buy-credits.html">
+        Buy Credits
+       </a>
+      </li>
+     </ul>
     </div>
-</footer>
-<script src="/js/nav.js"></script>
-<script src="/js/analytics.js"></script>
-<script src="/js/scroll-to-top.js"></script>
-</body>
+   </nav>
+  </header>
+  <main>
+   <section class="pricing" id="pricing">
+    <h2 data-i18n-key="pricing_hero_title">
+     Simple, One-Time Pricing: Get Found, Stay Found.
+    </h2>
+    <p data-i18n-key="pricing_hero_subtitle" style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+     Invest once for lasting local SEO impact. Choose the plan that fits your business needs and get a powerful suite of SEO-optimized landing pages designed to capture customers in every town you serve. No subscriptions, just results.
+    </p>
+    <div class="price-cards">
+     <div class="card" data-credits="50" data-price="49" data-stripe-price-id="price_1PKyXqJd7gZvY2J8c6Z1Yq2L">
+      <h3 data-i18n-key="pricing_plan_starter_title">
+       Starter
+      </h3>
+      <p class="price">
+       $49
+      </p>
+      <p data-i18n-key="pricing_one_time_fee">
+       One-Time Fee
+      </p>
+      <ul>
+       <li data-i18n-key="pricing_starter_feature1">
+        <strong>
+         Up to 50 Hyper-Local Pages:
+        </strong>
+        Target your core service areas effectively.
+       </li>
+       <li data-i18n-key="pricing_starter_feature2">
+        <strong>
+         Built-in SEO Optimization:
+        </strong>
+        Pages designed to rank high in local search results.
+       </li>
+       <li data-i18n-key="pricing_starter_feature3">
+        <strong>
+         Mobile-First &amp; Responsive Design:
+        </strong>
+        Flawless experience on any device.
+       </li>
+       <li data-i18n-key="pricing_starter_feature4">
+        Ideal for new businesses or highly focused local services.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyXqJd7gZvY2J8c6Z1Yq2L"/>
+       <button class="button" data-i18n-key="pricing_choose_starter" type="submit">
+        Choose Starter
+       </button>
+      </form>
+      <div id="paypal-button-container-starter">
+      </div>
+     </div>
+     <div class="card" data-credits="200" data-price="99" data-stripe-price-id="price_1PKyYJJd7gZvY2J8c6Z1Yq2M">
+      <h3 data-i18n-key="pricing_plan_pro_title">
+       Pro
+      </h3>
+      <p class="price">
+       $99
+      </p>
+      <p data-i18n-key="pricing_one_time_fee">
+       One-Time Fee
+      </p>
+      <ul>
+       <li data-i18n-key="pricing_pro_feature1">
+        <strong>
+         Up to 200 Hyper-Local Pages:
+        </strong>
+        Expand your reach across more towns and services.
+       </li>
+       <li data-i18n-key="pricing_pro_feature2">
+        <strong>
+         Advanced SEO Structuring:
+        </strong>
+        Deeper optimization for competitive keywords.
+       </li>
+       <li data-i18n-key="pricing_pro_feature3">
+        <strong>
+         Mobile-First &amp; Responsive Design:
+        </strong>
+        Ensures accessibility and performance.
+       </li>
+       <li data-i18n-key="pricing_pro_feature4">
+        Includes everything in Starter, plus extended coverage.
+       </li>
+       <li data-i18n-key="pricing_pro_feature5">
+        Perfect for growing businesses looking for wider local dominance.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyYJJd7gZvY2J8c6Z1Yq2M"/>
+       <button class="button" data-i18n-key="pricing_choose_pro" type="submit">
+        Choose Pro
+       </button>
+      </form>
+      <div id="paypal-button-container-pro">
+      </div>
+     </div>
+     <div class="card">
+      <h3 data-i18n-key="pricing_plan_agency_title">
+       Agency
+      </h3>
+      <p class="price">
+       $249
+      </p>
+      <p data-i18n-key="pricing_one_time_fee">
+       One-Time Fee
+      </p>
+      <ul>
+       <li data-i18n-key="pricing_agency_feature1">
+        <strong>
+         Up to 1000 Hyper-Local Pages:
+        </strong>
+        Maximize your presence across entire regions.
+       </li>
+       <li data-i18n-key="pricing_agency_feature2">
+        <strong>
+         Comprehensive SEO Strategy:
+        </strong>
+        Tailored for extensive geographic and service targeting.
+       </li>
+       <li data-i18n-key="pricing_agency_feature3">
+        <strong>
+         Mobile-First &amp; Responsive Design:
+        </strong>
+        Top-tier user experience across all devices.
+       </li>
+       <li data-i18n-key="pricing_agency_feature4">
+        Includes all Pro features, scaled for ultimate local market saturation.
+       </li>
+       <li data-i18n-key="pricing_agency_feature5">
+        Best for multi-location businesses or marketing agencies.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="priceId" type="hidden" value="price_1PKyZJJd7gZvY2J8c6Z1Yq2N"/>
+       <button class="button" data-i18n-key="pricing_choose_agency" type="submit">
+        Choose Agency
+       </button>
+      </form>
+      <div id="paypal-button-container-agency">
+      </div>
+     </div>
+     <div class="card">
+      <h3 data-i18n-key="pricing_plan_whitelabel_title">
+       White-Label Agency
+      </h3>
+      <p class="price" data-i18n-key="pricing_contact_us">
+       Contact Us
+      </p>
+      <p data-i18n-key="pricing_custom_solution">
+       For a custom solution
+      </p>
+      <ul>
+       <li data-i18n-key="pricing_whitelabel_feature1">
+        <strong>
+         Unlimited Clients:
+        </strong>
+        Manage all your clients under one roof.
+       </li>
+       <li data-i18n-key="pricing_whitelabel_feature2">
+        <strong>
+         Custom Branding:
+        </strong>
+        White-label the platform with your own brand.
+       </li>
+       <li data-i18n-key="pricing_whitelabel_feature3">
+        <strong>
+         Client-Facing Dashboard:
+        </strong>
+        A dashboard for your clients to track their results.
+       </li>
+       <li data-i18n-key="pricing_whitelabel_feature4">
+        <strong>
+         Dedicated Support:
+        </strong>
+        Get priority support from our team.
+       </li>
+      </ul>
+      <a class="button" data-i18n-key="pricing_agency_signup" href="agency-signup.html">
+       Agency Signup
+      </a>
+     </div>
+    </div>
+    <div class="coming-soon-card">
+     <h3 data-i18n-key="pricing_usage_based_title">
+      Usage-Based Pricing is Here!
+     </h3>
+     <p data-i18n-key="pricing_usage_based_description">
+      We're excited to announce that a new, flexible pricing model is available. With usage-based pricing, you'll be able to purchase credits and generate pages as you need them. It's the perfect solution for businesses with fluctuating needs or those who want to start small and scale up over time.
+     </p>
+     <a class="button" data-i18n-key="pricing_buy_credits" href="buy-credits.html">
+      Buy Credits
+     </a>
+    </div>
+   </section>
+  </main>
+  <div class="sticky-cta-bar">
+   <p>
+    Ready to get more local customers?
+   </p>
+   <a class="button" href="generate.html">
+    Generate Pages Now
+   </a>
+   <a class="button button-secondary" href="audit.html">
+    Get Free Audit
+   </a>
+  </div>
+  <footer>
+   <div class="container">
+    <div class="footer-columns">
+     <div class="footer-col">
+      <h3>
+       LocalLeads
+      </h3>
+      <p>
+       Dominate your local market, effortlessly.
+      </p>
+      <div class="social-icons">
+       <a aria-label="Twitter" href="https://twitter.com/intent/tweet?url=https://www.localleads.pro/pricing.html&amp;text=Pricing - LocalLeads" target="_blank">
+        <i class="fab fa-twitter">
+        </i>
+       </a>
+       <a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localleads.pro/pricing.html" target="_blank">
+        <i class="fab fa-facebook-f">
+        </i>
+       </a>
+       <a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localleads.pro/pricing.html&amp;title=Pricing - LocalLeads" target="_blank">
+        <i class="fab fa-linkedin-in">
+        </i>
+       </a>
+      </div>
+     </div>
+     <div class="footer-col">
+      <h3>
+       Quick Links
+      </h3>
+      <ul>
+       <li>
+        <a href="about.html">
+         About Us
+        </a>
+       </li>
+       <li>
+        <a href="pricing.html">
+         Pricing
+        </a>
+       </li>
+       <li>
+        <a href="blog.html">
+         Blog
+        </a>
+       </li>
+       <li>
+        <a href="contact.html">
+         Contact
+        </a>
+       </li>
+      </ul>
+     </div>
+     <div class="footer-col">
+      <h3>
+       Legal
+      </h3>
+      <ul>
+       <li>
+        <a href="privacy.html">
+         Privacy Policy
+        </a>
+       </li>
+       <li>
+        <a href="terms.html">
+         Terms of Service
+        </a>
+       </li>
+       <li>
+        <a href="audit.html">
+         Free SEO Audit
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="footer-bottom">
+     <p>
+      © 2026 LocalLeads. All rights reserved.
+     </p>
+    </div>
+   </div>
+  </footer>
+  <script src="/js/app.js">
+  </script>
+  <script data-sdk-integration-source="developer-studio" src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID">
+  </script>
+  <script>
+   fetch('/api/paypal-client-id')
+.then(response => response.json())
+.then(data => {
+const script = document.querySelector('script[src*="paypal.com/sdk/js"]');
+script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}`;
+});
+function renderPayPalButton(containerId, credits, price) {
+paypal.Buttons({
+createOrder: function(data, actions) {
+return fetch('/api/paypal-checkout', {
+method: 'post',
+headers: {
+'content-type': 'application/json'
+},
+body: JSON.stringify({
+purchase_units: [{
+amount: {
+value: price
+}
+}]
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+return data.orderID;
+});
+},
+onApprove: function(data, actions) {
+return fetch('/api/paypal-capture', {
+method: 'post',
+headers: {
+'content-type': 'application/json'
+},
+body: JSON.stringify({
+orderID: data.orderID,
+credits: credits
+})
+}).then(function(res) {
+return res.json();
+}).then(function(data) {
+window.location.href = 'success.html';
+});
+}
+}).render(`#${containerId}`);
+}
+document.addEventListener('DOMContentLoaded', function() {
+renderPayPalButton('paypal-button-container-starter', '50', '49.00');
+renderPayPalButton('paypal-button-container-pro', '200', '99.00');
+renderPayPalButton('paypal-button-container-agency', '1000', '249.00');
+});
+  </script>
+ </body>
 </html>

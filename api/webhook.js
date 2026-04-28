@@ -1,5 +1,19 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { buffer } = require('micro');
+const { kv } = require('@vercel/kv'); // Import kv
+const fs = require('fs');
+const path = require('path');
+
+async function logError(error, context) {
+  const logDir = path.join(process.cwd(), 'logs');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+  const logFilePath = path.join(logDir, 'webhook_error.log'); // Separate log for webhook errors
+  const timestamp = new Date().toISOString();
+  const errorMessage = `[${timestamp}] Context: ${context}\nError: ${error.message}\nStack: ${error.stack}\n\n`;
+  fs.appendFileSync(logFilePath, errorMessage);
+}
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
@@ -9,22 +23,106 @@ module.exports = async (req, res) => {
         let event;
 
         try {
-            event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
+            event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET || 'dummy_stripe_webhook_secret'); // Add fallback
         } catch (err) {
-            console.error('Stripe Webhook Error:', err.message);
-            // In production, avoid sending detailed error messages to the client
+            await logError(err, 'Stripe Webhook Signature Verification Failed');
             return res.status(400).json({ message: 'Webhook Error: Signature verification failed.' });
         }
 
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
+            const { userId, agencyId, credits } = session.metadata;
 
-            // TODO:
-            // 1. Get user details from the session
-            // 2. Save the purchase to the database
-            // 3. Trigger the page generation
-            // 4. Send the pages to the user's email
-            console.log('Payment was successful for session:', session.id);
+            if ((!userId && !agencyId) || !credits) {
+                await logError(new Error('Missing userId/agencyId or credits in session metadata.'), 'Stripe Webhook - Missing Metadata');
+                return res.status(400).json({ message: 'Missing identifier or credits in session metadata.' });
+            }
+
+            try {
+                const transaction = {
+                    date: new Date().toISOString(),
+                    credits: parseInt(credits, 10),
+                    amount: session.amount_total,
+                    currency: session.currency,
+                    payment_status: session.payment_status,
+                };
+
+                if (agencyId) {
+                    const agency = await kv.get(`agency:${agencyId}`);
+                    if (!agency) {
+                        await logError(new Error(`Agency not found for agencyId: ${agencyId}`), 'Stripe Webhook - Agency Retrieval');
+                        return res.status(404).json({ message: 'Agency not found.' });
+                    }
+                    agency.credits = (agency.credits || 0) + parseInt(credits, 10);
+                    await kv.set(`agency:${agencyId}`, agency);
+                    await kv.zadd(`agency:${agencyId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
+                    console.log(`Agency ${agencyId} successfully purchased ${credits} credits.`);
+                } else {
+                    // Retrieve user email from userId
+                    const userEmail = await kv.get(`userId:${userId}`);
+                    if (!userEmail) {
+                        await logError(new Error(`User email not found for userId: ${userId}`), 'Stripe Webhook - User Retrieval');
+                        return res.status(404).json({ message: 'User not found.' });
+                    }
+
+                    // Retrieve full user object
+                    const userString = await kv.get(`user:${userEmail}`);
+                    if (!userString) {
+                        await logError(new Error(`User profile not found for email: ${userEmail}`), 'Stripe Webhook - User Profile Retrieval');
+                        return res.status(404).json({ message: 'User profile not found.' });
+                    }
+                    let user = JSON.parse(userString);
+
+                    // Update user credits
+                    user.credits = (user.credits || 0) + parseInt(credits, 10);
+                    await kv.set(`user:${userEmail}`, JSON.stringify(user));
+                    await kv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
+                    console.log(`User ${userId} successfully purchased ${credits} credits.`);
+                }
+            } catch (error) {
+                await logError(error, 'Stripe Webhook - Credit Update Failed');
+                return res.status(500).json({ message: 'Error updating credits.' });
+            }
+        }
+
+        if (event.type === 'invoice.payment_succeeded') {
+            const invoice = event.data.object;
+            const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
+            const priceId = subscription.items.data[0].price.id;
+            const agencyId = subscription.metadata.agencyId;
+
+            if (agencyId) {
+                let creditsToAdd = 0;
+                if (priceId === 'price_BASIC_AGENCY_PLAN') {
+                    creditsToAdd = 100;
+                } else if (priceId === 'price_PRO_AGENCY_PLAN') {
+                    creditsToAdd = 250;
+                }
+
+                if (creditsToAdd > 0) {
+                    const agency = await kv.get(`agency:${agencyId}`);
+                    if (agency) {
+                        agency.credits = (agency.credits || 0) + creditsToAdd;
+                        agency.subscriptionStatus = 'active';
+                        await kv.set(`agency:${agencyId}`, agency);
+                        console.log(`Added ${creditsToAdd} credits to agency ${agencyId}`);
+                    }
+                }
+            }
+        }
+
+        if (event.type === 'customer.subscription.deleted') {
+            const subscription = event.data.object;
+            const agencyId = subscription.metadata.agencyId;
+
+            if (agencyId) {
+                const agency = await kv.get(`agency:${agencyId}`);
+                if (agency) {
+                    agency.subscriptionStatus = 'canceled';
+                    await kv.set(`agency:${agencyId}`, agency);
+                    console.log(`Subscription for agency ${agencyId} canceled.`);
+                }
+            }
         }
 
         res.status(200).send({ received: true });

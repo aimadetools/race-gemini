@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Agency Signup - LocalLeads
+  </title>
+  <meta content="Sign up for the LocalLeads agency white-label solution." name="description"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
+    <div class="container">
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a href="/generate.html">
+        Generate Pages
+       </a>
+      </li>
+      <li>
+       <a href="/pricing.html">
+        Pricing
+       </a>
+      </li>
+      <li>
+       <a href="/blog.html">
+        Blog
+       </a>
+      </li>
+      <li>
+       <a href="/about.html">
+        About
+       </a>
+      </li>
+      <li>
+       <a href="/audit.html">
+        Free Audit
+       </a>
+      </li>
+      <li>
+       <a href="/contact.html">
+        Contact
+       </a>
+      </li>
+      <li>
+       <a href="/auth.html">
+        Login/Signup
+       </a>
+      </li>
+      <li>
+       <a href="/buy-credits.html">
+        Buy Credits
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="auth-form">
+    <h2>
+     Agency Signup
+    </h2>
+    <form id="agency-signup-form">
+     <div class="form-group">
+      <label for="agency-name">
+       Agency Name
+      </label>
+      <input autocomplete="organization" id="agency-name" name="agency-name" required="" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="email">
+       Email
+      </label>
+      <input autocomplete="email" id="email" name="email" required="" type="email"/>
+     </div>
+     <div class="form-group">
+      <label for="password">
+       Password
+      </label>
+      <input autocomplete="new-password" id="password" name="password" required="" type="password"/>
+     </div>
+     <div class="form-group">
+      <button class="button" type="submit">
+       Sign Up
+      </button>
+     </div>
+    </form>
+    <p class="error-message" id="error-message">
+    </p>
+   </section>
+  </main>
+  <footer>
+   <div class="container">
+    <p>
+     © 2026 LocalLeads. All rights reserved.
+    </p>
+   </div>
+  </footer>
+  <script>
+   const form = document.getElementById('agency-signup-form');
+const errorMessage = document.getElementById('error-message');
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+errorMessage.textContent = '';
+const agencyName = document.getElementById('agency-name').value;
+const email = document.getElementById('email').value;
+const password = document.getElementById('password').value;
+const response = await fetch('/api/agency-signup', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ agencyName, email, password }),
+});
+if (response.ok) {
+window.location.href = 'agency-dashboard.html';
+} else {
+const { message } = await response.json();
+errorMessage.textContent = message;
+}
+});
+  </script>
+  <script src="/js/app.js">
+  </script>
+ </body>
+</html>

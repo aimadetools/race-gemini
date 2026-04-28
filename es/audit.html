@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Free Local SEO Audit - LocalLeads
+  </title>
+  <link href="/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
+    <div class="container">
+     <a class="logo" href="/">
+      LocalLeads
+     </a>
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
+        ×
+       </button>
+      </li>
+      <li>
+       <a data-i18n-key="header_generate_pages" href="/generate.html">
+        Generar Páginas
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_pricing" href="/pricing.html">
+        Precios
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_blog" href="/blog.html">
+        Blog
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_about" href="/about.html">
+        Acerca de
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_audit" href="/audit.html">
+        Auditoría Gratuita
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_contact" href="/contact.html">
+        Contacto
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_login_signup" href="/auth.html">
+        Iniciar Sesión/Registrarse
+       </a>
+      </li>
+      <li>
+       <a data-i18n-key="header_buy_credits" href="/buy-credits.html">
+        Comprar Créditos
+       </a>
+      </li>
+     </ul>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="hero">
+    <h1 data-i18n-key="audit_hero_title">
+     Obtén Tu Auditoría SEO Local Gratuita
+    </h1>
+    <p data-i18n-key="audit_hero_subtitle">
+     Descubre cuántos clientes potenciales estás perdiendo y desbloquea tu potencial de búsqueda local.
+    </p>
+   </section>
+   <section class="audit-form-section">
+    <div class="container">
+     <h2 data-i18n-key="audit_form_title">
+      Inicia Tu Auditoría
+     </h2>
+     <form id="auditForm">
+      <div class="form-step active" id="step1">
+       <h3 data-i18n-key="audit_step1_title">
+        Paso 1: Información de Tu Negocio
+       </h3>
+       <label data-i18n-key="audit_label_business_name" for="auditBusinessName">
+        Nombre del Negocio:
+       </label>
+       <input autocomplete="organization" class="form-input" id="auditBusinessName" name="businessName" placeholder="e.g., 'Smith's Plumbing'" required="" type="text"/>
+       <label data-i18n-key="audit_label_business_address" for="auditBusinessAddress">
+        Dirección del Negocio:
+       </label>
+       <input autocomplete="street-address" class="form-input" id="auditBusinessAddress" name="businessAddress" placeholder="e.g., '123 Main St, Springfield, IL'" required="" type="text"/>
+       <label data-i18n-key="audit_label_business_phone" for="auditBusinessPhone">
+        Teléfono del Negocio (opcional):
+       </label>
+       <input autocomplete="tel" class="form-input" id="auditBusinessPhone" name="businessPhone" placeholder="e.g., '555-123-4567'" type="tel"/>
+       <button class="next-step button" data-i18n-key="audit_next_button" type="button">
+        Siguiente
+       </button>
+      </div>
+      <div class="form-step" id="step2">
+       <h3 data-i18n-key="audit_step2_title">
+        Paso 2: Tus Servicios y Ubicaciones Objetivo
+       </h3>
+       <label data-i18n-key="audit_label_services" for="auditServices">
+        Servicios Clave que Ofreces (separados por comas):
+       </label>
+       <input class="form-input" id="auditServices" name="services" placeholder="e.g., 'plumbing repair, water heater installation'" required="" type="text"/>
+       <div class="char-counter">
+        <span id="auditServices-char-count">
+         0
+        </span>
+        characters
+       </div>
+       <label data-i18n-key="audit_label_towns" for="auditTowns">
+        Ciudades/Pueblos que Sirves (separados por comas):
+       </label>
+       <textarea class="form-input" id="auditTowns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City'" required="" rows="5"></textarea>
+       <div class="char-counter">
+        <span id="auditTowns-char-count">
+         0
+        </span>
+        characters
+       </div>
+       <button class="prev-step button button-secondary" data-i18n-key="audit_previous_button" type="button">
+        Anterior
+       </button>
+       <button class="next-step button" data-i18n-key="audit_next_button" type="button">
+        Siguiente
+       </button>
+      </div>
+      <div class="form-step" id="step3">
+       <h3 data-i18n-key="audit_step3_title">
+        Paso 3: Tu Información de Contacto
+       </h3>
+       <label data-i18n-key="audit_label_name" for="auditName">
+        Tu Nombre:
+       </label>
+       <input autocomplete="name" class="form-input" id="auditName" name="name" required="" type="text"/>
+       <label data-i18n-key="audit_label_email" for="auditEmail">
+        Tu Correo Electrónico:
+       </label>
+       <input autocomplete="email" class="form-input" id="auditEmail" name="email" placeholder="you@example.com" required="" type="email"/>
+       <button class="prev-step button button-secondary" data-i18n-key="audit_previous_button" type="button">
+        Anterior
+       </button>
+       <button class="button" data-i18n-key="audit_submit_button" type="submit">
+        Obtener Mi Auditoría Gratuita
+       </button>
+      </div>
+     </form>
+     <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
+     </div>
+     <div id="auditResults" style="display:none;">
+      <h2 data-i18n-key="audit_results_title">
+       Resultados de la Auditoría
+      </h2>
+      <p data-i18n-key="audit_results_message1">
+       Gracias por enviar tu información. Estamos generando tu informe de auditoría SEO personalizado. Recibirás un correo electrónico en breve con información detallada sobre tu potencial de búsqueda local.
+      </p>
+      <p data-i18n-key="audit_results_message2">
+       Mientras tanto, explora cómo LocalLeads puede ayudarte a captar más clientes locales:
+      </p>
+      <a class="button" data-i18n-key="audit_generate_pages_button" href="generate.html">
+       Generar Páginas Locales Ahora
+      </a>
+     </div>
+    </div>
+   </section>
+  </main>
+  <div class="sticky-cta-bar">
+   <p>
+    Ready to get more local customers?
+   </p>
+   <a class="button" href="generate.html">
+    Generate Pages Now
+   </a>
+   <a class="button button-secondary" href="audit.html">
+    Get Free Audit
+   </a>
+  </div>
+  <footer>
+   <div class="container">
+    <div class="footer-columns">
+     <div class="footer-col">
+      <h3>
+       LocalLeads
+      </h3>
+      <p>
+       Dominate your local market, effortlessly.
+      </p>
+      <div class="social-icons">
+       <a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
+        <i class="fab fa-twitter">
+        </i>
+       </a>
+       <a aria-label="LinkedIn" href="https://linkedin.com/company/localleads" target="_blank">
+        <i class="fab fa-linkedin-in">
+        </i>
+       </a>
+       <a aria-label="Facebook" href="https://facebook.com/LocalLeadsApp" target="_blank">
+        <i class="fab fa-facebook-f">
+        </i>
+       </a>
+      </div>
+     </div>
+     <div class="footer-col">
+      <h3>
+       Quick Links
+      </h3>
+      <ul>
+       <li>
+        <a href="about.html">
+         About Us
+        </a>
+       </li>
+       <li>
+        <a href="pricing.html">
+         Pricing
+        </a>
+       </li>
+       <li>
+        <a href="/blog.html">
+         Blog
+        </a>
+       </li>
+       <li>
+        <a href="contact.html">
+         Contact
+        </a>
+       </li>
+      </ul>
+     </div>
+     <div class="footer-col">
+      <h3>
+       Legal
+      </h3>
+      <ul>
+       <li>
+        <a href="/privacy.html">
+         Privacy Policy
+        </a>
+       </li>
+       <li>
+        <a href="/terms.html">
+         Terms of Service
+        </a>
+       </li>
+       <li>
+        <a href="audit.html">
+         Free SEO Audit
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="footer-bottom">
+     <p>
+      © 2026 LocalLeads. All rights reserved.
+     </p>
+    </div>
+   </div>
+  </footer>
+  <script src="../js/app.js">
+  </script>
+ </body>
+</html>

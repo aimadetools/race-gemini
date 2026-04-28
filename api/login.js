@@ -1,44 +1,71 @@
-const { kv } = require('@vercel/kv');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import { kv } from '@vercel/kv';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { serialize } from 'cookie';
+import fs from 'fs';
+import path from 'path';
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).send({ message: 'Only POST requests allowed' });
+async function logError(error, context) {
+  const logDir = path.join(process.cwd(), 'logs');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
   }
+  const logFilePath = path.join(logDir, 'login_error.log'); // Separate log file for login errors
+  const timestamp = new Date().toISOString();
+  const errorMessage = `[${timestamp}] Context: ${context}
+Error: ${error.message}
+Stack: ${error.stack}
 
-  const { email, password } = req.body;
+`;
+  fs.appendFileSync(logFilePath, errorMessage);
+}
 
-  if (!email || !password) {
-    return res.status(400).send({ message: 'Email and password are required' });
-  }
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    const { email, password } = req.body;
 
-  try {
-    const userId = await kv.get(`user:email:${email}`);
-
-    if (!userId) {
-      return res.status(401).send({ message: 'Invalid credentials' });
+    if (!email || !password) {
+      await logError(new Error('Email and password are required.'), 'Validation Error');
+      return res.status(400).json({ message: 'Email and password are required.' });
     }
 
-    const user = await kv.hgetall(userId);
+    try {
+      const userString = await kv.get(`user:${email}`);
+      if (!userString) {
+        return res.status(401).json({ message: 'Invalid credentials.' });
+      }
 
-    if (!user) {
-        return res.status(401).send({ message: 'Invalid credentials' });
+      const user = JSON.parse(userString);
+
+      const isValidPassword = await bcrypt.compare(password, user.hashedPassword);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: 'Invalid credentials.' });
+      }
+
+      // Generate JWT token
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'supersecretkey', { expiresIn: '1h' });
+
+      // Create a session in KV
+      const sessionId = `sess_${Date.now()}_${user.id}`;
+      await kv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
+      // Set session to expire in KV after 1 hour, matching JWT expiration
+
+      // Set HttpOnly cookie
+      res.setHeader('Set-Cookie', serialize('authToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development', // Use secure in production
+        sameSite: 'strict',
+        maxAge: 3600, // 1 hour
+        path: '/',
+      }));
+
+      return res.status(200).json({ message: 'Logged in successfully!', userId: user.id });
+    } catch (error) {
+      await logError(error, 'Login Processing Error');
+      return res.status(500).json({ message: 'Internal server error.' });
     }
-
-    const isMatch = await bcrypt.compare(password, user.password_hash);
-
-    if (!isMatch) {
-      return res.status(401).send({ message: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(200).send({ token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ message: 'Internal Server Error' });
+  } else {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-};
+}
