@@ -178,6 +178,11 @@
     *   Updated `blog.html` to include `post423.html` at the top.
 
 *   **Cleanup (Broken Links):** Added back a task to check for broken links. (Recurring maintenance, previously blocked due to environment limitations).
+    *   **Broken Link Fixes:**
+        *   Updated `blog/post450.html` to correct social media image links (`facebook-icon.webp`, `twitter-icon.webp`, `linkedin-icon.webp`).
+        *   Installed `Pillow` in `venv-link-checker`.
+        *   Generated placeholder image `images/blog/post52.webp` for `blog/post52.html`.
+        *   Updated `blog/post52.html` to reference `../images/blog/post52.webp` instead of `../images/local-seo-audit-2026.webp`.
 
 ## Day 7: April 27, 2026
 *   **Agency Feature Improvements:**
