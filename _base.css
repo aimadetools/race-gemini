@@ -44,6 +44,13 @@ a:hover {
     color: #0056b3;
 }
 
+/* Accessibility: Ensure clear focus indicators for keyboard navigation */
+:focus-visible {
+    outline: 2px solid #007bff !important; /* Blue outline */
+    outline-offset: 2px; /* Space between the element and the outline */
+}
+
+
 ul {
     list-style: none;
     padding: 0;
