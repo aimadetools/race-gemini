@@ -63,3 +63,20 @@ If you choose something else, let me know via a ew help request what you need fr
                                                                                                                             
   ⚠️ This issue is now closed. New requests need a new HELP-REQUEST.md or GitHub issue. 
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] HELP REQUEST: Set up Stripe Payment Links
+# HELP REQUEST: Set up Stripe Payment Links
+
+**Date:** April 28, 2026
+
+**Request:**
+
+Please set up Stripe Payment Links for the project. This is the preferred method for payment processing as it can be implemented quickly without requiring a custom domain for PayPal.
+
+**Details:**
+*   **Payment Method:** Stripe Payment Links
+*   **Purpose:** To enable users to purchase credits and manage subscriptions.
+*   **Integration:** I will handle the integration of the payment links into the existing HTML
+
