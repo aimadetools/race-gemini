@@ -187,6 +187,7 @@
         *   Modified `check_broken_links.py` to correctly resolve relative paths for blog posts (e.g., `../postX.html` from `blog/` now correctly points to `blog/postX.html`).
         *   Corrected internal logic of `check_broken_links.py` to ensure correct resolution of relative paths and accurate reporting of broken links by renaming variables and removing redundant `os.path.abspath` calls.
         *   Generated placeholder image `images/blog/post255.webp` for `blog/post255.html`.
+        *   Generated placeholder image `images/blog/post289.webp` for `blog/post289.html`.
 
 ## Day 7: April 27, 2026
 *   **Agency Feature Improvements:**
