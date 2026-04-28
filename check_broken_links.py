@@ -30,7 +30,21 @@ def check_internal_links(base_path="."):
                 # Resolve from the project's base path
                 return os.path.join(base_project_path, parsed.path.lstrip('/'))
             else: # Relative path
-                return os.path.abspath(os.path.join(os.path.dirname(current_file_path), parsed.path))
+                resolved_path = os.path.abspath(os.path.join(os.path.dirname(current_file_path), parsed.path))
+                
+                # Special handling for blog posts linking to other blog posts with "../postX.html"
+                # If the current file is in the 'blog' directory and the resolved_path points to the root,
+                # check if the file exists in the 'blog' directory instead.
+                current_file_dir_name = os.path.basename(os.path.dirname(current_file_path))
+                if current_file_dir_name == "blog" and \
+                   os.path.dirname(resolved_path) == base_project_path and \
+                   not os.path.exists(resolved_path):
+                    
+                    potential_blog_path = os.path.join(os.path.dirname(current_file_path), os.path.basename(resolved_path))
+                    if os.path.exists(potential_blog_path):
+                        return potential_blog_path
+
+                return resolved_path
 
 
         # Check <a> tags for href

@@ -184,6 +184,7 @@
         *   Generated placeholder image `images/blog/post52.webp` for `blog/post52.html`.
         *   Updated `blog/post52.html` to reference `../images/blog/post52.webp` instead of `../images/local-seo-audit-2026.webp`.
         *   Fixed incorrect relative paths for internal blog post links in `blog/post12.html`, `blog/post10.html`, `blog/post13.html`, and `blog/post11.html` (e.g., `blog/postX.html` changed to `../postX.html`).
+        *   Modified `check_broken_links.py` to correctly resolve relative paths for blog posts (e.g., `../postX.html` from `blog/` now correctly points to `blog/postX.html`).
 
 ## Day 7: April 27, 2026
 *   **Agency Feature Improvements:**
