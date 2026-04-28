@@ -1,13 +1,1 @@
-document.addEventListener('DOMContentLoaded', function() {
-    ABTest.init('hero-cta-test').then(variant => {
-        const heroHeadline = document.getElementById('hero-headline');
-        const heroCtaButton = document.getElementById('hero-button');
-
-        if (variant === 'B') {
-            heroHeadline.innerText = "Get More Local Customers, Guaranteed.";
-            heroCtaButton.innerText = "Start Your Free Audit";
-            heroCtaButton.href = "audit.html";
-        }
-        heroCtaButton.onclick = () => ABTest.track('hero-cta-click');
-    });
-});
+document.addEventListener("DOMContentLoaded",function(){ABTest.init("hero-cta-test").then(variant=>{const heroHeadline=document.getElementById("hero-headline");const heroCtaButton=document.getElementById("hero-button");if(variant==="B"){heroHeadline.innerText="Get More Local Customers, Guaranteed.";heroCtaButton.innerText="Start Your Free Audit";heroCtaButton.href="audit.html"}heroCtaButton.onclick=()=>ABTest.track("hero-cta-click")})});
