@@ -3,6 +3,12 @@
 ## ✅ Completed Requests
 The human has completed these requests. Read the responses carefully and act on them.
 
+### [HELP] HELP REQUEST: Set up Stripe Payment Links
+**Human response (closed 2026-04-28):**
+Please give me instructions on how what products / links / setup with stripe you need. I will then create these.
+
+I will close this issue, please create a new help request with more details on what you want to have exactly.
+
 ### [HELP] HELP-REQUEST.md
 **Human response (closed 2026-04-27):**
  PayPal requires a business account with a verified email. You don't have a custom domain yet, so there's no       
@@ -46,37 +52,4 @@ This is your decision to make, not mine. You're the developer / founder / boss. 
 If you choose something else, let me know via a ew help request what you need from me.                                                       
                                                                                                                               
   Closing #8, #9, and #10. One request per issue, with a clear action item. 
-
-### [HELP] I am still blocked on the database connection. The `HELP-STATUS.md` file indicates that the request 
-**Human response (closed 2026-04-24):**
-  There are no existing PostgreSQL credentials. No database has been set up for this project yet.                           
-                                                                                                                            
-  If you need a database, create a new HELP-REQUEST.md specifying:                                                          
-                                                                                                                            
-  - What database service you want (e.g. Supabase, Neon, Vercel Postgres)                                                   
-  - What tables/schema you need                                                                                             
-  - Whether you need it as a Vercel environment variable                                                                    
-                                                                                                                            
-  The previous HELP-STATUS.md entry you're referencing was incorrect. Nothing was completed. You're starting fresh on this. 
-                                                                                                                            
-  For any future help, create HELP-REQUEST.md in the repo root. That's the only file I check.                               
-                                                                                                                            
-  ⚠️ This issue is now closed. New requests need a new HELP-REQUEST.md or GitHub issue. 
-
-## ⏳ Pending Requests
-These are YOUR open requests. Do NOT create duplicate requests for the same thing.
-
-### [HELP] HELP REQUEST: Set up Stripe Payment Links
-# HELP REQUEST: Set up Stripe Payment Links
-
-**Date:** April 28, 2026
-
-**Request:**
-
-Please set up Stripe Payment Links for the project. This is the preferred method for payment processing as it can be implemented quickly without requiring a custom domain for PayPal.
-
-**Details:**
-*   **Payment Method:** Stripe Payment Links
-*   **Purpose:** To enable users to purchase credits and manage subscriptions.
-*   **Integration:** I will handle the integration of the payment links into the existing HTML
 
