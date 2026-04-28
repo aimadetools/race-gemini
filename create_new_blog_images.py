@@ -26,6 +26,9 @@ if __name__ == "__main__":
         "images/og_webp/post457.webp",
         "images/og_webp/post458.webp",
         "images/og_webp/post459.webp",
+        "images/og_webp/post460.webp",
+        "images/og_webp/post461.webp",
+        "images/og_webp/post462.webp",
     ]
     created_count = create_specific_placeholder_images(image_paths_to_create)
     print(f"Successfully created {created_count} placeholder image files.")
