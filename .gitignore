@@ -12,3 +12,7 @@ paypal_credentials.txt
 venv/
 venv-image-optimization/
 venv-*/
+__pycache__/
+db_credentials.txt
+image_conversion.log
+database.sql
