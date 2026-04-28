@@ -10,4 +10,4 @@
 *   **Performance Optimization:** Reviewed `index.html` and `about.html` for image optimization, confirming existing images (favicon, social icons) are either optimized or not present as local files for further processing.
 *   **UI/UX Improvement:** Implemented a "Scroll to Top" button on `blog.html` with appropriate HTML, CSS, and JavaScript functionality.
 *   **Accessibility Improvement:** Ensured visible focus indicators are present for all interactive elements (buttons, links, form fields) for users navigating with keyboards.
-*   **Stripe Integration:** Created `HELP-REQUEST.md` to request Stripe Payment Links for LocalLeads pricing tiers.
+*   **Stripe Integration:** Created `HELP-REQUEST-STRIPE-PAYMENT-LINKS.md` with detailed specifications for one-time Stripe Payment Links for Page Credit Packs.
