@@ -2,14 +2,14 @@
 
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
-*   **Agency White-Label Solution:** Develop a robust white-label solution for agencies, including a dedicated agency portal, client sub-accounts, custom branding, and streamlined page deployment workflows. (In Progress)
+*   **Agency White-Label Solution:** Develop a robust white-label solution for agencies, including a dedicated agency portal, client sub-accounts, custom branding, and streamlined page deployment workflows. (Completed)
     *   [x] Agency dashboard to view and manage clients.
     *   [x] Ability to add new clients.
     *   [x] Agency login.
-    *   [x] Custom branding for agencies. (In Progress)
+    *   [x] Custom branding for agencies. (Completed)
         *   [x] Agencies can set their logo URL and primary color.
         *   [x] Generated pages are branded with the agency's logo and color.
-    *   [x] Agency billing. (In Progress)
+    *   [x] Agency billing. (Completed)
         *   [x] Agencies can purchase credits.
         *   [x] Agencies can assign credits to clients.
         *   [x] Agencies can view their billing history.
