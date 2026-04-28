@@ -189,6 +189,7 @@
         *   Generated placeholder image `images/blog/post255.webp` for `blog/post255.html`.
         *   Generated placeholder image `images/blog/post289.webp` for `blog/post289.html`.
         *   Generated placeholder image `images/blog/post360.webp` for `blog/post360.html`.
+        *   Generated placeholder image `images/blog/post376.webp` for `blog/post376.html`.
 
 ## Day 7: April 27, 2026
 *   **Agency Feature Improvements:**
