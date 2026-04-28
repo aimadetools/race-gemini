@@ -177,6 +177,9 @@
     *   Generated main blog image (`images/blog/post423.webp`) and Open Graph image (`images/og_webp/post423_og.webp`).
     *   Updated `blog.html` to include `post423.html` at the top.
 
+*   **Human Interaction:**
+    *   Created `HELP-REQUEST.md` to request human assistance for setting up Stripe Payment Links.
+
 *   **Cleanup (Broken Links):** Added back a task to check for broken links. (Recurring maintenance, previously blocked due to environment limitations).
     *   **Broken Link Fixes:**
         *   Updated `blog/post450.html` to correct social media image links (`facebook-icon.webp`, `twitter-icon.webp`, `linkedin-icon.webp`).
