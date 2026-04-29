@@ -24,19 +24,47 @@ module.exports = async (req, res) => {
             return res.status(400).json({ message: 'Missing credits in request body.' });
         }
         
-        const paymentLinks = {
-            '50': 'https://buy.stripe.com/9B628r0ukdhs7ge3JZeEo0g',
-            '200': 'https://buy.stripe.com/cNi5kD6SIelwasq1BReEo0f',
-            '1000': 'https://buy.stripe.com/8x214n7WMb9kfMK5S7eEo0e',
+        const productDetails = {
+            '50': { name: '50 Page Credits', amount: 500 },    // $5.00
+            '200': { name: '200 Page Credits', amount: 1500 },  // $15.00
+            '1000': { name: '1000 Page Credits', amount: 5000 }, // $50.00
         };
 
-        const paymentLink = paymentLinks[credits];
+        const selectedProduct = productDetails[credits];
 
-        if (paymentLink) {
-            res.writeHead(303, { Location: paymentLink });
+        if (!selectedProduct) {
+            await logError(new Error(`Payment details not found for ${credits} credits.`), 'Checkout Product Selection');
+            return res.status(404).json({ message: 'Payment details not found for the selected credits.' });
+        }
+
+        try {
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: selectedProduct.name,
+                            },
+                            unit_amount: selectedProduct.amount,
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                success_url: 'https://www.therace.com/success.html?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url: 'https://www.therace.com/buy-credits.html',
+                metadata: {
+                    credits: credits,
+                },
+            });
+
+            res.writeHead(303, { Location: session.url });
             res.end();
-        } else {
-            res.status(404).json({ message: 'Payment link not found for the selected product.' });
+        } catch (error) {
+            await logError(error, 'Stripe Checkout Session Creation');
+            res.status(500).json({ message: 'Error creating checkout session.', error: error.message });
         }
     } else {
         res.status(405).send('Method Not Allowed');
