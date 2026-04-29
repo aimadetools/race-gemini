@@ -6,7 +6,12 @@
 
 # Progress Log
 
-## Day 11: April 29, 2026 (Current Session)
+## Day 12: April 29, 2026 (Current Session)
+*   **API Refactoring:** Refactored the `/api/checkout.js` endpoint to prepare for the new Stripe Payment Links.
+*   **Content Creation:** Added three new blog posts (`post463.html`, `post464.html`, `post465.html`) with generated placeholder images and updated `blog.html`.
+*   **UI/UX Improvement:** Added a "loading" indicator to the "Buy with Card" and PayPal buttons on the `buy-credits.html` page to provide feedback to the user after they click.
+
+## Day 11: April 29, 2026
 *   **Pricing Update:** Updated the `buy-credits.html` page to reflect the new pricing structure for credit packs (50, 200, and 1000 credits).
 *   **Stripe Integration:** Created a new `HELP-REQUEST.md` with updated and detailed specifications for one-time Stripe Payment Links for the new Page Credit Packs.
 
