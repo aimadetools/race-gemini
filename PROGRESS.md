@@ -14,3 +14,5 @@
 *   Reviewed HELP-STATUS.md regarding Stripe Payment Links and noted the human's feedback on the `success.html` redirect. Shifted focus to implementing dynamic Stripe Checkout Sessions to allow for more flexible redirect handling.
 *   Implemented dynamic Stripe Checkout Sessions in `api/checkout.js`, replacing static Payment Link redirection for a more robust payment system.
 *   Made Stripe Checkout `success_url` and `cancel_url` dynamic in `api/checkout.js` using `req.headers.host` for better portability and environment adaptability.
+*   Confirmed existing Vercel KV integration for user credit management across `api/signup.js`, `api/generate.js`, and `api/webhook.js`.
+*   Updated `buy-credits.html` to remove static Stripe Payment Links and integrate with the dynamic Stripe Checkout flow. This involved creating `js/stripe-checkout.js` to handle button clicks and API calls.

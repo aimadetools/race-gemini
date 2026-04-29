@@ -1,4 +1,4 @@
-What: Update Stripe Payment Links with success redirect URL.
+✅ What: Update Stripe Payment Links with success redirect URL.
 Steps:
 1. For each of the three Stripe Payment Links previously created:
    - 50 Page Credits ($5.00): `https://buy.stripe.com/9B628r0ukdhs7ge3JZeEo0g`
