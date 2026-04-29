@@ -16,3 +16,9 @@
 *   **Completed:** Implemented Article schema markup for all blog posts.
 *   **Completed:** Added blog search functionality to `blog.html` using `js/blog-search.js` for client-side filtering.
 *   **Completed:** Implemented responsive images using `srcset` and `sizes` attributes for blog post images, and added `loading="lazy"` where missing.
+*   **Completed:** Fully implemented the Payment and Credit System. This involved:
+    *   Confirming Stripe Payment Link integration in `api/checkout.js` for credit pack purchases.
+    *   Leveraging existing Vercel KV for persistent storage of user credit balances.
+    *   Verifying that `api/webhook.js` correctly adds credits to user/agency balances upon successful payment.
+    *   Verifying that `api/generate.js` checks and deducts user credits before page generation.
+    *   Confirmed existing JWT-based authentication is used to link credits to users.
