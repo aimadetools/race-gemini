@@ -53,8 +53,8 @@ module.exports = async (req, res) => {
                     },
                 ],
                 mode: 'payment',
-                success_url: 'https://www.therace.com/success.html?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url: 'https://www.therace.com/buy-credits.html',
+                success_url: `https://${req.headers.host}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `https://${req.headers.host}/buy-credits.html`,
                 metadata: {
                     credits: credits,
                 },
