@@ -111,12 +111,14 @@
         Perfect for small businesses.
        </li>
       </ul>
-      <form action="/api/checkout" method="POST">
+      <form action="/api/checkout" method="POST" onsubmit="showCardLoader(this)">
        <input name="credits" type="hidden" value="50"/>
        <button class="button" type="submit">
         Buy with Card
        </button>
+       <div class="loader"></div>
       </form>
+      <div class="loader-paypal"></div>
       <div id="paypal-button-container-50">
       </div>
      </div>
@@ -138,12 +140,14 @@
         Great value for growing businesses.
        </li>
       </ul>
-      <form action="/api/checkout" method="POST">
+      <form action="/api/checkout" method="POST" onsubmit="showCardLoader(this)">
        <input name="credits" type="hidden" value="200"/>
        <button class="button" type="submit">
         Buy with Card
        </button>
+       <div class="loader"></div>
       </form>
+      <div class="loader-paypal"></div>
       <div id="paypal-button-container-200">
       </div>
      </div>
@@ -165,12 +169,14 @@
         Best value for maximum reach.
        </li>
       </ul>
-      <form action="/api/checkout" method="POST">
+      <form action="/api/checkout" method="POST" onsubmit="showCardLoader(this)">
        <input name="credits" type="hidden" value="1000"/>
        <button class="button" type="submit">
         Buy with Card
        </button>
+       <div class="loader"></div>
       </form>
+      <div class="loader-paypal"></div>
       <div id="paypal-button-container-1000">
       </div>
      </div>
@@ -198,6 +204,13 @@
   <script data-sdk-integration-source="developer-studio" src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID">
   </script>
   <script>
+   function showCardLoader(form) {
+       const button = form.querySelector('button');
+       const loader = form.querySelector('.loader');
+       button.disabled = true;
+       loader.style.display = 'block';
+   }
+
    fetch('/api/paypal-client-id')
 .then(response => response.json())
 .then(data => {
@@ -205,7 +218,16 @@ const script = document.querySelector('script[src*="paypal.com/sdk/js"]');
 script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}`;
 });
 function renderPayPalButton(containerId, credits, price) {
-paypal.Buttons({
+    const loader = document.querySelector(`#${containerId}`).previousElementSibling;
+    paypal.Buttons({
+        onInit: function(data, actions) {
+            // Disable the buttons
+            actions.disable();
+        },
+        onClick: function() {
+            // Show a loader
+            loader.style.display = 'block';
+        },
 createOrder: function(data, actions) {
 return fetch('/api/paypal-checkout', {
 method: 'post',
@@ -236,6 +258,7 @@ orderID: data.orderID,
 credits: credits
 })
 }).then(function(res) {
+    loader.style.display = 'none';
 return res.json();
 }).then(function(data) {
 window.location.href = 'success.html';

@@ -54,6 +54,26 @@ module.exports = async (req, res) => {
             metadata.userId = decoded.userId;
         }
 
+        // TODO: Refactor to use Stripe Payment Links.
+        // This endpoint will be updated to redirect to a pre-created Payment Link URL.
+        // The Payment Link will be selected based on the 'priceId' or 'credits' from the request body.
+        // The actual Payment Links need to be created in the Stripe Dashboard and provided by a human.
+
+        // Placeholder for the future Payment Link logic
+        const paymentLinks = {
+            // price_12345: 'https://buy.stripe.com/link1',
+            // price_67890: 'https://buy.stripe.com/link2',
+        };
+
+        const paymentLink = paymentLinks[priceId];
+
+        if (paymentLink) {
+            res.writeHead(303, { Location: paymentLink });
+            res.end();
+        } else {
+            res.status(404).json({ message: 'Payment link not found for the selected product.' });
+        }
+        /*
         try {
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card', 'apple_pay'],
@@ -75,6 +95,7 @@ module.exports = async (req, res) => {
             await logError(error, 'Stripe checkout session creation failed');
             res.status(500).send('Failed to create checkout session.');
         }
+        */
     } else {
         res.status(405).send('Method Not Allowed');
     }
