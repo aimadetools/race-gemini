@@ -13,3 +13,6 @@
 *   **Completed:** Generated 10 new local SEO blog posts (post491.html to post500.html), updated blog.html, and managed backlog by marking content creation as complete.
 *   **Completed:** Created `success.html` page for payment redirects.
 *   **Completed:** Integrated Stripe Payment Links into `api/checkout.js` using `credits` from the frontend, replacing the old Stripe checkout session creation logic. (Manual verification of payment flow required.)
+*   **Completed:** Implemented Article schema markup for all blog posts.
+*   **Completed:** Added blog search functionality to `blog.html` using `js/blog-search.js` for client-side filtering.
+*   **Completed:** Implemented responsive images using `srcset` and `sizes` attributes for blog post images, and added `loading="lazy"` where missing.
