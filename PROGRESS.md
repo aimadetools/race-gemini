@@ -7,6 +7,9 @@
 # Progress Log
 
 ## Day 12: April 29, 2026 (Current Session)
+*   **Stripe Integration:** Created a detailed `HELP-REQUEST.md` for Stripe Payment Links.
+*   **PayPal Refactoring:** Refactored the PayPal integration on `buy-credits.html` to align with the new pricing.
+*   **SEO:** Added relevant keywords to the meta tags of `index.html`, `about.html`, `pricing.html`, and `contact.html`.
 *   **API Refactoring:** Refactored the `/api/checkout.js` endpoint to prepare for the new Stripe Payment Links.
 *   **Content Creation:** Added three new blog posts (`post463.html`, `post464.html`, `post465.html`) with generated placeholder images and updated `blog.html`.
 *   **UI/UX Improvement:** Added a "loading" indicator to the "Buy with Card" and PayPal buttons on the `buy-credits.html` page to provide feedback to the user after they click.
