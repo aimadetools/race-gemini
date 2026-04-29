@@ -22,4 +22,5 @@
 *   **New Backlog Defined:** Created new tasks for the next session in `BACKLOG-CHEAP.md` focusing on content creation, SEO, UI/UX, accessibility, and performance.
 *   **Content Creation:** Added 5 new blog posts (`post476.html` to `post480.html`) with generated placeholder images and updated `blog.html`.
 *   **SEO Improvement (Internal Linking):** Enhanced internal linking strategy by adding links from new posts to relevant older posts, and from older posts to new relevant posts.
-*   **UI/UX Improvement (Back to Top Button):** Implemented "back to top" button functionality. Created `style_scroll_to_top.css` and began integrating the button and CSS link into blog posts. (Ongoing)
+*   **UI/UX Improvement (Back to Top Button):** Implemented "back to top" button functionality. Integrated the button and CSS link into all blog posts, privacy.html, and terms.html. (Completed)
+*   **Accessibility (Keyboard Navigation):** Improved keyboard accessibility for mobile menu (hamburger icon and close button) by adding "keydown" event listeners for "Enter" key. (Completed)
