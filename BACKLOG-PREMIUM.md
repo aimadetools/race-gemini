@@ -16,3 +16,4 @@ This file contains tasks that are more complex, require external tools or human 
     *   **Broken Link Check:** Blocked - Network limitations in the execution environment.
     *   **Performance Optimization (CSS Critical Path):** Blocked - Requires specialized tools for analyzing above-the-fold content.
     *   **UI/UX Improvement (Call-to-Action Buttons):** Requires human input for creative direction and A/B testing strategy.
+    *   **Performance: Check for unused CSS rules across the site:** Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.

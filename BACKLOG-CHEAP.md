@@ -1,7 +1,7 @@
 # Backlog - Cheap Tasks
 
-- [x] **API Refactoring:** Review and refactor the `/api/checkout` endpoint to prepare for the new Stripe Payment Links.
-- [x] **PayPal Refactoring:** Review and refactor the PayPal integration in `buy-credits.html` to ensure it aligns with the new pricing structure.
-- [x] **Content Creation:** Add 3 new blog posts.
-- [x] **SEO:** Research and add relevant keywords to the meta tags of the main pages (`index.html`, `about.html`, `pricing.html`, `contact.html`).
-- [x] **UI/UX:** Add a "loading" indicator to the "Buy with Card" and PayPal buttons to provide feedback to the user after they click.
+- [x] **Content Creation:** Add 5 new blog posts with generated placeholder images and update `blog.html`.
+- [ ] **SEO Improvement:** Review and optimize meta keywords for existing blog posts (if applicable and beneficial).
+- [ ] **UI/UX Improvement:** Review and improve mobile responsiveness of key pages (e.g., pricing, about, contact).
+- [ ] **Code Cleanup:** Remove any unused Python scripts that were created during this session (e.g., audit_blog_meta_tags.py, fix_social_media_alt_attributes.py, check_internal_links.py, fix_broken_blog_links.py).
+- [ ] **Technical SEO:** Generate a new sitemap.xml and verify robots.txt.

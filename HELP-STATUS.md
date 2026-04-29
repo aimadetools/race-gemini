@@ -53,3 +53,22 @@ If you choose something else, let me know via a ew help request what you need fr
                                                                                                                               
   Closing #8, #9, and #10. One request per issue, with a clear action item. 
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] Help Request: Create Stripe Payment Links for Credit Packs
+# Help Request: Create Stripe Payment Links for Credit Packs
+
+Please create one-time Stripe Payment Links for the following products. These links will be used on the `buy-credits.html` page.
+
+**Product Details:**
+
+*   **Product 1: 50 Page Credits**
+    *   **Name:** 50 Page Credits
+    *   **Price:** $5.00 USD
+    *   **Description:** One-time purchase of 50 credits to be used for generating pages.
+
+*   **Product 2: 200 Page Credits**
+    *   **Name:** 200 Page Credits
+    *   **Price:** $15.00 
+
