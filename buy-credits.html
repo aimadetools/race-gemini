@@ -93,54 +93,25 @@
      Need more pages? Top up your account with our credit packs. Each credit allows you to generate one hyper-local, SEO-optimized page for your business.
     </p>
     <div class="price-cards">
-     <div class="card" data-credits="10" data-price="10" data-stripe-price-id="price_1PKyXqJd7gZvY2J8c6Z1Yq2L">
+     <div class="card" data-credits="50" data-price="50">
       <h3>
-       10 Credits
+       Small Business Pack
       </h3>
       <p class="price">
-       $10
+       $50
       </p>
       <p>
-       ($1.00 per page)
-      </p>
-      <ul>
-       <li>
-        Generate 10 hyper-local pages.
-       </li>
-       <li>
-        Perfect for small top-ups.
-       </li>
-      </ul>
-      <form action="/api/checkout" method="POST">
-       <input name="priceId" type="hidden" value="price_1PKyXqJd7gZvY2J8c6Z1Yq2L"/>
-       <input name="credits" type="hidden" value="10"/>
-       <button class="button" type="submit">
-        Buy with Card
-       </button>
-      </form>
-      <div id="paypal-button-container-10">
-      </div>
-     </div>
-     <div class="card" data-credits="50" data-price="45" data-stripe-price-id="price_1PKyYJJd7gZvY2J8c6Z1Yq2M">
-      <h3>
-       50 Credits
-      </h3>
-      <p class="price">
-       $45
-      </p>
-      <p>
-       ($0.90 per page)
+       (50 Page Credits)
       </p>
       <ul>
        <li>
         Generate 50 hyper-local pages.
        </li>
        <li>
-        Great value for growing businesses.
+        Perfect for small businesses.
        </li>
       </ul>
       <form action="/api/checkout" method="POST">
-       <input name="priceId" type="hidden" value="price_1PKyYJJd7gZvY2J8c6Z1Yq2M"/>
        <input name="credits" type="hidden" value="50"/>
        <button class="button" type="submit">
         Buy with Card
@@ -149,32 +120,58 @@
       <div id="paypal-button-container-50">
       </div>
      </div>
-     <div class="card" data-credits="100" data-price="80" data-stripe-price-id="price_1PKyZJJd7gZvY2J8c6Z1Yq2N">
+     <div class="card" data-credits="200" data-price="180">
       <h3>
-       100 Credits
+       Pro Pack
       </h3>
       <p class="price">
-       $80
+       $180
       </p>
       <p>
-       ($0.80 per page)
+       (200 Page Credits)
       </p>
       <ul>
        <li>
-        Generate 100 hyper-local pages.
+        Generate 200 hyper-local pages.
+       </li>
+       <li>
+        Great value for growing businesses.
+       </li>
+      </ul>
+      <form action="/api/checkout" method="POST">
+       <input name="credits" type="hidden" value="200"/>
+       <button class="button" type="submit">
+        Buy with Card
+       </button>
+      </form>
+      <div id="paypal-button-container-200">
+      </div>
+     </div>
+     <div class="card" data-credits="1000" data-price="800">
+      <h3>
+       Agency Pack
+      </h3>
+      <p class="price">
+       $800
+      </p>
+      <p>
+       (1000 Page Credits)
+      </p>
+      <ul>
+       <li>
+        Generate 1000 hyper-local pages.
        </li>
        <li>
         Best value for maximum reach.
        </li>
       </ul>
       <form action="/api/checkout" method="POST">
-       <input name="priceId" type="hidden" value="price_1PKyZJJd7gZvY2J8c6Z1Yq2N"/>
-       <input name="credits" type="hidden" value="100"/>
+       <input name="credits" type="hidden" value="1000"/>
        <button class="button" type="submit">
         Buy with Card
        </button>
       </form>
-      <div id="paypal-button-container-100">
+      <div id="paypal-button-container-1000">
       </div>
      </div>
     </div>
@@ -247,9 +244,9 @@ window.location.href = 'success.html';
 }).render(`#${containerId}`);
 }
 document.addEventListener('DOMContentLoaded', function() {
-renderPayPalButton('paypal-button-container-10', '10', '10.00');
-renderPayPalButton('paypal-button-container-50', '50', '45.00');
-renderPayPalButton('paypal-button-container-100', '100', '80.00');
+renderPayPalButton('paypal-button-container-50', '50', '50.00');
+renderPayPalButton('paypal-button-container-200', '200', '180.00');
+renderPayPalButton('paypal-button-container-1000', '1000', '800.00');
 });
   </script>
   <script src="/js/app.js">
