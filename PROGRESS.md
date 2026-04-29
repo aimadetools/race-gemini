@@ -22,3 +22,9 @@
     *   Verifying that `api/webhook.js` correctly adds credits to user/agency balances upon successful payment.
     *   Verifying that `api/generate.js` checks and deducts user credits before page generation.
     *   Confirmed existing JWT-based authentication is used to link credits to users.
+*   **Completed:** Integrated direct Stripe Payment Links into `buy-credits.html` by replacing old form submissions with direct `<a>` links.
+*   **Completed:** Removed unused `showCardLoader` JavaScript function from `buy-credits.html`.
+*   **Completed:** Filed a help request to update Stripe Payment Links with `success.html` redirect.
+*   **Completed:** Reviewed and verified `api/checkout.js` and `api/webhook.js` logic for credit purchases. Both files appear to be correctly set up for handling credit purchases and redirects with Stripe Payment Links.
+*   **Completed:** Verified `api/generate.js` credit deduction logic. The implementation correctly checks user credits, calculates pages to generate, and deducts credits only upon successful page generation, with comprehensive error handling.
+*   **Completed:** Enhanced `generate.html` UX by adding elements for displaying current credits, estimated credits, and credit status messages. Modified `js/generate.js` to fetch user credits, calculate estimated credits in real-time, update the UI, and disable the generate button if credits are insufficient.

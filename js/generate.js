@@ -12,16 +12,76 @@ document.addEventListener('DOMContentLoaded', () => {
     const townsInput = document.getElementById('towns');
     const townsCharCount = document.getElementById('towns-char-count');
 
+    // Credit display elements
+    const currentCreditsSpan = document.getElementById('current-credits');
+    const estimatedCreditsSpan = document.getElementById('estimated-credits');
+    const creditsStatusMessageDiv = document.getElementById('credits-status-message');
+    let currentCredits = 0; // Initialize current credits
+
+    async function fetchUserCredits() {
+        try {
+            const response = await fetch('/api/dashboard', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                currentCredits = data.user.credits || 0;
+                currentCreditsSpan.textContent = currentCredits;
+                updateCreditEstimates(); // Update estimates after fetching credits
+            } else {
+                console.error('Failed to fetch user credits:', response.statusText);
+                currentCreditsSpan.textContent = 'Error';
+            }
+        } catch (error) {
+            console.error('Error fetching user credits:', error);
+            currentCreditsSpan.textContent = 'Error';
+        }
+    }
+
+    function updateCreditEstimates() {
+        const servicesCount = servicesInput.value.split(',').filter(s => s.trim() !== '').length;
+        const townsCount = townsInput.value.split(',').filter(t => t.trim() !== '').length;
+        const estimatedCredits = servicesCount * townsCount;
+        estimatedCreditsSpan.textContent = estimatedCredits;
+
+        if (currentCredits === 0) {
+            creditsStatusMessageDiv.innerHTML = `<span class="error-message">You have 0 credits. <a href="/buy-credits.html">Buy credits now!</a></span>`;
+            submitButton.disabled = true;
+        } else if (estimatedCredits > currentCredits) {
+            const needed = estimatedCredits - currentCredits;
+            creditsStatusMessageDiv.innerHTML = `<span class="error-message">You need ${needed} more credits. <a href="/buy-credits.html">Buy credits now!</a></span>`;
+            submitButton.disabled = true;
+        } else if (estimatedCredits === 0) {
+            creditsStatusMessageDiv.innerHTML = '';
+            submitButton.disabled = true; // Disable until some input is provided
+        }
+        else {
+            creditsStatusMessageDiv.innerHTML = `<span class="success-message">You have enough credits.</span>`;
+            submitButton.disabled = false;
+        }
+    }
+
     function updateCharCount(inputElement, countElement) {
         countElement.textContent = inputElement.value.length;
     }
 
-    servicesInput.addEventListener('input', () => updateCharCount(servicesInput, servicesCharCount));
-    townsInput.addEventListener('input', () => updateCharCount(townsInput, townsCharCount));
-
     // Initial count update
     updateCharCount(servicesInput, servicesCharCount);
     updateCharCount(townsInput, townsCharCount);
+    
+    fetchUserCredits(); // Fetch credits on load
+
+    // Event listeners for real-time credit estimation and char count
+    servicesInput.addEventListener('input', () => {
+        updateCharCount(servicesInput, servicesCharCount);
+        updateCreditEstimates();
+    });
+    townsInput.addEventListener('input', () => {
+        updateCharCount(townsInput, townsCharCount);
+        updateCreditEstimates();
+    });
 
     // Toggle AI Style group visibility
     enableAICopyCheckbox.addEventListener('change', function () {
