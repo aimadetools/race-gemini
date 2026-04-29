@@ -3,9 +3,8 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   **Implement Payment and Credit System:** Design and build a robust system to handle payments, and manage user credits. This includes integrating the provided Stripe Payment Links and updating the `/api/checkout` endpoint.
 
-*   **Completed Core Features:** Agency White-Label Solution, Customer Authentication, Usage-based pricing, Optimized images for faster loading, CI/CD pipeline, AI-powered content generation, Client portal, A/B testing framework, Advanced analytics dashboard, Multi-language support (Proof-of-Concept), and expanded payment options (PayPal integration, Apple Pay integration).
+*   **Completed Core Features:** Agency White-Label Solution, Customer Authentication, Usage-based pricing, Optimized images for faster loading, CI/CD pipeline, AI-powered content generation, Client portal, A/B testing framework, Advanced analytics dashboard, Multi-language support (Proof-of-Concept), expanded payment options (PayPal integration, Apple Pay integration), and **Payment and Credit System (initial API integration complete, awaiting manual Stripe Payment Link configuration).**
 
 *   **Blocked / Requires External Intervention:**
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
