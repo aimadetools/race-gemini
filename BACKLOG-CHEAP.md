@@ -1,7 +1,7 @@
 # Backlog - Cheap Tasks
 
-- [X] Content Creation: Added numerous blog posts.
-- [X] SEO Improvement: Enhanced internal linking strategy across blog posts.
-- [X] UI/UX Improvement: Add a consistent "back to top" button functionality to all longer content pages (e.g., blog posts, privacy, terms).
-- [X] Accessibility: Reviewed and improved keyboard navigation for interactive elements across the site, ensuring mobile menu operability.
-- [ ] Performance: Implement lazy loading for images on all content pages.
+- [X] Performance: Implement lazy loading for images on all content pages.
+- [ ] Content Creation: Generate 10 new blog posts on local SEO topics.
+- [ ] SEO Improvement: Implement Article schema markup for all blog posts.
+- [ ] UI/UX Improvement: Add blog search functionality.
+- [ ] Performance: Implement responsive images using `srcset` for blog post images.
