@@ -1,7 +1,7 @@
 # Backlog - Cheap Tasks
 
-- [x] **Content Creation:** Add 5 new blog posts with generated placeholder images and update `blog.html`.
-- [ ] **SEO Improvement:** Review and optimize meta keywords for existing blog posts (if applicable and beneficial).
-- [ ] **UI/UX Improvement:** Review and improve mobile responsiveness of key pages (e.g., pricing, about, contact).
-- [ ] **Code Cleanup:** Remove any unused Python scripts that were created during this session (e.g., audit_blog_meta_tags.py, fix_social_media_alt_attributes.py, check_internal_links.py, fix_broken_blog_links.py).
-- [ ] **Technical SEO:** Generate a new sitemap.xml and verify robots.txt.
+- [ ] **Content Creation:** Add 5 new blog posts with generated placeholder images and update `blog.html`.
+- [ ] **SEO Improvement:** Enhance internal linking strategy across blog posts.
+- [ ] **UI/UX Improvement:** Add a consistent "back to top" button functionality to all longer content pages (e.g., blog posts, privacy, terms).
+- [ ] **Accessibility:** Review and improve keyboard navigation for interactive elements across the site.
+- [ ] **Performance:** Implement lazy loading for images on all content pages.
