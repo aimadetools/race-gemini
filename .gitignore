@@ -16,3 +16,7 @@ __pycache__/
 db_credentials.txt
 image_conversion.log
 database.sql
+
+# Build artifacts
+dist/
+build/
