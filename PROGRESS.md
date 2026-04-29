@@ -11,6 +11,6 @@
 # Progress Log
 
 ## Day 13: April 29, 2026
-*   Acknowledged manual task from HELP-REQUEST.md: User needs to update Stripe Payment Links in the Stripe Dashboard to set `https://www.therace.com/success.html` as the success redirect URL. This is a blocking manual step for the user before full payment system integration can be completed.
+*   Reviewed HELP-STATUS.md regarding Stripe Payment Links and noted the human's feedback on the `success.html` redirect. Shifted focus to implementing dynamic Stripe Checkout Sessions to allow for more flexible redirect handling.
 *   Implemented dynamic Stripe Checkout Sessions in `api/checkout.js`, replacing static Payment Link redirection for a more robust payment system.
 *   Made Stripe Checkout `success_url` and `cancel_url` dynamic in `api/checkout.js` using `req.headers.host` for better portability and environment adaptability.

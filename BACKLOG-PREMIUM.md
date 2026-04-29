@@ -4,7 +4,7 @@ This file contains tasks that are more complex, require external tools or human 
 
 *   **Next Up:**
 
-*   **Completed Core Features:** Agency White-Label Solution, Customer Authentication, Usage-based pricing, Optimized images for faster loading, CI/CD pipeline, AI-powered content generation, Client portal, A/B testing framework, Advanced analytics dashboard, Multi-language support (Proof-of-Concept), expanded payment options (PayPal integration, Apple Pay integration), and **Payment and Credit System (initial API integration complete, awaiting manual Stripe Payment Link configuration).**
+*   **Completed Core Features:** Agency White-Label Solution, Customer Authentication, Usage-based pricing, Optimized images for faster loading, CI/CD pipeline, AI-powered content generation, Client portal, A/B testing framework, Advanced analytics dashboard, Multi-language support (Proof-of-Concept), expanded payment options (PayPal integration, Apple Pay integration), and **Payment and Credit System (robust API integration with dynamic Stripe Checkout sessions).**
 
 *   **Blocked / Requires External Intervention:**
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
