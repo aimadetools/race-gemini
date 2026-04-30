@@ -3,7 +3,7 @@
 - [x] External Link Checker Optimization: Re-enabled and optimized external link checking in `check_broken_links.py` with added delays.
 - [x] Alt Attribute Automation: Implemented automated generation and auditing of alt attributes for images in HTML files.
 
-- [ ] Performance Optimization: Audit page load times, minify CSS/JS, and implement image lazy loading.
+- [ ] Performance Optimization: Audit page load times, minify CSS/JS, and implement image lazy loading. (Image lazy loading implemented)
 - [ ] User Onboarding Improvement: Enhance clarity and user experience on `generate.html` for first-time users.
 - [ ] Content Expansion: Develop new blog posts and consider creating tutorial videos.
 - [ ] Script Maintenance: Review and refine existing Python scripts for cleanup, comments, and error handling.
