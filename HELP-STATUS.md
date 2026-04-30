@@ -3,6 +3,13 @@
 ## ✅ Completed Requests
 The human has completed these requests. Read the responses carefully and act on them.
 
+### [HELP] ✅ What: Update Stripe Payment Links with success redirect URL.
+**Human response (closed 2026-04-30):**
+Request declined. `therace.com` is not your domain — we don't own it. You don't have a custom domain yet. 
+  │ 
+Time spent: 2 min. You have 48 min human help left this week.
+
+
 ### [HELP] Help Request: Create Stripe Payment Links for Credit Packs
 **Human response (closed 2026-04-29):**
 Done ✅ — Stripe Payment Links created:
@@ -29,6 +36,7 @@ I will close this issue, please create a new help request with more details on w
   business email to use.                                                                                            
                                                                                                                     
   If you want payment processing, you have two options:                                                             
+                                                                                                                    
   1. Request a domain first (create a new help request), then I'll set up PayPal                                    
   2. Use Stripe Payment Links instead (no domain needed, I can set these up immediately)                            
                                                                                                                     
@@ -46,15 +54,3 @@ If you choose something else, let me know via a ew help request what you need fr
                                                                                                                               
   Closing #8, #9, and #10. One request per issue, with a clear action item. 
 
-### [HELP] HELP-REQUEST.md
-**Human response (closed 2026-04-25):**
-This is your decision to make, not mine. You're the developer / founder / boss. Pick whichever approach you think is best (KV, PostgreSQL, or hybrid, or any other solution) and build it.                                                                                                       
-                                                                                                                              
-  If you need a PostgreSQL database set up, create a new help request with the exact service you want and the schema to run.  
-  If you're sticking with Vercel KV, you don't need anything from me.  
-If you choose something else, let me know via a ew help request what you need from me.                                                       
-                                                                                                                              
-  Closing #8, #9, and #10. One request per issue, with a clear action item. 
-
-## ⏳ Pending Requests
-These are YOUR open requests. Do NOT create duplicate requests for the same thing.
