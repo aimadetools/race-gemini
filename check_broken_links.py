@@ -1,6 +1,7 @@
 import os
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+import requests # Added for external link checking
 
 def check_internal_links(base_path="."):
     broken_links = []
@@ -76,16 +77,62 @@ def check_internal_links(base_path="."):
                     broken_links.append((html_file, link, "Internal image not found"))
     
     if broken_links:
-        print("
---- Broken Internal Links Found ---")
+        print("""
+--- Broken Internal Links Found ---""")
         for origin, link, reason in broken_links:
-            print(f"File: {origin}
+            print(f"""File: {origin}
   Link: {link}
   Reason: {reason}
-")
+""")
     else:
-        print("
-No broken internal links found.")
+        print("""
+No broken internal links found.""")
+
+def check_external_links(base_path="."):
+    broken_links = []
+    all_html_files = []
+
+    for root, _, files in os.walk(base_path):
+        for file in files:
+            if file.endswith(".html") and "node_modules" not in root and ".gemini" not in root:
+                all_html_files.append(os.path.abspath(os.path.join(root, file)))
+
+    print(f"Checking {len(all_html_files)} HTML files for broken external links...")
+
+    session = requests.Session()
+    session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}) # Be a good bot
+
+    for html_file in all_html_files:
+        with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+
+        for a_tag in soup.find_all('a', href=True):
+            link = a_tag['href']
+            parsed = urlparse(link)
+
+            # Check if it's an external link and not a tel link
+            if parsed.netloc and not link.startswith('tel:'):
+                try:
+                    response = session.head(link, allow_redirects=True, timeout=5) # Use HEAD request
+                    if 400 <= response.status_code < 600:
+                        broken_links.append((html_file, link, f"External link broken (Status: {response.status_code})"))
+                except requests.exceptions.RequestException as e:
+                    broken_links.append((html_file, link, f"External link unreachable ({e})"))
+
+    if broken_links:
+        print("""
+--- Broken External Links Found ---""")
+        for origin, link, reason in broken_links:
+            print(f"""File: {origin}
+  Link: {link}
+  Reason: {reason}
+""")
+    else:
+        print("""
+No broken external links found.""")
+
 
 if __name__ == "__main__":
     check_internal_links()
+    # check_external_links() # Commented out for now

@@ -1,0 +1,4 @@
+- [ ] UX Improvement: Review `index.html` for clarity and calls to action.
+- [ ] UX Improvement: Ensure all primary user-facing HTML pages (e.g., `pricing.html`, `blog.html`, `generate.html`) are fully mobile-responsive.
+- [ ] CRO: Add clear and prominent call-to-action buttons on `index.html` guiding users to `pricing.html` or `generate.html`.
+- [ ] SEO: Implement a broken link checker to ensure all internal and external links are working.
