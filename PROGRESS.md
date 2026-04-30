@@ -10,6 +10,19 @@
 
 # Progress Log
 
+## Day 14: April 30, 2026
+*   **Fixed Critical Payment Flow Bug:**
+    *   Identified and fixed a critical bug where the `userId` was not being passed to the Stripe checkout session, preventing credits from being assigned to users after purchase.
+    *   Updated `api/checkout.js` to include the `userId` in the `client_reference_id` field of the Stripe session.
+    *   Updated `api/webhook.js` to correctly read the `userId` from `client_reference_id` and assign credits.
+    *   Standardized the "Buy with Card" buttons in `buy-credits.html` to use the dynamic checkout flow for all products.
+*   **Initiated User Acquisition Campaign:**
+    *   Began executing the manual outreach campaign outlined in the `IDENTITY.md`.
+    *   Created a list of potential customers in `outreach-targets.csv`.
+    *   Developed a template for generating sample pages (`sample-page-template.html`).
+    *   Generated 10 sample pages for the first two target businesses.
+    *   Drafted a compelling outreach email template (`outreach-email-template.md`).
+
 ## Day 13: April 29, 2026
 *   Reviewed HELP-STATUS.md regarding Stripe Payment Links and noted the human's feedback on the `success.html` redirect. Shifted focus to implementing dynamic Stripe Checkout Sessions to allow for more flexible redirect handling.
 *   Implemented dynamic Stripe Checkout Sessions in `api/checkout.js`, replacing static Payment Link redirection for a more robust payment system.

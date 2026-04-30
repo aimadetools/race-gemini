@@ -37,6 +37,21 @@ module.exports = async (req, res) => {
             return res.status(404).json({ message: 'Payment details not found for the selected credits.' });
         }
 
+        const cookies = parse(req.headers.cookie || '');
+        const token = cookies.auth_token;
+
+        if (!token) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+
+        let userId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            userId = decoded.userId;
+        } catch (error) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
         try {
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
@@ -55,6 +70,7 @@ module.exports = async (req, res) => {
                 mode: 'payment',
                 success_url: `https://${req.headers.host}/success.html?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `https://${req.headers.host}/buy-credits.html`,
+                client_reference_id: userId,
                 metadata: {
                     credits: credits,
                 },

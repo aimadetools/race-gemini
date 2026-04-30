@@ -31,11 +31,12 @@ module.exports = async (req, res) => {
 
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
-            const { userId, agencyId, credits } = session.metadata;
+            const userId = session.client_reference_id;
+            const credits = session.metadata.credits;
 
-            if ((!userId && !agencyId) || !credits) {
-                await logError(new Error('Missing userId/agencyId or credits in session metadata.'), 'Stripe Webhook - Missing Metadata');
-                return res.status(400).json({ message: 'Missing identifier or credits in session metadata.' });
+            if (!userId || !credits) {
+                await logError(new Error('Missing userId (from client_reference_id) or credits in session.'), 'Stripe Webhook - Missing Data');
+                return res.status(400).json({ message: 'Missing user identifier or credits in session.' });
             }
 
             try {
@@ -47,38 +48,26 @@ module.exports = async (req, res) => {
                     payment_status: session.payment_status,
                 };
 
-                if (agencyId) {
-                    const agency = await kv.get(`agency:${agencyId}`);
-                    if (!agency) {
-                        await logError(new Error(`Agency not found for agencyId: ${agencyId}`), 'Stripe Webhook - Agency Retrieval');
-                        return res.status(404).json({ message: 'Agency not found.' });
-                    }
-                    agency.credits = (agency.credits || 0) + parseInt(credits, 10);
-                    await kv.set(`agency:${agencyId}`, agency);
-                    await kv.zadd(`agency:${agencyId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
-                    console.log(`Agency ${agencyId} successfully purchased ${credits} credits.`);
-                } else {
-                    // Retrieve user email from userId
-                    const userEmail = await kv.get(`userId:${userId}`);
-                    if (!userEmail) {
-                        await logError(new Error(`User email not found for userId: ${userId}`), 'Stripe Webhook - User Retrieval');
-                        return res.status(404).json({ message: 'User not found.' });
-                    }
-
-                    // Retrieve full user object
-                    const userString = await kv.get(`user:${userEmail}`);
-                    if (!userString) {
-                        await logError(new Error(`User profile not found for email: ${userEmail}`), 'Stripe Webhook - User Profile Retrieval');
-                        return res.status(404).json({ message: 'User profile not found.' });
-                    }
-                    let user = JSON.parse(userString);
-
-                    // Update user credits
-                    user.credits = (user.credits || 0) + parseInt(credits, 10);
-                    await kv.set(`user:${userEmail}`, JSON.stringify(user));
-                    await kv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
-                    console.log(`User ${userId} successfully purchased ${credits} credits.`);
+                // Retrieve user email from userId
+                const userEmail = await kv.get(`userId:${userId}`);
+                if (!userEmail) {
+                    await logError(new Error(`User email not found for userId: ${userId}`), 'Stripe Webhook - User Retrieval');
+                    return res.status(404).json({ message: 'User not found.' });
                 }
+
+                // Retrieve full user object
+                const userString = await kv.get(`user:${userEmail}`);
+                if (!userString) {
+                    await logError(new Error(`User profile not found for email: ${userEmail}`), 'Stripe Webhook - User Profile Retrieval');
+                    return res.status(404).json({ message: 'User profile not found.' });
+                }
+                let user = JSON.parse(userString);
+
+                // Update user credits
+                user.credits = (user.credits || 0) + parseInt(credits, 10);
+                await kv.set(`user:${userEmail}`, JSON.stringify(user));
+                await kv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
+                console.log(`User ${userId} successfully purchased ${credits} credits.`);
             } catch (error) {
                 await logError(error, 'Stripe Webhook - Credit Update Failed');
                 return res.status(500).json({ message: 'Error updating credits.' });
