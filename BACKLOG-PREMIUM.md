@@ -19,3 +19,4 @@ This file contains tasks that are more complex, require external tools or human 
     *   **Performance Optimization (CSS Critical Path):** Blocked - Requires specialized tools for analyzing above-the-fold content.
     *   **UI/UX Improvement (Call-to-Action Buttons):** Requires human input for a creative direction and A/B testing strategy.
     *   **Performance: Check for unused CSS rules across the site:** Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
+    *   **C6: Clean up unused CSS classes from `style.css`**: Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
