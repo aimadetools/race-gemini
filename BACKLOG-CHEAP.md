@@ -1,5 +1,0 @@
-- [x] C1: Create a new blog post targeting dentists.
-- [x] C2: Generate more sample pages for outreach.
-- [x] C3: Review `index.html` and `about.html` for clear calls to action and benefits for agencies.
-- [x] C4: Implement structured data (JSON-LD) for the `faq.html` page.
-- [x] C5: Add a simple "scroll to top" button to all pages for improved UX.
