@@ -15,4 +15,4 @@
 # Progress Log
 
 ## Day 15: April 30, 2026
-*   Managed backlog, created new blog post, refactored `api/generate.js`, updated all blog posts' JSON-LD dates, added "scroll to top" button, completed manual outreach campaign setup (identified 50 businesses, generated 250 sample pages, confirmed email draft, simulated sending), and audited HTML files for missing or empty alt attributes (no issues found).
+*   Managed backlog, created new blog post, refactored `api/generate.js`, updated all blog posts' JSON-LD dates, added "scroll to top" button, completed manual outreach campaign setup (identified 50 businesses, generated 250 sample pages, confirmed email draft, simulated sending), audited HTML files for missing or empty alt attributes (no issues found), and audited image file sizes (no images found larger than 500KB).
