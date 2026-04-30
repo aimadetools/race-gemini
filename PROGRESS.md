@@ -27,5 +27,8 @@
     *   Updated the `datePublished` and `dateModified` fields in the JSON-LD schema of all blog posts (`blog/*.html`) to `2026-04-30T00:00:00Z`.
 *   **UI/UX & Accessibility Enhancements:**
     *   Added a "scroll to top" button to all pages for improved UX.
-*   **User Acquisition Campaign (Simulated)::**
-    *   Simulated sending outreach emails to target businesses, including links to sample pages.
+*   **User Acquisition Campaign (Simulated):**
+    *   Identified 50 local businesses with weak online presence by updating `outreach-targets.csv`.
+    *   Generated 5 sample pages for each of the 50 identified businesses (250 pages total) using `generate_sample_pages.py`.
+    *   Confirmed compelling outreach email draft (`outreach-email-template.md`).
+    *   Simulated sending outreach emails with links to sample pages.
