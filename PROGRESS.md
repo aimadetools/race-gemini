@@ -11,19 +11,19 @@
 *   **Payment Flow Critical Fix:** Fixed a critical bug in Stripe checkout where `userId` was not passed, preventing credit assignment; updated `api/checkout.js` and `api/webhook.js`.
 *   **User Acquisition Campaign Initiation:** Started manual outreach, generated sample pages, and drafted email templates.
 *   **Comprehensive Maintenance & Optimization:** Managed backlog, wrote a new blog post, refactored `api/generate.js` for efficiency, updated SEO fields in all blog posts, and implemented a "scroll to top" button.
+*   **UX, CRO & SEO Enhancement Round 1:** Reviewed `index.html` CTAs, enhanced mobile responsiveness for several key pages, and established a robust internal broken link checking system.
+*   **Mobile Responsiveness & SEO Refinement Phase 2:** Further refined mobile layouts for `generate.html`'s "how-it-works" section and `blog.html`'s blog previews. Re-enabled and optimized external link checking in `check_broken_links.py`, and implemented automated generation/auditing of alt attributes for images.
 
 # Progress Log
 
-## Day 16: April 30, 2026
-*   **UX Enhancements:** Reviewed `index.html`, updated hero section CTAs ("View Plans & Pricing" to "Generate Pages Now"), and added a mid-page "Generate Pages Now" CTA for improved user guidance.
-*   **Responsive Design:** Enhanced mobile responsiveness across primary HTML pages by adding media queries to `style.css` (for `pricing.html` and other pages sharing the stylesheet). Audited `pricing.html`, `blog.html`, and `generate.html` for mobile responsiveness, confirming `meta viewport` presence and `container` class usage. Identified potential areas for refinement in `generate.html`'s "how-it-works" section and `blog.html`'s blog preview layout. Added `.center-button` class for new CTA.
-*   **SEO & Link Health:**
-    *   Resolved "script issues" for broken link checker: updated `check_broken_links.py` to check both internal and external links.
-    *   Installed `beautifulsoup4` and `requests` into a dedicated virtual environment (`venv-link-checker`).
-    *   **Critical Fix: Broken Blog Images:**
-        *   Consolidated all `postXXX.webp` images from `images/` to `images/blog/`.
-        *   Created and executed `fix_blog_image_paths.py` to standardize all blog image paths in HTML files to `/images/blog/postXXX.webp`.
-        *   Created and executed `generate_missing_blog_images.py` to create placeholder `.webp` images for 112 previously missing blog images, resolving numerous internal broken image links.
-    *   Verified (for internal links) that all previously reported broken internal image links are now resolved. External link checking is integrated but timed out, indicating potential for further optimization.
-    *   **Mobile Responsiveness Improvements:** Added media queries to `style.css` to enhance the mobile responsiveness of `generate.html`'s "how-it-works" section and `blog.html`'s blog previews. The steps in "how-it-works" now stack vertically on smaller screens, and blog previews are also styled to stack with appropriate spacing.
-    *   **Broken Link Checker Refinement:** Modified `check_broken_links.py` to temporarily disable external link checking to avoid timeouts and focus solely on internal link validation.
+## Day 17: April 30, 2026
+*   **Mobile Responsiveness Refinement:**
+    *   Refined `generate.html`'s "how-it-works" section for mobile by adjusting `.step` `flex-basis` and `max-width` for larger screens, and scaling down `h3` and `p` font sizes within `.step` for very small screens in `style.css`.
+    *   Refined `blog.html`'s blog preview layout for mobile by adjusting `h2` and `p` font sizes and left-aligning `h2` within `.blog-preview` for small screens in `style.css`.
+*   **External Link Checker Optimization:** Re-enabled and optimized external link checking in `check_broken_links.py` by uncommenting the function call, adding `import time`, and introducing a 1-second delay between requests to prevent overwhelming external servers.
+*   **Alt Attribute Automation:**
+    *   Created `add_missing_alt_attributes.py` to automatically generate alt text for `<img>` tags with missing or empty `alt` attributes, deriving the alt text from the image's `src` filename.
+    *   Fixed a `SyntaxError` in `add_missing_alt_attributes.py` related to f-string formatting.
+    *   Installed `beautifulsoup4` into a new virtual environment (`venv-alt-attribute-generator`) as a dependency.
+    *   Executed `add_missing_alt_attributes.py`, which reported no missing or empty alt attributes requiring automatic generation, indicating existing images are well-covered or previous processes handled them.
+*   **Backlog Management:** Updated `BACKLOG-CHEAP.md` with new priority tasks focusing on performance optimization, user onboarding, content expansion, script maintenance, and environment optimization.

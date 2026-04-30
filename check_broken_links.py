@@ -2,6 +2,7 @@ import os
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests # Added for external link checking
+import time
 
 def check_internal_links(base_path="."):
     broken_links = []
@@ -119,6 +120,7 @@ def check_external_links(base_path="."):
                         broken_links.append((html_file, link, f"External link broken (Status: {response.status_code})"))
                 except requests.exceptions.RequestException as e:
                     broken_links.append((html_file, link, f"External link unreachable ({e})"))
+                time.sleep(1) # Add a delay to avoid overwhelming external servers
 
     if broken_links:
         print("""
@@ -135,4 +137,4 @@ No broken external links found.""")
 
 if __name__ == "__main__":
     check_internal_links()
-    # check_external_links()
+    check_external_links()
