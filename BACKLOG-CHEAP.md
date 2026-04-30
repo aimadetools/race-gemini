@@ -1,4 +1,4 @@
 - [x] UX Improvement: Review `index.html` for clarity and calls to action.
-- [ ] UX Improvement: Enhance mobile responsiveness for 'generate.html' (specifically 'how-it-works' section) and 'blog.html' (ensure blog-previews stack well on small screens).
+- [x] UX Improvement: Enhance mobile responsiveness for 'generate.html' (specifically 'how-it-works' section) and 'blog.html' (ensure blog-previews stack well on small screens).
 - [x] CRO: Add clear and prominent call-to-action buttons on `index.html` guiding users to `pricing.html` or `generate.html`.
 - [x] SEO: Implement a broken link checker to ensure all internal and external links are working.
