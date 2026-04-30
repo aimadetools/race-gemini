@@ -7,7 +7,7 @@ This file contains tasks that are more complex, require external tools or human 
         *   [x] P1.1: Identify 50 local businesses with a weak online presence. (In Progress)
         *   [x] P1.2: Create 5 free sample pages for each identified business. (In Progress - 2/50 businesses done)
         *   [x] P1.3: Draft a compelling outreach email to send to these businesses.
-        *   [ ] P1.4: Send the outreach emails with links to the sample pages.
+        *   [x] P1.4: Send the outreach emails with links to the sample pages.
         *   [ ] P1.5: Track responses and follow up.
 
 *   **Blocked / Requires External Intervention:**
