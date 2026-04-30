@@ -1,280 +1,281 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
    Agency Dashboard - LocalLeads
   </title>
-  <meta content="Manage your clients and their local SEO pages." name="description"/>
-  <link href="style.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="/images/favicon.png" rel="icon" type="image/png"/>
-  <link href="style_scroll_to_top.css" rel="stylesheet"/>
- </head>
- <body>
-  <div id="mobile-nav-overlay">
-  </div>
-  <header>
-   <nav>
-    <div class="container">
-     <a class="logo" href="/">
+<meta content="Manage your clients and their local SEO pages." name="description"/>
+<link href="style.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+<link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="container">
+<a class="logo" href="/">
       LocalLeads
      </a>
-     <div class="hamburger-menu" id="hamburger-icon">
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-     </div>
-     <ul class="nav-links" id="nav-menu">
-      <li class="close-menu-li">
-       <button id="close-menu-btn">
+<div class="hamburger-menu" id="hamburger-icon">
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+</div>
+<ul class="nav-links" id="nav-menu">
+<li class="close-menu-li">
+<button id="close-menu-btn">
         ×
        </button>
-      </li>
-      <li>
-       <a href="/agency-dashboard.html">
+</li>
+<li>
+<a href="/agency-dashboard.html">
         Dashboard
        </a>
-      </li>
-      <li>
-       <a href="#" id="logout-link">
+</li>
+<li>
+<a href="#" id="logout-link">
         Logout
        </a>
-      </li>
-     </ul>
-    </div>
-   </nav>
-  </header>
-  <main>
-   <section class="dashboard">
-    <h2>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<main>
+<section class="dashboard">
+<h2>
      Agency Dashboard
     </h2>
-    <div class="agency-stats">
-     <div class="stat-card">
-      <h4>
+<div class="agency-stats">
+<div class="stat-card">
+<h4>
        Total Clients
       </h4>
-      <p id="total-clients">
-      </p>
-     </div>
-     <div class="stat-card">
-      <h4>
+<p id="total-clients">
+</p>
+</div>
+<div class="stat-card">
+<h4>
        Total Pages Generated
       </h4>
-      <p id="total-pages-generated">
-      </p>
-     </div>
-    </div>
-    <div id="agency-info">
-     <p>
-      <strong>
+<p id="total-pages-generated">
+</p>
+</div>
+</div>
+<div id="agency-info">
+<p>
+<strong>
        Agency:
       </strong>
-      <span id="agency-name">
-      </span>
-     </p>
-     <p>
-      <strong>
+<span id="agency-name">
+</span>
+</p>
+<p>
+<strong>
        Email:
       </strong>
-      <span id="agency-email">
-      </span>
-     </p>
-     <p>
-      <strong>
+<span id="agency-email">
+</span>
+</p>
+<p>
+<strong>
        Credits:
       </strong>
-      <span id="agency-credits">
-      </span>
-     </p>
-    </div>
-    <h3>
+<span id="agency-credits">
+</span>
+</p>
+</div>
+<h3>
      Clients
     </h3>
-    <div class="table-responsive">
-     <table id="client-list">
-      <thead>
-       <tr>
-        <th>
+<div class="table-responsive">
+<table id="client-list">
+<thead>
+<tr>
+<th>
          Name
         </th>
-        <th>
+<th>
          Email
         </th>
-        <th>
+<th>
          Pages Generated
         </th>
-        <th>
+<th>
          Credits
         </th>
-        <th>
-        </th>
-       </tr>
-      </thead>
-      <tbody>
-      </tbody>
-     </table>
-    </div>
-    <h3>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+<h3>
      Assign Credits
     </h3>
-    <form id="assign-credits-form">
-     <div class="form-group">
-      <label for="client-select">
+<form id="assign-credits-form">
+<div class="form-group">
+<label for="client-select">
        Select Client
       </label>
-      <select id="client-select" name="client-select" required="">
-      </select>
-     </div>
-     <div class="form-group">
-      <label for="credits-to-assign">
+<select id="client-select" name="client-select" required="">
+</select>
+</div>
+<div class="form-group">
+<label for="credits-to-assign">
        Credits to Assign
       </label>
-      <input id="credits-to-assign" min="1" name="credits-to-assign" required="" type="number"/>
-     </div>
-     <div class="form-group">
-      <button class="button" type="submit">
+<input id="credits-to-assign" min="1" name="credits-to-assign" required="" type="number"/>
+</div>
+<div class="form-group">
+<button class="button" type="submit">
        Assign Credits
       </button>
-     </div>
-    </form>
-    <p id="assign-credits-success-message" style="color: green;">
-    </p>
-    <h3>
+</div>
+</form>
+<p id="assign-credits-success-message" style="color: green;">
+</p>
+<h3>
      Add New Client
     </h3>
-    <form id="add-client-form">
-     <div class="form-group">
-      <label for="client-name">
+<form id="add-client-form">
+<div class="form-group">
+<label for="client-name">
        Client Name
       </label>
-      <input autocomplete="name" id="client-name" name="client-name" required="" type="text"/>
-     </div>
-     <div class="form-group">
-      <label for="client-email">
+<input autocomplete="name" id="client-name" name="client-name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="client-email">
        Client Email
       </label>
-      <input autocomplete="email" id="client-email" name="client-email" required="" type="email"/>
-     </div>
-     <div class="form-group">
-      <button class="button" type="submit">
+<input autocomplete="email" id="client-email" name="client-email" required="" type="email"/>
+</div>
+<div class="form-group">
+<button class="button" type="submit">
        Add Client
       </button>
-     </div>
-    </form>
-    <p class="error-message" id="error-message">
-    </p>
-   </section>
-   <section class="dashboard">
-    <h3>
+</div>
+</form>
+<p class="error-message" id="error-message">
+</p>
+</section>
+<section class="dashboard">
+<h3>
      Subscription
     </h3>
-    <p>
-     <strong>
+<p>
+<strong>
       Status:
      </strong>
-     <span id="subscription-status">
-     </span>
-    </p>
-    <p>
-     <strong>
+<span id="subscription-status">
+</span>
+</p>
+<p>
+<strong>
       Plan:
      </strong>
-     <span id="subscription-plan">
+<span id="subscription-plan">
       N/A
      </span>
-    </p>
-    <p>
-     <strong>
+</p>
+<p>
+<strong>
       Monthly Credits:
      </strong>
-     <span id="subscription-monthly-credits">
+<span id="subscription-monthly-credits">
       N/A
      </span>
-    </p>
-    <p>
-     <strong>
+</p>
+<p>
+<strong>
       Renewal Date:
      </strong>
-     <span id="subscription-renewal-date">
+<span id="subscription-renewal-date">
       N/A
      </span>
-    </p>
-    <a class="button" href="/agency-subscription.html">
+</p>
+<a class="button" href="/agency-subscription.html">
      Manage Subscription
     </a>
-   </section>
-   <section class="dashboard">
-    <h3>
+</section>
+<section class="dashboard">
+<h3>
      Custom Branding
     </h3>
-    <div id="agency-logo-container">
-     <img alt="Agency Logo" id="agency-logo-preview" loading="lazy" src="" style="max-width: 200px; display: none;"/>
-    </div>
-    <form id="branding-form">
-     <div class="form-group">
-      <label for="logo-url">
+<div id="agency-logo-container">
+<img alt="Agency Logo" id="agency-logo-preview" loading="lazy" src="" style="max-width: 200px; display: none;"/>
+</div>
+<form id="branding-form">
+<div class="form-group">
+<label for="logo-url">
        Logo URL
       </label>
-      <input autocomplete="url" id="logo-url" name="logo-url" type="url"/>
-     </div>
-     <div class="form-group">
-      <label for="primary-color">
+<input autocomplete="url" id="logo-url" name="logo-url" type="url"/>
+</div>
+<div class="form-group">
+<label for="primary-color">
        Primary Color
       </label>
-      <input id="primary-color" name="primary-color" type="color"/>
-     </div>
-     <div class="form-group">
-      <button class="button" type="submit">
+<input id="primary-color" name="primary-color" type="color"/>
+</div>
+<div class="form-group">
+<button class="button" type="submit">
        Save Branding
       </button>
-     </div>
-    </form>
-    <p id="branding-success-message" style="color: green;">
-    </p>
-   </section>
-   <section class="dashboard">
-    <h3>
+</div>
+</form>
+<p id="branding-success-message" style="color: green;">
+</p>
+</section>
+<section class="dashboard">
+<h3>
      Billing History
     </h3>
-    <button class="button" id="refresh-billing-history">
+<button class="button" id="refresh-billing-history">
      Refresh History
     </button>
-    <table id="billing-history-table">
-     <thead>
-      <tr>
-       <th>
+<table id="billing-history-table">
+<thead>
+<tr>
+<th>
         Date
        </th>
-       <th>
+<th>
         Credits
        </th>
-       <th>
+<th>
         Amount
        </th>
-       <th>
+<th>
         Status
        </th>
-      </tr>
-     </thead>
-     <tbody>
-     </tbody>
-    </table>
-   </section>
-  </main>
-  <footer>
-   <div class="container">
-    <p>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</section>
+</main>
+<footer>
+<div class="container">
+<p>
      © 2026 LocalLeads. All rights reserved.
     </p>
-   </div>
-  </footer>
-  <script>
+</div>
+</footer>
+<script>
    const agencyName = document.getElementById('agency-name');
 const agencyEmail = document.getElementById('agency-email');
 const agencyCredits = document.getElementById('agency-credits');
@@ -419,9 +420,9 @@ window.location.href = 'index.html';
 fetchDashboard();
 fetchBillingHistory();
   </script>
-  <script src="/js/app.js">
-  </script>
-  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
- </body>
+<script src="/js/app.min.js">
+</script>
+<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+</body>
 </html>
 ript&gt;

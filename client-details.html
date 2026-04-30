@@ -1,160 +1,161 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
    Client Details - LocalLeads
   </title>
-  <meta content="Manage and view detailed information about your clients, including their generated pages and service history, on your agency dashboard." name="description"/>
-  <link href="style.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="/images/favicon.png" rel="icon" type="image/png"/>
- </head>
- <body>
-  <div id="mobile-nav-overlay">
-  </div>
-  <header>
-   <nav>
-    <div class="container">
-     <a class="logo" href="/">
+<meta content="Manage and view detailed information about your clients, including their generated pages and service history, on your agency dashboard." name="description"/>
+<link href="style.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+</head>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="container">
+<a class="logo" href="/">
       LocalLeads
      </a>
-     <div class="hamburger-menu" id="hamburger-icon">
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-     </div>
-     <ul class="nav-links" id="nav-menu">
-      <li class="close-menu-li">
-       <button id="close-menu-btn">
+<div class="hamburger-menu" id="hamburger-icon">
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+</div>
+<ul class="nav-links" id="nav-menu">
+<li class="close-menu-li">
+<button id="close-menu-btn">
         ×
        </button>
-      </li>
-      <li>
-       <a href="/agency-dashboard.html">
+</li>
+<li>
+<a href="/agency-dashboard.html">
         Dashboard
        </a>
-      </li>
-      <li>
-       <a href="#" id="logout-link">
+</li>
+<li>
+<a href="#" id="logout-link">
         Logout
        </a>
-      </li>
-     </ul>
-    </div>
-   </nav>
-  </header>
-  <main>
-   <section class="dashboard">
-    <h2>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<main>
+<section class="dashboard">
+<h2>
      Client Details
     </h2>
-    <div id="client-info">
-     <p>
-      <strong>
+<div id="client-info">
+<p>
+<strong>
        Name:
       </strong>
-      <span id="client-name">
-      </span>
-     </p>
-     <p>
-      <strong>
+<span id="client-name">
+</span>
+</p>
+<p>
+<strong>
        Email:
       </strong>
-      <span id="client-email">
-      </span>
-     </p>
-     <p>
-      <strong>
+<span id="client-email">
+</span>
+</p>
+<p>
+<strong>
        Credits:
       </strong>
-      <span id="client-credits">
+<span id="client-credits">
        0
       </span>
-     </p>
-    </div>
-    <div class="assign-credits-section">
-     <h3>
+</p>
+</div>
+<div class="assign-credits-section">
+<h3>
       Assign Credits
      </h3>
-     <form id="assign-credits-form">
-      <div class="form-group">
-       <label for="assign-credits-amount">
+<form id="assign-credits-form">
+<div class="form-group">
+<label for="assign-credits-amount">
         Number of Credits:
        </label>
-       <input class="form-input" id="assign-credits-amount" min="1" required="" type="number"/>
-      </div>
-      <button class="button" type="submit">
+<input class="form-input" id="assign-credits-amount" min="1" required="" type="number"/>
+</div>
+<button class="button" type="submit">
        Assign Credits
       </button>
-      <p class="success-message" id="assign-credits-message">
-      </p>
-     </form>
-    </div>
-    <div class="edit-client-section">
-     <h3>
+<p class="success-message" id="assign-credits-message">
+</p>
+</form>
+</div>
+<div class="edit-client-section">
+<h3>
       Edit Client Details
      </h3>
-     <form id="edit-client-form">
-      <div class="form-group">
-       <label for="edit-client-name">
+<form id="edit-client-form">
+<div class="form-group">
+<label for="edit-client-name">
         Client Name:
        </label>
-       <input class="form-input" id="edit-client-name" required="" type="text"/>
-      </div>
-      <div class="form-group">
-       <label for="edit-client-email">
+<input class="form-input" id="edit-client-name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="edit-client-email">
         Client Email:
        </label>
-       <input class="form-input" id="edit-client-email" required="" type="email"/>
-      </div>
-      <button class="button" type="submit">
+<input class="form-input" id="edit-client-email" required="" type="email"/>
+</div>
+<button class="button" type="submit">
        Update Client
       </button>
-      <button class="button button-secondary" id="delete-client-button" type="button">
+<button class="button button-secondary" id="delete-client-button" type="button">
        Delete Client
       </button>
-      <p class="success-message" id="edit-client-message">
-      </p>
-     </form>
-    </div>
-    <h3>
+<p class="success-message" id="edit-client-message">
+</p>
+</form>
+</div>
+<h3>
      Generated Pages
     </h3>
-    <table id="generated-pages">
-     <thead>
-      <tr>
-       <th>
+<table id="generated-pages">
+<thead>
+<tr>
+<th>
         Service
        </th>
-       <th>
+<th>
         Town
        </th>
-       <th>
+<th>
         Created At
        </th>
-       <th>
+<th>
         Link
        </th>
-      </tr>
-     </thead>
-     <tbody>
-     </tbody>
-    </table>
-   </section>
-  </main>
-  <footer>
-   <div class="container">
-    <p>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</section>
+</main>
+<footer>
+<div class="container">
+<p>
      © 2026 LocalLeads. All rights reserved.
     </p>
-   </div>
-  </footer>
-  <script>
+</div>
+</footer>
+<script>
    const clientNameDisplay = document.getElementById('client-name');
 const clientEmailDisplay = document.getElementById('client-email');
 const clientCreditsDisplay = document.getElementById('client-credits');
@@ -322,7 +323,7 @@ document.getElementById('logout-link').addEventListener('click', async () => {
 
 fetchClientDetails();
   </script>
-  <script src="/js/app.js">
-  </script>
- </body>
+<script src="/js/app.min.js">
+</script>
+</body>
 </html>

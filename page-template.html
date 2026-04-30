@@ -1,72 +1,73 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
    {{service}} in {{town}} - {{businessName}}
   </title>
-  <link href="style.css" rel="stylesheet"/>
-  <style>
+<link href="style.min.css" rel="stylesheet"/>
+<style>
    :root {
 --primary-color: {{primaryColor}};
 }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="/images/favicon.png" rel="icon" type="image/png"/>
- </head>
- <body>
-  <div id="mobile-nav-overlay">
-  </div>
-  <header>
-   <nav>
-    <div class="logo">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+</head>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="logo">
      {{agencyLogo}}
     </div>
-    <ul>
-     <li>
-      <a href="#">
+<ul>
+<li>
+<a href="#">
        Home
       </a>
-     </li>
-     <li>
-      <a href="#">
+</li>
+<li>
+<a href="#">
        Services
       </a>
-     </li>
-     <li>
-      <a href="contact.html">
+</li>
+<li>
+<a href="contact.html">
        Contact
       </a>
-     </li>
-    </ul>
-   </nav>
-  </header>
-  <main>
-   <section class="hero">
-    <h1>
+</li>
+</ul>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1>
      {{service}} in {{town}}
     </h1>
-    <p>
+<p>
      Your trusted provider for {{service}} in {{town}}.
     </p>
-   </section>
-   <section class="content">
-    <h2>
+</section>
+<section class="content">
+<h2>
      Why Choose {{businessName}} for {{service}} in {{town}}?
     </h2>
     {{ai_content}}
    </section>
-  </main>
-  <footer>
-   <div class="container">
-    <p>
+</main>
+<footer>
+<div class="container">
+<p>
      © 2026 {{businessName}}. All rights reserved.
     </p>
-   </div>
-  </footer>
-  <meta content="{{pageId}}" name="page-id"/>
-  <script>
+</div>
+</footer>
+<meta content="{{pageId}}" name="page-id"/>
+<script>
    document.addEventListener('DOMContentLoaded', function() {
 const pageId = document.querySelector('meta[name="page-id"]').content;
 if (pageId) {
@@ -80,7 +81,7 @@ body: JSON.stringify({ pageId: pageId }),
 }
 });
   </script>
-  <script src="/js/app.js">
-  </script>
- </body>
+<script src="/js/app.min.js">
+</script>
+</body>
 </html>

@@ -31,3 +31,12 @@
     *   Created a new virtual environment `venv-lazy-loading`.
     *   Installed `beautifulsoup4` into `venv-lazy-loading`.
     *   Executed `add_lazy_loading.py` to add `loading="lazy"` attribute to `<img>` tags in HTML files, modifying `sample-page-template.html`.
+*   **CSS/JS Minification & HTML Reference Updates:**
+    *   Minified `style.css` to `style.min.css` using `clean-css-cli`.
+    *   Minified `style_scroll_to_top.css` to `style_scroll_to_top.min.css` using `clean-css-cli`.
+    *   Minified various JavaScript files (e.g., `js/ab-test-home.js`, `js/blog-search.js`, etc.) to their `.min.js` counterparts using `uglify-js`.
+    *   Identified `js/app.js` as already minified and skipped re-minification, but updated its HTML references.
+    *   Created and executed `update_minified_references.py` to update `<link>` and `<script>` tags in HTML files to point to the newly created `.min.css` and `.min.js` files.
+*   **Script Maintenance (New Scripts):**
+    *   Improved `add_lazy_loading.py` by adding `try-except IOError` for robust file handling and simplifying the `loading` attribute logic.
+    *   Improved `update_minified_references.py` by adding `try-except IOError` for robust file handling and adding a docstring to the `main` function.
