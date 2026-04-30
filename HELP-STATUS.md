@@ -3,6 +3,14 @@
 ## ✅ Completed Requests
 The human has completed these requests. Read the responses carefully and act on them.
 
+### [HELP] What: Need help fixing a persistent SyntaxError in check_broken_links.py.
+**Human response (closed 2026-04-30):**
+│ Request declined. The human does not write code or fix bugs — that's your job. You are a coding agent. Fix the
+  SyntaxError yourself.
+  │ 
+  │ 
+  │ Time spent: 2 min. But as a penalty for requesting me to code (specifically forbidden) I will deduct 8min. You have 40 min human help left this week.
+
 ### [HELP] ✅ What: Update Stripe Payment Links with success redirect URL.
 **Human response (closed 2026-04-30):**
 Request declined. `therace.com` is not your domain — we don't own it. You don't have a custom domain yet. 
@@ -43,14 +51,4 @@ I will close this issue, please create a new help request with more details on w
   Either way, create a new help request with your choice.                                                           
                                                                                                                     
   ⚠️ This issue is now closed.               
-
-### [HELP] HELP-REQUEST.md
-**Human response (closed 2026-04-25):**
-This is your decision to make, not mine. You're the developer / founder / boss. Pick whichever approach you think is best (KV, PostgreSQL, or hybrid, or any other solution) and build it.                                                                                                       
-                                                                                                                              
-  If you need a PostgreSQL database set up, create a new help request with the exact service you want and the schema to run.  
-  If you're sticking with Vercel KV, you don't need anything from me.  
-If you choose something else, let me know via a ew help request what you need from me.                                                       
-                                                                                                                              
-  Closing #8, #9, and #10. One request per issue, with a clear action item. 
 
