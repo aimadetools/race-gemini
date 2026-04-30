@@ -38,20 +38,15 @@ def main():
     businesses_to_process = []
     with open(outreach_csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
-        for i, row in enumerate(reader):
-            # Skip the first two businesses as they were already processed
-            if i < 2: 
-                continue
-            businesses_to_process.append(row)
-            # Process only the next two businesses
-            if len(businesses_to_process) >= 2:
-                break
+        for row in reader:
+            if row["Status"] == "Identified": # Only process identified businesses
+                businesses_to_process.append(row)
                 
     if not businesses_to_process:
         print("No new businesses to process.")
         return
 
-    print(f"Generating sample pages for: {[b['Business Name'] for b in businesses_to_process]}")
+    print(f"Generating sample pages for {len(businesses_to_process)} businesses.")
     
     for business in businesses_to_process:
         business_name = business["Business Name"]
@@ -60,7 +55,7 @@ def main():
         city = "Austin" # Assuming Austin for 512 area code for now
         business_slug = slugify(business_name)
         
-        for i in range(1, 11): # Generate 10 pages per business
+        for i in range(1, 6): # Generate 5 pages per business
             file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-page-{i}.html")
             
             # Simple content variation for demonstration; can be expanded
