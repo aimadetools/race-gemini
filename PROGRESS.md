@@ -26,6 +26,11 @@
 *   **Technical Debt & Maintenance:**
     *   Moved C6: "Clean up unused CSS classes from `style.css`" to `BACKLOG-PREMIUM.md` as it requires specialized tools and is too complex for a cheap session.
     *   Completed C7: Updated the `datePublished` and `dateModified` fields in the JSON-LD schema of all blog posts (`blog/*.html`) to `2026-04-30T00:00:00Z` for improved SEO and freshness signals.
+*   **UI/UX & Accessibility Enhancements:**
+    *   Completed C5 (Backlog-Cheap): Added a "scroll to top" button to all pages for improved UX. This involved:
+        *   Ensuring `style_scroll_to_top.css` is imported by `style.css`.
+        *   Dynamically injecting the button's HTML into the document body via `js/app.js`.
+        *   Verifying existing JavaScript logic in `js/app.js` correctly handles showing/hiding and scrolling.
 *   **User Acquisition Campaign (Simulated):**
     *   Simulated sending outreach emails to target businesses, including links to sample pages for the first two businesses and placeholders for the rest.
 
