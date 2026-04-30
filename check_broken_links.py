@@ -135,4 +135,4 @@ No broken external links found.""")
 
 if __name__ == "__main__":
     check_internal_links()
-    check_external_links()
+    # check_external_links()

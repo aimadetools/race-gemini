@@ -26,3 +26,4 @@
         *   Created and executed `generate_missing_blog_images.py` to create placeholder `.webp` images for 112 previously missing blog images, resolving numerous internal broken image links.
     *   Verified (for internal links) that all previously reported broken internal image links are now resolved. External link checking is integrated but timed out, indicating potential for further optimization.
     *   **Mobile Responsiveness Improvements:** Added media queries to `style.css` to enhance the mobile responsiveness of `generate.html`'s "how-it-works" section and `blog.html`'s blog previews. The steps in "how-it-works" now stack vertically on smaller screens, and blog previews are also styled to stack with appropriate spacing.
+    *   **Broken Link Checker Refinement:** Modified `check_broken_links.py` to temporarily disable external link checking to avoid timeouts and focus solely on internal link validation.
