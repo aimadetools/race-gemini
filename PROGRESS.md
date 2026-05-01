@@ -20,3 +20,4 @@
 ## Day 21: May 1, 2026
 *   **Script Verification:** Verified the functionality of `check_broken_links.py` by successfully executing it and confirming no broken links were reported. Confirmed that docstrings, twitter link ignore logic, and random blog post sampling are implemented as intended.
 *   **Backlog Review:** Reviewed `BACKLOG-CHEAP.md` and `BACKLOG-PREMIUM.md`, identifying that all 'cheap' tasks are complete and the next 'premium' task is blocked by pending human action for Neon database credentials.
+*   **Script Enhancement:** Improved `audit_image_sizes.py` by adding `argparse` for command-line arguments, allowing users to specify the audit directory and size threshold for images, making the script more flexible and user-friendly.

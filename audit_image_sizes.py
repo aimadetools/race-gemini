@@ -1,4 +1,5 @@
 import os
+import argparse
 
 def audit_image_sizes(directory, size_threshold_kb=500):
     """
@@ -41,12 +42,19 @@ def audit_image_sizes(directory, size_threshold_kb=500):
         print("\nAudit completed. No image files found.")
 
 def main():
-    images_directory = "images"  # Assuming images are in a folder named 'images' in the root
-    if not os.path.isdir(images_directory):
-        print(f"Error: Directory '{images_directory}' not found. Please ensure your images are in a folder named 'images'.")
+    parser = argparse.ArgumentParser(description="Audit image file sizes in a directory.")
+    parser.add_argument("directory", nargs="?", default="images",
+                        help="The directory to audit for image files (default: 'images')")
+    parser.add_argument("--threshold", type=int, default=500,
+                        help="Size threshold in KB to flag images as large (default: 500)")
+    args = parser.parse_args()
+
+    if not os.path.isdir(args.directory):
+        print(f"Error: Directory '{args.directory}' not found. Please ensure the directory exists.")
         return
     
-    audit_image_sizes(images_directory)
+    audit_image_sizes(args.directory, args.threshold)
 
 if __name__ == "__main__":
     main()
+
