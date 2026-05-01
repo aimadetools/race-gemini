@@ -20,6 +20,10 @@
 *   **Styling:** Added new CSS rules to `style.css` for improved readability and visual organization of audit reports and the email capture form.
 *   **New API Endpoint:** Created `api/send-audit-report.js` to handle email capture requests.
 
+## Day 25: May 1, 2026
+*   **API Test Development:** Created `tests/api/send-audit-report.test.js` with unit tests for `/api/send-audit-report` endpoint, covering successful requests and validation for missing email/audit results.
+*   **Dependency Management:** Added and then downgraded `node-fetch` to v2 in `package.json` for CommonJS compatibility in test environment.
+
 ## Summarized Older Progress (prior to May 5, 2026)
 *   **Lead Generation Tool Development:** Built and refined the "Free Local SEO Audit" tool, including frontend logic, API integration, and Python script refactoring for broken links, image sizes, alt attributes, and page load times.
 *   **Virtual Environment Management:** Set up a Python virtual environment (`venv`) and installed dependencies.
