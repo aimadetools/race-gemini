@@ -53,14 +53,15 @@ def main():
         city = business.get("City", "Austin") 
         business_slug = slugify(business_name)
 
+        service_type = business.get("Service Type", "Plumbing Services") # Get Service Type dynamically
+
         # Define these inside the loop so they use the current business's data
-        current_service_type = "Plumbing Services"
-        current_ai_content = f"<p>Looking for reliable {current_service_type} in {city}? {business_name} is your trusted local expert. We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. Contact us today for all your {current_service_type.lower()} needs!</p>"
+        current_ai_content = f"<p>Looking for reliable {service_type} in {city}? {business_name} is your trusted local expert. We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. Contact us today for all your {service_type.lower()} needs!</p>"
         current_primary_color = "#007bff"
         current_agency_logo = f"<span>{business_name}</span>"
         
         for i in range(1, 6): # Generate 5 pages per business
-            file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-{slugify(current_service_type)}-page-{i}.html")
+            file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-{slugify(service_type)}-page-{i}.html")
             
             # Generate the page content
             html_content = generate_sample_page(template_content, business_name, phone_number, city, current_service_type, current_ai_content, current_primary_color, current_agency_logo)
