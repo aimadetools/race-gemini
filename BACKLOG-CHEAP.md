@@ -1,1 +1,0 @@
-- [x] C7-C11: Enhanced Free Local SEO Audit tool with comprehensive checks, improved styling, and email report functionality.
