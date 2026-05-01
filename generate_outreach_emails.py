@@ -47,8 +47,12 @@ def generate_outreach_emails():
                 # User will need to replace sample_pages_base_url_placeholder
                 business_slug = slugify(business_name)
                 city_slug = slugify(city)
-                # Assuming 'Plumbing Services' is the default service type for sample pages generated
-                service_type_slug = slugify("Plumbing Services") 
+                service_type = row.get("Service Type", "Plumbing Services") # Get Service Type, default to Plumbing Services if not found
+                
+                # Construct a more specific sample page link
+                business_slug = slugify(business_name)
+                city_slug = slugify(city)
+                service_type_slug = slugify(service_type) # Use dynamic service_type 
                 
                 sample_page_link = f"{sample_pages_base_url_placeholder}/sample-pages/{business_slug}-{city_slug}-{service_type_slug}-page-1.html"
 
