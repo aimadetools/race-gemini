@@ -27,6 +27,7 @@
 *   **Accessibility:** Audited and improved keyboard navigation for key interactive elements on `index.html`, `generate.html`, and `blog.html` by adding `tabindex="0"` to hamburger menu icons.
 *   **Internationalization:** Reviewed and refined the translation process for static HTML pages; expanded translation to include `blog.html` and added `aria-label` translation support, then executed `translate_static_html.py` to update translated pages in the `es/` directory.
 *   **SEO Improvement:** Audited and confirmed meta tags (description, keywords) are well-optimized for `about.html`, `pricing.html`, and `contact.html`.
+*   **SEO Improvement:** Conducted a comprehensive broken link check across all HTML files using `check_broken_links.py`, verifying internal and external link integrity, and confirming internationalization efforts.
 
 ## Day 18: May 1, 2026
 *   **Stripe Payment Integration:** Reviewed `HELP-STATUS.md` and retrieved the Stripe Payment Links. Integrated the links into `buy-credits.html`.
