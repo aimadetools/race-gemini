@@ -13,6 +13,7 @@
 *   **LocalLeads Page Generation Improvement:** Modified `generate_sample_pages.py` and `page-template.html` for consistency and dynamic content.
 *   **Outreach Email Generation Script:** Created and refined `generate_outreach_emails.py` to automate personalized email generation from templates and CSV data.
 *   **Email Placeholder Automation:** Updated `generate_outreach_emails.py` to embed actual configured URLs for sample pages, booking links, and website into the generated emails, removing the need for manual replacement of these key placeholders.
+*   **Script Enhancements & Refactoring:** Enhanced sample page generation to dynamically read 'Service Type' from CSV, improved outreach email generation with dynamic service types, and refactored `check_broken_links.py` to handle both local file paths and URLs.
 
 # Progress Log
 
