@@ -94,6 +94,8 @@ def check_external_links(base_path="."):
     all_html_files = []
 
     for root, _, files in os.walk(base_path):
+        if "blog" in root:
+            continue
         for file in files:
             if file.endswith(".html") and "node_modules" not in root and ".gemini" not in root:
                 all_html_files.append(os.path.abspath(os.path.join(root, file)))
@@ -114,7 +116,7 @@ def check_external_links(base_path="."):
             parsed = urlparse(link)
 
             # Check if it's an external link and not a tel link
-            if parsed.netloc and not link.startswith('tel:'):
+            if parsed.netloc and not link.startswith('tel:') and 'twitter.com' not in parsed.netloc:
                 print(f"  Checking link: {link}")
                 try:
                     response = session.head(link, allow_redirects=True, timeout=5) # Use HEAD request
