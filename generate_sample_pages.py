@@ -52,7 +52,7 @@ def main():
         business_name = business["Business Name"]
         phone_number = business["Phone"]
         # Default to Austin if city is not in CSV, or can be derived from phone number area code
-        city = "Austin" # Assuming Austin for 512 area code for now
+        city = business.get("City", "Austin") # Use City from CSV, default to Austin if not present
         business_slug = slugify(business_name)
         
         for i in range(1, 6): # Generate 5 pages per business
