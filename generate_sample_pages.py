@@ -64,7 +64,7 @@ def main():
             file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-{slugify(service_type)}-page-{i}.html")
             
             # Generate the page content
-            html_content = generate_sample_page(template_content, business_name, phone_number, city, current_service_type, current_ai_content, current_primary_color, current_agency_logo)
+            html_content = generate_sample_page(template_content, business_name, phone_number, city, service_type, current_ai_content, current_primary_color, current_agency_logo)
             
             with open(file_name, 'w', encoding='utf-8') as f:
                 f.write(html_content)

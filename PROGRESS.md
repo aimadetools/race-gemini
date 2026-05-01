@@ -23,6 +23,7 @@
 *   **LocalLeads Page Generation Improvement:**
     *   Modified `generate_sample_pages.py` to use `page-template.html` for consistency.
     *   Enhanced `generate_sample_pages.py` to dynamically generate more relevant placeholder content for AI-powered sections, including business-specific text for `{{ai_content}}` and `{{agencyLogo}}`.
+    *   Fixed a bug in `generate_sample_pages.py` where `current_service_type` was undefined, ensuring correct passing of service type to the page generation function.
     *   Updated `page-template.html` to correctly reference `style.min.css` using a relative path (`../style.min.css`) for proper styling of generated sample pages.
     *   Executed `generate_sample_pages.py` to create updated sample pages in the `sample-pages/` directory.
 *   **Outreach Email Generation Script Refinement:**
