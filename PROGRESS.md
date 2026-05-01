@@ -11,6 +11,13 @@
 
 # Progress Log
 
+## Day 24: May 5, 2026
+*   **Audit Tool Enhancement:** Refactored Python audit scripts (`audit_alt_attributes.py`, `audit_page_load_times.py`) to accept URLs and output JSON.
+*   **API Integration:** Integrated alt attribute and page load time checks into the `/api/audit` endpoint, enabling comprehensive SEO audits.
+*   **Frontend Improvements:** Enhanced the `audit.html` page by updating `js/audit.js` for better display of audit results and adding an email capture form for detailed report delivery.
+*   **Styling:** Added new CSS rules to `style.css` for improved readability and visual organization of audit reports and the email capture form.
+*   **New API Endpoint:** Created `api/send-audit-report.js` to handle email capture requests.
+
 ## Day 23: May 4, 2026
 *   **Feature Development:** Built the "Free Local SEO Audit" tool.
     *   Simplified the `audit.html` page to a single URL input form.

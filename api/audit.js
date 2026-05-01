@@ -1,7 +1,59 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-module.exports = (req, res) => {
+const runPythonScript = (scriptName, url, pythonExecutable) => {
+    return new Promise((resolve, reject) => {
+        const scriptPath = path.resolve(process.cwd(), scriptName);
+        const pythonProcess = spawn(pythonExecutable, [scriptPath, url]);
+
+        let stdout = '';
+        let stderr = '';
+
+        pythonProcess.stdout.on('data', (data) => {
+            stdout += data.toString();
+        });
+
+        pythonProcess.stderr.on('data', (data) => {
+            stderr += data.toString();
+        });
+
+        pythonProcess.on('close', (code) => {
+            if (code !== 0) {
+                console.error(`Python script ${scriptName} exited with code ${code}`);
+                console.error(`stderr: ${stderr}`);
+                return reject({
+                    script: scriptName,
+                    message: `Error executing script: ${scriptName}`,
+                    error: stderr
+                });
+            }
+
+            try {
+                const results = JSON.parse(stdout);
+                resolve(results);
+            } catch (error) {
+                console.error(`Error parsing JSON from ${scriptName}:`, error);
+                console.error(`stdout: ${stdout}`);
+                reject({
+                    script: scriptName,
+                    message: `Error parsing results from ${scriptName}`,
+                    error: stdout
+                });
+            }
+        });
+
+        pythonProcess.on('error', (err) => {
+            console.error(`Failed to start python process for ${scriptName}.`, err);
+            reject({
+                script: scriptName,
+                message: `Failed to start process for ${scriptName}`,
+                error: err.message
+            });
+        });
+    });
+};
+
+module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
@@ -19,46 +71,50 @@ module.exports = (req, res) => {
     }
 
     const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
-    const scriptPath = path.resolve(process.cwd(), 'check_broken_links.py');
+    const auditResults = {};
+    const errors = [];
 
-    const pythonProcess = spawn(pythonExecutable, [scriptPath, url]);
+    try {
+        // Run all audit scripts concurrently
+        const [brokenLinks, altAttributes, pageLoadTimes] = await Promise.allSettled([
+            runPythonScript('check_broken_links.py', url, pythonExecutable),
+            runPythonScript('audit_alt_attributes.py', url, pythonExecutable),
+            runPythonScript('audit_page_load_times.py', url, pythonExecutable)
+        ]);
 
-    let stdout = '';
-    let stderr = '';
+        if (brokenLinks.status === 'fulfilled') {
+            auditResults.broken_links = brokenLinks.value;
+        } else {
+            errors.push(brokenLinks.reason);
+        }
 
-    pythonProcess.stdout.on('data', (data) => {
-        stdout += data.toString();
-    });
+        if (altAttributes.status === 'fulfilled') {
+            auditResults.alt_attributes = altAttributes.value;
+        } else {
+            errors.push(altAttributes.reason);
+        }
 
-    pythonProcess.stderr.on('data', (data) => {
-        stderr += data.toString();
-    });
+        if (pageLoadTimes.status === 'fulfilled') {
+            auditResults.page_load_times = pageLoadTimes.value;
+        } else {
+            errors.push(pageLoadTimes.reason);
+        }
 
-    pythonProcess.on('close', (code) => {
-        if (code !== 0) {
-            console.error(`Python script exited with code ${code}`);
-            console.error(`stderr: ${stderr}`);
-            return res.status(500).json({ 
-                message: 'Error executing audit script.',
-                error: stderr 
+        if (errors.length > 0) {
+            return res.status(500).json({
+                message: 'Some audit checks failed.',
+                results: auditResults,
+                errors: errors
             });
         }
 
-        try {
-            const results = JSON.parse(stdout);
-            res.status(200).json(results);
-        } catch (error) {
-            console.error('Error parsing JSON from python script:', error);
-            console.error(`stdout: ${stdout}`);
-            return res.status(500).json({ 
-                message: 'Error parsing audit script results.',
-                error: stdout
-            });
-        }
-    });
+        res.status(200).json(auditResults);
 
-    pythonProcess.on('error', (err) => {
-        console.error('Failed to start python process.', err);
-        return res.status(500).json({ message: 'Failed to start audit process.' });
-    });
+    } catch (error) {
+        console.error('An unexpected error occurred during audit orchestration:', error);
+        return res.status(500).json({
+            message: 'An unexpected error occurred during the audit process.',
+            error: error.message
+        });
+    }
 };

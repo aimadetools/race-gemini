@@ -1,24 +1,30 @@
+import argparse
+import json
 import perfometrics.curl as pcurl
 
-urls_to_audit = [
-    "https://race-gemini.vercel.app/index.html",
-    "https://race-gemini.vercel.app/blog.html",
-    "https://race-gemini.vercel.app/generate.html",
-    "https://race-gemini.vercel.app/pricing.html",
-]
+def main():
+    parser = argparse.ArgumentParser(description="Audit page load times for a given URL.")
+    parser.add_argument("url", help="The URL to audit.")
+    args = parser.parse_args()
 
-print("Auditing page load times using perfometrics:")
-
-for url in urls_to_audit:
-    print(f"\n--- Auditing: {url} ---")
     try:
-        metrics = pcurl.CurlUptime(url).get_metrics()
+        metrics = pcurl.CurlUptime(args.url).get_metrics()
+        
         if metrics:
-            print(f"  Time to First Byte (TTFB): {metrics.get('ttfb', 'N/A')}s")
-            print(f"  Total Time: {metrics.get('total', 'N/A')}s")
-
+            result = {
+                "url": args.url,
+                "metrics": {
+                    "ttfb": metrics.get('ttfb', 'N/A'),
+                    "total_time": metrics.get('total', 'N/A')
+                }
+            }
+            print(json.dumps(result, indent=2))
         else:
-            print("  No metrics returned.")
+            print(json.dumps({"error": f"No metrics returned for URL: {args.url}"}, indent=2))
+
     except Exception as e:
-        print(f"  An error occurred: {e}")
+        print(json.dumps({"error": f"An error occurred while auditing {args.url}: {e}"}, indent=2))
+
+if __name__ == "__main__":
+    main()
 

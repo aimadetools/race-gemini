@@ -115,12 +115,20 @@
      <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
      </div>
      <div id="auditResults" style="display:none;">
-      <h2 data-i18n-key="audit_results_title">
-       Audit Results
-      </h2>
-      <div id="results-container"></div>
+     <h2 data-i18n-key="audit_results_title">
+      Audit Results
+     </h2>
+     <div id="results-container"></div>
+     <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
+       <h3>Receive a Detailed Report</h3>
+       <p>Enter your email to get a full audit report sent to your inbox.</p>
+       <form id="emailReportForm">
+           <input class="form-input" type="email" id="reportEmail" placeholder="your@example.com" required>
+           <button class="button" type="submit">Send Report</button>
+           <div id="emailMessage" style="margin-top: 1rem;"></div>
+       </form>
      </div>
-    </div>
+     </div>    </div>
    </section>
   </main>
   <div class="sticky-cta-bar">
