@@ -1,0 +1,12 @@
+# Outreach Campaign Tracking
+
+## Campaign Wave 2 - [Date of sending, e.g., May 2, 2026]
+
+### Targets:
+- HydroWorks Plumbing (hydroworks.com)
+- Drain Master Pro (drainmasterpro.com)
+- ... (list all 50 new targets from outreach-targets.csv)
+
+### Responses:
+
+### Follow-ups:

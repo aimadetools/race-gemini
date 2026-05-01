@@ -22,15 +22,26 @@ Stack: ${error.stack}
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
-            const { pageId } = req.body;
+            const { pageId, eventType = 'page_view', elementId } = req.body;
 
             if (!pageId) {
                 await logError(new Error('Missing pageId in request body.'), 'Tracking - Validation');
                 return res.status(400).json({ message: 'Missing pageId.' });
             }
 
-            // Increment page views
-            await kv.incr(`page:${pageId}:views`);
+            const baseKey = `page:${pageId}`;
+            
+            // Track total views/events for the page
+            await kv.incr(`${baseKey}:views`);
+
+            // If an eventType is provided, track it specifically
+            if (eventType !== 'page_view') {
+                const eventKey = `${baseKey}:events:${eventType}`;
+                await kv.incr(eventKey);
+                if (elementId) {
+                    await kv.incr(`${eventKey}:${elementId}`);
+                }
+            }
 
             // Handle unique visitors using a cookie
             const cookies = parse(req.headers.cookie || '');

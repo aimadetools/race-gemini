@@ -83,3 +83,53 @@
 .onboarding-message.hidden {
     display: none;
 }
+
+.blog-cta {
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.blog-cta h2 {
+    color: #007bff;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.blog-cta .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.blog-cta .button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .blog-cta h2 {
+        font-size: 1.8rem;
+    }
+    .blog-cta p {
+        font-size: 1rem;
+    }
+    .blog-cta .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    .blog-cta .button {
+        width: 80%;
+    }
+}
+
