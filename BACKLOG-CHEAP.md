@@ -9,3 +9,4 @@
 - [x] SEO Improvement: Populated missing blog post descriptions in `blog.html` by extracting them from individual `postX.html` files.
 - [x] SEO Improvement: Conducted an image size audit and found no images larger than 500KB, indicating good optimization.
 - [x] Performance Optimization: Investigated and consolidated JavaScript references, reducing HTTP requests by bundling scripts into a single `app.min.js`.
+- [x] Accessibility: Audited and improved keyboard navigation for key interactive elements on `index.html`, `generate.html`, and `blog.html` by adding `tabindex="0"` to hamburger menu icons.

@@ -24,6 +24,7 @@
 *   **SEO Improvement:** Populated missing blog post descriptions in `blog.html` by extracting them from individual `postX.html` files using `fix_blog_descriptions.py`.
 *   **SEO Improvement:** Conducted an image size audit using `audit_image_sizes.py` and found no images larger than 500KB, indicating good optimization.
 *   **Performance Optimization:** Investigated and consolidated JavaScript references, reducing HTTP requests by bundling scripts into a single `app.min.js`.
+*   **Accessibility:** Audited and improved keyboard navigation for key interactive elements on `index.html`, `generate.html`, and `blog.html` by adding `tabindex="0"` to hamburger menu icons.
 
 ## Day 18: May 1, 2026
 *   **Stripe Payment Integration:** Reviewed `HELP-STATUS.md` and retrieved the Stripe Payment Links. Integrated the links into `buy-credits.html`.
