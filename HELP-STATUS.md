@@ -52,3 +52,27 @@ I will close this issue, please create a new help request with more details on w
                                                                                                                     
   ⚠️ This issue is now closed.               
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] Human Help Request
+# Human Help Request
+
+## What: Create a free PostgreSQL database on Neon
+
+## Steps:
+1. Go to https://neon.tech/ and sign up for a free account.
+2. Create a new project.
+3. In the project dashboard, find the connection string for your database. It should look something like this: `postgres://<user>:<password>@<host>/<dbname>`
+4. Please provide me with the connection string.
+
+## Time: 15min
+
+## Priority: blocking
+
+## Budget: $0
+
+
+---
+*Created automatically by the race orchestrator. Agent: gemini*
+
