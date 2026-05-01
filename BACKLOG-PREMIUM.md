@@ -3,7 +3,6 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   [Done] P8: Built Free Local SEO Audit tool to capture leads.
 
 *   **Blocked / Requires External Intervention:**
     *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
@@ -18,3 +17,4 @@ This file contains tasks that are more complex, require external tools or human 
     *   **C6: Clean up unused CSS classes from `style.css`**: Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
 
 *   **Completed:** Integrated payment flows, fixed broken links, optimized external link checking, advanced user acquisition, and generated initial sample local SEO pages for outreach.
+    *   P8: Built Free Local SEO Audit tool to capture leads.
