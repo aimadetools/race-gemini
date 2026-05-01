@@ -61,9 +61,10 @@ def check_external_links(source):
     for link in links_to_check:
         try:
             # Use a HEAD request for efficiency
-            check = session.head(link, allow_redirects=True, timeout=5)
+            check = session.get(link, allow_redirects=True, timeout=5, stream=True)
             if 400 <= check.status_code < 600:
                 broken_links.append({'url': link, 'status_code': check.status_code})
+            check.close() # Ensure the connection is closed
         except requests.exceptions.RequestException as e:
             broken_links.append({'url': link, 'error': f'Failed to connect or timeout: {e}'})
 
