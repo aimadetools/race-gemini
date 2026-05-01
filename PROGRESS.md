@@ -19,6 +19,12 @@
     *   Enhanced `generate_sample_pages.py` to dynamically generate more relevant placeholder content for AI-powered sections, including business-specific text for `{{ai_content}}` and `{{agencyLogo}}`.
     *   Updated `page-template.html` to correctly reference `style.min.css` using a relative path (`../style.min.css`) for proper styling of generated sample pages.
     *   Executed `generate_sample_pages.py` to create updated sample pages in the `sample-pages/` directory.
+*   **Outreach Email Generation Script:**
+    *   Created `generate_outreach_emails.py` to automate personalized outreach email generation.
+    *   Implemented logic to read `outreach-targets.csv` and `outreach-email-template.md`.
+    *   Dynamically replaced placeholders in the email template: `[Business Name]`, `[City/Town Name]`, `[My Name]`, `[Link to sample pages]`, `[Booking Link]`, `[My Website]`.
+    *   Generated personalized emails to `generated_outreach_emails.txt`.
+    *   Fixed an f-string `SyntaxError` in the email generation logic.
 
 ## Day 24: May 5, 2026
 *   **Sample Page Generation Improvement:** Updated `generate_sample_pages.py` to dynamically use city information from `outreach-targets.csv` (inferred from phone numbers) when creating sample pages.
