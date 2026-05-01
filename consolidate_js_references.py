@@ -17,15 +17,26 @@ def consolidate_js_in_html(filepath):
 
         # List of old script files that should be removed
         old_scripts = [
-            'nav.js',
-            'analytics.js',
-            'scroll-to-top.js',
-            'cookie-consent.js',
-            'sticky-cta.js',
-            'main.js', # Sometimes used for general scripts
-            'auth.js',
-            'social-share.js',
-            'mobile-swipe-nav.js'
+            'ab-test-home.js', 'ab-test-home.min.js',
+            'admin-agency-inquiries.js', 'admin-agency-inquiries.min.js',
+            'agency-billing.js', 'agency-billing.min.js',
+            'agency-form.js', 'agency-form.min.js',
+            'agency-subscription.js', 'agency-subscription.min.js',
+            'app.js', # The old app.js (which was already minified)
+            'app.unminified.js', # The old app.unminified.js
+            'audit-form.js', 'audit-form.min.js',
+            'blog-search.js', 'blog-search.min.js',
+            'contact.js', 'contact.min.js',
+            'dashboard.js', 'dashboard.min.js',
+            'generate.js', 'generate.min.js',
+            'mobile-swipe-nav.js', 'mobile-swipe-nav.min.js',
+            'referral-form.js', 'referral-form.min.js',
+            'social-share.js', 'social-share.min.js',
+            'stripe-checkout.js', 'stripe-checkout.min.js',
+            'testimonial-carousel.js', 'testimonial-carousel.min.js',
+            # Existing entries from the original script that might still be present individually
+            'nav.js', 'analytics.js', 'scroll-to-top.js', 'cookie-consent.js',
+            'sticky-cta.js', 'main.js', 'auth.js'
         ]
 
         # Find and remove old script references
@@ -37,25 +48,24 @@ def consolidate_js_in_html(filepath):
                 changed = True
                 print(f"  Removed old script: {src}")
 
-        # Check if /js/app.js is already present
-        app_js_present = False
+        # Check if /js/app.min.js is already present
+        app_min_js_present = False
         for script_tag in soup.find_all('script', src=True):
-            if '/js/app.js' in script_tag['src']:
-                app_js_present = True
+            if '/js/app.min.js' in script_tag['src']:
+                app_min_js_present = True
                 break
         
-        # Add /js/app.js if not already present and if changes were made (or if it's not a blog post that might not need it)
-        # For simplicity, let's just add it if any old scripts were removed or if it's not a blog post
-        if not app_js_present:
+        # Add /js/app.min.js if not already present
+        if not app_min_js_present:
             # Find a good place to insert, e.g., before </body>
             body_tag = soup.body
             if body_tag:
-                new_script_tag = soup.new_tag('script', src='/js/app.js', defer=True)
+                new_script_tag = soup.new_tag('script', src='/js/app.min.js', defer=True)
                 body_tag.append(new_script_tag)
                 changed = True
-                print(f"  Added /js/app.js")
+                print(f"  Added /js/app.min.js")
             else:
-                print(f"  Warning: No <body> tag found in {filepath}, cannot add /js/app.js")
+                print(f"  Warning: No <body> tag found in {filepath}, cannot add /js/app.min.js")
 
 
         if changed:

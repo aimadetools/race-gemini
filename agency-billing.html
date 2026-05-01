@@ -1,204 +1,204 @@
 <!DOCTYPE html>
-
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Manage your LocalLeads agency billing and subscription plans. Upgrade or downgrade your agency account." name="description"/>
-<title>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Manage your LocalLeads agency billing and subscription plans. Upgrade or downgrade your agency account." name="description"/>
+  <title>
    Agency Billing - LocalLeads
   </title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-<link href="/style.min.css" rel="stylesheet"/>
-<link href="/images/favicon.png" rel="icon" type="image/png"/>
-<link href="style_scroll_to_top.min.css" rel="stylesheet"/>
-</head>
-<body>
-<div id="mobile-nav-overlay">
-</div>
-<header>
-<nav>
-<div class="container">
-<a class="logo" href="/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="/style.min.css" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <div id="mobile-nav-overlay">
+  </div>
+  <header>
+   <nav>
+    <div class="container">
+     <a class="logo" href="/">
       LocalLeads
      </a>
-<div class="hamburger-menu" id="hamburger-icon">
-<div class="bar">
-</div>
-<div class="bar">
-</div>
-<div class="bar">
-</div>
-</div>
-<ul class="nav-links" id="nav-menu">
-<li class="close-menu-li">
-<button id="close-menu-btn">
+     <div class="hamburger-menu" id="hamburger-icon">
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+      <div class="bar">
+      </div>
+     </div>
+     <ul class="nav-links" id="nav-menu">
+      <li class="close-menu-li">
+       <button id="close-menu-btn">
         ×
        </button>
-</li>
-<li>
-<a href="/agency-dashboard.html">
+      </li>
+      <li>
+       <a href="/agency-dashboard.html">
         Dashboard
        </a>
-</li>
-<li>
-<a href="#" id="logout-link">
+      </li>
+      <li>
+       <a href="#" id="logout-link">
         Logout
        </a>
-</li>
-</ul>
-</div>
-</nav>
-</header>
-<main>
-<section class="dashboard-section" id="current-agency-plan">
-<h2>
+      </li>
+     </ul>
+    </div>
+   </nav>
+  </header>
+  <main>
+   <section class="dashboard-section" id="current-agency-plan">
+    <h2>
      Your Current Agency Plan
     </h2>
-<div class="card">
-<h3 id="current-plan-display">
+    <div class="card">
+     <h3 id="current-plan-display">
       Loading Current Plan...
      </h3>
-<p>
-<strong>
+     <p>
+      <strong>
        Status:
       </strong>
-<span id="current-plan-status">
+      <span id="current-plan-status">
        Loading...
       </span>
-</p>
-<p>
-<strong>
+     </p>
+     <p>
+      <strong>
        Monthly Credits:
       </strong>
-<span id="current-plan-credits">
+      <span id="current-plan-credits">
        Loading...
       </span>
-</p>
-<p>
-<strong>
+     </p>
+     <p>
+      <strong>
        Renews On:
       </strong>
-<span id="current-plan-renews-on">
+      <span id="current-plan-renews-on">
        Loading...
       </span>
-</p>
-<a class="button button-secondary" href="/agency-subscription.html">
+     </p>
+     <a class="button button-secondary" href="/agency-subscription.html">
       View Full Subscription Details
      </a>
-</div>
-</section>
-<section class="pricing" id="agency-billing">
-<h2>
+    </div>
+   </section>
+   <section class="pricing" id="agency-billing">
+    <h2>
      Change Your Agency Plan
     </h2>
-<p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+    <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
      Choose a plan that fits your agency's needs. All plans come with a monthly credit allowance and access to our white-label features.
     </p>
-<div class="price-cards">
-<div class="card">
-<h3>
+    <div class="price-cards">
+     <div class="card">
+      <h3>
        Basic Agency
       </h3>
-<p class="price">
+      <p class="price">
        $49/month
       </p>
-<ul>
-<li>
+      <ul>
+       <li>
         100 credits per month
        </li>
-<li>
+       <li>
         Manage unlimited clients
        </li>
-<li>
+       <li>
         Custom branding
        </li>
-</ul>
-<form id="basic-plan-form">
-<input name="priceId" type="hidden" value="price_BASIC_AGENCY_PLAN"/>
-<button class="button" onclick="handlePlanChange('price_BASIC_AGENCY_PLAN')" type="button">
+      </ul>
+      <form id="basic-plan-form">
+       <input name="priceId" type="hidden" value="price_BASIC_AGENCY_PLAN"/>
+       <button class="button" onclick="handlePlanChange('price_BASIC_AGENCY_PLAN')" type="button">
         Choose Basic
        </button>
-</form>
-</div>
-<div class="card">
-<h3>
+      </form>
+     </div>
+     <div class="card">
+      <h3>
        Pro Agency
       </h3>
-<p class="price">
+      <p class="price">
        $99/month
       </p>
-<ul>
-<li>
+      <ul>
+       <li>
         250 credits per month
        </li>
-<li>
+       <li>
         Advanced analytics
        </li>
-<li>
+       <li>
         Priority support
        </li>
-<li>
+       <li>
         Manage unlimited clients
        </li>
-<li>
+       <li>
         Custom branding
        </li>
-</ul>
-<form id="pro-plan-form">
-<input name="priceId" type="hidden" value="price_PRO_AGENCY_PLAN"/>
-<button class="button" onclick="handlePlanChange('price_PRO_AGENCY_PLAN')" type="button">
+      </ul>
+      <form id="pro-plan-form">
+       <input name="priceId" type="hidden" value="price_PRO_AGENCY_PLAN"/>
+       <button class="button" onclick="handlePlanChange('price_PRO_AGENCY_PLAN')" type="button">
         Choose Pro
        </button>
-</form>
-</div>
-</div>
-</section>
-<section class="dashboard-section" id="credit-assignment-history">
-<h2>
+      </form>
+     </div>
+    </div>
+   </section>
+   <section class="dashboard-section" id="credit-assignment-history">
+    <h2>
      Credit Assignment History
     </h2>
-<table>
-<thead>
-<tr>
-<th>
+    <table>
+     <thead>
+      <tr>
+       <th>
         Client
        </th>
-<th>
+       <th>
         Credits Assigned
        </th>
-<th>
+       <th>
         Date
        </th>
-</tr>
-</thead>
-<tbody id="credit-history-body">
-</tbody>
-</table>
-</section>
-</main>
-<div class="sticky-cta-bar">
-<p>
+      </tr>
+     </thead>
+     <tbody id="credit-history-body">
+     </tbody>
+    </table>
+   </section>
+  </main>
+  <div class="sticky-cta-bar">
+   <p>
     Ready to get more local customers?
    </p>
-<a class="button" href="generate.html">
+   <a class="button" href="generate.html">
     Generate Pages Now
    </a>
-<a class="button button-secondary" href="audit.html">
+   <a class="button button-secondary" href="audit.html">
     Get Free Audit
    </a>
-</div>
-<footer>
-<div class="container">
-<p>
+  </div>
+  <footer>
+   <div class="container">
+    <p>
      © 2026 LocalLeads. All rights reserved.
     </p>
-</div>
-</footer>
-<script src="/js/app.min.js">
-</script>
-<script src="/js/agency-billing.min.js">
-</script>
-<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-</body>
+   </div>
+  </footer>
+  <script src="/js/app.min.js">
+  </script>
+  <button id="scrollToTopBtn" title="Go to top">
+   <i class="fas fa-arrow-up">
+   </i>
+  </button>
+ </body>
 </html>
