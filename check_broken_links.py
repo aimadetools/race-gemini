@@ -104,6 +104,7 @@ def check_external_links(base_path="."):
     session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}) # Be a good bot
 
     for html_file in all_html_files:
+        print(f"Checking file: {html_file}")
         with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
         soup = BeautifulSoup(content, 'html.parser')
@@ -114,6 +115,7 @@ def check_external_links(base_path="."):
 
             # Check if it's an external link and not a tel link
             if parsed.netloc and not link.startswith('tel:'):
+                print(f"  Checking link: {link}")
                 try:
                     response = session.head(link, allow_redirects=True, timeout=5) # Use HEAD request
                     if 400 <= response.status_code < 600:
@@ -137,4 +139,4 @@ No broken external links found.""")
 
 if __name__ == "__main__":
     check_internal_links()
-    # check_external_links()
+    check_external_links()
