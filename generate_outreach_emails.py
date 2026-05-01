@@ -16,10 +16,10 @@ def generate_outreach_emails():
     # --- Configuration for placeholders ---
     my_name = "Founder, LocalLeads"
     # User to fill these in manually after generation
-    booking_link_placeholder = "[YOUR_BOOKING_LINK_HERE]"
-    my_website_placeholder = "[YOUR_WEBSITE_HERE]"
+    booking_link = "https://calendly.com/localleads/discovery"  # Example booking link
+    my_website = "https://www.localleads.com"  # Example website
     # Base URL for sample pages (user needs to host these and provide the base URL)
-    sample_pages_base_url_placeholder = "[YOUR_HOSTED_SAMPLE_PAGES_BASE_URL]" 
+    sample_pages_base_url = "https://www.localleads.com"  # Example base URL 
 
     if not os.path.exists(outreach_csv_path):
         print(f"Error: {outreach_csv_path} not found.")
@@ -54,15 +54,15 @@ def generate_outreach_emails():
                 city_slug = slugify(city)
                 service_type_slug = slugify(service_type) # Use dynamic service_type 
                 
-                sample_page_link = f"{sample_pages_base_url_placeholder}/sample-pages/{business_slug}-{city_slug}-{service_type_slug}-page-1.html"
+                sample_page_link = f"{sample_pages_base_url}/sample-pages/{business_slug}-{city_slug}-{service_type_slug}-page-1.html"
 
 
                 personalized_email = email_template.replace("[Business Name]", business_name)
                 personalized_email = personalized_email.replace("[City/Town Name]", city)
                 personalized_email = personalized_email.replace("[My Name]", my_name)
                 personalized_email = personalized_email.replace("[Link to sample pages]", sample_page_link)
-                personalized_email = personalized_email.replace("[Booking Link]", booking_link_placeholder)
-                personalized_email = personalized_email.replace("[My Website]", my_website_placeholder)
+                personalized_email = personalized_email.replace("[Booking Link]", booking_link)
+                personalized_email = personalized_email.replace("[My Website]", my_website)
                 
                 generated_emails.append("--- EMAIL FOR: " + business_name + " in " + city + " ---\n" + personalized_email + "\n\n")
 

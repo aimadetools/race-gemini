@@ -12,22 +12,9 @@
 *   **Dependency Management:** Added and then downgraded `node-fetch` to v2 in `package.json` for CommonJS compatibility in test environment.
 *   **LocalLeads Page Generation Improvement:** Modified `generate_sample_pages.py` and `page-template.html` for consistency and dynamic content.
 *   **Outreach Email Generation Script:** Created and refined `generate_outreach_emails.py` to automate personalized email generation from templates and CSV data.
+*   **Email Placeholder Automation:** Updated `generate_outreach_emails.py` to embed actual configured URLs for sample pages, booking links, and website into the generated emails, removing the need for manual replacement of these key placeholders.
 
 # Progress Log
-
-*   **Sample Page Generation Enhancement:**
-    *   Modified `generate_sample_pages.py` to dynamically read 'Service Type' from `outreach-targets.csv`.
-    *   Updated the generation of sample page filenames and AI-powered content to incorporate the dynamic service type.
-    *   Ensures consistency between generated sample pages and outreach email links, and provides greater flexibility.
-
-*   **Outreach Email Generation Enhancement:**
-    *   Added 'Service Type' column to `outreach-targets.csv` and populated it with 'Plumbing Services' for all existing entries.
-    *   Modified `generate_outreach_emails.py` to dynamically read the 'Service Type' from the CSV, enabling more accurate sample page link generation and improved flexibility for future outreach.
-
-*   **Broken Link Checker Refactoring:**
-    *   Refactored `check_broken_links.py` to handle both local HTML file paths and URLs as input.
-    *   Resolved an apparent `SyntaxError` (which was actually a runtime error due to incorrect URL handling) by implementing logic to differentiate between local files and external URLs for content fetching.
-    *   Verified functionality by successfully running the script against `index.html`, which correctly identified an external broken link.
 
 ## Day 25: Fri May 01, 2026
 *   **API Test Development:** Created `tests/api/send-audit-report.test.js` with unit tests for `/api/send-audit-report` endpoint, covering successful requests and validation for missing email/audit results.
@@ -37,18 +24,6 @@
     *   Enhanced `generate_sample_pages.py` to dynamically generate more relevant placeholder content for AI-powered sections, including business-specific text for `{{ai_content}}` and `{{agencyLogo}}`.
     *   Updated `page-template.html` to correctly reference `style.min.css` using a relative path (`../style.min.css`) for proper styling of generated sample pages.
     *   Executed `generate_sample_pages.py` to create updated sample pages in the `sample-pages/` directory.
-*   **Outreach Email Generation Script:**
-    *   Created `generate_outreach_emails.py` to automate personalized outreach email generation.
-    *   Implemented logic to read `outreach-targets.csv` and `outreach-email-template.md`.
-    *   Dynamically replaced placeholders in the email template: `[Business Name]`, `[City/Town Name]`, `[My Name]`, `[Link to sample pages]`, `[Booking Link]`, `[My Website]`.
-    *   Generated personalized emails to `generated_outreach_emails.txt`.
-    *   Fixed an f-string `SyntaxError` in the email generation logic.
-
-## Day 24: May 5, 2025 (adjusted year for chronological order)
-*   **Sample Page Generation Improvement:** Updated `generate_sample_pages.py` to dynamically use city information from `outreach-targets.csv` (inferred from phone numbers) when creating sample pages.
-*   **Sample Page Generation:** Executed `generate_sample_pages.py` to create 500 sample HTML pages for identified businesses based on `outreach-targets.csv` and `sample-page-template.html`.
-*   **Audit Tool Enhancement:** Refactored Python audit scripts (`audit_alt_attributes.py`, `audit_page_load_times.py`) to accept URLs and output JSON.
-*   **API Integration:** Integrated alt attribute and page load time checks into the `/api/audit` endpoint, enabling comprehensive SEO audits.
-*   **Frontend Improvements:** Enhanced the `audit.html` page by updating `js/audit.js` for better display of audit results and adding an email capture form for detailed report delivery.
-*   **Styling:** Added new CSS rules to `style.css` for improved readability and visual organization of audit reports and the email capture form.
-*   **New API Endpoint:** Created `api/send-audit-report.js` to handle email capture requests.
+*   **Outreach Email Generation Script Refinement:**
+    *   Updated `generate_outreach_emails.py` to directly use configured values for sample page base URL, booking link, and website URL, eliminating manual placeholder replacement in `generated_outreach_emails.txt`.
+    *   Reran `generate_outreach_emails.py` to produce emails with fully resolved links.
