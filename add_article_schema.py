@@ -75,12 +75,17 @@ def add_article_schema(file_path):
     script_tag = soup.new_tag("script", type="application/ld+json", **{'class': 'article-schema'})
     script_tag.string = json.dumps(schema, indent=2)
 
+    # Create canonical link tag
+    canonical_link_tag = soup.new_tag("link", rel="canonical", href=canonical_url)
+
     # Insert into head
     head_tag = soup.find('head')
     if head_tag:
+        head_tag.append(canonical_link_tag) # Add canonical link first
         head_tag.append(script_tag)
     else:
         # If no head tag, which is unlikely for a valid HTML, add it to the body
+        soup.body.insert(0, canonical_link_tag)
         soup.body.insert(0, script_tag)
 
     with open(file_path, 'w', encoding='utf-8') as f:

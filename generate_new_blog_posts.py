@@ -21,6 +21,7 @@ def generate_blog_post_html(post_number, title, description, keywords, image_url
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="{title} | LocalLeads Blog" name="twitter:title"/>
 <meta content="{description}" name="twitter:description"/>
+<link rel="canonical" href="{canonical_url}"/>
 <link href="../style.css" rel="stylesheet"/>
 <link href="/images/favicon.png" rel="icon" type="image/png"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
@@ -110,10 +111,7 @@ def generate_blog_post_html(post_number, title, description, keywords, image_url
        Dominate your local market, effortlessly.
       </p>
 <div class="social-icons">
-<a aria-label="Twitter" href="https://twitter.com/intent/tweet?url=https://www.localleads.pro&amp;text=LocalLeads - Get Found in Every Town" target="_blank">
-<i class="fab fa-twitter">
-</i>
-</a>
+
 <a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localleads.pro" target="_blank">
 <i class="fab fa-facebook-f">
 </i>
@@ -195,9 +193,9 @@ def create_new_blog_posts(start_num, count):
     for i in range(count):
         post_number = start_num + i
         title = f"Local SEO Strategy for {post_number}"
-        description = f"Explore effective local SEO strategies tailored for small businesses to dominate search results in their local market. This is a placeholder description for post {post_number}."
+        description = f"Discover effective local SEO strategies to help small businesses attract customers and rank higher in local search. This is a concise overview for post {post_number}."
         keywords = f"local seo, small business seo, local marketing, {post_number}"
-        image_url = f"https://www.localleads.com/images/og_webp/post{post_number}.webp"
+        image_url = f"https://www.localleads.pro/images/og_webp/post{post_number}.webp"
         canonical_url = f"https://www.localleads.pro/blog/post{post_number}.html"
         content = f"This blog post provides an in-depth look into optimizing your business for local search, focusing on techniques that drive organic traffic and convert local customers. Key areas include Google My Business optimization, local citation building, and reputation management. This is the main content for post {post_number}."
         

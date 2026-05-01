@@ -33,4 +33,14 @@
     *   Investigated a reported `SyntaxError` in `check_broken_links.py` and confirmed it was not present in the current version.
     *   Modified the script to use `session.get` with `stream=True` and `check.close()` to improve handling of connections that may close prematurely (e.g., `httpstat.us/404`), although an edge case for `httpstat.us/404` still results in a `RemoteDisconnected` error, it is correctly flagged as an issue.
     *   Verified the script's functionality by running it against a test HTML file.
-    *   Removed the temporary test HTML file (`test_links.html`).
+    *   Removed broken Twitter social links from `index.html`, `blog.html`, `about.html`, `pricing.html`, and `generate.html` after `check_broken_links.py` identified 404 errors. This improves site integrity and user experience.
+*   **Broken Link Fixes:** Fixed broken Twitter social links across critical HTML pages (index.html, blog.html, about.html, pricing.html, generate.html).
+*   **Blog Content Optimization:**
+    *   Updated `generate_new_blog_posts.py` to use `localleads.pro` for OG image URLs, include canonical link tags, remove broken Twitter links from new posts, and utilize a concise placeholder meta description.
+    *   Disabled meta description truncation logic in `fix_blog_meta_tags.py` to prevent arbitrary cutting of descriptions.
+    *   Corrected OG image domains in all existing blog posts by running `convert_blog_og_images.py`.
+    *   Added canonical link tags to all existing blog posts by modifying and re-running `add_article_schema.py`.
+    *   Globally removed all broken Twitter social icons from existing blog posts by creating and executing `remove_blog_twitter_links.py`.
+*   **UI/UX Improvements (index.html):**
+    *   Updated logo's `href` from `/` to `../index.html` for consistency across the site.
+    *   Added Font Awesome icons to the "Why Choose Us" feature cards (`fas fa-dollar-sign`, `fas fa-location-arrow`, `fas fa-hand-sparkles`, `fas fa-chart-line`) to enhance visual engagement and consistency with other sections.

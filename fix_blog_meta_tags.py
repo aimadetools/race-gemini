@@ -26,10 +26,8 @@ def fix_html_file(file_path):
         meta_description_tag = soup.find('meta', attrs={'name': 'description'})
         if meta_description_tag:
             meta_description_content = meta_description_tag.get('content', '').strip()
-            if len(meta_description_content) > 160:
-                new_meta_description_content = meta_description_content[:157] + "..."
-                meta_description_tag['content'] = new_meta_description_content
-                modified = True
+            # Removed truncation logic for meta description. 
+            # Descriptions should be crafted to optimal length during content generation.
         
         if modified:
             with open(file_path, 'w', encoding='utf-8') as f:
