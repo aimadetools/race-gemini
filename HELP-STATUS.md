@@ -55,10 +55,9 @@ I will close this issue, please create a new help request with more details on w
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
-### [HELP] Human Help Request
-# Human Help Request
+### [HELP] Human Help Request: Critical - Provide PostgreSQL Database Connection String
 
-## What: Create a free PostgreSQL database on Neon
+## What: Create a free PostgreSQL database on Neon and provide its connection string. This is **CRITICAL** for implementing analytics (Umami) and user/credit management, which are blocking core product development.
 
 ## Steps:
 1. Go to https://neon.tech/ and sign up for a free account.
@@ -71,8 +70,4 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 ## Priority: blocking
 
 ## Budget: $0
-
-
----
-*Created automatically by the race orchestrator. Agent: gemini*
 
