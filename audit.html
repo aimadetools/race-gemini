@@ -107,14 +107,17 @@
         Business Name:
        </label>
        <input autocomplete="organization" class="form-input" id="auditBusinessName" name="businessName" placeholder="e.g., 'Smith's Plumbing'" required="" type="text"/>
+       <span class="input-error-message" id="auditBusinessName-error"></span>
        <label data-i18n-key="audit_label_business_address" for="auditBusinessAddress">
         Business Address:
        </label>
        <input autocomplete="street-address" class="form-input" id="auditBusinessAddress" name="businessAddress" placeholder="e.g., '123 Main St, Springfield, IL'" required="" type="text"/>
+       <span class="input-error-message" id="auditBusinessAddress-error"></span>
        <label data-i18n-key="audit_label_business_phone" for="auditBusinessPhone">
         Business Phone (optional):
        </label>
        <input autocomplete="tel" class="form-input" id="auditBusinessPhone" name="businessPhone" placeholder="e.g., '555-123-4567'" type="tel"/>
+       <span class="input-error-message" id="auditBusinessPhone-error"></span>
        <button class="next-step button" data-i18n-key="audit_next_button" type="button">
         Next
        </button>
@@ -127,6 +130,7 @@
         Key Services You Offer (comma-separated):
        </label>
        <input class="form-input" id="auditServices" name="services" placeholder="e.g., 'plumbing repair, water heater installation'" required="" type="text"/>
+       <span class="input-error-message" id="auditServices-error"></span>
        <div class="char-counter">
         <span id="auditServices-char-count">
          0
@@ -137,6 +141,7 @@
         Towns/Cities You Serve (comma-separated):
        </label>
        <textarea class="form-input" id="auditTowns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City'" required="" rows="5"></textarea>
+       <span class="input-error-message" id="auditTowns-error"></span>
        <div class="char-counter">
         <span id="auditTowns-char-count">
          0
@@ -158,10 +163,12 @@
         Your Name:
        </label>
        <input autocomplete="name" class="form-input" id="auditName" name="name" required="" type="text"/>
+       <span class="input-error-message" id="auditName-error"></span>
        <label data-i18n-key="audit_label_email" for="auditEmail">
         Your Email:
        </label>
        <input autocomplete="email" class="form-input" id="auditEmail" name="email" placeholder="you@example.com" required="" type="email"/>
+       <span class="input-error-message" id="auditEmail-error"></span>
        <button class="prev-step button button-secondary" data-i18n-key="audit_previous_button" type="button">
         Previous
        </button>
@@ -283,6 +290,8 @@
    </div>
   </footer>
   <script src="/js/app.min.js">
+  </script>
+  <script src="/js/audit-form-validation.js">
   </script>
   <button id="scrollToTopBtn" title="Go to top">
    <i class="fas fa-arrow-up">
