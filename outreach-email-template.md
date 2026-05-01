@@ -20,9 +20,9 @@ You can view them here: [Link to sample pages]
 
 These pages are designed to help you get found on Google when people in these towns are searching for a plumber.
 
-If you're interested in getting more pages like these to attract more customers, I'd be happy to chat. We offer affordable one-time packages with no monthly fees.
+If you're interested in getting more pages like these to attract more customers, we offer affordable one-time packages with no monthly fees. Don't let competitors capture your local market. Our proven strategy helps businesses like yours dominate local search.
 
-Would you be open to a quick 15-minute call next week to discuss?
+Ready to see how LocalLeads can directly increase your customer base? Book a free 15-minute consultation here: [Booking Link]
 
 Best,
 

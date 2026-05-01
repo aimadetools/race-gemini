@@ -52,6 +52,19 @@
     color: #007bff;
 }
 
+.onboarding-icon {
+    margin-right: 0.5rem; /* Space between icon and text */
+    color: #007bff; /* Color for the icon */
+    font-size: 1.3rem; /* Slightly larger icon */
+}
+
+.buy-credits-link {
+    font-size: 0.9em; /* Smaller font size relative to parent */
+    color: #00bfff; /* A slightly different blue for distinction */
+    text-decoration: underline; /* Emphasize it's a link */
+    margin-left: 0.5rem; /* Small space from the credits number */
+}
+
 .dismiss-button {
     background: none;
     border: none;
