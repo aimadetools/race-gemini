@@ -1,193 +1,65 @@
-import os
+import sys
+import json
+import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
-import requests # Added for external link checking
-import time
-import random
+from urllib.parse import urlparse, urljoin
 
-def check_internal_links(base_path="."):
+def check_external_links(url):
     """
-    Checks all HTML files in the given base_path for broken internal links.
-
-    An internal link is considered broken if the target file/directory does not exist.
-    Special handling is included for root paths (resolving to index.html) and
-    directory links that might imply an index.html.
+    Fetches a URL, finds all unique external links, and checks their status.
 
     Args:
-        base_path (str): The base directory to start scanning for HTML files.
-                         Defaults to the current directory.
+        url (str): The URL to audit.
 
     Returns:
-        list: A list of tuples, where each tuple contains (origin_file, broken_link, reason).
+        list: A list of dictionaries, where each dictionary represents a broken
+              link and contains 'url' and 'status_code'.
     """
     broken_links = []
-    all_html_files = []
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+    except requests.exceptions.RequestException as e:
+        return [{'url': url, 'error': str(e)}]
 
-    # Collect all HTML files, excluding specified directories
-    for root, _, files in os.walk(base_path):
-        for file in files:
-            # Exclude node_modules and .gemini temp directories from the search
-            if file.endswith(".html") and "node_modules" not in root and ".gemini" not in root:
-                all_html_files.append(os.path.abspath(os.path.join(root, file)))
+    links = set()
+    for a_tag in soup.find_all('a', href=True):
+        link = a_tag['href']
+        parsed_link = urlparse(link)
 
-    print(f"Checking {len(all_html_files)} HTML files for broken internal links...")
-
-    for html_file in all_html_files:
-        with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
-            content = f.read()
-
-        soup = BeautifulSoup(content, 'html.parser')
-
-        def resolve_path(link_href, current_file_path, base_project_path):
-            """
-            Resolves a given link (href or src) to an absolute file system path.
-
-            Args:
-                link_href (str): The URL or path from an HTML attribute.
-                current_file_path (str): The absolute path of the HTML file
-                                         containing the link.
-                base_project_path (str): The absolute base path of the project.
-
-            Returns:
-                str or None: The absolute file system path if it's an internal link
-                             to be checked, otherwise None (for external links or
-                             special schemes like 'tel:').
-            """
-            parsed = urlparse(link_href)
-
-            # Ignore external links or protocol-relative URLs
-            if parsed.netloc or link_href.startswith('//'):
-                return None
-            
-            # Ignore special schemes like tel:
-            if link_href.startswith('tel:'):
-                return None
-
-            if parsed.path.startswith('/'): # Absolute path from site root (e.g., /images/pic.png)
-                # Construct absolute path from the project's base directory
-                # os.path.abspath is used to normalize the path (e.g., remove '..' components)
-                resolved = os.path.abspath(os.path.join(base_project_path, parsed.path.lstrip('/')))
-            else: # Relative path (e.g., ../style.css)
-                # Resolve relative to the current HTML file's directory
-                current_dir = os.path.dirname(current_file_path)
-                target_filename = parsed.path
-                resolved = os.path.abspath(os.path.join(current_dir, target_filename))
-            return resolved
-
-        # Check <a> tags for href attributes
-        for a_tag in soup.find_all('a', href=True):
-            link = a_tag['href']
-            resolved_path = resolve_path(link, html_file, base_path)
-            if resolved_path:
-                if not os.path.exists(resolved_path):
-                    # Special handling for root link '/' to 'index.html'
-                    if resolved_path == os.path.abspath(base_path) and not os.path.exists(os.path.join(resolved_path, 'index.html')):
-                        broken_links.append((html_file, link, "Internal file not found (index.html missing in root)"))
-                    # Special handling for directory links that might imply 'index.html'
-                    elif os.path.isdir(resolved_path):
-                        if not os.path.exists(os.path.join(resolved_path, 'index.html')):
-                            broken_links.append((html_file, link, "Internal directory link without index.html"))
-                    else:
-                        broken_links.append((html_file, link, "Internal file not found"))
-
-        # Check <link> tags for href (CSS, favicons etc.)
-        for link_tag in soup.find_all('link', href=True):
-            link = link_tag['href']
-            resolved_path = resolve_path(link, html_file, base_path)
-            if resolved_path:
-                if not os.path.exists(resolved_path):
-                    broken_links.append((html_file, link, "Internal stylesheet/resource not found"))
-
-        # Check <img> tags for src attributes
-        for img_tag in soup.find_all('img', src=True):
-            link = img_tag['src']
-            resolved_path = resolve_path(link, html_file, base_path)
-            if resolved_path:
-                if not os.path.exists(resolved_path):
-                    broken_links.append((html_file, link, "Internal image not found"))
-    
-    if broken_links:
-        print("""
---- Broken Internal Links Found ---""")
-        for origin, link, reason in broken_links:
-            print(f"""File: {origin}
-  Link: {link}
-  Reason: {reason}
-""")
-    else:
-        print("""
-No broken internal links found.""")
-
-def check_external_links(base_path="."):
-    """
-    Checks all HTML files in the given base_path for broken external links.
-
-    This function iterates through all HTML files, extracts external links from <a> tags,
-    and attempts to make a HEAD request to each link to check its availability.
-    It includes a delay between requests to avoid overwhelming external servers and
-    ignores specific domains (e.g., twitter.com) that might cause false positives.
-    A random sample of blog posts is checked for efficiency.
-
-    Args:
-        base_path (str): The base directory to start scanning for HTML files.
-                         Defaults to the current directory.
-
-    Returns:
-        list: A list of tuples, where each tuple contains (origin_file, broken_link, reason).
-    """
-    broken_links = []
-    all_html_files = []
-
-    # Collect all HTML files
-    for root, _, files in os.walk(base_path):
-        for file in files:
-            # Exclude node_modules and .gemini temp directories
-            if file.endswith(".html") and "node_modules" not in root and ".gemini" not in root:
-                all_html_files.append(os.path.abspath(os.path.join(root, file)))
-    
-    # Take a random sample of 10 blog posts
-    blog_posts = [f for f in all_html_files if "blog" in f]
-    sample_blog_posts = random.sample(blog_posts, min(10, len(blog_posts)))
-    other_html_files = [f for f in all_html_files if "blog" not in f]
-    all_html_files = other_html_files + sample_blog_posts
-
-    print(f"Checking {len(all_html_files)} HTML files for broken external links...")
+        if parsed_link.scheme and parsed_link.netloc:
+            # Absolute external link
+            links.add(link)
+        elif not parsed_link.scheme and parsed_link.netloc:
+             # Protocol-relative URL, e.g. //example.com
+            links.add(f"https:{link}")
+        # We are ignoring internal links for now.
 
     session = requests.Session()
-    session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}) # Be a good bot
+    session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
 
-    for html_file in all_html_files:
-        with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
-            content = f.read()
-        soup = BeautifulSoup(content, 'html.parser')
+    for link in links:
+        try:
+            # Use a HEAD request for efficiency
+            check = session.head(link, allow_redirects=True, timeout=5)
+            if 400 <= check.status_code < 600:
+                broken_links.append({'url': link, 'status_code': check.status_code})
+        except requests.exceptions.RequestException:
+            # If HEAD fails, it could be because the server doesn't support it.
+            # We could try a GET, but for now we'll just report it as an issue.
+            broken_links.append({'url': link, 'error': 'Failed to connect or timeout'})
 
-        for a_tag in soup.find_all('a', href=True):
-            link = a_tag['href']
-            parsed = urlparse(link)
-
-            # Check if it's an external link and not a tel link
-            if parsed.netloc and not link.startswith('tel:') and 'twitter.com' not in parsed.netloc:
-                try:
-                    response = session.head(link, allow_redirects=True, timeout=5) # Use HEAD request
-                    if 400 <= response.status_code < 600:
-                        broken_links.append((html_file, link, f"External link broken (Status: {response.status_code})"))
-                except requests.exceptions.RequestException as e:
-                    broken_links.append((html_file, link, f"External link unreachable ({e})"))
-                time.sleep(1) # Add a delay to avoid overwhelming external servers
-
-    if broken_links:
-        print("""
---- Broken External Links Found ---""")
-        for origin, link, reason in broken_links:
-            print(f"""File: {origin}
-  Link: {link}
-  Reason: {reason}
-""")
-    else:
-        print("""
-No broken external links found.""")
-
+    return broken_links
 
 if __name__ == "__main__":
-    check_internal_links()
-    check_external_links()
+    if len(sys.argv) > 1:
+        target_url = sys.argv[1]
+        results = {
+            'broken_links': check_external_links(target_url)
+        }
+        print(json.dumps(results, indent=4))
+    else:
+        error_message = {'error': 'No URL provided as a command-line argument.'}
+        print(json.dumps(error_message, indent=4))
+

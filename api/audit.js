@@ -1,70 +1,64 @@
-const fs = require('fs');
+const { spawn } = require('child_process');
 const path = require('path');
-import { kv } from '@vercel/kv';
-import { customAlphabet } from 'nanoid';
-
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
 module.exports = (req, res) => {
-    if (req.method === 'POST') {
-        const { businessName, businessAddress, businessPhone, services, towns, name, email } = req.body;
-
-        if (!businessName || !businessAddress || !services || !towns || !name || !email) {
-            return res.status(400).json({ message: 'All fields are required for the audit. Please fill them out.' });
-        }
-
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Please enter a valid email address.' });
-        }
-
-        // Basic phone number validation (not empty and reasonable length)
-        if (businessPhone && businessPhone.length < 7) { // Assuming a minimum of 7 digits for a phone number
-            return res.status(400).json({ message: 'Please enter a valid business phone number.' });
-        }
-
-        const servicesArray = services.split(',').map(s => s.trim()).filter(s => s !== '');
-        const townsArray = towns.split(',').map(t => t.trim()).filter(t => t !== '');
-
-        const potentialPages = servicesArray.length * townsArray.length;
-
-        // Generate a unique ID for the audit
-        const auditId = nanoid();
-
-        const auditData = {
-            id: auditId,
-            timestamp: new Date().toISOString(),
-            businessName,
-            businessAddress,
-            businessPhone,
-            services: servicesArray,
-            towns: townsArray,
-            name,
-            email,
-            auditSummary: {
-                numberOfServices: servicesArray.length,
-                numberOfTowns: townsArray.length,
-                potentialPages: potentialPages,
-            }
-        };
-
-        // Store the audit data in Vercel KV
-        try {
-            await kv.set(`audit:${auditId}`, JSON.stringify(auditData));
-            console.log(`Audit data stored in Vercel KV with ID: ${auditId}`);
-        } catch (error) {
-            console.error('Failed to store audit data in Vercel KV:', error);
-            // Decide how to handle this error. For now, we'll proceed but it's noted.
-        }
-        
-        res.status(200).json({ 
-            message: 'Audit submitted successfully. Your audit ID is ' + auditId,
-            auditSummary: auditData.auditSummary,
-            auditId: auditId
-        });
-
-    } else {
-        res.status(405).json({ message: 'Method Not Allowed' });
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Method Not Allowed' });
     }
+
+    const { url } = req.body;
+
+    // Basic URL validation
+    if (!url) {
+        return res.status(400).json({ message: 'URL is required.' });
+    }
+    try {
+        new URL(url);
+    } catch (error) {
+        return res.status(400).json({ message: 'Invalid URL format.' });
+    }
+
+    const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
+    const scriptPath = path.resolve(process.cwd(), 'check_broken_links.py');
+
+    const pythonProcess = spawn(pythonExecutable, [scriptPath, url]);
+
+    let stdout = '';
+    let stderr = '';
+
+    pythonProcess.stdout.on('data', (data) => {
+        stdout += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        stderr += data.toString();
+    });
+
+    pythonProcess.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`Python script exited with code ${code}`);
+            console.error(`stderr: ${stderr}`);
+            return res.status(500).json({ 
+                message: 'Error executing audit script.',
+                error: stderr 
+            });
+        }
+
+        try {
+            const results = JSON.parse(stdout);
+            res.status(200).json(results);
+        } catch (error) {
+            console.error('Error parsing JSON from python script:', error);
+            console.error(`stdout: ${stdout}`);
+            return res.status(500).json({ 
+                message: 'Error parsing audit script results.',
+                error: stdout
+            });
+        }
+    });
+
+    pythonProcess.on('error', (err) => {
+        console.error('Failed to start python process.', err);
+        return res.status(500).json({ message: 'Failed to start audit process.' });
+    });
 };

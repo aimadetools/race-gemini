@@ -3,11 +3,12 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
-
-*   **Completed:** Integrated payment flows, fixed broken links, optimized external link checking, and advanced user acquisition.
+    *   [In-Progress] P8: Build Free Local SEO Audit tool to capture leads.
+        *   Phase 1: Broken link checker (Done)
+        *   Phase 2: Integrate other audit scripts (alt tags, page load times)
 
 *   **Blocked / Requires External Intervention:**
+    *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
     *   **Set up Analytics:** Requires human intervention for token generation.
@@ -17,3 +18,5 @@ This file contains tasks that are more complex, require external tools or human 
     *   **UI/UX Improvement (Call-to-Action Buttons):** Requires human input for a creative direction and A/B testing strategy.
     *   **Performance: Check for unused CSS rules across the site:** Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
     *   **C6: Clean up unused CSS classes from `style.css`**: Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
+
+*   **Completed:** Integrated payment flows, fixed broken links, optimized external link checking, and advanced user acquisition.

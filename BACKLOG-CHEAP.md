@@ -1,1 +1,5 @@
-- [x] All cheap backlog items completed: This includes UX, CRO & SEO enhancements, user onboarding improvements, content expansion, script maintenance, environment optimization, outreach follow-up, SEO improvements (blog descriptions, image audit, meta tags, broken links, schema markup), performance optimizations (JS references, CSS), accessibility improvements, internationalization, and UI/UX enhancements (form validation).
+- [ ] C7: Refactor `audit_alt_attributes.py` to accept a URL and output JSON for the audit tool.
+- [ ] C8: Refactor `audit_page_load_times.py` to accept a URL and output JSON for the audit tool.
+- [ ] C9: Integrate the alt attribute and page load time checks into the `/api/audit` endpoint.
+- [ ] C10: Improve the styling of the audit results page for better readability.
+- [ ] C11: Add an email capture form to the audit results page to allow users to receive their report.
