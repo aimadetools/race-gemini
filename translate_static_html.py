@@ -5,15 +5,24 @@ from bs4 import BeautifulSoup
 def translate_html(html_file_path, locale_data, output_dir, output_filename):
     """
     Translates an HTML file based on locale data and saves it to a new location.
+    Handles text content and 'aria-label' attributes for elements with 'data-i18n-key'.
     """
     with open(html_file_path, 'r', encoding='utf-8') as f:
         soup = BeautifulSoup(f, 'html.parser')
 
-    # Translate elements with data-i18n-key
+    # Translate elements with data-i18n-key (text content)
     for element in soup.find_all(attrs={'data-i18n-key': True}):
         key = element['data-i18n-key']
         if key in locale_data:
-            element.string = locale_data[key]
+            # Check if the element is an input/textarea with a placeholder
+            if element.name in ['input', 'textarea'] and 'placeholder' in element.attrs:
+                element['placeholder'] = locale_data[key]
+            else:
+                element.string = locale_data[key]
+        
+        # Translate aria-label attribute if it has a data-i18n-key
+        if 'aria-label' in element.attrs and f"{key}_aria_label" in locale_data:
+            element['aria-label'] = locale_data[f"{key}_aria_label"]
 
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
@@ -38,6 +47,7 @@ def main():
         'contact.html',
         'audit.html',
         'generate.html',
+        'blog.html', # Added blog.html
     ]
     
     # Translate to Spanish

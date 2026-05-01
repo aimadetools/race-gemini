@@ -105,5 +105,7 @@
     "generate_ai_style_professional": "Professional",
     "generate_ai_style_casual": "Casual",
     "generate_submit_button": "Generate Pages",
-    "generate_loading_message": "Generating your pages... This may take a moment."
+    "generate_loading_message": "Generating your pages... This may take a moment.",
+    "header_toggle_nav_menu": "Toggle navigation menu",
+    "header_close_mobile_menu": "Close mobile menu"
 }

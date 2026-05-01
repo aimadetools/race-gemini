@@ -10,3 +10,4 @@
 - [x] SEO Improvement: Conducted an image size audit and found no images larger than 500KB, indicating good optimization.
 - [x] Performance Optimization: Investigated and consolidated JavaScript references, reducing HTTP requests by bundling scripts into a single `app.min.js`.
 - [x] Accessibility: Audited and improved keyboard navigation for key interactive elements on `index.html`, `generate.html`, and `blog.html` by adding `tabindex="0"` to hamburger menu icons.
+- [x] Internationalization: Reviewed and refined the translation process for static HTML pages; expanded translation to include `blog.html` and added `aria-label` translation support, then executed `translate_static_html.py` to update translated pages in the `es/` directory.
