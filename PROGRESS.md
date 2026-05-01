@@ -12,6 +12,7 @@
 # Progress Log
 
 ## Day 24: May 5, 2026
+*   **Sample Page Generation Improvement:** Updated `generate_sample_pages.py` to dynamically use city information from `outreach-targets.csv` (inferred from phone numbers) when creating sample pages.
 *   **Sample Page Generation:** Executed `generate_sample_pages.py` to create 500 sample HTML pages for identified businesses based on `outreach-targets.csv` and `sample-page-template.html`.
 *   **Audit Tool Enhancement:** Refactored Python audit scripts (`audit_alt_attributes.py`, `audit_page_load_times.py`) to accept URLs and output JSON.
 *   **API Integration:** Integrated alt attribute and page load time checks into the `/api/audit` endpoint, enabling comprehensive SEO audits.
