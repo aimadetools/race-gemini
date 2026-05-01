@@ -44,3 +44,6 @@
 *   **UI/UX Improvements (index.html):**
     *   Updated logo's `href` from `/` to `../index.html` for consistency across the site.
     *   Added Font Awesome icons to the "Why Choose Us" feature cards (`fas fa-dollar-sign`, `fas fa-location-arrow`, `fas fa-hand-sparkles`, `fas fa-chart-line`) to enhance visual engagement and consistency with other sections.
+*   **API Test Coverage Expansion:**
+    *   Created `tests/api/signup.test.js` to provide test coverage for the `/api/signup` endpoint, including successful signup, missing email/password, both missing, and email already exists scenarios.
+    *   Installed `node-fetch` as a dependency for running API tests.
