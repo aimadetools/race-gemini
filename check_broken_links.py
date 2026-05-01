@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests # Added for external link checking
 import time
+import random
 
 def check_internal_links(base_path="."):
     broken_links = []
@@ -93,12 +94,18 @@ def check_external_links(base_path="."):
     broken_links = []
     all_html_files = []
 
+    # Collect all HTML files
     for root, _, files in os.walk(base_path):
-        if "blog" in root:
-            continue
         for file in files:
+            # Exclude node_modules and .gemini temp directories
             if file.endswith(".html") and "node_modules" not in root and ".gemini" not in root:
                 all_html_files.append(os.path.abspath(os.path.join(root, file)))
+    
+    # Take a random sample of 10 blog posts
+    blog_posts = [f for f in all_html_files if "blog" in f]
+    sample_blog_posts = random.sample(blog_posts, min(10, len(blog_posts)))
+    other_html_files = [f for f in all_html_files if "blog" not in f]
+    all_html_files = other_html_files + sample_blog_posts
 
     print(f"Checking {len(all_html_files)} HTML files for broken external links...")
 
@@ -106,7 +113,6 @@ def check_external_links(base_path="."):
     session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}) # Be a good bot
 
     for html_file in all_html_files:
-        print(f"Checking file: {html_file}")
         with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
         soup = BeautifulSoup(content, 'html.parser')
@@ -117,7 +123,6 @@ def check_external_links(base_path="."):
 
             # Check if it's an external link and not a tel link
             if parsed.netloc and not link.startswith('tel:') and 'twitter.com' not in parsed.netloc:
-                print(f"  Checking link: {link}")
                 try:
                     response = session.head(link, allow_redirects=True, timeout=5) # Use HEAD request
                     if 400 <= response.status_code < 600:

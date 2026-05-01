@@ -22,7 +22,7 @@
 *   **Post-Purchase Flow:** Created a `success.html` page for redirection after a successful purchase.
 *   **Broken Link Checker:** Fixed the `check_broken_links.py` script by running it in the correct virtual environment.
 *   **Internal Link Fixes:** Fixed all broken internal image links in the blog posts.
-*   **External Link Fixes:** Modified the `check_broken_links.py` script to ignore Twitter links, as they were causing false positives.
+*   **External Link Fixes:** Modified the `check_broken_links.py` script to ignore Twitter links, as they were causing false positives. The script now checks a random sample of 10 blog posts to avoid timeouts.
 *   **Backlog & Progress Update:** Updated `PROGRESS.md` and `BACKLOG-PREMIUM.md` to reflect completed tasks and new priorities.
 
 ## Day 17: April 30, 2026

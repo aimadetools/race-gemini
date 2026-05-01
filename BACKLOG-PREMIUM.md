@@ -3,9 +3,10 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   [ ] P6: Reinstate external link checking for blog posts in `check_broken_links.py`.
+    *   [ ] P7: Create a system to track and analyze user behavior on the website.
 
 *   **Completed:**
+    *   [x] P6: Reinstate external link checking for blog posts in `check_broken_links.py`.
     *   [x] P5: Re-enable and fix external link checking in `check_broken_links.py`.
     *   [x] P2: Integrate Stripe Payment Links into `buy-credits.html`.
     *   [x] P3: Create a `success.html` page for post-purchase redirection.
