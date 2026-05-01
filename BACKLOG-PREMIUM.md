@@ -3,7 +3,7 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   [ ] P7: Create a system to track and analyze user behavior on the website.
+    *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
 
 *   **Completed:**
     *   [x] P6: Reinstate external link checking for blog posts in `check_broken_links.py`.

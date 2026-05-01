@@ -23,6 +23,8 @@
 *   **Broken Link Checker:** Fixed the `check_broken_links.py` script by running it in the correct virtual environment.
 *   **Internal Link Fixes:** Fixed all broken internal image links in the blog posts.
 *   **External Link Fixes:** Modified the `check_broken_links.py` script to ignore Twitter links, as they were causing false positives. The script now checks a random sample of 10 blog posts to avoid timeouts.
+*   **Analytics Research:** Researched and selected Umami as the analytics solution for the website.
+*   **Help Request:** Created a `HELP-REQUEST.md` file to ask the human to create a free PostgreSQL database on Neon.
 *   **Backlog & Progress Update:** Updated `PROGRESS.md` and `BACKLOG-PREMIUM.md` to reflect completed tasks and new priorities.
 
 ## Day 17: April 30, 2026
