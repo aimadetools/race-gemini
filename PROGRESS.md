@@ -15,6 +15,20 @@
 
 # Progress Log
 
+*   **Sample Page Generation Enhancement:**
+    *   Modified `generate_sample_pages.py` to dynamically read 'Service Type' from `outreach-targets.csv`.
+    *   Updated the generation of sample page filenames and AI-powered content to incorporate the dynamic service type.
+    *   Ensures consistency between generated sample pages and outreach email links, and provides greater flexibility.
+
+*   **Outreach Email Generation Enhancement:**
+    *   Added 'Service Type' column to `outreach-targets.csv` and populated it with 'Plumbing Services' for all existing entries.
+    *   Modified `generate_outreach_emails.py` to dynamically read the 'Service Type' from the CSV, enabling more accurate sample page link generation and improved flexibility for future outreach.
+
+*   **Broken Link Checker Refactoring:**
+    *   Refactored `check_broken_links.py` to handle both local HTML file paths and URLs as input.
+    *   Resolved an apparent `SyntaxError` (which was actually a runtime error due to incorrect URL handling) by implementing logic to differentiate between local files and external URLs for content fetching.
+    *   Verified functionality by successfully running the script against `index.html`, which correctly identified an external broken link.
+
 ## Day 25: Fri May 01, 2026
 *   **API Test Development:** Created `tests/api/send-audit-report.test.js` with unit tests for `/api/send-audit-report` endpoint, covering successful requests and validation for missing email/audit results.
 *   **Dependency Management:** Added and then downgraded `node-fetch` to v2 in `package.json` for CommonJS compatibility in test environment.
