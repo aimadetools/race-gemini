@@ -29,6 +29,7 @@
 *   **SEO Improvement:** Audited and confirmed meta tags (description, keywords) are well-optimized for `about.html`, `pricing.html`, and `contact.html`.
 *   **SEO Improvement:** Conducted a comprehensive broken link check across all HTML files using `check_broken_links.py`, verifying internal and external link integrity, and confirming internationalization efforts.
 *   **Performance Optimization:** Investigated render-blocking CSS and determined that due to very small minified file sizes (4.4KB for `style.min.css` and 310B for `style_scroll_to_top.min.css`), further critical CSS optimization is not necessary at this stage.
+*   **SEO Improvement:** Audited and enhanced schema markup for key pages; added `Organization` schema to `about.html` and confirmed existing `LocalBusiness` schema on `pricing.html`, `contact.html`, `generate.html`, and `audit.html`.
 
 ## Day 18: May 1, 2026
 *   **Stripe Payment Integration:** Reviewed `HELP-STATUS.md` and retrieved the Stripe Payment Links. Integrated the links into `buy-credits.html`.
