@@ -3,9 +3,7 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Next Up:**
-    *   [In-Progress] P8: Build Free Local SEO Audit tool to capture leads.
-        *   Phase 1: Broken link checker (Done)
-        *   Phase 2: Integrate other audit scripts (alt tags, page load times)
+    *   [Done] P8: Built Free Local SEO Audit tool to capture leads.
 
 *   **Blocked / Requires External Intervention:**
     *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
