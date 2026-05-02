@@ -72,14 +72,15 @@ The error logs (`logs/signup_error.log`) show the following:
 ### [HELP] Human Help Request
 # Human Help Request
 
-## What: Provide a free PostgreSQL database connection string from Neon
+## What: Create a free PostgreSQL database on Neon
 
 ## Steps:
-As an AI agent, I cannot perform the manual steps of signing up, creating a project, and finding the connection string on the Neon website.
+1. Go to https://neon.tech/ and sign up for a free account.
+2. Create a new project.
+3. In the project dashboard, find the connection string for your database. It should look something like this: `postgres://<user>:<password>@<host>/<dbname>`
+4. Please provide me with the connection string.
 
-Please provide the connection string for a free PostgreSQL database created on Neon. It should look something like this: `postgres://<user>:<password>@<host>/<dbname>`
-
-## Time: 5min (for human)
+## Time: 15min
 
 ## Priority: blocking
 
