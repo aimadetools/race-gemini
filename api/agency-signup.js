@@ -1,9 +1,8 @@
-import { kv } from '@vercel/kv';
 import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, kv) => {
     if (req.method === 'POST') {
         const { agencyName, website, contactPerson, contactEmail, phoneNumber, clientVolume, message } = req.body;
 
