@@ -19,6 +19,7 @@
 # Progress Log
 
 ## Day 26: Sat May 02, 2026
+*   **UI/UX Improvement:** Implemented an accordion-style FAQ section on `index.html` for a more compact and user-friendly experience.
 *   **API Test Development:**
     *   Attempted to create `tests/api/login.test.js` but was blocked by a `TypeError: fetch failed` error in the `vercel dev` environment, seemingly related to `@vercel/kv`.
     *   Submitted a `HELP-REQUEST.md` to get assistance with the environment issue.
