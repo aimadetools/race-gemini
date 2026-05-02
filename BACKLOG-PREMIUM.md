@@ -6,10 +6,11 @@ This file contains tasks that are more complex, require external tools or human 
 
 *   **Blocked / Requires External Intervention:**
     *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
-    *   *   [~] Expand API Test Coverage (In Progress)
+    *   [~] Expand API Test Coverage (In Progress)
         *   **Done:** Refactored `signup`, `login`, `reset-password` and `add-client` handlers for KV dependency injection and created robust tests using a mock KV store.
         *   **Done:** Created a comprehensive test suite for the `forgot-password-request` API endpoint.
-        *   **Next:** Continue expanding coverage to other critical endpoints, focusing on agency and dashboard functionality (`agency-signup`, `agency-login`, `agency-dashboard`, `dashboard`, `client-details`, etc.). Many of these will require the same KV mocking pattern.
+        *   **Done:** Implemented a global mock for `@vercel/kv` in `jest.setup.js`, ensuring all existing API endpoints now benefit from consistent in-memory KV store usage during testing.
+        *   **Next:** Continue expanding coverage to other critical endpoints, focusing on agency and dashboard functionality (`agency-login`, `agency-dashboard`, `dashboard`, `client-details`, etc.).
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
     *   **Set up Analytics:** Requires human intervention for token generation.
