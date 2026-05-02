@@ -1,5 +1,6 @@
 - [x] Run `check_broken_links.py` to identify and fix any broken links on the website.
 - [x] Review and Optimize Blog Content for SEO and readability.
-- [ ] Improve UI/UX of Key Pages (e.g., `index.html`, `pricing.html`, `generate.html`).
-- [ ] Improve word count for blog posts with less than 300 words.
+- [x] Improve UI/UX of Key Pages (e.g., `index.html`, `pricing.html`, `generate.html`).
+    - [x] Implemented accordion for FAQ section on `index.html`.
+- [x] Improve word count for blog posts with less than 300 words.
 - [ ] Expand Test Coverage for API Endpoints (partially blocked).

@@ -19,8 +19,12 @@
 # Progress Log
 
 ## Day 26: Sat May 02, 2026
-*   **Blog Content Improvement:** Expanded several blog posts to meet a 300-word count minimum, improving their depth and SEO value.
-*   **UI/UX Improvement:** Implemented an accordion-style FAQ section on `index.html` for a more compact and user-friendly experience.
+*   **Blog Content Improvement:**
+    *   Verified all blog posts meet a 300-word count minimum using `count_blog_words.py`.
+    *   Expanded several blog posts to meet a 300-word count minimum, improving their depth and SEO value.
+*   **UI/UX Improvement:**
+    *   Implemented an accordion-style FAQ section on `index.html` by creating `js/accordion.js` and integrating it into the page.
+    *   Implemented an accordion-style FAQ section on `index.html` for a more compact and user-friendly experience.
 *   **API Test Development:**
     *   Attempted to create `tests/api/login.test.js` but was blocked by a `TypeError: fetch failed` error in the `vercel dev` environment, seemingly related to `@vercel/kv`.
     *   Submitted a `HELP-REQUEST.md` to get assistance with the environment issue.

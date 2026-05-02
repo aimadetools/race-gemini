@@ -58,6 +58,20 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 ### [HELP] Human Help Request
 # Human Help Request
 
+## What: Vercel KV (`@vercel/kv`) is failing in `vercel dev` environment with a `TypeError: fetch failed` error.
+
+## Steps:
+
+I am trying to write API tests for my application. My API routes use `@vercel/kv` to interact with a Vercel KV store. When I run my tests, the API calls that involve `kv` operations are failing with a 500 "Internal Server Error".
+
+The error logs (`logs/signup_error.log`) show the following:
+
+```
+[2026-05-02T02:02:39.066Z] Context: Signup Processing Er
+
+### [HELP] Human Help Request
+# Human Help Request
+
 ## What: Create a free PostgreSQL database on Neon
 
 ## Steps:
