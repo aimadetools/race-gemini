@@ -2,5 +2,7 @@
 - [x] Review and Optimize Blog Content for SEO and readability.
 - [x] Improve UI/UX of Key Pages (e.g., `index.html`, `pricing.html`, `generate.html`).
     - [x] Implemented accordion for FAQ section on `index.html`.
+    - [x] Ensured consistent logo href (`../index.html`) across `index.html`, `pricing.html`, and `generate.html`.
+    - [x] Updated "coming soon" card on `pricing.html` to reflect usage-based pricing is available and renamed its class from `coming-soon-card` to `usage-pricing-card`.
 - [x] Improve word count for blog posts with less than 300 words.
 - [ ] Expand Test Coverage for API Endpoints (partially blocked).
