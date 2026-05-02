@@ -14,8 +14,20 @@
 *   **Outreach Email Generation Script:** Created and refined `generate_outreach_emails.py` to automate personalized email generation from templates and CSV data.
 *   **Email Placeholder Automation:** Updated `generate_outreach_emails.py` to embed actual configured URLs for sample pages, booking links, and website into the generated emails, removing the need for manual replacement of these key placeholders.
 *   **Script Enhancements & Refactoring:** Enhanced sample page generation to dynamically read 'Service Type' from CSV, improved outreach email generation with dynamic service types, and refactored `check_broken_links.py` to handle both local file paths and URLs.
+*   **Blog SEO Audit and Fixes:** Created a script to audit all blog posts for common SEO issues. Fixed all missing h1 tags and a meta description length issue.
 
 # Progress Log
+
+## Day 26: Sat May 02, 2026
+*   **API Test Development:**
+    *   Attempted to create `tests/api/login.test.js` but was blocked by a `TypeError: fetch failed` error in the `vercel dev` environment, seemingly related to `@vercel/kv`.
+    *   Submitted a `HELP-REQUEST.md` to get assistance with the environment issue.
+*   **Site Maintenance:**
+    *   Ran `check_broken_links.py` and fixed a broken Twitter link in `contact.html`.
+*   **Blog SEO Optimization:**
+    *   Created `audit_blog_posts.py` to audit all blog posts for SEO issues.
+    *   Identified and fixed a large number of missing `<h1>` tags across blog posts using `fix_missing_h1_tags.py`.
+    *   Fixed a meta description length issue in `blog/post512.html`.
 
 ## Day 25: Fri May 01, 2026
 *   **API Test Development:** Created `tests/api/send-audit-report.test.js` with unit tests for `/api/send-audit-report` endpoint, covering successful requests and validation for missing email/audit results.

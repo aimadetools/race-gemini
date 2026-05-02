@@ -33,8 +33,7 @@ async function generateUniqueEmail() {
 }
 
 async function testSuccessfulSignup() {
-    console.log('
---- Test Case 1: Successful Signup ---');
+    console.log('--- Test Case 1: Successful Signup ---');
     const email = await generateUniqueEmail();
     const password = 'securepassword123';
     try {
@@ -61,8 +60,7 @@ async function testSuccessfulSignup() {
 }
 
 async function testMissingEmail() {
-    console.log('
---- Test Case 2: Missing Email ---');
+    console.log('--- Test Case 2: Missing Email ---');
     const password = 'securepassword123';
     try {
         const response = await fetch(API_ENDPOINT, {
@@ -88,8 +86,7 @@ async function testMissingEmail() {
 }
 
 async function testMissingPassword() {
-    console.log('
---- Test Case 3: Missing Password ---');
+    console.log('--- Test Case 3: Missing Password ---');
     const email = await generateUniqueEmail();
     try {
         const response = await fetch(API_ENDPOINT, {
@@ -115,8 +112,7 @@ async function testMissingPassword() {
 }
 
 async function testBothMissing() {
-    console.log('
---- Test Case 4: Both Email and Password Missing ---');
+    console.log('--- Test Case 4: Both Email and Password Missing ---');
     try {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
@@ -141,8 +137,7 @@ async function testBothMissing() {
 }
 
 async function testEmailAlreadyExists() {
-    console.log('
---- Test Case 5: Email Already Exists ---');
+    console.log('--- Test Case 5: Email Already Exists ---');
     const email = await generateUniqueEmail();
     const password = 'anothersecurepassword';
     try {
