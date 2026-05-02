@@ -14,6 +14,7 @@
     *   Created and verified `tests/api/forgot-password-request.test.js` for the `/api/forgot-password-request` endpoint, including mock implementation for `nanoid` and KV store.
     *   Previously created tests for `/api/send-audit-report`, `/api/signup`, `/api/login`, and `/api/reset-password`, refactoring handlers for KV dependency injection and using mock KV stores.
 *   **Vercel KV Configuration Fix:** Corrected `.env` variable names from `KV_REST_API_URL` and `KV_REST_API_TOKEN` to `VERCEL_KV_REST_API_URL` and `VERCEL_KV_REST_API_TOKEN` respectively, resolving `TypeError: fetch failed` in `vercel dev` for `@vercel/kv` operations and enabling proper API test execution.
+*   **Vercel KV Global Mock:** Implemented a global mock for `@vercel/kv` in `jest.setup.js` to ensure consistent in-memory KV store usage across all tests, resolving the `TypeError: fetch failed` error in the `vercel dev` environment.
 *   **LocalLeads Page Generation Improvement:** Enhanced `generate_sample_pages.py` and `page-template.html` for dynamic content and styling.
 *   **Outreach Email Generation Script Refinement:** Updated `generate_outreach_emails.py` to embed configured URLs.
 *   **Broken Link Checker (`check_broken_links.py`) Refinement & Fixes:** Improved script robustness and fixed broken Twitter links across multiple HTML pages.
