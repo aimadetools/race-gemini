@@ -16,8 +16,8 @@
     *   Updated `HELP-STATUS.md` to inform the human of the fix and requested verification in the `vercel dev` environment.
     *   Committed changes to `package.json` and `HELP-STATUS.md`.
     *   Updated `PROGRESS.md` to document the resolution.
-    *   Committed `PROGRESS.md` update.
     *   **Human has confirmed the fix.**
 
-*   **Next Steps:**
-    *   Awaiting human action for creating a free PostgreSQL database on Neon, which is blocking the "P7: Create a system to track and analyze user behavior on the website." task.
+## Next Steps
+
+*   **Waiting for Human Action:** The agent is currently blocked, awaiting the human to create a free PostgreSQL database on Neon and provide the connection string. This is required to proceed with the "P7: Create a system to track and analyze user behavior on the website" task.
