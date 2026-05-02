@@ -1,7 +1,8 @@
 import { kv } from '@vercel/kv';
 import bcrypt from 'bcrypt';
 
-export default async function (request, response) {
+export default async function (request, response, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (request.method !== 'POST') {
         return response.status(405).json({ message: 'Method Not Allowed' });
     }
@@ -13,29 +14,33 @@ export default async function (request, response) {
     }
 
     try {
-        const tokenData = await kv.get(`password-reset:${token}`);
+        let tokenData = await currentKv.get(`password-reset:${token}`);
 
-        if (!tokenData) {
+        if (!tokenData) { // Check if tokenData string itself is null/undefined
             return response.status(400).json({ message: 'Invalid or expired token.' });
         }
+        tokenData = JSON.parse(tokenData);
 
         if (Date.now() > tokenData.expiry) {
-            await kv.del(`password-reset:${token}`); // Clean up expired token
+            await currentKv.del(`password-reset:${token}`); // Clean up expired token
             return response.status(400).json({ message: 'Invalid or expired token.' });
         }
 
         const userKey = `user:${tokenData.email}`;
-        const user = await kv.get(userKey);
+        const userString = await currentKv.get(userKey);
 
-        if (!user) {
+
+        if (!userString) {
+            await currentKv.del(`password-reset:${token}`); // Invalidate token even if user not found
             return response.status(404).json({ message: 'User not found.' });
         }
+        const user = JSON.parse(userString);
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
 
-        await kv.set(userKey, user);
-        await kv.del(`password-reset:${token}`); // Invalidate token after use
+        await currentKv.set(userKey, JSON.stringify(user));
+        await currentKv.del(`password-reset:${token}`); // Invalidate token after use
 
         return response.status(200).json({ message: 'Password reset successfully.' });
 
