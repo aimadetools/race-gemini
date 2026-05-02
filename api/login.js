@@ -20,7 +20,8 @@ Stack: ${error.stack}
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+  const currentKv = currentKvClient || kv;
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const userString = await kv.get(`user:${email}`);
+      const userString = await currentKv.get(`user:${email}`);
       if (!userString) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
@@ -47,7 +48,7 @@ export default async function handler(req, res) {
 
       // Create a session in KV
       const sessionId = `sess_${Date.now()}_${user.id}`;
-      await kv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
+      await currentKv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
       // Set session to expire in KV after 1 hour, matching JWT expiration
 
       // Set HttpOnly cookie
