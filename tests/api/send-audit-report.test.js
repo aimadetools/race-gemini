@@ -1,109 +1,86 @@
-const fetch = require('node-fetch');
+// tests/api/send-audit-report.test.js
+import handler from '../../api/send-audit-report';
+import { jest } from '@jest/globals';
 
-const API_ENDPOINT = 'http://localhost:3000/api/send-audit-report';
+describe('Send Audit Report API', () => {
+    let mockReq;
+    let mockRes;
 
-async function runTests() {
-    console.log('Running tests for /api/send-audit-report...');
+    beforeEach(() => {
+        jest.clearAllMocks();
 
-    // Test Case 1: Successful request
-    await testSuccessfulRequest();
-
-    // Test Case 2: Missing email
-    await testMissingEmail();
-
-    // Test Case 3: Missing auditResults
-    await testMissingAuditResults();
-
-    console.log('All tests finished.');
-}
-
-async function testSuccessfulRequest() {
-    console.log('--- Test Case 1: Successful Request ---');
-    try {
-        const response = await fetch(API_ENDPOINT, {
+        mockReq = {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: 'test@example.com',
-                auditResults: {
-                    altAttributes: { missing: 5 },
-                    pageLoadTime: { score: 85 }
-                }
-            }),
-        });
-        const data = await response.json();
+            body: {},
+        };
+        mockRes = {
+            _status: 200,
+            _json: {},
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis(),
+            end: jest.fn().mockReturnThis(), // Added end method for 405
+        };
+    });
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+    it('should return 200 for a successful audit report request', async () => {
+        mockReq.body = {
+            email: 'test@example.com',
+            auditResults: {
+                altAttributes: { missing: 5 },
+                pageLoadTime: { score: 85 }
+            }
+        };
 
-        if (response.status === 200 && data.message === 'Audit report request received successfully.') {
-            console.log('✅ Test Case 1 Passed: Successful request received expected response.');
-        } else {
-            console.error('❌ Test Case 1 Failed: Unexpected response for successful request.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 1 Failed: Error during successful request:', error.message);
-    }
-}
+        await handler(mockReq, mockRes);
 
-async function testMissingEmail() {
-    console.log('--- Test Case 2: Missing Email ---');
-    try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                auditResults: {
-                    altAttributes: { missing: 5 },
-                    pageLoadTime: { score: 85 }
-                }
-            }),
-        });
-        const data = await response.json();
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Audit report request received successfully.' });
+    });
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+    it('should return 400 if email is missing', async () => {
+        mockReq.body = {
+            auditResults: {
+                altAttributes: { missing: 5 },
+                pageLoadTime: { score: 85 }
+            }
+        };
 
-        if (response.status === 400 && data.message === 'Email and audit results are required.') {
-            console.log('✅ Test Case 2 Passed: Missing email handled correctly.');
-        } else {
-            console.error('❌ Test Case 2 Failed: Unexpected response for missing email.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 2 Failed: Error during missing email test:', error.message);
-    }
-}
+        await handler(mockReq, mockRes);
 
-async function testMissingAuditResults() {
-    console.log('--- Test Case 3: Missing Audit Results ---');
-    try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: 'test@example.com'
-            }),
-        });
-        const data = await response.json();
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
+    });
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+    it('should return 400 if auditResults are missing', async () => {
+        mockReq.body = {
+            email: 'test@example.com'
+        };
 
-        if (response.status === 400 && data.message === 'Email and audit results are required.') {
-            console.log('✅ Test Case 3 Passed: Missing audit results handled correctly.');
-        } else {
-            console.error('❌ Test Case 3 Failed: Unexpected response for missing audit results.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 3 Failed: Error during missing audit results test:', error.message);
-    }
-}
+        await handler(mockReq, mockRes);
 
-// Ensure a local development server (e.g., `vercel dev`) is running on port 3000 before executing tests.
-runTests();
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
+    });
+
+    it('should return 400 if both email and auditResults are missing', async () => {
+        mockReq.body = {};
+
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
+    });
+
+    it('should return 405 for non-POST methods', async () => {
+        mockReq.method = 'GET';
+        mockReq.body = {
+            email: 'test@example.com',
+            auditResults: {}
+        };
+
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(405);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Method Not Allowed' });
+    });
+});

@@ -134,7 +134,7 @@ describe('reset-password API', () => {
 
         // Verify token was deleted
         const tokenInKv = await mockKv.get(`password-reset:${resetToken}`);
-        expect(tokenInKv).toBeNull();
+        expect(tokenInKv).toBeUndefined();
     });
 
     it('should return 400 if token is missing', async () => {
@@ -190,7 +190,7 @@ describe('reset-password API', () => {
 
         // Verify expired token was cleaned up
         const tokenInKv = await mockKv.get(`password-reset:${expiredToken}`);
-        expect(tokenInKv).toBeNull();
+        expect(tokenInKv).toBeUndefined();
     });
 
     it('should return 404 if user not found (after token validation) and invalidate token', async () => {
@@ -213,7 +213,7 @@ describe('reset-password API', () => {
 
         // Ensure the token was consumed/deleted even if user not found
         const tokenInKv = await mockKv.get(`password-reset:${tokenForNonExistentUser}`);
-        expect(tokenInKv).toBeNull();
+        expect(tokenInKv).toBeUndefined();
 
         // Clean up the token created specifically for this test's setup
         await mockKv.del(`password-reset:${tokenForNonExistentUser}`);
