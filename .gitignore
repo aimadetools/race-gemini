@@ -20,3 +20,4 @@ database.sql
 # Build artifacts
 dist/
 build/
+package-lock.json
