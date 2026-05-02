@@ -37,7 +37,7 @@ export default async function (request, response, currentKvClient) {
         const user = JSON.parse(userString);
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
+        user.hashedPassword = hashedPassword;
 
         await currentKv.set(userKey, JSON.stringify(user));
         await currentKv.del(`password-reset:${token}`); // Invalidate token after use

@@ -1,269 +1,158 @@
-const loginHandler = require('../../api/login').default;
-const signupHandler = require('../../api/signup').default; // Needed for user creation in setup
-const path = require('path');
-const fs = require('fs');
-const jwt = require('jsonwebtoken'); // To verify JWT tokens
+// tests/api/login.test.js
+import loginHandler from '../../api/login';
+import signupHandler from '../../api/signup';
+import { jest } from '@jest/globals';
 
-// Set a consistent JWT secret for testing
-process.env.JWT_SECRET = 'test_jwt_secret_key';
 
 // Mock KV store for in-memory testing
 const mockKvStore = new Map();
 
 const mockKv = {
     async get(key) {
-        return mockKvStore.get(key);
+        const value = mockKvStore.get(key);
+        return value;
     },
     async set(key, value) {
-        mockKvStore.set(key, value);
+        mockKvStore.set(key, typeof value === 'object' && value !== null ? JSON.stringify(value) : value);
     },
     async delete(key) {
         mockKvStore.delete(key);
     },
-    // Add other KV methods if used in login.js and needed for tests
+    async incr(key) {
+        let current = parseInt(mockKvStore.get(key) || '0', 10);
+        current += 1;
+        mockKvStore.set(key, current.toString());
+        return current;
+    },
 };
 
-// Helper to create mock response object
-const createMockRes = () => {
-    const headers = {};
-    const res = {
-        _status: 200,
-        _json: {},
-        status(statusCode) {
-            this._status = statusCode;
-            return this;
-        },
-        json(data) {
-            this._json = data;
-            return this;
-        },
-        setHeader(name, value) {
-            headers[name] = value;
-        },
-        _getHeaders() {
-            return headers;
-        },
-        // For internal server error logging
-        end(message) {
-            this._json = { message };
+describe('Login API', () => {
+    let mockReq;
+    let mockRes;
+    let testUserEmail;
+    let testUserPassword;
+
+    beforeAll(() => {
+        // Set a consistent JWT secret for testing globally for the suite
+        process.env.JWT_SECRET = 'test_jwt_secret_key';
+    });
+
+    afterAll(() => {
+        delete process.env.JWT_SECRET;
+    });
+
+    beforeEach(async () => {
+        jest.clearAllMocks();
+        mockKvStore.clear(); // Clear the mock KV store for each test
+
+        testUserEmail = `test-login-${Date.now()}-${Math.random().toString(36).substring(2, 7)}@example.com`;
+        testUserPassword = 'a-secure-password';
+
+        // Setup: Create a user to test login against
+        const signupReq = {
+            method: 'POST',
+            body: { email: testUserEmail, password: testUserPassword },
+        };
+        const signupRes = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis(),
+            end: jest.fn().mockReturnThis(),
+        };
+
+        await signupHandler(signupReq, signupRes, mockKv);
+
+        if (signupRes.status.mock.calls[0][0] !== 201) {
+            throw new Error(`CRITICAL FAILURE: Could not create user for login tests. Error: ${JSON.stringify(signupRes.json.mock.calls[0][0])}`);
         }
-    };
-    return res;
-};
 
 
-async function runTests() {
-    console.log('Running tests for /api/login...');
+        mockReq = {
+            method: 'POST',
+            body: {},
+            headers: {}, // Add headers for cookie parsing
+        };
+        mockRes = {
+            _status: 200,
+            _json: {},
+            _headers: {},
+            status: jest.fn(function(statusCode) { this._status = statusCode; return this; }),
+            json: jest.fn(function(data) { this._json = data; return this; }),
+            setHeader: jest.fn(function(name, value) { this._headers[name] = value; }),
+            end: jest.fn(),
+            getHeaders: jest.fn(function() { return this._headers; }), // Added getHeaders
+        };
+    });
 
-    // Clear the mock KV store at the beginning of the test run to ensure a clean state
-    mockKvStore.clear();
+    it('should return 200 for a successful login and set auth cookie', async () => {
+        mockReq.body = { email: testUserEmail, password: testUserPassword };
 
-    // --- Test Setup: Create a user to test login ---
-    const testUserEmail = `test-login-${Date.now()}@example.com`;
-    const testUserPassword = 'a-secure-password';
-    const signupReq = {
-        method: 'POST',
-        body: { email: testUserEmail, password: testUserPassword },
-    };
-    const signupRes = createMockRes();
+        await loginHandler(mockReq, mockRes, mockKv);
 
-    await signupHandler(signupReq, signupRes, mockKv);
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Logged in successfully!',
+            userId: expect.any(String),
+        }));
 
-    if (signupRes._status !== 201) {
-        console.error('❌ CRITICAL FAILURE: Could not create user for login tests. Aborting.');
-        console.error('Error details:', signupRes._json);
-        return;
-    }
-    console.log('✓ Test setup complete: User created successfully.');
-    // --- End Test Setup ---
+        expect(mockRes.setHeader).toHaveBeenCalledWith(
+            'Set-Cookie',
+            expect.stringContaining('authToken=')
+        );
+    });
 
+    it('should return 401 for wrong password', async () => {
+        mockReq.body = { email: testUserEmail, password: 'wrong-password' };
 
-    // Run all test cases
-    await testSuccessfulLogin(testUserEmail, testUserPassword);
-    await testWrongPassword(testUserEmail);
-    await testNonExistentEmail();
-    await testMissingEmail();
-    await testMissingPassword(testUserEmail);
-    await testBothMissing();
+        await loginHandler(mockReq, mockRes, mockKv);
 
-    console.log('All tests finished for /api/login.');
-}
+        expect(mockRes.status).toHaveBeenCalledWith(401);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Invalid credentials.' });
+    });
 
-async function testSuccessfulLogin(email, password) {
-    console.log('--- Test Case 1: Successful Login ---');
-    const req = {
-        method: 'POST',
-        body: { email, password },
-        // Mock process.env.JWT_SECRET for consistent token generation
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
+    it('should return 401 for non-existent email', async () => {
+        const nonExistentEmail = `nonexistent-${Date.now()}@example.com`;
+        mockReq.body = { email: nonExistentEmail, password: 'anypassword' };
 
-    try {
-        await loginHandler(req, res, mockKv);
+        await loginHandler(mockReq, mockRes, mockKv);
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+        expect(mockRes.status).toHaveBeenCalledWith(401);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Invalid credentials.' });
+    });
 
-        if (res._status === 200 && res._json.message === 'Logged in successfully!' && res._json.userId) {
-            // Verify JWT token
-            const headers = res._getHeaders();
-            const setCookieHeader = headers['Set-Cookie'];
-            const cookieHeaders = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
-            if (cookieHeaders && cookieHeaders.length > 0) {
-                const authTokenCookie = cookieHeaders.find(cookie => cookie.startsWith('authToken='));
-                if (authTokenCookie) {
-                    const token = authTokenCookie.split(';')[0].split('authToken=')[1];
-                    try {
-                        const decoded = jwt.verify(token, 'test_jwt_secret_key'); // Use mocked secret
-                        if (decoded.userId === res._json.userId) {
-                            console.log('✅ Test Case 1 Passed: Successful login received expected response and valid token.');
-                        } else {
-                            console.error('❌ Test Case 1 Failed: Token verification failed (userId mismatch).');
-                        }
-                    } catch (jwtError) {
-                        console.error('❌ Test Case 1 Failed: JWT token verification failed:', jwtError.message);
-                    }
-                } else {
-                    console.error('❌ Test Case 1 Failed: AuthToken cookie not found in Set-Cookie header.');
-                }
-            } else {
-                console.error('❌ Test Case 1 Failed: Set-Cookie header not found.');
-            }
-        } else {
-            console.error('❌ Test Case 1 Failed: Unexpected response for successful login.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 1 Failed: Error during successful login test:', error.message);
-    }
-}
+    it('should return 400 if email is missing', async () => {
+        mockReq.body = { password: 'anypassword' };
 
-async function testWrongPassword(email) {
-    console.log('--- Test Case 2: Wrong Password ---');
-    const req = {
-        method: 'POST',
-        body: { email, password: 'this-is-the-wrong-password' },
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
+        await loginHandler(mockReq, mockRes, mockKv);
 
-    try {
-        await loginHandler(req, res, mockKv);
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+    it('should return 400 if password is missing', async () => {
+        mockReq.body = { email: testUserEmail };
 
-        if (res._status === 401 && res._json.message === 'Invalid credentials.') {
-            console.log('✅ Test Case 2 Passed: Wrong password handled correctly.');
-        } else {
-            console.error('❌ Test Case 2 Failed: Unexpected response for wrong password.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 2 Failed: Error during wrong password test:', error.message);
-    }
-}
+        await loginHandler(mockReq, mockRes, mockKv);
 
-async function testNonExistentEmail() {
-    console.log('--- Test Case 3: Non-Existent Email ---');
-    const nonExistentEmail = `nonexistent-${Date.now()}@example.com`;
-    const req = {
-        method: 'POST',
-        body: { email: nonExistentEmail, password: 'anypassword' },
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-    try {
-        await loginHandler(req, res, mockKv);
+    it('should return 400 if both email and password are missing', async () => {
+        mockReq.body = {};
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+        await loginHandler(mockReq, mockRes, mockKv);
 
-        // The current implementation of login.js returns 401 for both wrong password and non-existent user
-        // This is a common security practice to avoid user enumeration.
-        if (res._status === 401 && res._json.message === 'Invalid credentials.') {
-            console.log('✅ Test Case 3 Passed: Non-existent email handled correctly (as invalid credentials).');
-        } else {
-            console.error('❌ Test Case 3 Failed: Unexpected response for non-existent email.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 3 Failed: Error during non-existent email test:', error.message);
-    }
-}
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-async function testMissingEmail() {
-    console.log('--- Test Case 4: Missing Email ---');
-    const req = {
-        method: 'POST',
-        body: { password: 'any-password' },
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
+    it('should return 405 for non-POST methods', async () => {
+        mockReq.method = 'GET';
+        mockReq.body = { email: testUserEmail, password: testUserPassword };
 
-    try {
-        await loginHandler(req, res, mockKv);
+        await loginHandler(mockReq, mockRes, mockKv);
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
-
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 4 Passed: Missing email handled correctly.');
-        } else {
-            console.error('❌ Test Case 4 Failed: Unexpected response for missing email.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 4 Failed: Error during missing email test:', error.message);
-    }
-}
-
-async function testMissingPassword(email) {
-    console.log('--- Test Case 5: Missing Password ---');
-    const req = {
-        method: 'POST',
-        body: { email },
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
-
-    try {
-        await loginHandler(req, res, mockKv);
-
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
-
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 5 Passed: Missing password handled correctly.');
-        } else {
-            console.error('❌ Test Case 5 Failed: Unexpected response for missing password.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 5 Failed: Error during missing password test:', error.message);
-    }
-}
-
-async function testBothMissing() {
-    console.log('--- Test Case 6: Both Email and Password Missing ---');
-    const req = {
-        method: 'POST',
-        body: {},
-        process: { env: { JWT_SECRET: 'test_jwt_secret_key' } }
-    };
-    const res = createMockRes();
-
-    try {
-        await loginHandler(req, res, mockKv);
-
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
-
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 6 Passed: Both email and password missing handled correctly.');
-        } else {
-            console.error('❌ Test Case 6 Failed: Unexpected response for both missing.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 6 Failed: Error during both missing test:', error.message);
-    }
-}
-
-runTests();
+        expect(mockRes.status).toHaveBeenCalledWith(405);
+        expect(mockRes.end).toHaveBeenCalledWith('Method GET Not Allowed');
+    });
+});

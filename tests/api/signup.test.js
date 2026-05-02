@@ -1,206 +1,147 @@
-const signupHandler = require('../../api/signup').default; // Import the refactored handler
-const path = require('path');
-const fs = require('fs');
+// tests/api/signup.test.js
+import handler from '../../api/signup'; // Import the refactored handler
+import { jest } from '@jest/globals';
+
+
+
 
 // Mock KV store for in-memory testing
 const mockKvStore = new Map();
 
 const mockKv = {
     async get(key) {
-        return mockKvStore.get(key);
+        const value = mockKvStore.get(key);
+        return value;
     },
     async set(key, value) {
-        mockKvStore.set(key, value);
+        mockKvStore.set(key, typeof value === 'object' && value !== null ? JSON.stringify(value) : value);
     },
     async delete(key) {
         mockKvStore.delete(key);
     },
-    // Add other KV methods if used in signup.js and needed for tests
+    async incr(key) {
+        let current = parseInt(mockKvStore.get(key) || '0', 10);
+        current += 1;
+        mockKvStore.set(key, current.toString());
+        return current;
+    },
 };
 
-// Helper to create mock response object
-const createMockRes = () => {
-    const res = {
-        _status: 200,
-        _json: {},
-        status(statusCode) {
-            this._status = statusCode;
-            return this;
-        },
-        json(data) {
-            this._json = data;
-            return this;
-        },
-        // For internal server error logging
-        end(message) {
-            this._json = { message };
-        }
-    };
-    return res;
-};
+describe('Signup API', () => {
+    let mockReq;
+    let mockRes;
 
-async function runTests() {
-    console.log('Running tests for /api/signup...');
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockKvStore.clear(); // Clear the mock KV store for each test
 
-    // Clear the mock KV store at the beginning of the test run to ensure a clean state
-    mockKvStore.clear();
+        mockReq = {
+            method: 'POST',
+            body: {},
+        };
+        mockRes = {
+            _status: 200,
+            _json: {},
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis(),
+            setHeader: jest.fn().mockReturnThis(), // Added setHeader method
+            end: jest.fn().mockReturnThis(), // Added end method for 405
+        };
+        process.env.JWT_SECRET = 'test_jwt_secret'; // Set a test JWT secret if needed by other tests
+    });
 
-    // Test Case 1: Successful signup
-    await testSuccessfulSignup();
+    afterEach(() => {
+        delete process.env.JWT_SECRET;
+    });
 
-    // Test Case 2: Missing email
-    await testMissingEmail();
+    const generateUniqueEmail = () => `test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}@example.com`;
 
-    // Test Case 3: Missing password
-    await testMissingPassword();
+    it('should return 201 for a successful signup', async () => {
+        const email = generateUniqueEmail();
+        const password = 'securepassword123';
+        mockReq.body = { email, password };
 
-    // Test Case 4: Both email and password missing
-    await testBothMissing();
+        await handler(mockReq, mockRes, mockKv);
 
-    // Test Case 5: Email already exists
-    await testEmailAlreadyExists();
+        expect(mockRes.status).toHaveBeenCalledWith(201);
+        expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'User registered successfully!',
+            userId: expect.any(String),
+        }));
 
-    console.log('All tests finished for /api/signup.');
-}
+        // Verify user data stored in KV
+        const storedUser = JSON.parse(await mockKv.get(`user:${email}`));
+        expect(storedUser).toMatchObject({
+            email,
+            hashedPassword: `mock-hashed-${password}`,
+            credits: 50,
+        });
+        expect(await mockKv.get(`userId:${storedUser.id}`)).toBe(email);
+    });
 
-async function generateUniqueEmail() {
-    return `test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}@example.com`;
-}
+    it('should return 400 if email is missing', async () => {
+        const password = 'securepassword123';
+        mockReq.body = { password };
 
-async function testSuccessfulSignup() {
-    console.log('--- Test Case 1: Successful Signup ---');
-    const email = await generateUniqueEmail();
-    const password = 'securepassword123';
-    const req = {
-        method: 'POST',
-        body: { email, password },
-    };
-    const res = createMockRes();
+        await handler(mockReq, mockRes, mockKv);
 
-    try {
-        await signupHandler(req, res, mockKv);
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+    it('should return 400 if password is missing', async () => {
+        const email = generateUniqueEmail();
+        mockReq.body = { email };
 
-        if (res._status === 201 && res._json.message === 'User registered successfully!' && res._json.userId) {
-            console.log('✅ Test Case 1 Passed: Successful signup received expected response.');
-        } else {
-            console.error('❌ Test Case 1 Failed: Unexpected response for successful signup.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 1 Failed: Error during successful signup test:', error.message);
-    }
-}
+        await handler(mockReq, mockRes, mockKv);
 
-async function testMissingEmail() {
-    console.log('--- Test Case 2: Missing Email ---');
-    const password = 'securepassword123';
-    const req = {
-        method: 'POST',
-        body: { password },
-    };
-    const res = createMockRes();
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-    try {
-        await signupHandler(req, res, mockKv);
+    it('should return 400 if both email and password are missing', async () => {
+        mockReq.body = {};
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+        await handler(mockReq, mockRes, mockKv);
 
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 2 Passed: Missing email handled correctly.');
-        } else {
-            console.error('❌ Test Case 2 Failed: Unexpected response for missing email.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 2 Failed: Error during missing email test:', error.message);
-    }
-}
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
+    });
 
-async function testMissingPassword() {
-    console.log('--- Test Case 3: Missing Password ---');
-    const email = await generateUniqueEmail();
-    const req = {
-        method: 'POST',
-        body: { email },
-    };
-    const res = createMockRes();
+    it('should return 409 if email already exists', async () => {
+        const email = generateUniqueEmail();
+        const password = 'securepassword123';
 
-    try {
-        await signupHandler(req, res, mockKv);
+        // First signup
+        mockReq.body = { email, password };
+        await handler(mockReq, mockRes, mockKv);
+        expect(mockRes.status).toHaveBeenCalledWith(201);
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+        // Clear mock calls for the second attempt
+        jest.clearAllMocks();
+        mockRes = { // Re-initialize mockRes for second call
+            _status: 200,
+            _json: {},
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis(),
+            end: jest.fn().mockReturnThis(),
+        };
 
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 3 Passed: Missing password handled correctly.');
-        } else {
-            console.error('❌ Test Case 3 Failed: Unexpected response for missing password.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 3 Failed: Error during missing password test:', error.message);
-    }
-}
+        // Second signup with same email
+        mockReq.body = { email, password: 'anotherpassword' };
+        await handler(mockReq, mockRes, mockKv);
 
-async function testBothMissing() {
-    console.log('--- Test Case 4: Both Email and Password Missing ---');
-    const req = {
-        method: 'POST',
-        body: {},
-    };
-    const res = createMockRes();
+        expect(mockRes.status).toHaveBeenCalledWith(409);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'User with this email already exists.' });
+    });
 
-    try {
-        await signupHandler(req, res, mockKv);
+    it('should return 405 for non-POST methods', async () => {
+        mockReq.method = 'GET';
+        mockReq.body = { email: generateUniqueEmail(), password: 'anypassword' };
 
-        console.log('Response Status:', res._status);
-        console.log('Response Data:', res._json);
+        await handler(mockReq, mockRes, mockKv);
 
-        if (res._status === 400 && res._json.message === 'Email and password are required.') {
-            console.log('✅ Test Case 4 Passed: Both email and password missing handled correctly.');
-        } else {
-            console.error('❌ Test Case 4 Failed: Unexpected response for both missing.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 4 Failed: Error during both missing test:', error.message);
-    }
-}
-
-async function testEmailAlreadyExists() {
-    console.log('--- Test Case 5: Email Already Exists ---');
-    const email = await generateUniqueEmail();
-    const password = 'anothersecurepassword';
-    const req1 = {
-        method: 'POST',
-        body: { email, password },
-    };
-    const res1 = createMockRes();
-
-    const req2 = {
-        method: 'POST',
-        body: { email, password: 'differentpassword' },
-    };
-    const res2 = createMockRes();
-
-    try {
-        // First, successfully sign up the user
-        await signupHandler(req1, res1, mockKv);
-
-        // Then, try to sign up with the same email again
-        await signupHandler(req2, res2, mockKv);
-
-        console.log('Response Status:', res2._status);
-        console.log('Response Data:', res2._json);
-
-        if (res2._status === 409 && res2._json.message === 'User with this email already exists.') {
-            console.log('✅ Test Case 5 Passed: Email already exists handled correctly.');
-        } else {
-            console.error('❌ Test Case 5 Failed: Unexpected response for email already exists.');
-        }
-    } catch (error) {
-        console.error('❌ Test Case 5 Failed: Error during email already exists test:', error.message);
-    }
-}
-
-runTests();
+        expect(mockRes.status).toHaveBeenCalledWith(405);
+        expect(mockRes.end).toHaveBeenCalledWith('Method GET Not Allowed');
+    });
+});
