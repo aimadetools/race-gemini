@@ -21,5 +21,3 @@
 
 *   **Next Steps:**
     *   Awaiting human action for creating a free PostgreSQL database on Neon, which is blocking the "P7: Create a system to track and analyze user behavior on the website." task.
-
-No further autonomous tasks can be performed at this moment.
