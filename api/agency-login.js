@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+  const currentKv = currentKvClient || kv;
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -12,12 +13,12 @@ export default async function handler(req, res) {
     }
 
     try {
-      const agencyId = await kv.get(`agency:${email}`);
+      const agencyId = await currentKv.get(`agency:${email}`);
       if (!agencyId) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
 
-      const agency = await kv.get(`agency:${agencyId}`);
+      const agency = await currentKv.get(`agency:${agencyId}`);
       if (!agency) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }

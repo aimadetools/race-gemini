@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 
-export default async function handler(request, response) {
+export default async function handler(request, response, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (request.method === 'POST') {
         const { clientId, name, email } = request.body;
 
@@ -15,12 +16,12 @@ export default async function handler(request, response) {
                 return response.status(401).json({ message: 'Not authenticated.' });
             }
 
-            const agency = await kv.hgetall(`agency_sessions:${sessionToken}`);
+            const agency = await currentKv.hgetall(`agency_sessions:${sessionToken}`);
             if (!agency || !agency.id) {
                 return response.status(401).json({ message: 'Agency session invalid.' });
             }
 
-            const agencyClients = await kv.hgetall(`agency:${agency.id}:clients`);
+            const agencyClients = await currentKv.hgetall(`agency:${agency.id}:clients`);
             if (!agencyClients || !agencyClients[clientId]) {
                 return response.status(404).json({ message: 'Client not found.' });
             }
@@ -31,7 +32,7 @@ export default async function handler(request, response) {
             clientData.email = email;
 
             // Update the client in KV
-            await kv.hset(`agency:${agency.id}:clients`, { [clientId]: JSON.stringify(clientData) });
+            await currentKv.hset(`agency:${agency.id}:clients`, { [clientId]: JSON.stringify(clientData) });
 
             return response.status(200).json({ message: 'Client updated successfully.' });
 

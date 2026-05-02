@@ -2,7 +2,7 @@ const archiver = require('archiver');
 const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const jwt = require('jsonwebtoken');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
@@ -20,7 +20,8 @@ if (geminiApiKey) {
     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
 }
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle } = req.body;
 
@@ -53,13 +54,13 @@ module.exports = async (req, res) => {
 
         try {
             // Retrieve user email from userId
-            const userEmail = await kv.get(`userId:${userId}`);
+            const userEmail = await currentKv.get(`userId:${userId}`);
             if (!userEmail) {
                 return res.status(404).json({ message: 'User not found. Please log in again.' });
             }
 
             // Retrieve full user object
-            const userString = await kv.get(`user:${userEmail}`);
+            const userString = await currentKv.get(`user:${userEmail}`);
             if (!userString) {
                 return res.status(404).json({ message: 'User profile not found. Please log in again.' });
             }
@@ -71,7 +72,7 @@ module.exports = async (req, res) => {
 
             let agency = null;
             if (user.agencyId) {
-                const agencyData = await kv.get(`agency:${user.agencyId}`);
+                const agencyData = await currentKv.get(`agency:${user.agencyId}`);
                 if (agencyData) {
                     agency = JSON.parse(agencyData);
                 }
@@ -138,7 +139,7 @@ module.exports = async (req, res) => {
                     archive.append(pageContent, { name: fileName });
 
                     // Store page metadata
-                    await kv.set(pageId, JSON.stringify({
+                    await currentKv.set(pageId, JSON.stringify({
                         businessName,
                         service,
                         town,
@@ -148,13 +149,13 @@ module.exports = async (req, res) => {
                         aiStyle: aiStyle || null,
                         userId: user.id // Link page to user
                     }));
-                    await kv.sadd(`user:${userId}:pages`, pageId);
+                    await currentKv.sadd(`user:${userId}:pages`, pageId);
                 }
             }
 
             // Decrement user credits and save updated user object
             user.credits -= pagesToGenerate;
-            await kv.set(`user:${userEmail}`, JSON.stringify(user));
+            await currentKv.set(`user:${userEmail}`, JSON.stringify(user));
 
             archive.finalize();
 

@@ -3,7 +3,8 @@ import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { yourName, yourEmail, companyName, website, monthlyReferrals, message } = req.body;
 
@@ -39,7 +40,7 @@ module.exports = async (req, res) => {
         };
 
         try {
-            await kv.set(`referral-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
+            await currentKv.set(`referral-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
             console.log(`Referral inquiry stored in Vercel KV with ID: ${inquiryId}`);
             res.status(200).json({ message: 'Referral inquiry submitted successfully. We will get back to you shortly.', inquiryId });
         } catch (error) {

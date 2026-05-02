@@ -1,9 +1,10 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 const slugify = require('slugify');
 
-async function handler(req, res) {
+async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Only GET requests are allowed' });
     }
@@ -29,15 +30,15 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const client = await kv.get(`user:${id}`);
+        const client = await currentKv.get(`user:${id}`);
         if (!client || client.agencyId !== agencyId) {
             return res.status(404).json({ message: 'Client not found' });
         }
 
-        const pageIds = await kv.smembers(`user:${id}:pages`);
+        const pageIds = await currentKv.smembers(`user:${id}:pages`);
         const pages = [];
         for (const pageId of pageIds) {
-            const page = await kv.get(`page:${pageId}`);
+            const page = await currentKv.get(`page:${pageId}`);
             if (page) {
                 const serviceSlug = slugify(page.service, { lower: true, strict: true });
                 const townSlug = slugify(page.town, { lower: true, strict: true });

@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 
-export default async function handler(request, response) {
+export default async function handler(request, response, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (request.method === 'POST') {
         const { clientId } = request.body;
 
@@ -14,13 +15,13 @@ export default async function handler(request, response) {
                 return response.status(401).json({ message: 'Not authenticated.' });
             }
 
-            const agency = await kv.hgetall(`agency_sessions:${sessionToken}`);
+            const agency = await currentKv.hgetall(`agency_sessions:${sessionToken}`);
             if (!agency || !agency.id) {
                 return response.status(401).json({ message: 'Agency session invalid.' });
             }
 
             // Verify client belongs to this agency
-            const agencyClients = await kv.hgetall(`agency:${agency.id}:clients`);
+            const agencyClients = await currentKv.hgetall(`agency:${agency.id}:clients`);
             if (!agencyClients || !agencyClients[clientId]) {
                 return response.status(404).json({ message: 'Client not found or does not belong to this agency.' });
             }
@@ -32,18 +33,18 @@ export default async function handler(request, response) {
             // Delete all pages associated with the client
             const pageKeysToDelete = Object.keys(clientPages).map(pageId => `page:${pageId}`);
             if (pageKeysToDelete.length > 0) {
-                await kv.del(...pageKeysToDelete);
+                await currentKv.del(...pageKeysToDelete);
             }
 
             // Remove client from the agency's client list
-            await kv.hdel(`agency:${agency.id}:clients`, clientId);
+            await currentKv.hdel(`agency:${agency.id}:clients`, clientId);
 
             // Decrement client count and pages generated count from agency stats
-            const currentAgencyStats = await kv.hgetall(`agency:${agency.id}:stats`);
+            const currentAgencyStats = await currentKv.hgetall(`agency:${agency.id}:stats`);
             const totalClients = (parseInt(currentAgencyStats?.totalClients) || 1) - 1;
             const totalPagesGenerated = (parseInt(currentAgencyStats?.totalPagesGenerated) || 0) - Object.keys(clientPages).length;
 
-            await kv.hset(`agency:${agency.id}:stats`, {
+            await currentKv.hset(`agency:${agency.id}:stats`, {
                 totalClients: Math.max(0, totalClients),
                 totalPagesGenerated: Math.max(0, totalPagesGenerated)
             });

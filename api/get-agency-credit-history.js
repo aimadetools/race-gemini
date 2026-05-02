@@ -1,8 +1,9 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 
-async function handler(req, res) {
+async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Only GET requests are allowed' });
     }
@@ -22,7 +23,7 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const creditHistory = await kv.lrange(`agency:${agencyId}:creditHistory`, 0, -1);
+        const creditHistory = await currentKv.lrange(`agency:${agencyId}:creditHistory`, 0, -1);
 
         return res.status(200).json(creditHistory);
 

@@ -19,7 +19,8 @@ Stack: ${error.stack}
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+  const currentKv = currentKvClient || kv;
   if (req.method === 'GET') {
     try {
       const cookies = parse(req.headers.cookie || '');
@@ -40,29 +41,29 @@ export default async function handler(req, res) {
       const userId = decoded.userId;
 
       // Retrieve user email from userId
-      const userEmail = await kv.get(`userId:${userId}`);
+      const userEmail = await currentKv.get(`userId:${userId}`);
       if (!userEmail) {
           return res.status(404).json({ message: 'User not found. Please log in again.' });
       }
 
       // Retrieve full user object
-      const userString = await kv.get(`user:${userEmail}`);
+      const userString = await currentKv.get(`user:${userEmail}`);
       if (!userString) {
           return res.status(404).json({ message: 'User profile not found.' });
       }
       const user = JSON.parse(userString);
 
       // Retrieve generated pages for the user
-      const pageIds = await kv.smembers(`user:${userId}:pages`);
+      const pageIds = await currentKv.smembers(`user:${userId}:pages`);
       const generatedPages = [];
 
       for (const pageId of pageIds) {
-          const pageDataString = await kv.get(pageId);
+          const pageDataString = await currentKv.get(pageId);
           if (pageDataString) {
               const pageData = JSON.parse(pageDataString);
               // Fetch page views and unique visitors
-              const views = await kv.get(`page:${pageId}:views`) || 0;
-              const uniqueVisitors = await kv.scard(`page:${pageId}:unique_visitors`) || 0;
+              const views = await currentKv.get(`page:${pageId}:views`) || 0;
+              const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
               generatedPages.push({ ...pageData, pageId, views, uniqueVisitors });
           }
       }

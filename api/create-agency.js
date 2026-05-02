@@ -1,9 +1,10 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const bcrypt = require('bcryptjs');
 
 // This is a temporary admin script to create an agency from an inquiry
 // In the future, this should be replaced with a proper admin panel
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { inquiryId } = req.body;
 
@@ -12,7 +13,7 @@ module.exports = async (req, res) => {
         }
 
         try {
-            const inquiryData = await kv.get(`agency-inquiry:${inquiryId}`);
+            const inquiryData = await currentKv.get(`agency-inquiry:${inquiryId}`);
 
             if (!inquiryData) {
                 return res.status(404).json({ message: 'Inquiry not found' });
@@ -20,7 +21,7 @@ module.exports = async (req, res) => {
 
             const { agencyName, contactEmail } = inquiryData;
 
-            const existingAgency = await kv.get(`agency:${contactEmail}`);
+            const existingAgency = await currentKv.get(`agency:${contactEmail}`);
             if (existingAgency) {
                 return res.status(409).json({ message: 'Agency with this email already exists' });
             }
@@ -28,7 +29,7 @@ module.exports = async (req, res) => {
             const password = Math.random().toString(36).slice(-8);
             const passwordHash = await bcrypt.hash(password, 10);
             
-            const agencyId = await kv.incr('next_agency_id');
+            const agencyId = await currentKv.incr('next_agency_id');
 
             const newAgency = {
                 id: agencyId,
@@ -38,8 +39,8 @@ module.exports = async (req, res) => {
                 createdAt: new Date().toISOString(),
             };
 
-            await kv.set(`agency:${agencyId}`, newAgency);
-            await kv.set(`agency:${contactEmail}`, agencyId);
+            await currentKv.set(`agency:${agencyId}`, newAgency);
+            await currentKv.set(`agency:${contactEmail}`, agencyId);
 
             // In a real application, you would email the agency their password
             // For now, we will just return it in the response

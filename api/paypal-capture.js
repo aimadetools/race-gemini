@@ -1,5 +1,5 @@
 const paypal = require('@paypal/checkout-server-sdk');
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const { parse } = require('cookie'); // Use parse from 'cookie' directly
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -24,7 +24,8 @@ let clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { orderID, credits } = req.body;
         const request = new paypal.orders.OrdersCaptureRequest(orderID);
@@ -55,14 +56,14 @@ module.exports = async (req, res) => {
 
             if (capture.result.status === 'COMPLETED') {
                 // Retrieve user email from userId
-                const userEmail = await kv.get(`userId:${userId}`);
+                const userEmail = await currentKv.get(`userId:${userId}`);
                 if (!userEmail) {
                     await logError(new Error(`User email not found for userId: ${userId}`), 'PayPal Capture - User Retrieval');
                     return res.status(404).json({ message: 'User not found.' });
                 }
 
                 // Retrieve full user object
-                const userString = await kv.get(`user:${userEmail}`);
+                const userString = await currentKv.get(`user:${userEmail}`);
                 if (!userString) {
                     await logError(new Error(`User profile not found for email: ${userEmail}`), 'PayPal Capture - User Profile Retrieval');
                     return res.status(404).json({ message: 'User profile not found.' });
@@ -71,7 +72,7 @@ module.exports = async (req, res) => {
 
                 // Update user credits
                 user.credits = (user.credits || 0) + parseInt(credits, 10);
-                await kv.set(`user:${userEmail}`, JSON.stringify(user));
+                await currentKv.set(`user:${userEmail}`, JSON.stringify(user));
 
                 return res.status(200).json({ success: true, message: 'Payment captured and credits updated.' });
             } else {

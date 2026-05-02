@@ -2,7 +2,8 @@ import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 
-export default async function handler(request, response) {
+export default async function handler(request, response, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (request.method === 'POST') {
         const { newPriceId } = request.body;
 
@@ -25,7 +26,7 @@ export default async function handler(request, response) {
                 return response.status(403).json({ message: 'Not an agency account.' });
             }
 
-            const agency = await kv.get(`agency:${agencyId}`);
+            const agency = await currentKv.get(`agency:${agencyId}`);
             if (!agency) {
                 return response.status(404).json({ message: 'Agency not found.' });
             }
@@ -61,7 +62,7 @@ export default async function handler(request, response) {
             // agency.renewalDate = new Date().setMonth(new Date().getMonth() + 1).toISOString(); // Example: next month
             // agency.nextInvoiceAmount = newPrice;
 
-            await kv.set(`agency:${agencyId}`, agency);
+            await currentKv.set(`agency:${agencyId}`, agency);
 
             return response.status(200).json({ message: `Successfully updated to ${newPlanName} plan.` });
 

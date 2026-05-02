@@ -3,7 +3,8 @@ import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
 
-export default async function (request, response) {
+export default async function (request, response, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (request.method !== 'POST') {
         return response.status(405).json({ message: 'Method Not Allowed' });
     }
@@ -15,7 +16,7 @@ export default async function (request, response) {
     }
 
     try {
-        const user = await kv.get(`user:${email}`);
+        const user = await currentKv.get(`user:${email}`);
 
         // Prevent user enumeration by always sending a generic success message
         if (!user) {
@@ -26,7 +27,7 @@ export default async function (request, response) {
         const resetToken = nanoid();
         const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
 
-        await kv.set(`password-reset:${resetToken}`, { email, expiry: resetTokenExpiry }, { ex: 3600 }); // Store for 1 hour
+        await currentKv.set(`password-reset:${resetToken}`, { email, expiry: resetTokenExpiry }, { ex: 3600 }); // Store for 1 hour
 
         // In a real application, you would send an email with this link
         // For now, we'll log it to the console

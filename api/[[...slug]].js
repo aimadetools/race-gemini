@@ -1,9 +1,10 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const slugify = require('slugify');
 const fs = require('fs');
 const path = require('path');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     const { slug } = req.query;
 
     if (!slug || slug.length !== 2) {
@@ -13,14 +14,14 @@ module.exports = async (req, res) => {
     const [clientId, fileName] = slug;
     const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
-    const pageIds = await kv.smembers(`user:${clientId}:pages`);
+    const pageIds = await currentKv.smembers(`user:${clientId}:pages`);
     if (!pageIds || pageIds.length === 0) {
         return res.status(404).send('Not Found');
     }
 
     let pageIdToFind = null;
     for (const pageId of pageIds) {
-        const page = await kv.hgetall(pageId);
+        const page = await currentKv.hgetall(pageId);
         if (page && slugify(page.service, { lower: true, strict: true }) === serviceSlug && slugify(page.town, { lower: true, strict: true }) === townSlug) {
             pageIdToFind = pageId;
             break;
@@ -31,7 +32,7 @@ module.exports = async (req, res) => {
         return res.status(404).send('Not Found');
     }
 
-    const page = await kv.hgetall(pageIdToFind);
+    const page = await currentKv.hgetall(pageIdToFind);
 
     if (!page) {
         return res.status(404).send('Not Found');

@@ -1,6 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { buffer } = require('micro');
-const { kv } = require('@vercel/kv'); // Import kv
+import { kv } from '@vercel/kv'; // Import kv
 const fs = require('fs');
 const path = require('path');
 
@@ -15,7 +15,8 @@ async function logError(error, context) {
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const sig = req.headers['stripe-signature'];
         const buf = await buffer(req);
@@ -49,14 +50,14 @@ module.exports = async (req, res) => {
                 };
 
                 // Retrieve user email from userId
-                const userEmail = await kv.get(`userId:${userId}`);
+                const userEmail = await currentKv.get(`userId:${userId}`);
                 if (!userEmail) {
                     await logError(new Error(`User email not found for userId: ${userId}`), 'Stripe Webhook - User Retrieval');
                     return res.status(404).json({ message: 'User not found.' });
                 }
 
                 // Retrieve full user object
-                const userString = await kv.get(`user:${userEmail}`);
+                const userString = await currentKv.get(`user:${userEmail}`);
                 if (!userString) {
                     await logError(new Error(`User profile not found for email: ${userEmail}`), 'Stripe Webhook - User Profile Retrieval');
                     return res.status(404).json({ message: 'User profile not found.' });
@@ -65,8 +66,8 @@ module.exports = async (req, res) => {
 
                 // Update user credits
                 user.credits = (user.credits || 0) + parseInt(credits, 10);
-                await kv.set(`user:${userEmail}`, JSON.stringify(user));
-                await kv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
+                await currentKv.set(`user:${userEmail}`, JSON.stringify(user));
+                await currentKv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
                 console.log(`User ${userId} successfully purchased ${credits} credits.`);
             } catch (error) {
                 await logError(error, 'Stripe Webhook - Credit Update Failed');
@@ -89,11 +90,11 @@ module.exports = async (req, res) => {
                 }
 
                 if (creditsToAdd > 0) {
-                    const agency = await kv.get(`agency:${agencyId}`);
+                    const agency = await currentKv.get(`agency:${agencyId}`);
                     if (agency) {
                         agency.credits = (agency.credits || 0) + creditsToAdd;
                         agency.subscriptionStatus = 'active';
-                        await kv.set(`agency:${agencyId}`, agency);
+                        await currentKv.set(`agency:${agencyId}`, agency);
                         console.log(`Added ${creditsToAdd} credits to agency ${agencyId}`);
                     }
                 }
@@ -105,10 +106,10 @@ module.exports = async (req, res) => {
             const agencyId = subscription.metadata.agencyId;
 
             if (agencyId) {
-                const agency = await kv.get(`agency:${agencyId}`);
+                const agency = await currentKv.get(`agency:${agencyId}`);
                 if (agency) {
                     agency.subscriptionStatus = 'canceled';
-                    await kv.set(`agency:${agencyId}`, agency);
+                    await currentKv.set(`agency:${agencyId}`, agency);
                     console.log(`Subscription for agency ${agencyId} canceled.`);
                 }
             }

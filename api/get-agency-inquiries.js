@@ -1,10 +1,11 @@
 import { kv } from '@vercel/kv';
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+  const currentKv = currentKvClient || kv;
   if (req.method === 'GET') {
     try {
       const inquiryKeys = [];
-      for await (const key of kv.scanIterator({ match: 'agency-inquiry:*' })) {
+      for await (const key of currentKv.scanIterator({ match: 'agency-inquiry:*' })) {
         inquiryKeys.push(key);
       }
 
@@ -12,7 +13,7 @@ export default async function handler(req, res) {
         return res.status(200).json([]);
       }
 
-      const inquiries = await kv.mget(...inquiryKeys);
+      const inquiries = await currentKv.mget(...inquiryKeys);
       // The result from mget is an array of strings, so we need to parse each one
       const parsedInquiries = inquiries.map(inquiry => JSON.parse(inquiry));
 

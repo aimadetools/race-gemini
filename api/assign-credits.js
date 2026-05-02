@@ -1,8 +1,9 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 
-async function handler(req, res) {
+async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
@@ -29,7 +30,7 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const agency = await kv.get(`agency:${agencyId}`);
+        const agency = await currentKv.get(`agency:${agencyId}`);
         if (!agency) {
             return res.status(404).json({ message: 'Agency not found' });
         }
@@ -38,13 +39,13 @@ async function handler(req, res) {
             return res.status(400).json({ message: 'Insufficient credits.' });
         }
 
-        const client = await kv.get(`user:${clientId}`);
+        const client = await currentKv.get(`user:${clientId}`);
         if (!client) {
             return res.status(404).json({ message: 'Client not found.' });
         }
         
         // Ensure client belongs to the agency
-        const agencyClientIds = await kv.smembers(`agency:${agencyId}:clients`);
+        const agencyClientIds = await currentKv.smembers(`agency:${agencyId}:clients`);
         if (!agencyClientIds.includes(clientId)) {
             return res.status(403).json({ message: 'Client does not belong to this agency.' });
         }
@@ -52,8 +53,8 @@ async function handler(req, res) {
         agency.credits -= creditsToAssign;
         client.credits = (client.credits || 0) + creditsToAssign;
 
-        await kv.set(`agency:${agencyId}`, agency);
-        await kv.set(`user:${client.email}`, client);
+        await currentKv.set(`agency:${agencyId}`, agency);
+        await currentKv.set(`user:${client.email}`, client);
 
         const historyEntry = {
             clientId,
@@ -62,7 +63,7 @@ async function handler(req, res) {
             date: new Date().toISOString(),
         };
 
-        await kv.lpush(`agency:${agencyId}:creditHistory`, JSON.stringify(historyEntry));
+        await currentKv.lpush(`agency:${agencyId}:creditHistory`, JSON.stringify(historyEntry));
 
         return res.status(200).json({ message: 'Credits assigned successfully' });
 

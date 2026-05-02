@@ -19,7 +19,8 @@ Stack: ${error.stack}
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         try {
             const { pageId, eventType = 'page_view', elementId } = req.body;
@@ -32,14 +33,14 @@ export default async function handler(req, res) {
             const baseKey = `page:${pageId}`;
             
             // Track total views/events for the page
-            await kv.incr(`${baseKey}:views`);
+            await currentKv.incr(`${baseKey}:views`);
 
             // If an eventType is provided, track it specifically
             if (eventType !== 'page_view') {
                 const eventKey = `${baseKey}:events:${eventType}`;
-                await kv.incr(eventKey);
+                await currentKv.incr(eventKey);
                 if (elementId) {
-                    await kv.incr(`${eventKey}:${elementId}`);
+                    await currentKv.incr(`${eventKey}:${elementId}`);
                 }
             }
 
@@ -60,7 +61,7 @@ export default async function handler(req, res) {
             }
 
             // Add visitorId to a set for unique visitors for this page
-            const isNewVisitor = await kv.sadd(`page:${pageId}:unique_visitors`, visitorId);
+            const isNewVisitor = await currentKv.sadd(`page:${pageId}:unique_visitors`, visitorId);
 
             res.status(200).json({ message: 'Tracking data recorded.' });
 

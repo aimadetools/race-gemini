@@ -1,9 +1,10 @@
-const { kv } = require('@vercel/kv');
+import { kv } from '@vercel/kv';
 const bcrypt = require('bcryptjs');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 
-async function handler(req, res) {
+async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
@@ -29,7 +30,7 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const existingUser = await kv.get(`user:${clientEmail}`);
+        const existingUser = await currentKv.get(`user:${clientEmail}`);
         if (existingUser) {
             return res.status(409).json({ message: 'User with this email already exists' });
         }
@@ -46,11 +47,11 @@ async function handler(req, res) {
             credits: 0
         };
         
-        const userId = await kv.incr('next_user_id');
-        await kv.set(`user:${userId}`, newUser);
-        await kv.set(`user:${clientEmail}`, userId);
+        const userId = await currentKv.incr('next_user_id');
+        await currentKv.set(`user:${userId}`, newUser);
+        await currentKv.set(`user:${clientEmail}`, userId);
 
-        await kv.sadd(`agency:${agencyId}:clients`, userId);
+        await currentKv.sadd(`agency:${agencyId}:clients`, userId);
 
         // In a real application, you would email the user their password
         // For this example, we will just return it in the response
