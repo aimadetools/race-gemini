@@ -11,7 +11,8 @@ This file contains tasks that are more complex, require external tools or human 
         *   **Done:** Created a comprehensive test suite for the `forgot-password-request` API endpoint.
         *   **Done:** Implemented a global mock for `@vercel/kv` in `jest.setup.js`, ensuring all existing API endpoints now benefit from consistent in-memory KV store usage during testing.
         *   **Done:** Added comprehensive API test coverage for `agency-login.js`.
-        *   **Next:** Continue expanding coverage to other critical endpoints, focusing on `agency-dashboard`, `dashboard`, `client-details`, etc.
+        *   **Done:** Added comprehensive API test coverage for `agency-dashboard.js`.
+        *   **Next:** Continue expanding coverage to other critical endpoints, focusing on `dashboard`, `client-details`, etc.
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
     *   **Set up Analytics:** Requires human intervention for token generation.
