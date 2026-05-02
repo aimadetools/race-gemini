@@ -1,86 +1,111 @@
 // tests/api/send-audit-report.test.js
-import handler from '../../api/send-audit-report';
 import { jest } from '@jest/globals';
 
-describe('Send Audit Report API', () => {
-    let mockReq;
-    let mockRes;
+let handler;
+
+describe('send-audit-report API', () => {
+    let consoleErrorSpy;
+
+    beforeAll(async () => {
+        handler = (await import('../../api/send-audit-report')).default;
+    });
 
     beforeEach(() => {
         jest.clearAllMocks();
-
-        mockReq = {
-            method: 'POST',
-            body: {},
-        };
-        mockRes = {
-            _status: 200,
-            _json: {},
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn().mockReturnThis(),
-            end: jest.fn().mockReturnThis(), // Added end method for 405
-        };
+        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        jest.spyOn(console, 'log').mockImplementation(() => {}); // Mock console.log as well
     });
 
-    it('should return 200 for a successful audit report request', async () => {
-        mockReq.body = {
-            email: 'test@example.com',
-            auditResults: {
-                altAttributes: { missing: 5 },
-                pageLoadTime: { score: 85 }
-            }
+    afterEach(() => {
+        consoleErrorSpy.mockRestore();
+        jest.restoreAllMocks(); // Restore all mocks, including console.log
+    });
+
+    it('should return 405 if not a POST request', async () => {
+        const req = { method: 'GET' };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
         };
 
-        await handler(mockReq, mockRes);
+        await handler(req, res);
 
-        expect(mockRes.status).toHaveBeenCalledWith(200);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Audit report request received successfully.' });
+        expect(res.status).toHaveBeenCalledWith(405);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Method Not Allowed' });
     });
 
     it('should return 400 if email is missing', async () => {
-        mockReq.body = {
-            auditResults: {
-                altAttributes: { missing: 5 },
-                pageLoadTime: { score: 85 }
-            }
+        const req = { method: 'POST', body: { auditResults: { seo: 'good' } } };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
         };
 
-        await handler(mockReq, mockRes);
+        await handler(req, res);
 
-        expect(mockRes.status).toHaveBeenCalledWith(400);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
     });
 
     it('should return 400 if auditResults are missing', async () => {
-        mockReq.body = {
-            email: 'test@example.com'
+        const req = { method: 'POST', body: { email: 'test@example.com' } };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
         };
 
-        await handler(mockReq, mockRes);
+        await handler(req, res);
 
-        expect(mockRes.status).toHaveBeenCalledWith(400);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
     });
 
-    it('should return 400 if both email and auditResults are missing', async () => {
-        mockReq.body = {};
-
-        await handler(mockReq, mockRes);
-
-        expect(mockRes.status).toHaveBeenCalledWith(400);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and audit results are required.' });
-    });
-
-    it('should return 405 for non-POST methods', async () => {
-        mockReq.method = 'GET';
-        mockReq.body = {
-            email: 'test@example.com',
-            auditResults: {}
+    it('should return 200 for a successful audit report request', async () => {
+        const mockEmail = 'user@example.com';
+        const mockAuditResults = {
+            broken_links: [],
+            alt_attributes: [{ tag: 'img', alt: '' }],
+            page_load_times: { desktop: '2s', mobile: '5s' }
         };
 
-        await handler(mockReq, mockRes);
+        const req = { method: 'POST', body: { email: mockEmail, auditResults: mockAuditResults } };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
 
-        expect(mockRes.status).toHaveBeenCalledWith(405);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Method Not Allowed' });
+        await handler(req, res);
+
+        expect(console.log).toHaveBeenCalledWith('Received audit report request:');
+        expect(console.log).toHaveBeenCalledWith('Email:', mockEmail);
+        expect(console.log).toHaveBeenCalledWith('Audit Results:', JSON.stringify(mockAuditResults, null, 2));
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Audit report request received successfully.' });
+    });
+
+    it('should return 500 for an internal server error', async () => {
+        const req = {
+            method: 'POST',
+            body: {
+                email: 'test@example.com',
+                auditResults: {},
+            },
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+
+        // Simulate an error within the handler
+        jest.spyOn(global.JSON, 'stringify').mockImplementationOnce(() => {
+            throw new Error('Simulated JSON error');
+        });
+
+
+        await handler(req, res);
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Error in send-audit-report API:', expect.any(Error));
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error', error: 'Simulated JSON error' });
     });
 });

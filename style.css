@@ -118,6 +118,19 @@
     font-weight: bold;
 }
 
+/* Email Message Styling */
+.email-message--success {
+    color: #28a745;
+}
+
+.email-message--error {
+    color: #dc3545;
+}
+
+.email-message--info {
+    color: #17a2b8;
+}
+
 .faq-item {
     border-bottom: 1px solid #ddd;
     padding: 15px 0;

@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const auditResultsDiv = document.getElementById('auditResults');
     const resultsContainer = document.getElementById('results-container');
     const errorMessageDiv = document.getElementById('form-error-message');
+        const auditUrlErrorSpan = document.getElementById('auditUrl-error');
 
     // New elements for email capture
     const emailCaptureSection = document.getElementById('emailCaptureSection');
@@ -19,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = auditUrlInput.value;
 
         if (!url) {
-            errorMessageDiv.textContent = 'Please enter a valid URL.';
-            errorMessageDiv.style.display = 'block';
+            auditUrlErrorSpan.textContent = 'Please enter a valid URL.';
+            auditUrlErrorSpan.style.display = 'block';
             return;
         }
 
@@ -30,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         emailCaptureSection.style.display = 'none'; // Hide email capture on new audit
         resultsContainer.innerHTML = '';
         errorMessageDiv.style.display = 'none';
+        auditUrlErrorSpan.textContent = ''; // Clear URL specific error
+        auditUrlErrorSpan.style.display = 'none'; // Hide URL specific error
         emailMessageDiv.textContent = ''; // Clear previous email message
 
         try {
@@ -48,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const results = await response.json();
             currentAuditResults = results; // Store the results
+            auditUrlInput.value = ''; // Clear URL input after successful audit
             displayResults(results);
             emailCaptureSection.style.display = 'block'; // Show email capture after results
 
@@ -135,20 +139,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!email) {
             emailMessageDiv.textContent = 'Please enter your email address.';
-            emailMessageDiv.style.color = '#dc3545';
+            emailMessageDiv.className = 'email-message--error';
             return;
-        }
+            }
 
-        if (!currentAuditResults) {
+            if (!currentAuditResults) {
             emailMessageDiv.textContent = 'No audit results to send.';
-            emailMessageDiv.style.color = '#dc3545';
+            emailMessageDiv.className = 'email-message--error';
             return;
-        }
+            }
 
-        emailMessageDiv.textContent = 'Sending report...';
-        emailMessageDiv.style.color = '#17a2b8';
+            emailMessageDiv.textContent = 'Sending report...';
+            emailMessageDiv.className = 'email-message--info';
 
-        try {
+            try {
             const response = await fetch('/api/send-audit-report', {
                 method: 'POST',
                 headers: {
@@ -163,12 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             emailMessageDiv.textContent = 'Report sent successfully!';
-            emailMessageDiv.style.color = '#28a745';
+            emailMessageDiv.className = 'email-message--success';
             reportEmailInput.value = ''; // Clear email input
 
-        } catch (error) {
+            } catch (error) {
             emailMessageDiv.textContent = error.message;
-            emailMessageDiv.style.color = '#dc3545';
-        }
-    });
+            emailMessageDiv.className = 'email-message--error';
+            }    });
 });
