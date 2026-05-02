@@ -14,7 +14,8 @@ async function logError(error, context) {
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res) {
+export default async function handler(req, res, currentKvClient) {
+  const currentKv = currentKvClient || kv;
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
 
     try {
       // Check if user already exists
-      const existingUser = await kv.get(`user:${email}`);
+      const existingUser = await currentKv.get(`user:${email}`);
       if (existingUser) {
         return res.status(409).json({ message: 'User with this email already exists.' });
       }
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
       const userId = `user_${Date.now()}`;
 
       // Store user in KV
-      await kv.set(`user:${email}`, JSON.stringify({
+      await currentKv.set(`user:${email}`, JSON.stringify({
         id: userId,
         email,
         hashedPassword,
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
       }));
 
       // Optionally, store a reverse lookup from userId to email if needed
-      await kv.set(`userId:${userId}`, email);
+      await currentKv.set(`userId:${userId}`, email);
 
       return res.status(201).json({ message: 'User registered successfully!', userId });
     } catch (error) {

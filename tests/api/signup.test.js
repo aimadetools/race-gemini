@@ -1,14 +1,49 @@
-const fetch = require('node-fetch');
+const signupHandler = require('../../api/signup').default; // Import the refactored handler
 const path = require('path');
 const fs = require('fs');
 
-const API_ENDPOINT = 'http://localhost:3000/api/signup';
+// Mock KV store for in-memory testing
+const mockKvStore = new Map();
+
+const mockKv = {
+    async get(key) {
+        return mockKvStore.get(key);
+    },
+    async set(key, value) {
+        mockKvStore.set(key, value);
+    },
+    async delete(key) {
+        mockKvStore.delete(key);
+    },
+    // Add other KV methods if used in signup.js and needed for tests
+};
+
+// Helper to create mock response object
+const createMockRes = () => {
+    const res = {
+        _status: 200,
+        _json: {},
+        status(statusCode) {
+            this._status = statusCode;
+            return this;
+        },
+        json(data) {
+            this._json = data;
+            return this;
+        },
+        // For internal server error logging
+        end(message) {
+            this._json = { message };
+        }
+    };
+    return res;
+};
 
 async function runTests() {
     console.log('Running tests for /api/signup...');
 
-    // Clean up KV entries created by tests if necessary (manual step for now)
-    console.log('NOTE: For a truly clean test run, ensure your Vercel KV store is cleared of test emails before running these tests.');
+    // Clear the mock KV store at the beginning of the test run to ensure a clean state
+    mockKvStore.clear();
 
     // Test Case 1: Successful signup
     await testSuccessfulSignup();
@@ -36,20 +71,19 @@ async function testSuccessfulSignup() {
     console.log('--- Test Case 1: Successful Signup ---');
     const email = await generateUniqueEmail();
     const password = 'securepassword123';
+    const req = {
+        method: 'POST',
+        body: { email, password },
+    };
+    const res = createMockRes();
+
     try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
+        await signupHandler(req, res, mockKv);
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+        console.log('Response Status:', res._status);
+        console.log('Response Data:', res._json);
 
-        if (response.status === 201 && data.message === 'User registered successfully!' && data.userId) {
+        if (res._status === 201 && res._json.message === 'User registered successfully!' && res._json.userId) {
             console.log('✅ Test Case 1 Passed: Successful signup received expected response.');
         } else {
             console.error('❌ Test Case 1 Failed: Unexpected response for successful signup.');
@@ -62,20 +96,19 @@ async function testSuccessfulSignup() {
 async function testMissingEmail() {
     console.log('--- Test Case 2: Missing Email ---');
     const password = 'securepassword123';
+    const req = {
+        method: 'POST',
+        body: { password },
+    };
+    const res = createMockRes();
+
     try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ password }),
-        });
-        const data = await response.json();
+        await signupHandler(req, res, mockKv);
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+        console.log('Response Status:', res._status);
+        console.log('Response Data:', res._json);
 
-        if (response.status === 400 && data.message === 'Email and password are required.') {
+        if (res._status === 400 && res._json.message === 'Email and password are required.') {
             console.log('✅ Test Case 2 Passed: Missing email handled correctly.');
         } else {
             console.error('❌ Test Case 2 Failed: Unexpected response for missing email.');
@@ -88,20 +121,19 @@ async function testMissingEmail() {
 async function testMissingPassword() {
     console.log('--- Test Case 3: Missing Password ---');
     const email = await generateUniqueEmail();
+    const req = {
+        method: 'POST',
+        body: { email },
+    };
+    const res = createMockRes();
+
     try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        });
-        const data = await response.json();
+        await signupHandler(req, res, mockKv);
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+        console.log('Response Status:', res._status);
+        console.log('Response Data:', res._json);
 
-        if (response.status === 400 && data.message === 'Email and password are required.') {
+        if (res._status === 400 && res._json.message === 'Email and password are required.') {
             console.log('✅ Test Case 3 Passed: Missing password handled correctly.');
         } else {
             console.error('❌ Test Case 3 Failed: Unexpected response for missing password.');
@@ -113,20 +145,19 @@ async function testMissingPassword() {
 
 async function testBothMissing() {
     console.log('--- Test Case 4: Both Email and Password Missing ---');
+    const req = {
+        method: 'POST',
+        body: {},
+    };
+    const res = createMockRes();
+
     try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({}),
-        });
-        const data = await response.json();
+        await signupHandler(req, res, mockKv);
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+        console.log('Response Status:', res._status);
+        console.log('Response Data:', res._json);
 
-        if (response.status === 400 && data.message === 'Email and password are required.') {
+        if (res._status === 400 && res._json.message === 'Email and password are required.') {
             console.log('✅ Test Case 4 Passed: Both email and password missing handled correctly.');
         } else {
             console.error('❌ Test Case 4 Failed: Unexpected response for both missing.');
@@ -140,26 +171,29 @@ async function testEmailAlreadyExists() {
     console.log('--- Test Case 5: Email Already Exists ---');
     const email = await generateUniqueEmail();
     const password = 'anothersecurepassword';
+    const req1 = {
+        method: 'POST',
+        body: { email, password },
+    };
+    const res1 = createMockRes();
+
+    const req2 = {
+        method: 'POST',
+        body: { email, password: 'differentpassword' },
+    };
+    const res2 = createMockRes();
+
     try {
         // First, successfully sign up the user
-        await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
+        await signupHandler(req1, res1, mockKv);
 
         // Then, try to sign up with the same email again
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: 'differentpassword' }), // Password doesn't matter here
-        });
-        const data = await response.json();
+        await signupHandler(req2, res2, mockKv);
 
-        console.log('Response Status:', response.status);
-        console.log('Response Data:', data);
+        console.log('Response Status:', res2._status);
+        console.log('Response Data:', res2._json);
 
-        if (response.status === 409 && data.message === 'User with this email already exists.') {
+        if (res2._status === 409 && res2._json.message === 'User with this email already exists.') {
             console.log('✅ Test Case 5 Passed: Email already exists handled correctly.');
         } else {
             console.error('❌ Test Case 5 Failed: Unexpected response for email already exists.');
@@ -169,5 +203,4 @@ async function testEmailAlreadyExists() {
     }
 }
 
-// Ensure a local development server (e.g., `vercel dev`) is running on port 3000 before executing tests.
 runTests();
