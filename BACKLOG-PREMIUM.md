@@ -6,7 +6,7 @@ This file contains tasks that are more complex, require external tools or human 
 
 *   **Blocked / Requires External Intervention:**
     *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
-    *   [ ] Expand API Test Coverage (Vercel KV issue for api/signup.js resolved via mocking; other KV APIs still require investigation for similar treatment or real credentials in dev.)
+    *   [ ] Expand API Test Coverage (Vercel KV issue for api/signup.js and api/login.js resolved via mocking; other KV APIs still require investigation for similar treatment or real credentials in dev.)
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
     *   **Set up Analytics:** Requires human intervention for token generation.
