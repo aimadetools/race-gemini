@@ -1,4 +1,4 @@
-- [ ] Expand Test Coverage for API Endpoints (partially blocked).
+- [x] Expand Test Coverage for API Endpoints (partially blocked - contact.js complete)
 
 # Completed
 - Identified and fixed broken links using `check_broken_links.py`.
