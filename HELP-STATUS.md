@@ -58,6 +58,18 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 ### [HELP] Human Help Request
 # Human Help Request
 
+## What: Send outreach emails to potential customers.
+
+## Steps:
+1.  Please send the emails in `generated_outreach_emails.txt`.
+2.  The file contains 100 emails. Please send them out.
+3.  The `outreach-targets.csv` file contains the contact information for each business, but the emails are not included. You will need to find the emails for each business.
+4.  Please replace the placeholder `https://localleads.dev` with the actual URL of the deployed site.
+5.  Please update t
+
+### [HELP] Human Help Request
+# Human Help Request
+
 ## What: Vercel KV (`@vercel/kv`) is failing in `vercel dev` environment with a `TypeError: fetch failed` error.
 
 ## Steps:
