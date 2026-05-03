@@ -9,6 +9,9 @@
 
 ## Summary of Today's Work (May 3, 2026)
 
+*   **Bug Fix:**
+    *   Fixed a `ModuleNotFoundError` in `check_broken_links.py` by ensuring it runs within the project's virtual environment.
+    *   Added a shebang and made the script executable for easier use.
 *   **User Acquisition:**
     *   Refactored `generate_sample_pages.py` and `generate_outreach_emails.py` to work together.
     *   Generated 100 personalized outreach emails and 500 sample pages for potential customers.
