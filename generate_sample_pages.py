@@ -24,12 +24,39 @@ def slugify(text):
     text = re.sub(r'[^a-z0-9-]', '', text)
     return text
 
+def generate_for_business(business, template_content):
+    """Generates 5 sample pages for a single business."""
+    output_dir = "sample-pages"
+    os.makedirs(output_dir, exist_ok=True)
+
+    business_name = business["Business Name"]
+    phone_number = business["Phone"]
+    city = business.get("City", "Austin")
+    business_slug = slugify(business_name)
+
+    service_type = business.get("Service Type", "Plumbing Services") # Get Service Type dynamically
+
+    # Define these inside the loop so they use the current business's data
+    current_ai_content = f"<p>Looking for reliable {service_type} in {city}? {business_name} is your trusted local expert. We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. Contact us today for all your {service_type.lower()} needs!</p>"
+    current_primary_color = "#007bff"
+    current_agency_logo = f"<span>{business_name}</span>"
+
+    generated_files = []
+    for i in range(1, 6): # Generate 5 pages per business
+        file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-{slugify(service_type)}-page-{i}.html")
+
+        # Generate the page content
+        html_content = generate_sample_page(template_content, business_name, phone_number, city, service_type, current_ai_content, current_primary_color, current_agency_logo)
+
+        with open(file_name, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        print(f"Created sample page: {file_name}")
+        generated_files.append(file_name)
+    return generated_files
+
 def main():
     outreach_csv_path = "outreach-targets.csv"
     template_path = "page-template.html" # Changed to page-template.html
-    output_dir = "sample-pages"
-    
-    os.makedirs(output_dir, exist_ok=True)
     
     with open(template_path, 'r', encoding='utf-8') as f:
         template_content = f.read()
@@ -48,27 +75,7 @@ def main():
     print(f"Generating sample pages for {len(businesses_to_process)} businesses.")
     
     for business in businesses_to_process:
-        business_name = business["Business Name"]
-        phone_number = business["Phone"]
-        city = business.get("City", "Austin") 
-        business_slug = slugify(business_name)
-
-        service_type = business.get("Service Type", "Plumbing Services") # Get Service Type dynamically
-
-        # Define these inside the loop so they use the current business's data
-        current_ai_content = f"<p>Looking for reliable {service_type} in {city}? {business_name} is your trusted local expert. We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. Contact us today for all your {service_type.lower()} needs!</p>"
-        current_primary_color = "#007bff"
-        current_agency_logo = f"<span>{business_name}</span>"
-        
-        for i in range(1, 6): # Generate 5 pages per business
-            file_name = os.path.join(output_dir, f"{business_slug}-{slugify(city)}-{slugify(service_type)}-page-{i}.html")
-            
-            # Generate the page content
-            html_content = generate_sample_page(template_content, business_name, phone_number, city, service_type, current_ai_content, current_primary_color, current_agency_logo)
-            
-            with open(file_name, 'w', encoding='utf-8') as f:
-                f.write(html_content)
-            print(f"Created sample page: {file_name}")
+        generate_for_business(business, template_content)
 
 if __name__ == "__main__":
     main()

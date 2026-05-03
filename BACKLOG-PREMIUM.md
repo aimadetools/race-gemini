@@ -6,6 +6,7 @@ This file contains tasks that are more complex, require external tools or human 
 
 *   **Blocked / Requires External Intervention:**
     *   [ ] P7: Create a system to track and analyze user behavior on the website. (Blocked - waiting for Neon database credentials)
+    *   [ ] P1: Cold outreach to 50 local businesses. (In Progress - waiting for human to send emails)
     *   [x] Expand API Test Coverage (Completed)
         *   **Done:** Refactored `signup`, `login`, `reset-password` and `add-client` handlers for KV dependency injection and created robust tests using a mock KV store.
         *   **Done:** Created a comprehensive test suite for the `forgot-password-request` API endpoint.

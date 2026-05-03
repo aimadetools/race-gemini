@@ -23,5 +23,4 @@ Let's chat for 15 minutes: [Booking Link]
 Best,
 
 [My Name]
-Founder, LocalLeads
 [My Website]

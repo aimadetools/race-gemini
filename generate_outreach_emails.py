@@ -1,25 +1,17 @@
+from generate_sample_pages import generate_for_business, slugify
 import csv
 import os
-import re
-
-def slugify(text):
-    """Converts text to a URL-friendly slug."""
-    text = re.sub(r'\s+', '-', text).lower()
-    text = re.sub(r'[^a-z0-9-]', '', text)
-    return text
 
 def generate_outreach_emails():
     outreach_csv_path = "outreach-targets.csv"
     template_path = "outreach-email-template.md"
     output_file_path = "generated_outreach_emails.txt"
+    page_template_path = "page-template.html"
 
     # --- Configuration for placeholders ---
     my_name = "Founder, LocalLeads"
-    # User to fill these in manually after generation
-    booking_link = "https://calendly.com/localleads/discovery"  # Example booking link
-    my_website = "https://www.localleads.com"  # Example website
-    # Base URL for sample pages (user needs to host these and provide the base URL)
-    sample_pages_base_url = "https://www.localleads.com"  # Example base URL 
+    booking_link = "https://calendly.com/localleads/discovery"
+    my_website = "https://localleads.dev" # I will use a placeholder, the human can replace it
 
     if not os.path.exists(outreach_csv_path):
         print(f"Error: {outreach_csv_path} not found.")
@@ -29,8 +21,15 @@ def generate_outreach_emails():
         print(f"Error: {template_path} not found.")
         return
 
+    if not os.path.exists(page_template_path):
+        print(f"Error: {page_template_path} not found.")
+        return
+
     with open(template_path, 'r', encoding='utf-8') as f:
         email_template = f.read()
+
+    with open(page_template_path, 'r', encoding='utf-8') as f:
+        page_template_content = f.read()
 
     generated_emails = []
 
@@ -40,25 +39,22 @@ def generate_outreach_emails():
             if row["Status"] == "Identified":
                 business_name = row["Business Name"]
                 city = row["City"]
-                
-                # Construct a more specific sample page link if possible
-                # This assumes a slugified structure for sample pages like:
-                # {base_url}/sample-pages/{business-slug}-{city-slug}-plumbing-services-page-1.html
-                # User will need to replace sample_pages_base_url_placeholder
-                business_slug = slugify(business_name)
-                city_slug = slugify(city)
-                service_type = row.get("Service Type", "Plumbing Services") # Get Service Type, default to Plumbing Services if not found
+                service_type = row.get("Service Type", "Plumbing Services")
+
+                # Generate sample pages
+                generated_files = generate_for_business(row, page_template_content)
                 
                 # Construct a more specific sample page link
-                business_slug = slugify(business_name)
-                city_slug = slugify(city)
-                service_type_slug = slugify(service_type) # Use dynamic service_type 
-                
-                sample_page_link = f"{sample_pages_base_url}/sample-pages/{business_slug}-{city_slug}-{service_type_slug}-page-1.html"
+                if generated_files:
+                    first_page = os.path.basename(generated_files[0])
+                    sample_page_link = f"{my_website}/sample-pages/{first_page}"
+                else:
+                    sample_page_link = f"[{my_website}/sample-pages/](No pages generated)"
 
 
                 personalized_email = email_template.replace("[Business Name]", business_name)
                 personalized_email = personalized_email.replace("[City/Town Name]", city)
+                personalized_email = personalized_email.replace("[mention current city, e.g., Austin]", city)
                 personalized_email = personalized_email.replace("[My Name]", my_name)
                 personalized_email = personalized_email.replace("[Link to sample pages]", sample_page_link)
                 personalized_email = personalized_email.replace("[Booking Link]", booking_link)
