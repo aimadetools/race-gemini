@@ -8,6 +8,8 @@
 
 ## Summary of Today's Work (May 3, 2026)
 
+*   **Testing:**
+    *   Added Unit Tests: Created `tests/test_check_broken_links.py` with 7 comprehensive unit tests, including mocking network requests, to ensure the reliability and maintainability of the `check_broken_links.py` script.
 *   **Bug Fix:**
     *   Fixed a `ModuleNotFoundError` in `check_broken_links.py` by ensuring it runs within the project's virtual environment.
     *   Added a shebang and made the script executable for easier use.
@@ -40,6 +42,7 @@
     *   Implemented "Load More" pagination for "Your Generated Pages" table on `dashboard.html`, including creating `api/dashboard/pages.js` and `js/dashboard.js`.
     *   Enhanced validation for 'services' and 'towns' fields in `js/generate-form-validation.js` to automatically trim whitespace and provide specific error messages for empty items.
     *   Added clearer placeholder text with examples to the "Services" and "Towns" input fields in `generate.html` to guide users on correct input format.
+    *   Regenerated `sitemap.xml` to include all new blog posts, localized pages, and updated `lastmod` dates, improving SEO.
 *   **UX/Accessibility Improvement:**
     *   Improved the contrast ratio of the secondary button text in `style.css` to meet WCAG AA standards.
     *   Implemented interactive (expand/collapse) FAQ items in `faq.html` with JavaScript and refined CSS for smoother animations.

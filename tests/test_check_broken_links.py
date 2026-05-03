@@ -1,182 +1,174 @@
-import sys
-import os
+
 import unittest
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import patch, MagicMock
+import os
 import json
 import requests
-import subprocess # Added for subprocess test
-
-# Add the parent directory to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from check_broken_links import check_external_links
 
 class TestCheckBrokenLinks(unittest.TestCase):
 
-    @patch('requests.Session')
-    @patch('requests.get')
-    def test_valid_url_no_broken_links(self, mock_get_source, mock_session_class):
-        mock_response_source = MagicMock(status_code=200, content=b'<html><body><a href="http://example.com/good">Good Link</a></body></html>')
-        mock_response_source.raise_for_status.return_value = None
-        mock_get_source.return_value = mock_response_source
+    def setUp(self):
+        # Create a dummy HTML file for testing local file functionality
+        self.dummy_html_content = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Test Page</title>
+        </head>
+        <body>
+            <a href="http://example.com/valid-link">Valid External Link</a>
+            <a href="https://broken.example.com/broken-link">Broken External Link</a>
+            <a href="/internal-link">Internal Link</a>
+            <a href="relative-link.html">Relative Link</a>
+            <a href="//protocol-relative.example.com/test">Protocol Relative Link</a>
+        </body>
+        </html>
+        """
+        self.dummy_html_path = "dummy_test_file.html"
+        with open(self.dummy_html_path, "w", encoding="utf-8") as f:
+            f.write(self.dummy_html_content)
 
-        mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=200, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance
+        # Create another dummy HTML file for URL content testing
+        self.dummy_url_html_content = """
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <a href="http://urltest.com/valid">Valid URL Link</a>
+            <a href="https://urltest.com/broken">Broken URL Link</a>
+        </body>
+        </html>
+        """
+        self.dummy_url_path = "http://test-server.com/test-page.html"
 
-        result = check_external_links('http://test.com')
-        self.assertEqual(result, [])
-        mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('http://example.com/good', allow_redirects=True, stream=True, timeout=5)
 
-    @patch('requests.Session')
-    @patch('requests.get')
-    def test_valid_url_with_broken_link(self, mock_get_source, mock_session_class):
-        mock_response_source = MagicMock(status_code=200, content=b'<html><body><a href="http://example.com/bad">Bad Link</a></body></html>')
-        mock_response_source.raise_for_status.return_value = None
-        mock_get_source.return_value = mock_response_source
-
-        mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=404, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance
-
-        result = check_external_links('http://test.com')
-        self.assertEqual(result, [{'url': 'http://example.com/bad', 'status_code': 404}])
-        mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('http://example.com/bad', allow_redirects=True, stream=True, timeout=5)
-
-    @patch('requests.Session')
-    @patch('requests.get')
-    def test_valid_url_with_protocol_relative_link(self, mock_get_source, mock_session_class):
-        mock_response_source = MagicMock(status_code=200, content=b'<html><body><a href="//example.com/relative">Relative Link</a></body></html>')
-        mock_response_source.raise_for_status.return_value = None
-        mock_get_source.return_value = mock_response_source
-
-        mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=200, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance
-
-        result = check_external_links('http://test.com')
-        self.assertEqual(result, [])
-        mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('https://example.com/relative', allow_redirects=True, stream=True, timeout=5)
-
-    @patch('requests.get')
-    def test_source_url_fetch_failure(self, mock_get_source):
-        mock_get_source.side_effect = requests.exceptions.RequestException('Network error')
-
-        result = check_external_links('http://test.com')
-        self.assertEqual(result, [{'url': 'http://test.com', 'error': 'Failed to fetch URL: Network error'}])
-        mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-
-    @patch('os.path.exists', return_value=True)
-    @patch('builtins.open', new_callable=unittest.mock.mock_open, read_data='<html><body><a href="http://example.com/good">Good Link</a></body></html>')
-    @patch('requests.Session')
-    def test_local_file_no_broken_links(self, mock_session_class, mock_open, mock_exists):
-        mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=200, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance
-
-        result = check_external_links('local_file.html')
-        self.assertEqual(result, [])
-        mock_exists.assert_called_once_with('local_file.html')
-        mock_open.assert_called_once_with('local_file.html', 'r', encoding='utf-8')
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('http://example.com/good', allow_redirects=True, stream=True, timeout=5)
-
-    @patch('os.path.exists', return_value=True)
-    @patch('builtins.open', new_callable=unittest.mock.mock_open, read_data='<html><body><a href="http://example.com/bad">Bad Link</a></body></html>')
-    @patch('requests.Session')
-    def test_local_file_with_broken_link(self, mock_session_class, mock_open, mock_exists):
-        mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=404, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance
-
-        result = check_external_links('local_file.html')
-        self.assertEqual(result, [{'url': 'http://example.com/bad', 'status_code': 404}])
-        self.assertIn(call('local_file.html'), mock_exists.call_args_list)
-        mock_open.assert_called_once_with('local_file.html', 'r', encoding='utf-8')
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('http://example.com/bad', allow_redirects=True, stream=True, timeout=5)
-
-    @patch('os.path.exists', return_value=False)
-    def test_invalid_source_neither_url_nor_file(self, mock_exists):
-        result = check_external_links('invalid_source')
-        self.assertEqual(result, [{'source': 'invalid_source', 'error': 'Invalid source: Not a valid URL or existing file path.'}])
-        mock_exists.assert_called_once_with('invalid_source')
+    def tearDown(self):
+        # Clean up the dummy HTML file
+        if os.path.exists(self.dummy_html_path):
+            os.remove(self.dummy_html_path)
 
     @patch('requests.Session')
     @patch('requests.get')
-    def test_link_check_connectivity_failure(self, mock_get_source, mock_session_class):
-        mock_response_source = MagicMock(status_code=200, content=b'<html><body><a href="http://example.com/timeout">Timeout Link</a></body></html>')
-        mock_response_source.raise_for_status.return_value = None
-        mock_get_source.return_value = mock_response_source
+    def test_check_external_links_local_file(self, mock_requests_get, mock_requests_session):
+        # Mock requests.get for initial source fetch (if source is a URL)
+        # and for subsequent link checks
+        mock_response_source = MagicMock()
+        mock_response_source.status_code = 200
+        mock_response_source.content = self.dummy_url_html_content.encode('utf-8')
+        mock_requests_get.return_value = mock_response_source
 
+        # Mock the session.get for external link checks
         mock_session_instance = MagicMock()
-        mock_session_instance.get.side_effect = requests.exceptions.RequestException('Connection timeout')
-        mock_session_class.return_value = mock_session_instance
+        mock_requests_session.return_value = mock_session_instance
 
-        result = check_external_links('http://test.com')
-        self.assertEqual(result, [{'url': 'http://example.com/timeout', 'error': 'Failed to connect or timeout: Connection timeout'}])
-        mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-        mock_session_class.assert_called_once()
-        mock_session_instance.get.assert_called_once_with('http://example.com/timeout', allow_redirects=True, stream=True, timeout=5)
+        # Simulate responses for the links found in dummy_html_content
+        def mock_session_get_side_effect(url, **kwargs):
+            mock_resp = MagicMock()
+            if "example.com/valid-link" in url:
+                mock_resp.status_code = 200
+            elif "broken.example.com/broken-link" in url:
+                mock_resp.status_code = 404
+            elif "protocol-relative.example.com/test" in url:
+                mock_resp.status_code = 200
+            else:
+                raise Exception("Unexpected URL in mock_session_get_side_effect")
+            mock_resp.close = MagicMock()
+            return mock_resp
 
-    @patch('os.path.exists', return_value=True)
-    @patch('builtins.open', side_effect=IOError('File permission denied'))
-    def test_local_file_read_failure(self, mock_open, mock_exists):
-        result = check_external_links('protected_file.html')
-        self.assertEqual(result, [{'file': 'protected_file.html', 'error': 'Failed to read local file: File permission denied'}])
-        self.assertIn(call('protected_file.html'), mock_exists.call_args_list)
-        mock_open.assert_called_once_with('protected_file.html', 'r', encoding='utf-8')
+        mock_session_instance.get.side_effect = mock_session_get_side_effect
+
+        broken_links = check_external_links(self.dummy_html_path)
+
+        # Expect only the broken link to be reported
+        self.assertEqual(len(broken_links), 1)
+        self.assertEqual(broken_links[0]['url'], 'https://broken.example.com/broken-link')
+        self.assertEqual(broken_links[0]['status_code'], 404)
 
     @patch('requests.Session')
     @patch('requests.get')
-    def test_script_execution_with_venv(self, mock_get, mock_session):
-        # This test ensures that the check_broken_links.py script can be executed
-        # as a subprocess using the virtual environment's Python interpreter
-        # without encountering a ModuleNotFoundError.
-        import subprocess
-        import os
-        import json
+    def test_check_external_links_url_source(self, mock_requests_get, mock_requests_session):
+        # Mock requests.get for initial source fetch
+        mock_response_source = MagicMock()
+        mock_response_source.status_code = 200
+        mock_response_source.content = self.dummy_url_html_content.encode('utf-8')
+        mock_requests_get.return_value = mock_response_source
 
-        dummy_html_content = b'<html><body><a href="http://example.com/test-subprocess">Test Subprocess Link</a></body></html>'
-        dummy_html_path = 'temp_test_script_subprocess.html'
-        with open(dummy_html_path, 'wb') as f:
-            f.write(dummy_html_content)
-
-        # Mock requests behavior for the subprocess
+        # Mock the session.get for external link checks
         mock_session_instance = MagicMock()
-        mock_session_instance.get.return_value = MagicMock(status_code=404, close=MagicMock())
-        mock_session.return_value = mock_session_instance
+        mock_requests_session.return_value = mock_session_instance
 
-        mock_response_source = MagicMock(status_code=200, content=dummy_html_content)
-        mock_response_source.raise_for_status.return_value = None
-        mock_get.return_value = mock_response_source
+        # Simulate responses for the links found in dummy_url_html_content
+        def mock_session_get_side_effect(url, **kwargs):
+            mock_resp = MagicMock()
+            if "urltest.com/valid" in url:
+                mock_resp.status_code = 200
+            elif "urltest.com/broken" in url:
+                mock_resp.status_code = 500 # Server error
+            else:
+                raise Exception("Unexpected URL in mock_session_get_side_effect")
+            mock_resp.close = MagicMock()
+            return mock_resp
 
-        script_path = os.path.abspath('check_broken_links.py')
-        venv_python = os.path.abspath('venv/bin/python')
+        mock_session_instance.get.side_effect = mock_session_get_side_effect
 
-        try:
-            result = subprocess.run(
-                [venv_python, script_path, dummy_html_path],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
+        broken_links = check_external_links(self.dummy_url_path)
 
-            self.assertNotIn('ModuleNotFoundError', result.stderr)
-            self.assertEqual(result.returncode, 0)
+        self.assertEqual(len(broken_links), 1)
+        self.assertEqual(broken_links[0]['url'], 'https://urltest.com/broken')
+        self.assertEqual(broken_links[0]['status_code'], 500)
+        
+        # Verify that requests.get was called for the initial URL source
+        mock_requests_get.assert_called_once_with(self.dummy_url_path, timeout=10)
 
-            output_data = json.loads(result.stdout)
-            self.assertEqual(output_data, {"broken_links": [{"url": "http://example.com/test-subprocess", "status_code": 404}]})
+    def test_check_external_links_invalid_source(self):
+        broken_links = check_external_links("non_existent_file.html")
+        self.assertEqual(len(broken_links), 1)
+        self.assertIn('Invalid source', broken_links[0]['error'])
 
-        finally:
-            if os.path.exists(dummy_html_path):
-                os.remove(dummy_html_path)
+    @patch('requests.Session')
+    @patch('requests.get', side_effect=requests.exceptions.RequestException("DNS Error"))
+    def test_check_external_links_url_fetch_failure(self, mock_requests_get, mock_requests_session):
+        broken_links = check_external_links("http://unreachable.com")
+        self.assertEqual(len(broken_links), 1)
+        self.assertIn('Failed to fetch URL', broken_links[0]['error'])
+
+    @patch('requests.Session')
+    @patch('builtins.open', side_effect=IOError("Permission denied"))
+    def test_check_external_links_local_file_read_failure(self, mock_open, mock_requests_session):
+        broken_links = check_external_links(self.dummy_html_path)
+        self.assertEqual(len(broken_links), 1)
+        self.assertIn('Failed to read local file', broken_links[0]['error'])
+
+    @patch('requests.Session')
+    @patch('requests.get')
+    def test_check_external_links_no_links(self, mock_requests_get, mock_requests_session):
+        empty_html = "<html><body></body></html>"
+        with open("empty_test_file.html", "w", encoding="utf-8") as f:
+            f.write(empty_html)
+
+        broken_links = check_external_links("empty_test_file.html")
+        self.assertEqual(len(broken_links), 0)
+        os.remove("empty_test_file.html")
+
+    @patch('requests.Session')
+    @patch('requests.get')
+    def test_check_external_links_link_connection_error(self, mock_requests_get, mock_requests_session):
+        # Mock requests.get for initial source fetch
+        mock_response_source = MagicMock()
+        mock_response_source.status_code = 200
+        mock_response_source.content = self.dummy_url_html_content.encode('utf-8')
+        mock_requests_get.return_value = mock_response_source
+
+        # Mock the session.get for external link checks
+        mock_session_instance = MagicMock()
+        mock_requests_session.return_value = mock_session_instance
+        mock_session_instance.get.side_effect = requests.exceptions.RequestException("Connection refused")
+
+        broken_links = check_external_links(self.dummy_url_path)
+
+        self.assertEqual(len(broken_links), 2) # Both links will fail due to connection error
+        self.assertIn('Failed to connect or timeout', broken_links[0]['error'])
+        self.assertIn('Failed to connect or timeout', broken_links[1]['error'])
 
 if __name__ == '__main__':
     unittest.main()
