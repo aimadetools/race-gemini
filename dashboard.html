@@ -1,170 +1,243 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Access your LocalLeads dashboard to manage your account, view generated pages, and track performance." name="description"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Access your LocalLeads dashboard to manage your account, view generated pages, and track performance." name="description"/>
+<title>
    Dashboard - LocalLeads
   </title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="/style.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-  <link href="/images/favicon.png" rel="icon" type="image/png"/>
- </head>
- <body>
-  <div id="mobile-nav-overlay">
-  </div>
-  <header>
-   <nav>
-    <div class="container">
-     <a class="logo" href="/">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="/style.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+</head>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="container">
+<a class="logo" href="/">
       LocalLeads
      </a>
-     <div class="hamburger-menu" id="hamburger-icon">
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-     </div>
-     <ul class="nav-links" id="nav-menu">
-      <li class="close-menu-li">
-       <button id="close-menu-btn">
+<div class="hamburger-menu" id="hamburger-icon">
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+</div>
+<ul class="nav-links" id="nav-menu">
+<li class="close-menu-li">
+<button id="close-menu-btn">
         ×
        </button>
-      </li>
-      <li>
+</li>
+<li>
+<a href="/generate.html">
+        Generate Pages
+       </a>
+</li>
+<li>
+<a href="/pricing.html">
+        Pricing
+       </a>
+</li>
+<li>
+<a href="/blog.html">
+        Blog
+       </a>
+</li>
+<li>
+<a href="/about.html">
+        About
+       </a>
+</li>
+<li>
+<a href="/audit.html">
+        Free Audit
+       </a>
+</li>
+<li>
+<a href="/contact.html">
+        Contact
+       </a>
+</li>
+<li>
+<a href="/auth.html">
+        Login/Signup
+       </a>
+</li>
+<li>
+<a href="/buy-credits.html">
+        Buy Credits
+       </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<main>
+<section class="hero">
+<div class="container">
+<h1>
+      Your Dashboard
+     </h1>
+<div class="onboarding-message" id="dashboard-onboarding-message" style="display: none; margin-top: 1.5rem;">
+<p>
+<i class="fas fa-info-circle onboarding-icon">
+</i>
+<b>
+        Welcome to your LocalLeads Dashboard!
+       </b>
+       This is where you'll manage your generated pages and track your progress. To get started, head over to the
        <a href="/generate.html">
         Generate Pages
        </a>
-      </li>
-      <li>
-       <a href="/pricing.html">
-        Pricing
-       </a>
-      </li>
-      <li>
-       <a href="/blog.html">
-        Blog
-       </a>
-      </li>
-      <li>
-       <a href="/about.html">
-        About
-       </a>
-      </li>
-      <li>
-       <a href="/audit.html">
-        Free Audit
-       </a>
-      </li>
-      <li>
-       <a href="/contact.html">
-        Contact
-       </a>
-      </li>
-      <li>
-       <a href="/auth.html">
-        Login/Signup
-       </a>
-      </li>
-      <li>
-       <a href="/buy-credits.html">
-        Buy Credits
-       </a>
-      </li>
-     </ul>
-    </div>
-   </nav>
-  </header>
-  <main>
-   <section class="hero">
-    <div class="container">
-     <h1>
-      Your Dashboard
-     </h1>
-    </div>
-   </section>
-   <section>
-    <div class="container">
-     <h2>
+       section to create your first set of SEO-optimized pages.
+      </p>
+<button class="dismiss-button" id="dismiss-dashboard-onboarding">
+       ×
+      </button>
+</div>
+</div>
+</section>
+<section>
+<div class="container">
+<h2>
       Account Information
      </h2>
-     <div id="account-info">
-      <p>
-       <strong>
+<div id="account-info">
+<p>
+<strong>
         Email:
        </strong>
-       <span id="user-email">
-       </span>
-      </p>
-      <p>
-       <strong>
+<span id="user-email">
+</span>
+</p>
+<p>
+<strong>
         Remaining Credits:
        </strong>
-       <span id="user-credits">
-       </span>
-      </p>
-     </div>
-    </div>
-   </section>
-   <section>
-    <div class="container">
-     <h2>
+<span id="user-credits">
+</span>
+</p>
+</div>
+</div>
+</section>
+<section>
+<div class="container">
+<h2>
       Your Generated Pages
      </h2>
-     <div id="generated-pages">
-      <table class="data-table">
-       <thead>
-        <tr>
-         <th>
+<div id="generated-pages">
+<table class="data-table">
+<thead>
+<tr>
+<th>
           Business Name
          </th>
-         <th>
+<th>
           Service
          </th>
-         <th>
+<th>
           Town
          </th>
-         <th>
+<th>
           Views
          </th>
-         <th>
+<th>
           Unique Visitors
          </th>
-         <th>
+<th>
           Actions
          </th>
-        </tr>
-       </thead>
-       <tbody>
-       </tbody>
-      </table>
-     </div>
-    </div>
-   </section>
-  </main>
-  <div class="sticky-cta-bar">
-   <p>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+<div class="center-button" id="load-more-container" style="display: none; margin-top: 1.5rem;">
+<button class="button" id="load-more-pages">Load More</button>
+</div>
+</div>
+</section>
+</main>
+<div class="sticky-cta-bar">
+<p>
     Ready to get more local customers?
    </p>
-   <a class="button" href="generate.html">
+<a class="button" href="generate.html">
     Generate Pages Now
    </a>
-   <a class="button button-secondary" href="audit.html">
+<a class="button button-secondary" href="audit.html">
     Get Free Audit
    </a>
-  </div>
-  <footer>
-   <div class="container">
-    <p>
-     © 2026 LocalLeads. All rights reserved.
-    </p>
-   </div>
-  </footer>
-  <script src="/js/app.min.js">
-  </script>
- </body>
+</div>
+<footer>
+<div class="container">
+<div class="footer-columns">
+<div class="footer-col">
+<h3>
+       LocalLeads
+      </h3>
+<p>
+       Dominate your local market, effortlessly.
+      </p>
+<div class="social-icons">
+<a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
+<i class="fab fa-facebook-f"></i>
+</a>
+<a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
+<i class="fab fa-linkedin-in"></i>
+</a>
+<a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
+<i class="fab fa-twitter"></i>
+</a>
+</div>
+</div>
+<div class="footer-col">
+<h3>
+       Quick Links
+      </h3>
+<ul><li><a href="about.html">About Us</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Contact</a></li><li><a href="faq.html">FAQ</a></li><li><a href="referral-program.html">Referral Program</a></li></ul>
+</div>
+<div class="footer-col">
+<h3>
+       Legal
+      </h3>
+<ul>
+<li>
+<a href="privacy.html">
+         Privacy Policy
+        </a>
+</li>
+<li>
+<a href="terms.html">
+         Terms of Service
+        </a>
+</li>
+<li>
+<a href="audit.html">
+         Free SEO Audit
+        </a>
+</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>
+      © 2026 LocalLeads. All rights reserved.
+     </p>
+</div>
+</div>
+</footer>
+
+
+
+<script src="/js/app.min.js"></script><script src="/js/dashboard.js"></script><script src="/js/analytics.js"></script></body>
 </html>

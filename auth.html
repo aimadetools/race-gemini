@@ -111,6 +111,7 @@
 <input autocomplete="new-password" class="form-input" id="signup-password" required="" type="password"/>
 <p class="error-message" id="signup-password-error">
 </p>
+<div id="password-strength-indicator" style="margin-top: 5px; font-size: 0.9em;"></div>
 </div>
 <button class="button" type="submit">
          Signup
@@ -176,101 +177,164 @@
 </footer>
 <script>
    document.addEventListener('DOMContentLoaded', () => {
-const signupForm = document.getElementById('signup-form');
-const signupEmailInput = document.getElementById('signup-email');
-const signupPasswordInput = document.getElementById('signup-password');
-const signupMessage = document.getElementById('signup-message');
-const signupEmailError = document.getElementById('signup-email-error');
-const signupPasswordError = document.getElementById('signup-password-error');
-signupForm.addEventListener('submit', async (e) => {
-e.preventDefault();
-signupEmailError.textContent = '';
-signupPasswordError.textContent = '';
-signupMessage.textContent = '';
-const email = signupEmailInput.value;
-const password = signupPasswordInput.value;
-if (!email) {
-signupEmailError.textContent = 'Email is required.';
-return;
-}
-if (!password) {
-signupPasswordError.textContent = 'Password is required.';
-return;
-}
-try {
-const response = await fetch('/api/signup', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify({ email, password }),
-});
-const data = await response.json();
-if (response.ok) {
-signupMessage.textContent = data.message;
-signupMessage.style.color = 'green';
-signupForm.reset();
-// Optionally redirect or log in the user
-} else {
-signupMessage.textContent = data.message || 'Signup failed.';
-signupMessage.style.color = 'red';
-}
-} catch (error) {
-console.error('Error during signup:', error);
-signupMessage.textContent = 'An unexpected error occurred.';
-signupMessage.style.color = 'red';
-}
-});
-// Login form submission handler
-const loginForm = document.getElementById('login-form');
-const loginEmailInput = document.getElementById('login-email');
-const loginPasswordInput = document.getElementById('login-password');
-const loginMessage = document.getElementById('login-message');
-const loginEmailError = document.getElementById('login-email-error');
-const loginPasswordError = document.getElementById('login-password-error');
-loginForm.addEventListener('submit', async (e) => {
-e.preventDefault();
-loginEmailError.textContent = '';
-loginPasswordError.textContent = '';
-loginMessage.textContent = '';
-const email = loginEmailInput.value;
-const password = loginPasswordInput.value;
-if (!email) {
-loginEmailError.textContent = 'Email is required.';
-return;
-}
-if (!password) {
-loginPasswordError.textContent = 'Password is required.';
-return;
-}
-try {
-const response = await fetch('/api/login', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify({ email, password }),
-});
-const data = await response.json();
-if (response.ok) {
-loginMessage.textContent = data.message;
-loginMessage.style.color = 'green';
-loginForm.reset();
-// Optionally redirect or update UI for logged-in state
-} else {
-loginMessage.textContent = data.message || 'Login failed.';
-loginMessage.style.color = 'red';
-}
-} catch (error) {
-console.error('Error during login:', error);
-loginMessage.textContent = 'An unexpected error occurred.';
-loginMessage.style.color = 'red';
-}
-});
+    // Helper function for displaying messages
+    const displayMessage = (element, message, isError = true) => {
+        element.textContent = message;
+        element.style.color = isError ? 'red' : 'green';
+    };
+
+    // Signup form logic
+    const signupForm = document.getElementById('signup-form');
+    const signupEmailInput = document.getElementById('signup-email');
+    const signupPasswordInput = document.getElementById('signup-password');
+    const signupMessage = document.getElementById('signup-message');
+    const signupEmailError = document.getElementById('signup-email-error');
+    const signupPasswordError = document.getElementById('signup-password-error');
+
+    // Password Strength Indicator
+    const passwordInput = document.getElementById('signup-password');
+    const strengthIndicator = document.getElementById('password-strength-indicator');
+
+    passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        let strength = 0;
+        let feedback = '';
+
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+        // Criteria for strength
+        if (password.length >= 8) strength++; // Length
+        if (hasLowerCase) strength++;
+        if (hasUpperCase) strength++;
+        if (hasNumber) strength++;
+        if (hasSpecialChar) strength++;
+
+        // Provide feedback
+        if (password.length === 0) {
+            feedback = '';
+            strengthIndicator.style.color = 'inherit';
+        } else if (strength < 3) {
+            feedback = 'Weak';
+            strengthIndicator.style.color = 'red';
+        } else if (strength < 5) {
+            feedback = 'Medium';
+            strengthIndicator.style.color = 'orange';
+        } else {
+            feedback = 'Strong';
+            strengthIndicator.style.color = 'green';
+        }
+        strengthIndicator.textContent = feedback;
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        signupEmailError.textContent = '';
+        signupPasswordError.textContent = '';
+        signupMessage.textContent = '';
+        const email = signupEmailInput.value;
+        const password = signupPasswordInput.value;
+
+        const signupSubmitButton = signupForm.querySelector('button[type="submit"]'); // Get button reference
+
+        if (!email) {
+            signupEmailError.textContent = 'Email is required.';
+            return;
+        }
+        if (!password) {
+            signupPasswordError.textContent = 'Password is required.';
+            return;
+        }
+
+        signupSubmitButton.disabled = true; // Disable button
+        signupSubmitButton.innerHTML = 'Signing up... <span class="spinner"></span>'; // Add spinner
+
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                displayMessage(signupMessage, data.message, false); // false for success
+                signupForm.reset();
+                window.location.href = '/dashboard.html'; // Redirect to dashboard
+            } else {
+                displayMessage(signupMessage, data.message || 'Signup failed.');
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            displayMessage(signupMessage, 'An unexpected error occurred.');
+        } finally {
+            signupSubmitButton.disabled = false; // Re-enable button
+            signupSubmitButton.textContent = 'Signup'; // Restore original text
+        }
+    });
+
+    // Login form logic
+    const loginForm = document.getElementById('login-form');
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
+    const loginMessage = document.getElementById('login-message');
+    const loginEmailError = document.getElementById('login-email-error');
+    const loginPasswordError = document.getElementById('login-password-error');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginEmailError.textContent = '';
+        loginPasswordError.textContent = '';
+        loginMessage.textContent = '';
+        const email = loginEmailInput.value;
+        const password = loginPasswordInput.value;
+
+        const loginSubmitButton = loginForm.querySelector('button[type="submit"]'); // Get button reference
+
+        if (!email) {
+            loginEmailError.textContent = 'Email is required.';
+            return;
+        }
+        if (!password) {
+            loginPasswordError.textContent = 'Password is required.';
+            return;
+        }
+
+        loginSubmitButton.disabled = true; // Disable button
+        loginSubmitButton.innerHTML = 'Logging in... <span class="spinner"></span>'; // Add spinner
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                // Assuming successful login redirects to dashboard or similar
+                displayMessage(loginMessage, data.message, false);
+                loginForm.reset();
+                window.location.href = '/dashboard.html'; // Redirect to dashboard
+            } else {
+                displayMessage(loginMessage, data.message || 'Login failed.');
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            displayMessage(loginMessage, 'An unexpected error occurred.');
+        } finally {
+            loginSubmitButton.disabled = false; // Re-enable button
+            loginSubmitButton.textContent = 'Login'; // Restore original text
+        }
+    });
 });
   </script>
-<script src="/js/app.min.js">
-</script>
+
+
 <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-</body>
+<script src="/js/app.min.js"></script><script src="/js/analytics.js"></script></body>
 </html>

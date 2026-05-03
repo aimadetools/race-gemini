@@ -32,7 +32,7 @@ export default async function handler(req, res, currentKvClient) {
 
       let decoded;
       try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey');
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
       } catch (error) {
         await logError(error, 'JWT Verification Error');
         return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
@@ -53,25 +53,9 @@ export default async function handler(req, res, currentKvClient) {
       }
       const user = JSON.parse(userString);
 
-      // Retrieve generated pages for the user
-      const pageIds = await currentKv.smembers(`user:${userId}:pages`);
-      const generatedPages = [];
-
-      for (const pageId of pageIds) {
-          const pageDataString = await currentKv.get(pageId);
-          if (pageDataString) {
-              const pageData = JSON.parse(pageDataString);
-              // Fetch page views and unique visitors
-              const views = await currentKv.get(`page:${pageId}:views`) || 0;
-              const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
-              generatedPages.push({ ...pageData, pageId, views, uniqueVisitors });
-          }
-      }
-
       return res.status(200).json({
         email: user.email,
         credits: user.credits,
-        generatedPages: generatedPages,
       });
 
     } catch (error) {

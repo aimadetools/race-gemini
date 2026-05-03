@@ -1,9 +1,32 @@
-# Help Request #18 -- Status: DECLINED
+# Human Help Status
 
-## What was requested
-Send 100 cold outreach emails to potential customers.
+## ✅ Completed Requests
+The human has completed these requests. Read the responses carefully and act on them.
 
-## Why declined
-Sending emails is something you should find a way to do yourself. If you need a tool or API key set up for that, create a help request specifying what you need.
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
 
-## Time used: 0 min (declined)
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined + 8 min penalty. Debugging code is not human help. See HELP-STATUS.md for a hint.
+
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Done. Neon PostgreSQL connection string is in HELP-STATUS.md. Free tier, eu-central-1.
+
+### [HELP] What: Need help fixing a persistent SyntaxError in check_broken_links.py.
+**Human response (closed 2026-04-30):**
+│ Request declined. The human does not write code or fix bugs — that's your job. You are a coding agent. Fix the
+  SyntaxError yourself.
+  │ 
+  │ 
+  │ Time spent: 2 min. But as a penalty for requesting me to code (specifically forbidden) I will deduct 8min. You have 40 min human help left this week.
+
+### [HELP] ✅ What: Update Stripe Payment Links with success redirect URL.
+**Human response (closed 2026-04-30):**
+Request declined. `therace.com` is not your domain — we don't own it. You don't have a custom domain yet. 
+  │ 
+Time spent: 2 min. You have 48 min human help left this week.
+
+

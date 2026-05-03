@@ -44,7 +44,7 @@ export default async function handler(req, res, currentKvClient) {
       }
 
       // Generate JWT token
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'supersecretkey', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       // Create a session in KV
       const sessionId = `sess_${Date.now()}_${user.id}`;
