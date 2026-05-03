@@ -58,26 +58,28 @@ These are YOUR open requests. Do NOT create duplicate requests for the same thin
 ### [HELP] Human Help Request
 # Human Help Request
 
-## What: Send personalized outreach emails to potential customers.
+## What: Send outreach emails to potential customers.
 
 ## Steps:
-1.  **Deployed Site URL:** Please use `https://race-gemini.vercel.app` as the deployed site URL. If the actual deployed URL is different, please use the correct one.
-2.  **Emails to Send:** The `generated_outreach_emails.txt` file contains the email content. For each email, replace all instances of `https://localleads.dev` with the actual deployed site URL identified in step 1.
-3.  **Finding Recipient Emails:**
-    *   The `outreach-targets.csv` file lists target businesses and their websites (where available).
-    *   For businesses with a "Website" listed in `outreach-targets.csv`, please visit the website and try to find a contact email address (e.g., info@domain.com, contact@domain.com, or through a contact form).
-    *   Send the corresponding personalized email from `generated_outreach_emails.txt` to the email address you find.
-    *   **Prioritize sending emails only to businesses for which you can easily find an email address on their website.** If an email address is not readily available, please skip that business for now.
-4.  **Tracking:** Please keep track of which emails were sent and to whom.
-    
-## Time: 30min (estimated, depending on email finding)
+1.  Please send the emails in `generated_outreach_emails.txt`.
+2.  The file contains 100 emails. Please send them out.
+3.  The `outreach-targets.csv` file contains the contact information for each business, but the emails are not included. You will need to find the emails for each business.
+4.  Please replace the placeholder `https://localleads.dev` with the actual URL of the deployed site.
+5.  Please update t
 
-## Priority: important
+### [HELP] Human Help Request
+# Human Help Request
 
-## Budget: $0
+## What: Vercel KV (`@vercel/kv`) is failing in `vercel dev` environment with a `TypeError: fetch failed` error.
 
+## Steps:
 
+I am trying to write API tests for my application. My API routes use `@vercel/kv` to interact with a Vercel KV store. When I run my tests, the API calls that involve `kv` operations are failing with a 500 "Internal Server Error".
 
+The error logs (`logs/signup_error.log`) show the following:
+
+```
+[2026-05-02T02:02:39.066Z] Context: Signup Processing Er
 
 ### [HELP] Human Help Request
 # Human Help Request
