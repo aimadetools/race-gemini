@@ -1,34 +1,33 @@
 import sys
 import os
+import unittest
+from unittest.mock import patch, MagicMock, call
+import json
+import requests
+import subprocess # Added for subprocess test
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import unittest
-from unittest.mock import patch, MagicMock, call
-import json
-import requests # ADDED THIS LINE
 from check_broken_links import check_external_links
 
 class TestCheckBrokenLinks(unittest.TestCase):
 
-    @patch('requests.Session') # Patch requests.Session
-    @patch('requests.get')     # Patch requests.get for initial URL fetch
+    @patch('requests.Session')
+    @patch('requests.get')
     def test_valid_url_no_broken_links(self, mock_get_source, mock_session_class):
-        # Mock response for the initial source URL fetch
         mock_response_source = MagicMock(status_code=200, content=b'<html><body><a href="http://example.com/good">Good Link</a></body></html>')
         mock_response_source.raise_for_status.return_value = None
         mock_get_source.return_value = mock_response_source
 
-        # Configure the mock session and its get method
         mock_session_instance = MagicMock()
         mock_session_instance.get.return_value = MagicMock(status_code=200, close=MagicMock())
-        mock_session_class.return_value = mock_session_instance # requests.Session() returns this mock instance
+        mock_session_class.return_value = mock_session_instance
 
         result = check_external_links('http://test.com')
         self.assertEqual(result, [])
         mock_get_source.assert_called_once_with('http://test.com', timeout=10)
-        mock_session_class.assert_called_once() # Verify Session() was called
+        mock_session_class.assert_called_once()
         mock_session_instance.get.assert_called_once_with('http://example.com/good', allow_redirects=True, stream=True, timeout=5)
 
     @patch('requests.Session')
@@ -65,7 +64,7 @@ class TestCheckBrokenLinks(unittest.TestCase):
         mock_session_class.assert_called_once()
         mock_session_instance.get.assert_called_once_with('https://example.com/relative', allow_redirects=True, stream=True, timeout=5)
 
-    @patch('requests.get') # Only patching requests.get here as Session is not used for source_url_fetch_failure
+    @patch('requests.get')
     def test_source_url_fetch_failure(self, mock_get_source):
         mock_get_source.side_effect = requests.exceptions.RequestException('Network error')
 
@@ -73,8 +72,6 @@ class TestCheckBrokenLinks(unittest.TestCase):
         self.assertEqual(result, [{'url': 'http://test.com', 'error': 'Failed to fetch URL: Network error'}])
         mock_get_source.assert_called_once_with('http://test.com', timeout=10)
 
-    # For local file tests, requests.get and Session are not used to read the file, only for external links.
-    # So we'll patch requests.Session for the link checks.
     @patch('os.path.exists', return_value=True)
     @patch('builtins.open', new_callable=unittest.mock.mock_open, read_data='<html><body><a href="http://example.com/good">Good Link</a></body></html>')
     @patch('requests.Session')
@@ -100,8 +97,7 @@ class TestCheckBrokenLinks(unittest.TestCase):
 
         result = check_external_links('local_file.html')
         self.assertEqual(result, [{'url': 'http://example.com/bad', 'status_code': 404}])
-        # Removed assert_called_once_with to avoid conflict with .netrc check
-        self.assertIn(call('local_file.html'), mock_exists.call_args_list) # Check if it was called with the file
+        self.assertIn(call('local_file.html'), mock_exists.call_args_list)
         mock_open.assert_called_once_with('local_file.html', 'r', encoding='utf-8')
         mock_session_class.assert_called_once()
         mock_session_instance.get.assert_called_once_with('http://example.com/bad', allow_redirects=True, stream=True, timeout=5)
@@ -134,9 +130,53 @@ class TestCheckBrokenLinks(unittest.TestCase):
     def test_local_file_read_failure(self, mock_open, mock_exists):
         result = check_external_links('protected_file.html')
         self.assertEqual(result, [{'file': 'protected_file.html', 'error': 'Failed to read local file: File permission denied'}])
-        # Removed assert_called_once_with due to .netrc check
         self.assertIn(call('protected_file.html'), mock_exists.call_args_list)
         mock_open.assert_called_once_with('protected_file.html', 'r', encoding='utf-8')
+
+    @patch('requests.Session')
+    @patch('requests.get')
+    def test_script_execution_with_venv(self, mock_get, mock_session):
+        # This test ensures that the check_broken_links.py script can be executed
+        # as a subprocess using the virtual environment's Python interpreter
+        # without encountering a ModuleNotFoundError.
+        import subprocess
+        import os
+        import json
+
+        dummy_html_content = b'<html><body><a href="http://example.com/test-subprocess">Test Subprocess Link</a></body></html>'
+        dummy_html_path = 'temp_test_script_subprocess.html'
+        with open(dummy_html_path, 'wb') as f:
+            f.write(dummy_html_content)
+
+        # Mock requests behavior for the subprocess
+        mock_session_instance = MagicMock()
+        mock_session_instance.get.return_value = MagicMock(status_code=404, close=MagicMock())
+        mock_session.return_value = mock_session_instance
+
+        mock_response_source = MagicMock(status_code=200, content=dummy_html_content)
+        mock_response_source.raise_for_status.return_value = None
+        mock_get.return_value = mock_response_source
+
+        script_path = os.path.abspath('check_broken_links.py')
+        venv_python = os.path.abspath('venv/bin/python')
+
+        try:
+            result = subprocess.run(
+                [venv_python, script_path, dummy_html_path],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertNotIn('ModuleNotFoundError', result.stderr)
+            self.assertEqual(result.returncode, 0)
+
+            output_data = json.loads(result.stdout)
+            self.assertEqual(output_data, {"broken_links": [{"url": "http://example.com/test-subprocess", "status_code": 404}]})
+
+        finally:
+            if os.path.exists(dummy_html_path):
+                os.remove(dummy_html_path)
 
 if __name__ == '__main__':
     unittest.main()
