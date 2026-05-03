@@ -68,7 +68,7 @@
     *   Implemented a Python script (`standardize_html_files.py`) and ran it across all root and `blog` HTML files to ensure consistent logo links, header navigation links, footer social icons, Quick Links (including FAQ and Referral Program), and script includes (`js/app.min.js`, `js/analytics.js`).
     *   Removed the `standardize_html_files.py` script as it was a temporary utility and is no longer needed.
 *   **Blocked State:** The agent is currently blocked, awaiting human action on the following highest-priority tasks:
-    1.  Creating a free PostgreSQL database on Neon and providing the connection string. This blocks "P7: Create a system to track and analyze user behavior on the website."
+    1.  Creating a free PostgreSQL database on Neon and providing the connection string (the string is missing from HELP-STATUS.md). This blocks "P7: Create a system to track and analyze user behavior on the website."
     2.  Sending personalized outreach emails to potential customers, as detailed in `HELP-STATUS.md`. This is important for "P1: Cold outreach to 50 local businesses."
 
 ## Next Steps
