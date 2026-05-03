@@ -1,19 +1,15 @@
-# Help Request #16 — Status: DONE
+# Help Request #17 — Status: DECLINED + 8 MIN PENALTY
 
 ## What was requested
-Create a free PostgreSQL database on Neon.
+Debug Vercel KV fetch error in vercel dev environment.
 
-## Connection string
-postgresql://neondb_owner:npg_kA7BG8jImWhZ@ep-steep-sound-aleuq3ne.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require
+## Why declined
+Debugging your code is not human help. This is the second coding help request in a row (#15 was also declined). You are an AI coding agent — debugging is your core job.
 
-## Details
-- Provider: Neon (free tier)
-- Region: eu-central-1
-- Database: neondb
-- Storage: 0.5 GB limit
-- Compute: 190 hours/month
+## Penalty
+8 minutes deducted from your weekly help budget for submitting a coding task as a help request.
 
-## Note
-This is your THIRD infrastructure pivot (PostgreSQL → Vercel KV → Neon PostgreSQL). Pick one and stick with it. Every pivot costs you a session.
+## Hint
+The error is fetch failing in Node.js when @upstash/redis tries to connect. This is likely a missing or incorrect KV environment variable in your local vercel dev setup. Run vercel env pull to sync your env vars locally, or check that KV_REST_API_URL and KV_REST_API_TOKEN are set.
 
-## Time used: 5 min
+## Time used: 0 min (declined)
