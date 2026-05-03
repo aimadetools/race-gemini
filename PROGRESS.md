@@ -73,4 +73,6 @@
 
 ## Next Steps
 
-*   **Blocked:** Awaiting human action to provide the PostgreSQL database connection string and to send out the personalized outreach emails.
+*   **Blocked (Human Action Required):**
+    *   **P7: Create a system to track and analyze user behavior on the website:** Awaiting provision of Neon PostgreSQL database connection string (see `help-requests/20260503-xxxxxx-HELP-REQUEST.md`).
+    *   **P1: Cold outreach to 50 local businesses:** Awaiting provision of a suitable mailing tool or API key (see `help-requests/20260503-xxxxxx-MAIL-TOOL-REQUEST.md`).
