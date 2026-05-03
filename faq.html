@@ -343,6 +343,43 @@
     </div>
    </div>
   </footer>
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+     const question = item.querySelector('h3');
+     const answer = item.querySelector('p');
+
+     // Set initial ARIA attributes for accessibility
+     question.setAttribute('aria-expanded', 'false');
+     question.setAttribute('aria-controls', `answer-${question.id || Math.random().toString(36).substr(2, 9)}`);
+     answer.id = question.getAttribute('aria-controls');
+
+     question.addEventListener('click', () => {
+      const isExpanded = question.getAttribute('aria-expanded') === 'true';
+
+      if (isExpanded) {
+       question.setAttribute('aria-expanded', 'false');
+       item.classList.remove('active');
+       answer.style.display = 'none';
+      } else {
+       question.setAttribute('aria-expanded', 'true');
+       item.classList.add('active');
+       answer.style.display = 'block';
+      }
+     });
+
+     // Optional: Add keyboard navigation (Space/Enter key)
+     question.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+       event.preventDefault(); // Prevent scrolling when pressing Space
+       question.click();
+      }
+     });
+    });
+   });
+  </script>
   <script src="/js/app.min.js">
   </script>
  </body>

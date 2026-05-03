@@ -77,57 +77,33 @@
 <section class="audit-form-section">
 <div class="container">
 <h2 data-i18n-key="audit_form_title">Inicia Tu Auditoría</h2>
-<form id="auditForm">
-<div class="form-step active" id="step1">
-<h3 data-i18n-key="audit_step1_title">Paso 1: Información de Tu Negocio</h3>
-<label data-i18n-key="audit_label_business_name" for="auditBusinessName">Nombre del Negocio:</label>
-<input autocomplete="organization" class="form-input" id="auditBusinessName" name="businessName" placeholder="e.g., 'Smith's Plumbing'" required="" type="text"/>
-<label data-i18n-key="audit_label_business_address" for="auditBusinessAddress">Dirección del Negocio:</label>
-<input autocomplete="street-address" class="form-input" id="auditBusinessAddress" name="businessAddress" placeholder="e.g., '123 Main St, Springfield, IL'" required="" type="text"/>
-<label data-i18n-key="audit_label_business_phone" for="auditBusinessPhone">Teléfono del Negocio (opcional):</label>
-<input autocomplete="tel" class="form-input" id="auditBusinessPhone" name="businessPhone" placeholder="e.g., '555-123-4567'" type="tel"/>
-<button class="next-step button" data-i18n-key="audit_next_button" type="button">Siguiente</button>
-</div>
-<div class="form-step" id="step2">
-<h3 data-i18n-key="audit_step2_title">Paso 2: Tus Servicios y Ubicaciones Objetivo</h3>
-<label data-i18n-key="audit_label_services" for="auditServices">Servicios Clave que Ofreces (separados por comas):</label>
-<input class="form-input" id="auditServices" name="services" placeholder="e.g., 'plumbing repair, water heater installation'" required="" type="text"/>
-<div class="char-counter">
-<span id="auditServices-char-count">
-         0
-        </span>
-        characters
-       </div>
-<label data-i18n-key="audit_label_towns" for="auditTowns">Ciudades/Pueblos que Sirves (separados por comas):</label>
-<textarea class="form-input" id="auditTowns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City'" required="" rows="5"></textarea>
-<div class="char-counter">
-<span id="auditTowns-char-count">
-         0
-        </span>
-        characters
-       </div>
-<button class="prev-step button button-secondary" data-i18n-key="audit_previous_button" type="button">Anterior</button>
-<button class="next-step button" data-i18n-key="audit_next_button" type="button">Siguiente</button>
-</div>
-<div class="form-step" id="step3">
-<h3 data-i18n-key="audit_step3_title">Paso 3: Tu Información de Contacto</h3>
-<label data-i18n-key="audit_label_name" for="auditName">Tu Nombre:</label>
-<input autocomplete="name" class="form-input" id="auditName" name="name" required="" type="text"/>
-<label data-i18n-key="audit_label_email" for="auditEmail">Tu Correo Electrónico:</label>
-<input autocomplete="email" class="form-input" id="auditEmail" name="email" placeholder="you@example.com" required="" type="email"/>
-<button class="prev-step button button-secondary" data-i18n-key="audit_previous_button" type="button">Anterior</button>
+<form id="auditUrlForm">
+<label data-i18n-key="audit_label_url" for="auditUrl">
+       Website URL:
+      </label>
+<input class="form-input" id="auditUrl" name="url" placeholder="https://example.com" required="" type="url"/>
+<span class="input-error-message" id="auditUrl-error"></span>
 <button class="button" data-i18n-key="audit_submit_button" type="submit">Obtener Mi Auditoría Gratuita</button>
-</div>
 </form>
+<div id="loading" style="display:none; text-align: center; padding: 2rem;">
+<p>Auditing your site... This may take a moment.</p>
+<div class="spinner"></div>
+</div>
 <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
 </div>
 <div id="auditResults" style="display:none;">
 <h2 data-i18n-key="audit_results_title">Resultados de la Auditoría</h2>
-<p data-i18n-key="audit_results_message1">Gracias por enviar tu información. Estamos generando tu informe de auditoría SEO personalizado. Recibirás un correo electrónico en breve con información detallada sobre tu potencial de búsqueda local.</p>
-<p data-i18n-key="audit_results_message2">Mientras tanto, explora cómo LocalLeads puede ayudarte a captar más clientes locales:</p>
-<a class="button" data-i18n-key="audit_generate_pages_button" href="../generate.html">Generar Páginas Locales Ahora</a>
+<div id="results-container"></div>
+<div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
+<h3>Receive a Detailed Report</h3>
+<p>Enter your email to get a full audit report sent to your inbox.</p>
+<form id="emailReportForm">
+<input class="form-input" id="reportEmail" placeholder="your@example.com" required="" type="email"/>
+<button class="button" type="submit">Send Report</button>
+<div id="emailMessage" style="margin-top: 1rem;"></div>
+</form>
 </div>
-</div>
+</div> </div>
 </section>
 </main>
 <div class="sticky-cta-bar">
@@ -224,6 +200,8 @@
 </div>
 </footer>
 <script src="/js/app.min.js">
+</script>
+<script src="/js/audit.js">
 </script>
 <button id="scrollToTopBtn" title="Go to top">
 <i class="fas fa-arrow-up">

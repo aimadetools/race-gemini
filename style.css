@@ -1,4 +1,4 @@
-@import url('./style_scroll_to_top.css');@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap);body{background-color:#121212;color:#fff;font-family:Inter,sans-serif;margin:0}.container{max-width:1200px;margin:0 auto;padding:0 1rem}h1{font-size:3rem;margin-bottom:1rem}h2{text-align:center;font-size:2.5rem;margin-bottom:2rem}h3{font-size:1.5rem;margin-bottom:1rem}p{font-size:1.2rem;line-height:1.6}a{color:#007bff;text-decoration:none;transition:color .3s}a:hover{color:#0056b3}:focus-visible{outline:2px solid #007bff!important;outline-offset:2px}ul{list-style:none;padding:0;margin:0}li{margin-bottom:.5rem}.button{background-color:#007bff;color:#fff;padding:.8rem 1.5rem;border-radius:5px;text-decoration:none;font-weight:700;transition:background-color .3s}.button:hover{background-color:#0056b3}.button:focus-visible{outline:2px solid #007bff!important;outline-offset:2px}.button:disabled{background-color:#ccc;cursor:not-allowed}.button-secondary{background-color:#6c757d}.button-secondary:hover{background-color:#5a6268}.button .spinner{display:inline-block;width:1em;height:1em;border:2px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin .8s ease-in-out infinite;vertical-align:middle;margin-left:.5em}@keyframes spin{to{transform:rotate(360deg)}}.button:disabled{cursor:not-allowed;opacity:.6}.center-button{text-align:center;margin-top:2rem;margin-bottom:2rem}.card{background-color:#1f1f1f;padding:2rem;border-radius:10px;text-align:center;max-width:300px;transition:transform .3s,box-shadow .3s}.card:hover{transform:translateY(-10px);box-shadow:0 10px 20px rgba(0,0,0,.2)}@media (max-width: 768px) {
+@import url('./style_scroll_to_top.css');@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap);body{background-color:#121212;color:#fff;font-family:Inter,sans-serif;margin:0}.container{max-width:1200px;margin:0 auto;padding:0 1rem}h1{font-size:3rem;margin-bottom:1rem}h2{text-align:center;font-size:2.5rem;margin-bottom:2rem}h3{font-size:1.5rem;margin-bottom:1rem}p{font-size:1.2rem;line-height:1.6}a{color:#007bff;text-decoration:none;transition:color .3s}a:hover{color:#0056b3}:focus-visible{outline:2px solid #007bff!important;outline-offset:2px}ul{list-style:none;padding:0;margin:0}li{margin-bottom:.5rem}.button{background-color:#007bff;color:#fff;padding:.8rem 1.5rem;border-radius:5px;text-decoration:none;font-weight:700;transition:background-color .3s}.button:hover{background-color:#0056b3}.button:focus-visible{outline:2px solid #007bff!important;outline-offset:2px}.button:disabled{background-color:#ccc;cursor:not-allowed}.button-secondary{background-color:#495057}.button-secondary:hover{background-color:#5a6268}.button .spinner{display:inline-block;width:1em;height:1em;border:2px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin .8s ease-in-out infinite;vertical-align:middle;margin-left:.5em}@keyframes spin{to{transform:rotate(360deg)}}.button:disabled{cursor:not-allowed;opacity:.6}.center-button{text-align:center;margin-top:2rem;margin-bottom:2rem}.card{background-color:#1f1f1f;padding:2rem;border-radius:10px;text-align:center;max-width:300px;transition:transform .3s,box-shadow .3s}.card:hover{transform:translateY(-10px);box-shadow:0 10px 20px rgba(0,0,0,.2)}@media (max-width: 768px) {
     .how-it-works .steps {
         flex-direction: column;
         align-items: center;
@@ -159,10 +159,11 @@
 .faq-item p {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    padding-top: 0; /* Initial padding */
+    transition: max-height 0.3s ease-out, padding-top 0.3s ease-out; /* Animate both */
 }
 
 .faq-item.active p {
     max-height: 1000px; /* A large enough value to show the content */
-    padding-top: 10px;
+    padding-top: 10px; /* Padding when active */
 }

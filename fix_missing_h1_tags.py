@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup
 
 def fix_h1_tag(file_path):
     """
-    Adds an h1 tag to a blog post if it's missing.
-    The h1 content will be derived from the title tag.
+    Ensures optimal h1 tag usage in an HTML file:
+    - Adds an h1 tag if missing, deriving content from the title.
+    - Converts all h1 tags after the first one to h2 tags.
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -14,41 +15,47 @@ def fix_h1_tag(file_path):
         return
 
     soup = BeautifulSoup(content, 'lxml')
+    initial_soup_str = str(soup) # Store initial state to check for changes
 
-    # Check if an h1 tag already exists
-    if soup.find('h1'):
-        return # Do nothing if an h1 tag is present
+    h1_tags = soup.find_all('h1')
 
-    # Get the title
-    title_tag = soup.find('title')
-    if not title_tag or not title_tag.string:
-        print(f"Warning: No title found in {file_path}. Cannot create h1 tag.")
-        return
+    if not h1_tags:
+        # No h1 tags found, add one from the title
+        title_tag = soup.find('title')
+        if not title_tag or not title_tag.string:
+            print(f"Warning: No title found in {file_path}. Cannot create h1 tag.")
+            return
 
-    # Create the h1 tag
-    h1_tag = soup.new_tag('h1')
-    h1_tag.string = title_tag.string.strip()
+        h1_tag = soup.new_tag('h1')
+        h1_tag.string = title_tag.string.strip()
 
-    # Find the main content area to prepend the h1 tag
-    # This is a guess, might need refinement based on actual HTML structure
-    main_content = soup.find('main') or soup.find('body')
-    if main_content:
-        # Prepending inside a container div if one exists, for better structure
-        container = main_content.find('div', class_='container')
-        if container:
-            container.insert(0, h1_tag)
+        main_content = soup.find('main') or soup.find('body')
+        if main_content:
+            container = main_content.find('div', class_='container')
+            if container:
+                container.insert(0, h1_tag)
+            else:
+                main_content.insert(0, h1_tag)
+            print(f"Added missing h1 tag to: {os.path.basename(file_path)}")
         else:
-            main_content.insert(0, h1_tag)
-    else:
-        print(f"Warning: Could not find a <main> or <body> tag in {file_path}. Cannot insert h1 tag.")
-        return
+            print(f"Warning: Could not find a <main> or <body> tag in {file_path}. Cannot insert h1 tag.")
+            return
+    elif len(h1_tags) > 1:
+        # Multiple h1 tags found, convert subsequent ones to h2
+        for i, h1 in enumerate(h1_tags):
+            if i > 0: # Skip the first h1
+                h1.name = 'h2'
+                print(f"Converted extra h1 tag to h2 in: {os.path.basename(file_path)}")
+    # No 'else' for exactly one h1 tag as we just return early in that case.
 
-    try:
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(str(soup))
-        print(f"Fixed missing h1 tag in: {os.path.basename(file_path)}")
-    except Exception as e:
-        print(f"Error writing to file {file_path}: {e}")
+    # Only write if changes were made
+    if str(soup) != initial_soup_str:
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(str(soup))
+            print(f"Updated h1 tag(s) in: {os.path.basename(file_path)}")
+        except Exception as e:
+            print(f"Error writing to file {file_path}: {e}")
 
 
 def main():

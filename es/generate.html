@@ -24,7 +24,7 @@
 <header>
 <nav>
 <div class="container">
-<a class="logo" href="../">
+<a class="logo" href="../index.html">
       LocalLeads
      </a>
 <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
@@ -146,8 +146,7 @@
 </i>
 </div>
 <input autocomplete="postal-code" class="form-input" id="zipCode" name="zipCode" placeholder="e.g., '90210'" required="" type="text"/>
-<span class="input-error-message" id="zipCode-error">
-</span>
+<span class="input-error-message" id="zipCode-error"></span>
 <div class="tooltip-container">
 <label data-i18n-key="generate_label_services" for="services">Servicios (separados por comas):</label>
 <i class="fas fa-info-circle tooltip-icon" title="List the key services you offer, separated by commas. E.g., 'plumbing repair, water heater installation, drain cleaning'.">
@@ -187,7 +186,7 @@
 <option data-i18n-key="generate_ai_style_casual" value="casual">Casual</option>
 </select>
 </div>
-<button class="button" data-i18n-key="generate_submit_button" type="submit">Generar Páginas</button>
+<button class="button" data-i18n-key="generate_submit_button" id="generate-pages-button" type="submit">Generar Páginas</button>
 <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
 </div>
 </form>
@@ -241,10 +240,6 @@
        Dominate your local market, effortlessly.
       </p>
 <div class="social-icons">
-<a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
-<i class="fab fa-twitter">
-</i>
-</a>
 <a aria-label="LinkedIn" href="https://linkedin.com/company/localleads" target="_blank">
 <i class="fab fa-linkedin-in">
 </i>
@@ -313,6 +308,10 @@
 </div>
 </footer>
 <script src="/js/app.min.js">
+</script>
+<script src="/js/generate-form-validation.js">
+</script>
+<script src="/js/analytics.js">
 </script>
 <script>
    (async function() {

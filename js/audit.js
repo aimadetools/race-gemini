@@ -131,6 +131,30 @@ document.addEventListener('DOMContentLoaded', () => {
             section.appendChild(p);
             resultsContainer.appendChild(section);
         }
+
+        // H1 Tags
+        if (results.h1_tags) {
+            const h1Results = results.h1_tags;
+            if (h1Results.num_h1_tags === 1) {
+                const section = createResultSection('H1 Tag Audit:', 'success');
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>Status:</strong> ${h1Results.issues[0].description}<br><strong>Content:</strong> "${h1Results.h1_content[0]}"`;
+                section.appendChild(p);
+                resultsContainer.appendChild(section);
+            } else if (h1Results.num_h1_tags > 1) {
+                const section = createResultSection('H1 Tag Audit:', 'warning');
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>Status:</strong> ${h1Results.issues[0].description}<br><strong>Contents:</strong><br>${h1Results.h1_content.map(content => `- "${content}"`).join('<br>')}`;
+                section.appendChild(p);
+                resultsContainer.appendChild(section);
+            } else { // num_h1_tags === 0
+                const section = createResultSection('H1 Tag Audit:', 'error');
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>Status:</strong> ${h1Results.issues[0].description}`;
+                section.appendChild(p);
+                resultsContainer.appendChild(section);
+            }
+        }
     }
 
     emailReportForm.addEventListener('submit', async (e) => {

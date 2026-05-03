@@ -76,10 +76,11 @@ module.exports = async (req, res) => {
 
     try {
         // Run all audit scripts concurrently
-        const [brokenLinks, altAttributes, pageLoadTimes] = await Promise.allSettled([
+        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags] = await Promise.allSettled([
             runPythonScript('check_broken_links.py', url, pythonExecutable),
             runPythonScript('audit_alt_attributes.py', url, pythonExecutable),
-            runPythonScript('audit_page_load_times.py', url, pythonExecutable)
+            runPythonScript('audit_page_load_times.py', url, pythonExecutable),
+            runPythonScript('audit_h1_tags.py', url, pythonExecutable)
         ]);
 
         if (brokenLinks.status === 'fulfilled') {
@@ -98,6 +99,12 @@ module.exports = async (req, res) => {
             auditResults.page_load_times = pageLoadTimes.value;
         } else {
             errors.push(pageLoadTimes.reason);
+        }
+
+        if (h1Tags.status === 'fulfilled') {
+            auditResults.h1_tags = h1Tags.value;
+        } else {
+            errors.push(h1Tags.reason);
         }
 
         if (errors.length > 0) {

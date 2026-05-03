@@ -104,6 +104,7 @@
     "generate_label_ai_content_style": "Estilo de Contenido de IA:",
     "generate_ai_style_professional": "Profesional",
     "generate_ai_style_casual": "Casual",
+    "generate_ai_style_friendly": "Amigable",
     "generate_submit_button": "Generar Páginas",
     "generate_loading_message": "Generando tus páginas... Esto puede tardar un momento.",
     "header_toggle_nav_menu": "Alternar menú de navegación",

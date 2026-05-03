@@ -130,7 +130,9 @@ module.exports = async (req, res, currentKvClient) => {
                         .replace(/{{town}}/g, town)
                         .replace(/{{agencyLogo}}/g, agencyLogoHtml)
                         .replace(/{{primaryColor}}/g, primaryColorValue)
-                        .replace(/{{ai_content}}/g, aiContent);
+                        .replace(/{{ai_content}}/g, aiContent)
+                        .replace(/{{service_slug}}/g, serviceSlug)
+                        .replace(/{{town_slug}}/g, townSlug);
                     // pageId is used for tracking and should not be injected directly into the HTML
                     // If it needs to be in the HTML, add a specific placeholder for it in the template
                     // For now, removing direct replacement here to avoid unintended exposure.
