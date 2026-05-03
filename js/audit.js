@@ -1,29 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Helper function for displaying messages (replicated from auth.html for consistency)
+    const displayMessage = (element, message, isError = true) => {
+        element.textContent = message;
+        element.style.color = isError ? 'red' : 'green';
+    };
+
+    // Helper function for managing button loading state
+    const setLoadingState = (button, isLoading, originalText) => {
+        button.disabled = isLoading;
+        if (isLoading) {
+            button.innerHTML = `${originalText}... <span class="spinner"></span>`;
+        } else {
+            button.textContent = originalText;
+        }
+    };
+
     const auditForm = document.getElementById('auditUrlForm');
     const auditUrlInput = document.getElementById('auditUrl');
+    const auditSubmitButton = auditForm.querySelector('button[type="submit"]'); // Get button
     const loadingDiv = document.getElementById('loading');
     const auditResultsDiv = document.getElementById('auditResults');
     const resultsContainer = document.getElementById('results-container');
     const errorMessageDiv = document.getElementById('form-error-message');
-        const auditUrlErrorSpan = document.getElementById('auditUrl-error');
+    const auditUrlErrorSpan = document.getElementById('auditUrl-error');
 
     // New elements for email capture
     const emailCaptureSection = document.getElementById('emailCaptureSection');
     const emailReportForm = document.getElementById('emailReportForm');
     const reportEmailInput = document.getElementById('reportEmail');
     const emailMessageDiv = document.getElementById('emailMessage');
+    const emailReportSubmitButton = emailReportForm.querySelector('button[type="submit"]'); // Get button
 
     let currentAuditResults = null; // Store current audit results
 
     auditForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const url = auditUrlInput.value;
-
-        if (!url) {
-            auditUrlErrorSpan.textContent = 'Please enter a valid URL.';
-            auditUrlErrorSpan.style.display = 'block';
-            return;
-        }
 
         // Reset UI
         loadingDiv.style.display = 'block';
@@ -34,6 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
         auditUrlErrorSpan.textContent = ''; // Clear URL specific error
         auditUrlErrorSpan.style.display = 'none'; // Hide URL specific error
         emailMessageDiv.textContent = ''; // Clear previous email message
+
+        if (!url) {
+            displayMessage(auditUrlErrorSpan, 'Please enter a valid URL.');
+            loadingDiv.style.display = 'none'; // Hide loading if validation fails
+            return;
+        }
+
+        setLoadingState(auditSubmitButton, true, 'Start Audit');
 
         try {
             const response = await fetch('/api/audit', {
@@ -56,10 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
             emailCaptureSection.style.display = 'block'; // Show email capture after results
 
         } catch (error) {
-            errorMessageDiv.textContent = error.message;
-            errorMessageDiv.style.display = 'block';
+            displayMessage(errorMessageDiv, error.message);
         } finally {
             loadingDiv.style.display = 'none';
+            setLoadingState(auditSubmitButton, false, 'Start Audit');
         }
     });
 
@@ -161,22 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = reportEmailInput.value;
 
+        setLoadingState(emailReportSubmitButton, true, 'Send Report'); // Set loading state for email button
+
         if (!email) {
-            emailMessageDiv.textContent = 'Please enter your email address.';
-            emailMessageDiv.className = 'email-message--error';
+            displayMessage(emailMessageDiv, 'Please enter your email address.');
+            setLoadingState(emailReportSubmitButton, false, 'Send Report'); // Reset button state
             return;
-            }
+        }
 
-            if (!currentAuditResults) {
-            emailMessageDiv.textContent = 'No audit results to send.';
-            emailMessageDiv.className = 'email-message--error';
+        if (!currentAuditResults) {
+            displayMessage(emailMessageDiv, 'No audit results to send.');
+            setLoadingState(emailReportSubmitButton, false, 'Send Report'); // Reset button state
             return;
-            }
+        }
 
-            emailMessageDiv.textContent = 'Sending report...';
-            emailMessageDiv.className = 'email-message--info';
-
-            try {
+        try {
             const response = await fetch('/api/send-audit-report', {
                 method: 'POST',
                 headers: {
@@ -190,12 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || `Failed to send report: ${response.statusText}`);
             }
 
-            emailMessageDiv.textContent = 'Report sent successfully!';
-            emailMessageDiv.className = 'email-message--success';
+            displayMessage(emailMessageDiv, 'Report sent successfully!', false); // false for success
             reportEmailInput.value = ''; // Clear email input
 
-            } catch (error) {
-            emailMessageDiv.textContent = error.message;
-            emailMessageDiv.className = 'email-message--error';
-            }    });
+        } catch (error) {
+            displayMessage(emailMessageDiv, error.message);
+        } finally {
+            setLoadingState(emailReportSubmitButton, false, 'Send Report'); // Reset button state
+        }
+    });
 });

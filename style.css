@@ -167,3 +167,28 @@
     max-height: 1000px; /* A large enough value to show the content */
     padding-top: 10px; /* Padding when active */
 }
+
+/* Error Message Styling */
+.error-message, .input-error-message {
+    color: #dc3545; /* A standard red color for errors */
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .footer-col {
+        flex: 1 1 30%;
+        min-width: 250px;
+    }
+}
+
+.nav-links li {
+    padding: 0.5rem 0;
+}
+
+.form-input:focus-visible {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Primary blue with some transparency */
+    outline: none; /* Remove default outline as we have custom styling */
+}

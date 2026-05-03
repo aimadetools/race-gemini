@@ -36,10 +36,18 @@ document.addEventListener('DOMContentLoaded', function() {
             displayError(inputElement, inputErrors[inputElement.id] || 'This field is required.');
             isValid = false;
         } 
-        // Additional validation for services/towns to prevent just whitespace
-        else if ((inputElement.id === 'services' || inputElement.id === 'towns') && inputElement.value.split(',').every(item => item.trim() === '')) {
-            displayError(inputElement, inputErrors[inputElement.id] || 'Please enter at least one value.');
-            isValid = false;
+        // Additional validation for services/towns to prevent just whitespace and trim items
+        else if (inputElement.id === 'services' || inputElement.id === 'towns') {
+            const items = inputElement.value.split(',').map(item => item.trim()).filter(item => item !== '');
+            inputElement.value = items.join(', '); // Update input with trimmed values
+
+            if (items.length === 0 && inputElement.hasAttribute('required')) {
+                displayError(inputElement, inputErrors[inputElement.id] || 'Please enter at least one value.');
+                isValid = false;
+            } else if (inputElement.value.split(',').some(item => item.trim() === '')) {
+                displayError(inputElement, `Please ensure all ${inputElement.id} are not empty.`);
+                isValid = false;
+            }
         }
         // Basic zip code validation (e.g., 5 digits)
         else if (inputElement.id === 'zipCode') {

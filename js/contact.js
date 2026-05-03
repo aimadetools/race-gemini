@@ -1,46 +1,48 @@
-document.getElementById('contact-form').addEventListener('submit', async function (event) {
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded",()=>{
+    // Helper function for displaying messages (replicated from auth.html for consistency)
+    const displayMessage = (element, message, isError = true) => {
+        element.textContent = message;
+        element.style.color = isError ? 'red' : 'green';
+    };
 
-    const form = event.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const contactForm=document.getElementById("contact-form");
+    const messageDiv=document.getElementById("message"); // Using 'message' ID for consistency
 
-    const formMessageDiv = document.getElementById('form-message');
-    formMessageDiv.textContent = ''; // Clear previous messages
-    formMessageDiv.classList.remove('success-message'); // Remove success class if present
-    formMessageDiv.classList.remove('error-message'); // Remove error class if present
+    if(contactForm){
+        contactForm.addEventListener("submit",async function(event){
+            event.preventDefault();
+            const name=document.getElementById("name").value;
+            const email=document.getElementById("email").value;
+            const message=document.getElementById("message").value; // Assuming textarea has ID 'message'
 
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.disabled = true;
-    const originalButtonText = submitButton.innerHTML;
-    submitButton.innerHTML = 'Sending... <span class="spinner"></span>';
+            const submitButton=contactForm.querySelector('button[type="submit"]');
+            submitButton.disabled=true;
+            submitButton.innerHTML='Sending... <span class="spinner"></span>';
+            
+            messageDiv.textContent=""; // Clear previous messages
 
-    try {
-        const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            try{
+                const response=await fetch("/api/contact",{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({name,email,message})
+                });
+                const data=await response.json();
+                submitButton.disabled=false;
+                submitButton.innerHTML="Send Message";
+
+                if(response.ok){
+                    displayMessage(messageDiv, "Message sent successfully! We'll get back to you soon.", false); // false for success
+                    contactForm.reset();
+                } else {
+                    displayMessage(messageDiv, data.message || 'Failed to send message.');
+                }
+            } catch(error) {
+                console.error("Error:",error);
+                submitButton.disabled=false;
+                submitButton.innerHTML="Send Message";
+                displayMessage(messageDiv, "An unexpected error occurred. Please try again later.");
+            }
         });
-
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalButtonText;
-
-        if (response.ok) {
-            form.reset();
-            formMessageDiv.textContent = 'Your message has been sent successfully!';
-            formMessageDiv.classList.add('success-message'); // Add success class for styling
-        } else {
-            const error = await response.json();
-            formMessageDiv.textContent = `Error: ${error.message}`;
-            formMessageDiv.classList.add('error-message'); // Add error class for styling
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalButtonText;
-        formMessageDiv.textContent = 'An unexpected error occurred. Please try again later.';
-        formMessageDiv.classList.add('error-message');
     }
 });
