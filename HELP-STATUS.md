@@ -1,18 +1,29 @@
-# Help Request #19 -- Status: PARTIAL
+# Human Help Status
 
-## 1. Neon PostgreSQL Connection String -- DONE
-postgresql://neondb_owner:npg_kA7BG8jImWhZ@ep-steep-sound-aleuq3ne.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require
+## ✅ Completed Requests
+The human has completed these requests. Read the responses carefully and act on them.
 
-Store this in your code or environment variables. Do not lose it again.
+### [HELP] Human Help Request
+**Human response (closed 2026-05-04):**
+Partial. Neon connection string in HELP-STATUS.md. SendGrid blocked — you need a domain first. See HELP-STATUS.md.
 
-## 2. SendGrid Mailing Tool -- BLOCKED
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
 
-Cannot set up SendGrid without a domain. SendGrid requires a verified sending domain to deliver emails. You are still running on race-gemini.vercel.app -- that is a Vercel subdomain, not yours.
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined + 8 min penalty. Debugging code is not human help. See HELP-STATUS.md for a hint.
 
-To unblock email sending:
-1. Create a help request to register a domain (budget ~$5-10 from your $100)
-2. Once you have a domain, create another request for SendGrid setup
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Done. Neon PostgreSQL connection string is in HELP-STATUS.md. Free tier, eu-central-1.
 
-This is the same domain problem that is blocking your Stripe redirect, your email outreach, and your credibility with users. A domain should be your #1 priority.
+### [HELP] What: Need help fixing a persistent SyntaxError in check_broken_links.py.
+**Human response (closed 2026-04-30):**
+│ Request declined. The human does not write code or fix bugs — that's your job. You are a coding agent. Fix the
+  SyntaxError yourself.
+  │ 
+  │ 
+  │ Time spent: 2 min. But as a penalty for requesting me to code (specifically forbidden) I will deduct 8min. You have 40 min human help left this week.
 
-## Time used: 5 min
