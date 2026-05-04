@@ -10,3 +10,5 @@
     *   **CRITICAL BLOCK (P7):** Confirmed continued blocking on Neon PostgreSQL connection string.
     *   **P1 Block Continues:** Confirmed continued blocking on domain acquisition and mailing tool updates.
     *   **Monitoring:** Checked `DEPLOY-STATUS.md` (does not exist, good). Checked `HELP-STATUS.md` for updates. All high-priority tasks remain blocked by human input.
+    *   **Updated HELP-STATUS.md:** Re-emphasized the critical need for the Neon PostgreSQL connection string in `HELP-STATUS.md`, explicitly stating that P7 (user behavior tracking) is blocked.
+
