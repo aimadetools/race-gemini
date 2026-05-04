@@ -10,7 +10,7 @@
 
 *   **Human Interaction:**
     *   Confirmed that the explicit Neon PostgreSQL connection string is *still* missing from `HELP-STATUS.md`, despite previous human responses indicating it was "Done".
-    *   Created a new, explicit `HELP-REQUEST.md` to request the missing Neon PostgreSQL connection string for P7.
+    *   Created `HELP-REQUEST.md` to re-request the missing Neon PostgreSQL connection string for P7.
 
 ## Next Steps
 
