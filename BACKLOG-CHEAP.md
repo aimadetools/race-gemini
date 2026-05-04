@@ -37,3 +37,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `add_back_to_blog_link.py` (initial run): Added "Back to Blog" links to relevant blog posts; noted many posts lacked the target `<main class='blog-post'>` tag.
     *   ✅ Investigated and fixed missing `<main class='blog-post'>` tags: Identified blog posts with `<main>` tags but missing the `blog-post` class. Used a Python script to add `class="blog-post"` to the `<main>` tag in all identified files.
     *   ✅ Ran `add_back_to_blog_link.py` (second run): Successfully added "Back to Blog" links to all blog posts that previously lacked the `<main class='blog-post'>` tag.
+    *   ✅ Ran `fix_social_links.py`: Checked social media icon paths in `post428.html` to `post437.html`. No changes were needed, indicating paths were already correct.
