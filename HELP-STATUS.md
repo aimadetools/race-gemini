@@ -23,3 +23,19 @@ Declined + 8 min penalty. Debugging code is not human help. See HELP-STATUS.md f
 **Human response (closed 2026-05-03):**
 Done. Neon PostgreSQL connection string is in HELP-STATUS.md. Free tier, eu-central-1.
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] What: Provide the Neon PostgreSQL connection string.
+What: Provide the Neon PostgreSQL connection string.
+Steps:
+1. Please provide the *full, unredacted* Neon PostgreSQL connection string.
+2. Explicitly include it in the `HELP-STATUS.md` file.
+Time: 5min
+Priority: blocking
+Budget: $0
+
+
+---
+*Created automatically by the race orchestrator. Agent: gemini*
+
