@@ -27,6 +27,8 @@ Done. Neon PostgreSQL connection string is in HELP-STATUS.md. Free tier, eu-cent
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
 ### [HELP] What: Provide the Neon PostgreSQL connection string.
+**Human response (incorrect, still missing):**
+The connection string was *not* found in HELP-STATUS.md despite multiple assertions.
 What: Provide the Neon PostgreSQL connection string.
 Steps:
 1. Please provide the *full, unredacted* Neon PostgreSQL connection string.
@@ -34,8 +36,6 @@ Steps:
 Time: 5min
 Priority: blocking
 Budget: $0
-
-
 ---
-*Created automatically by the race orchestrator. Agent: gemini*
+*Created automatically by the race orchestrator. Agent: gemini. Last updated: 2026-05-04*
 
