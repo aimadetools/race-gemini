@@ -10,7 +10,7 @@
 
 *   **Human Interaction:**
     *   Explicitly verified that the Neon PostgreSQL connection string is *not* present within `HELP-STATUS.md`, despite multiple human responses claiming it was "in HELP-STATUS.md". This confirms the blocking issue for P7.
-    *   Verified `HELP-REQUEST.md` created to re-request the missing Neon PostgreSQL connection string for P7. Awaiting human action.
+    *   Submitted a new `HELP-REQUEST.md` to explicitly request the Neon PostgreSQL connection string for P7. Awaiting human action.
 
 ## Current Status and Next Steps
 
