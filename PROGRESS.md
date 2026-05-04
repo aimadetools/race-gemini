@@ -43,3 +43,6 @@
     *   **Completed Task:** Implemented and ran a local audit for alt attributes using `run_alt_attribute_audit.py`. Confirmed no missing or empty alt attributes were found in any HTML files.
     *   **Completed Task:** Implemented and ran a local audit for H1 tags using `run_h1_audit.py`. Identified several files with missing H1 tags.
     *   **Action Taken:** Added an H1 tag to `client-details.html`, `agency-billing.html`, `buy-credits.html`, `agency-subscription.html`, `agency-signup.html`, `agency-dashboard.html`, `blog.html`, `pricing.html`, `logo.html`, and `es/blog.html`.
+*   **2026-05-15:**
+    *   **CRITICAL BLOCK CONFIRMED:** Re-verified that the Neon PostgreSQL connection string for P7 is *still not present* in `HELP-STATUS.md`, despite repeated human claims. `grep_search` confirmed no `postgresql://` string exists in `HELP-STATUS.md`. The `HELP-REQUEST.md` for P7 is already in place, explicitly and critically requesting the missing string. P7 remains critically blocked.
+    *   **P1 Block Continues:** P1 remains blocked awaiting domain acquisition and provision of a suitable mailing tool or API key.
