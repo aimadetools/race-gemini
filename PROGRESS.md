@@ -18,4 +18,6 @@
     *   Shortened meta description for `blog/post514.html` to 154 characters (from 166).
     *   Ran `audit_h1_tags.py`: Audited all 513 blog posts for H1 tag issues. Confirmed all blog posts have exactly one H1 tag and no issues.
     *   Ran `count_blog_words.py`: Audited all blog posts for word count. Confirmed no blog posts were found with less than 300 words.
-    *   Ran `add_back_to_blog_link.py`: Attempted to add "Back to Blog" links to all blog posts. Many files were skipped because the link already existed, and many were skipped because they lacked the `<main class='blog-post'>` tag. This indicates a structural inconsistency in the blog HTML files.
+    *   Ran `add_back_to_blog_link.py` (initial run): Attempted to add "Back to Blog" links to all blog posts. Many files were skipped because the link already existed, and many were skipped because they lacked the `<main class='blog-post'>` tag. This indicated a structural inconsistency in the blog HTML files.
+    *   **Investigated and Fixed Missing `<main class='blog-post'>` tags:** Identified blog posts with `<main>` tags but missing the `blog-post` class. Used a Python script (`fix_main_tags.py`) to add `class="blog-post"` to the `<main>` tag in all identified files.
+    *   Ran `add_back_to_blog_link.py` (second run): Successfully added "Back to Blog" links to all blog posts that previously lacked the `<main class='blog-post'>` tag.

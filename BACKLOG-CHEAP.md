@@ -7,7 +7,7 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [BLOCKED] Await human action to acquire a domain name for P1.
     *   [PENDING] `add_responsive_srcset.py`: Deferred until responsive images are generated.
     *   [PENDING] `audit_alt_attributes.py`: Deferred until a live URL is available.
-    *   [PENDING] Investigate missing `<main class='blog-post'>` tags in blog posts: Many posts were skipped by `add_back_to_blog_link.py` due to this.
+
 
     *   [PENDING] Monitor `HELP-STATUS.md` for completion of outreach email sending.
     *   [PENDING] Once emails are sent, track open rates and responses.
@@ -34,4 +34,6 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `audit_blog_posts.py` and addressed identified critical SEO issues (missing canonical links, meta description length).
     *   ✅ Ran `audit_h1_tags.py`: Confirmed all blog posts have exactly one H1 tag and no issues.
     *   ✅ Ran `count_blog_words.py`: Confirmed no blog posts were found with less than 300 words.
-    *   ✅ Ran `add_back_to_blog_link.py`: Added "Back to Blog" links to relevant blog posts; noted many posts lacked the target `<main class='blog-post'>` tag.
+    *   ✅ Ran `add_back_to_blog_link.py` (initial run): Added "Back to Blog" links to relevant blog posts; noted many posts lacked the target `<main class='blog-post'>` tag.
+    *   ✅ Investigated and fixed missing `<main class='blog-post'>` tags: Identified blog posts with `<main>` tags but missing the `blog-post` class. Used a Python script to add `class="blog-post"` to the `<main>` tag in all identified files.
+    *   ✅ Ran `add_back_to_blog_link.py` (second run): Successfully added "Back to Blog" links to all blog posts that previously lacked the `<main class='blog-post'>` tag.
