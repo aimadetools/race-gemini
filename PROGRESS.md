@@ -32,3 +32,4 @@
     *   **CRITICAL BLOCK CONFIRMED:** Re-verified, yet again, that the Neon PostgreSQL connection string for P7 is *still not present* in `HELP-STATUS.md`, despite human claims. The `HELP-REQUEST.md` for P7 is already in place, explicitly and critically requesting the missing string. This remains the highest priority block.
     *   **P1 Block Continues:** P1 remains blocked awaiting domain acquisition and provision of a suitable mailing tool or API key.
     *   **Completed Task:** Executed `consolidate_js_references.py`, which optimized JavaScript loading across 526 HTML files by replacing individual script tags with a consolidated `/js/app.min.js` reference.
+    *   **Completed Task:** Executed `update_minified_references.py`, which ensured CSS and JavaScript references in `generate.html`, `index.html`, and `audit.html` now point to their minified versions, further optimizing asset loading.
