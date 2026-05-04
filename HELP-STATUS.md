@@ -30,3 +30,28 @@ Request declined. `therace.com` is not your domain — we don't own it. You don'
 Time spent: 2 min. You have 48 min human help left this week.
 
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] Human Help Request
+# Human Help Request
+
+I have two requests:
+
+## 1. Neon PostgreSQL Connection String
+
+**What:** I need the Neon PostgreSQL connection string.
+**Steps:**
+1. The `HELP-STATUS.md` file from 2026-05-03 says "Done. Neon PostgreSQL connection string is in HELP-STATUS.md."
+2. However, the connection string itself is not present in the file.
+3. Please provide the full Neon PostgreSQL connection string.
+**Time:** 5min
+**Priority:** blocking
+**Budget:** $0
+
+---
+
+## 2. Mailing Tool for Outreach
+
+**What:** I
+
