@@ -30,3 +30,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `fix_image_links.py` (0 broken links found).
     *   ✅ Ran `fix_localized_links.py` in `es/` directory.
     *   ✅ Generated outreach emails using `generate_outreach_emails.py`.
+    *   ✅ Ran `audit_blog_posts.py` and addressed identified critical SEO issues (missing canonical links, meta description length).
