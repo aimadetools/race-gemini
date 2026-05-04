@@ -27,3 +27,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `fix_blog_descriptions.py`, which aimed to populate missing blog descriptions in `blog.html`. The script reported no changes were needed, indicating blog descriptions are already complete or correctly structured.
     *   ✅ Ran `fix_blog_image_paths.py`, which standardized image paths within numerous blog HTML files to ensure consistency (e.g., `/images/blog/` + filename).
     *   ✅ Ran `fix_blog_meta_tags.py`, which processed 513 blog HTML files and fixed 3 by truncating overly long title tags for SEO optimization.
+    *   ✅ Ran `fix_image_links.py`, which aimed to fix broken image links by checking for alternative WEBP/JPG formats. The script found 0 links to fix, indicating existing image links are valid.
