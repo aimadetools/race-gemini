@@ -6,6 +6,7 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [PENDING] **P7 Dependency:** **CRITICAL: Neon PostgreSQL database connection string is *STILL* missing from HELP-STATUS.md, despite human claims.** This critically blocks "P7: Create a system to track and analyze user behavior on the website". The `HELP-REQUEST.md` has been re-submitted, explicitly requesting the missing string.
     *   [PENDING] Await human action to acquire a domain name.
     *   [PENDING] `add_responsive_srcset.py`: This script relies on responsive image files (e.g., `image-480w.webp`, `image-800w.webp`) being present. Since `add_responsive_images.py` found no suitable images to convert/generate, these files likely do not exist. Running this script now would create broken image links. Deferring until responsive images are generated.
+    *   [PENDING] `audit_alt_attributes.py`: This script requires a live URL to audit, and I do not have a local web server running for the project's static HTML files. Deferring until a live URL is available.
     *   [ ] Monitor `HELP-STATUS.md` for completion of outreach email sending.
     *   [ ] Once emails are sent, track open rates and responses.
     *   [ ] Analyze the results of the outreach campaign to identify successful strategies and areas for improvement.
