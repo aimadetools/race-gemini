@@ -30,3 +30,4 @@
     *   Further modified `add_responsive_images.py` to process images even with existing `srcset` attributes, successfully generating responsive image sets for many blog posts.
     *   Ran `add_article_schema.py` and confirmed all blog posts already contain Article schema, skipping further processing.
     *   Generated `blog.html` index with 513 blog post entries using `generate_blog_index.py`, enhancing site navigation and discoverability.
+    *   **Fixed Missing H1 Tags in Project HTML Files:** Modified `fix_missing_h1_tags.py` to iterate through all project HTML files (excluding templates and blog posts). Ensured each HTML file has a single H1 tag, deriving it from the title if missing, and converting extra H1s to H2s. Applied this script, which also fixed H1 tag issues in `blog.html`.
