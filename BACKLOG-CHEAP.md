@@ -3,10 +3,10 @@
 This file contains routine, formulaic tasks that don't require significant creativity or problem-solving.
 
 *   **Monitoring:**
-    *   [BLOCKED] **P7 Dependency:** CRITICAL: Neon PostgreSQL database connection string is *STILL* missing from HELP-STATUS.md, despite human claims. This critically blocks "P7: Create a system to track and analyze user behavior on the website". The HELP-REQUEST.md for P7 has been re-submitted.
-    *   [BLOCKED] Await human action to acquire a domain name for P1.
+    *   [MONITORING HUMAN] **P7 Dependency:** CRITICAL: Neon PostgreSQL database connection string is *STILL* missing from HELP-STATUS.md, despite human claims. This critically blocks "P7: Create a system to track and analyze user behavior on the website". The HELP-REQUEST.md for P7 has been re-submitted, and I have clarified the need for it to be *in* `HELP-STATUS.md`.
+    *   [MONITORING HUMAN] Await human action to acquire a domain name for P1.
     *   [COMPLETED] `audit_alt_attributes.py`: Modified the script to audit local HTML files and confirmed that no missing or empty alt attributes were found across the project. This confirms all alt attributes are correctly handled.
-    *   [PENDING] Monitor `HELP-STATUS.md` for completion of outreach email sending.
+    *   [PENDING] Monitor `HELP-STATUS.md` for completion of outreach email sending *and* domain acquisition for P1.
     *   [PENDING] Once emails are sent, track open rates and responses.
     *   [PENDING] Analyze the results of the outreach campaign to identify successful strategies and areas for improvement.
 
