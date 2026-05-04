@@ -17,6 +17,7 @@
    {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localleads.pro/images/logo.png","url": "https://www.localleads.pro","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localleads.pro/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com/LocalLeadsApp","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
   </script>
 <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+  <link href="style_scroll_to_top.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="mobile-nav-overlay">
@@ -25,8 +26,11 @@
 <nav>
 <div class="container">
 <a class="logo" href="/">
-<div class="pin"></div>
-<span>LocalLeads</span>
+<div class="pin">
+</div>
+<span>
+       LocalLeads
+      </span>
 </a>
 <div class="hamburger-menu" id="hamburger-icon">
 <div class="bar">
@@ -105,32 +109,45 @@
        Website URL:
       </label>
 <input class="form-input" id="auditUrl" name="url" placeholder="https://example.com" required="" type="url"/>
-<span class="input-error-message" id="auditUrl-error"></span>
+<span class="input-error-message" id="auditUrl-error">
+</span>
 <button class="button" data-i18n-key="audit_submit_button" type="submit">
        Start Audit
       </button>
 </form>
 <div id="loading" style="display:none; text-align: center; padding: 2rem;">
-<p>Auditing your site... This may take a moment.</p>
-<div class="spinner"></div>
+<p>
+       Auditing your site... This may take a moment.
+      </p>
+<div class="spinner">
+</div>
 </div>
 <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
 </div>
 <div id="auditResults" style="display:none;">
 <h2 data-i18n-key="audit_results_title">
-      Audit Results
-     </h2>
-<div id="results-container"></div>
+       Audit Results
+      </h2>
+<div id="results-container">
+</div>
 <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
-<h3>Receive a Detailed Report</h3>
-<p>Enter your email to get a full audit report sent to your inbox.</p>
+<h3>
+        Receive a Detailed Report
+       </h3>
+<p>
+        Enter your email to get a full audit report sent to your inbox.
+       </p>
 <form id="emailReportForm">
 <input class="form-input" id="reportEmail" placeholder="your@example.com" required="" type="email"/>
-<button class="button" type="submit">Send Report</button>
-<div id="emailMessage" style="margin-top: 1rem;"></div>
+<button class="button" type="submit">
+         Send Report
+        </button>
+<div id="emailMessage" style="margin-top: 1rem;">
+</div>
 </form>
 </div>
-</div> </div>
+</div>
+</div>
 </section>
 </main>
 <div class="sticky-cta-bar">
@@ -156,13 +173,16 @@
       </p>
 <div class="social-icons">
 <a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
-<i class="fab fa-facebook-f"></i>
+<i class="fab fa-facebook-f">
+</i>
 </a>
 <a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
-<i class="fab fa-linkedin-in"></i>
+<i class="fab fa-linkedin-in">
+</i>
 </a>
 <a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
-<i class="fab fa-twitter"></i>
+<i class="fab fa-twitter">
+</i>
 </a>
 </div>
 </div>
@@ -170,7 +190,38 @@
 <h3>
        Quick Links
       </h3>
-<ul><li><a href="about.html">About Us</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Contact</a></li><li><a href="faq.html">FAQ</a></li><li><a href="referral-program.html">Referral Program</a></li></ul>
+<ul>
+<li>
+<a href="about.html">
+         About Us
+        </a>
+</li>
+<li>
+<a href="pricing.html">
+         Pricing
+        </a>
+</li>
+<li>
+<a href="blog.html">
+         Blog
+        </a>
+</li>
+<li>
+<a href="contact.html">
+         Contact
+        </a>
+</li>
+<li>
+<a href="faq.html">
+         FAQ
+        </a>
+</li>
+<li>
+<a href="referral-program.html">
+         Referral Program
+        </a>
+</li>
+</ul>
 </div>
 <div class="footer-col">
 <h3>
@@ -202,13 +253,14 @@
 </div>
 </div>
 </footer>
-
-<script src="/js/audit.js">
+<script src="/js/audit.min.js">
 </script>
-
 <button id="scrollToTopBtn" title="Go to top">
 <i class="fas fa-arrow-up">
 </i>
 </button>
-<script src="/js/app.min.js"></script><script src="/js/analytics.js"></script></body>
+<script src="/js/app.min.js">
+</script>
+  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+</body>
 </html>

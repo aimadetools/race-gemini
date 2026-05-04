@@ -17,6 +17,7 @@
 <script type="application/ld+json">
    {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localleads.pro/images/logo.png","url": "https://www.localleads.pro","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localleads.pro/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com/LocalLeadsApp","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
   </script>
+  <link href="style_scroll_to_top.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="mobile-nav-overlay">
@@ -24,7 +25,13 @@
 <header>
 <nav>
 <div class="container">
-<a class="logo" href="/"><div class="pin"></div><span>LocalLeads</span></a>
+<a class="logo" href="/">
+<div class="pin">
+</div>
+<span>
+       LocalLeads
+      </span>
+</a>
 <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
 <div class="bar">
 </div>
@@ -184,7 +191,8 @@
 </i>
 </div>
 <input autocomplete="postal-code" class="form-input" id="zipCode" name="zipCode" placeholder="e.g., '90210'" required="" type="text"/>
-<span class="input-error-message" id="zipCode-error"></span>
+<span class="input-error-message" id="zipCode-error">
+</span>
 <div class="tooltip-container">
 <label data-i18n-key="generate_label_services" for="services">
        Services (comma-separated):
@@ -298,13 +306,16 @@
       </p>
 <div class="social-icons">
 <a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
-<i class="fab fa-facebook-f"></i>
+<i class="fab fa-facebook-f">
+</i>
 </a>
 <a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
-<i class="fab fa-linkedin-in"></i>
+<i class="fab fa-linkedin-in">
+</i>
 </a>
 <a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
-<i class="fab fa-twitter"></i>
+<i class="fab fa-twitter">
+</i>
 </a>
 </div>
 </div>
@@ -312,7 +323,38 @@
 <h3>
        Quick Links
       </h3>
-<ul><li><a href="about.html">About Us</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Contact</a></li><li><a href="faq.html">FAQ</a></li><li><a href="referral-program.html">Referral Program</a></li></ul>
+<ul>
+<li>
+<a href="about.html">
+         About Us
+        </a>
+</li>
+<li>
+<a href="pricing.html">
+         Pricing
+        </a>
+</li>
+<li>
+<a href="blog.html">
+         Blog
+        </a>
+</li>
+<li>
+<a href="contact.html">
+         Contact
+        </a>
+</li>
+<li>
+<a href="faq.html">
+         FAQ
+        </a>
+</li>
+<li>
+<a href="referral-program.html">
+         Referral Program
+        </a>
+</li>
+</ul>
 </div>
 <div class="footer-col">
 <h3>
@@ -344,10 +386,8 @@
 </div>
 </div>
 </footer>
-
-<script src="/js/generate-form-validation.js">
+<script src="/js/generate-form-validation.min.js">
 </script>
-
 <script>
    (async function() {
 const variant = await ABTest.init('ai-content-test');
@@ -356,5 +396,8 @@ document.getElementById('enable-ai-group').style.display = 'none';
 }
 })();
   </script>
-<script src="/js/app.min.js"></script><script src="/js/analytics.js"></script></body>
+<script src="/js/app.min.js">
+</script>
+  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+</body>
 </html>
