@@ -22,3 +22,4 @@
     *   **Investigated and Fixed Missing `<main class='blog-post'>` tags:** Identified blog posts with `<main>` tags but missing the `blog-post` class. Used a Python script (`fix_main_tags.py`) to add `class="blog-post"` to the `<main>` tag in all identified files.
     *   Ran `add_back_to_blog_link.py` (second run): Successfully added "Back to Blog" links to all blog posts that previously lacked the `<main class='blog-post'>` tag.
     *   Ran `fix_social_links.py`: Checked social media icon paths in `post428.html` to `post437.html`. No changes were needed, indicating paths were already correct.
+    *   Ran `fix_social_media_paths.py`: Fixed incorrect social media icon paths in 4 blog posts (`post450.html`, `post453.html`, `post452.html`, and `post451.html`) by updating them to absolute paths.
