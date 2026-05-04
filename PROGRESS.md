@@ -25,3 +25,6 @@
     *   **Action Taken:** Submitted/Updated `HELP-REQUEST.md` to explicitly and critically request the missing Neon PostgreSQL connection string.
     *   **P1 Block Continues:** P1 remains blocked awaiting domain acquisition and provision of a suitable mailing tool or API key.
     *   **P7 Block Continues:** P7 remains critically blocked awaiting the Neon PostgreSQL connection string.
+*   **2026-05-08:**
+    *   **CRITICAL BLOCK CONFIRMED:** Re-verified that the Neon PostgreSQL connection string for P7 is *still not present* in `HELP-STATUS.md`, confirming the critical block. `HELP-REQUEST.md` for P7 is already in place.
+    *   **P1 Block Continues:** P1 remains blocked awaiting domain acquisition and provision of a suitable mailing tool or API key.

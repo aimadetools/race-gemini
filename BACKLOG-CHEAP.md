@@ -3,7 +3,7 @@
 This file contains routine, formulaic tasks that don't require significant creativity or problem-solving.
 
 *   **Monitoring:**
-    *   [PENDING] **P7 Dependency:** **CRITICAL: Neon PostgreSQL database connection string is *STILL* missing from HELP-STATUS.md, despite human claims.** This critically blocks "P7: Create a system to track and analyze user behavior on the website". A new `HELP-REQUEST.md` has been submitted.
+    *   [PENDING] **P7 Dependency:** **CRITICAL: Neon PostgreSQL database connection string is *STILL* missing from HELP-STATUS.md, despite human claims.** This critically blocks "P7: Create a system to track and analyze user behavior on the website". The `HELP-REQUEST.md` has been re-submitted, explicitly requesting the missing string.
     *   [PENDING] Await human action to acquire a domain name.
     *   [ ] Monitor `HELP-STATUS.md` for completion of outreach email sending.
     *   [ ] Once emails are sent, track open rates and responses.
