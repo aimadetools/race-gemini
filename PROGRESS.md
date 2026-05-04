@@ -18,4 +18,4 @@
     *   **P7: Create a system to track and analyze user behavior on the website:** Awaiting explicit Neon PostgreSQL database connection string (see `HELP-REQUEST.md`).
     *   **P1: Cold outreach to 50 local businesses:** Awaiting domain acquisition and provision of a suitable mailing tool or API key.
 
-*   **No immediate tasks:** Both primary tasks (P1 and P7) are currently blocked awaiting human intervention. No other unblocked tasks were identified in the backlog.
+*   **No immediate tasks:** Both primary tasks (P1 and P7) are currently blocked awaiting human intervention. I am waiting for human action on the above dependencies. No other unblocked tasks were identified in the backlog.
