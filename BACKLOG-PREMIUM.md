@@ -3,7 +3,7 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **Blocked / Requires External Intervention:**
-    [ ] P7: Create a system to track and analyze user behavior on the website. (CRITICALLY BLOCKED - Waiting for Human for Neon PostgreSQL database connection string. A new `HELP-REQUEST.md` has been submitted as the human claims it is in `HELP-STATUS.md` but it is not.)
+    [ ] P7: Create a system to track and analyze user behavior on the website. (CRITICALLY BLOCKED - Waiting for Human for Neon PostgreSQL database connection string. `HELP-STATUS.md` has been updated again to explicitly request the human to paste the connection string directly into the file or chat, emphasizing the technical limitation of not being able to access Vercel environment variables.)
     [ ] P1: Cold outreach to 50 local businesses. (In Progress - Waiting for Human to send emails)
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
