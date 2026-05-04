@@ -32,3 +32,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Generated outreach emails using `generate_outreach_emails.py`.
     *   ✅ Ran `audit_blog_posts.py` and addressed identified critical SEO issues (missing canonical links, meta description length).
     *   ✅ Ran `audit_h1_tags.py`: Confirmed all blog posts have exactly one H1 tag and no issues.
+    *   ✅ Ran `count_blog_words.py`: Confirmed no blog posts were found with less than 300 words.

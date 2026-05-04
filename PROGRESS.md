@@ -17,3 +17,4 @@
     *   Shortened meta description for `blog/post513.html` to 154 characters (from 169).
     *   Shortened meta description for `blog/post514.html` to 154 characters (from 166).
     *   Ran `audit_h1_tags.py`: Audited all 513 blog posts for H1 tag issues. Confirmed all blog posts have exactly one H1 tag and no issues.
+    *   Ran `count_blog_words.py`: Audited all blog posts for word count. Confirmed no blog posts were found with less than 300 words.
