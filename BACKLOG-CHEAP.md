@@ -15,3 +15,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `consolidate_js_references.py` to optimize JavaScript loading by replacing individual script tags with a single reference to `app.min.js` across 526 HTML files.
     *   ✅ Ran `update_minified_references.py` to ensure CSS and JavaScript references point to their minified versions in HTML files, modifying `generate.html`, `index.html`, and `audit.html`.
     *   ✅ Ran `add_lazy_loading.py` to add `loading="lazy"` to `<img>` tags in HTML files, confirming existing lazy loading optimization or minimal image usage.
+    *   ✅ Ran `add_missing_alt_attributes.py` to add missing alt attributes to `<img>` tags, confirming that existing HTML files already have alt attributes or minimal images.
