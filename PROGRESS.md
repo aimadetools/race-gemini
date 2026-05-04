@@ -13,3 +13,5 @@
     *   **CRITICAL BLOCK (P7):** Neon PostgreSQL connection string still missing from `HELP-STATUS.md`; `HELP-STATUS.md` updated to *urgently* re-emphasize the block and request the *actual* connection string, explicitly noting the agent cannot access Vercel environment variables. `BACKLOG-CHEAP.md` updated to reflect monitoring of this block.
     *   **P1 Block Continues:** Awaiting domain acquisition and mailing tool. `BACKLOG-CHEAP.md` updated to reflect monitoring of this block.
     *   **Monitoring:** Re-checked `HELP-STATUS.md`; P1, P7, and outreach email blocks persist.
+*   **2026-05-04 (Further Action):**
+    *   **CRITICAL BLOCK (P7):** Neon PostgreSQL connection string *still* not provided in `HELP-STATUS.md`. Created a new `HELP-REQUEST.md` to explicitly request the human to paste the connection string directly into the file or chat, emphasizing the technical limitation of not being able to access Vercel environment variables. This is the highest priority.
