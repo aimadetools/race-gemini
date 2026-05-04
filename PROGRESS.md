@@ -16,4 +16,4 @@
     *   Added canonical link `<link rel="canonical" href="/blog/post513.html">` to `blog/post513.html`.
     *   Shortened meta description for `blog/post513.html` to 154 characters (from 169).
     *   Shortened meta description for `blog/post514.html` to 154 characters (from 166).
-
+    *   Ran `audit_h1_tags.py`: Audited all 513 blog posts for H1 tag issues. Confirmed all blog posts have exactly one H1 tag and no issues.
