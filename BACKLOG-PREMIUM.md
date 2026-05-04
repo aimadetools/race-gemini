@@ -2,12 +2,9 @@
 
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
-*   **Next Up:**
-
 *   **Blocked / Requires External Intervention:**
     [ ] P7: Create a system to track and analyze user behavior on the website. (In Progress - Waiting for Human for Neon database credentials)
     [ ] P1: Cold outreach to 50 local businesses. (In Progress - Waiting for Human to send emails)
-    *   [x] Expand API Test Coverage: Refactored existing API tests and added comprehensive coverage for various endpoints including `signup`, `login`, `reset-password`, `add-client`, `forgot-password-request`, `agency-login`, `agency-dashboard`, `dashboard`, and `client-details`. Implemented global KV mock. (Completed)
     *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
     *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
     *   **Set up Analytics:** Requires human intervention for token generation.
@@ -19,5 +16,6 @@ This file contains tasks that are more complex, require external tools or human 
     *   **C6: Clean up unused CSS classes from `style.css`**: Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
 
 *   **Completed:**
+    *   ✅ **Expand API Test Coverage**: Refactored existing API tests and added comprehensive coverage for various endpoints including `signup`, `login`, `reset-password`, `add-client`, `forgot-password-request`, `agency-login`, `agency-dashboard`, `dashboard`, and `client-details`. Implemented global KV mock.
     *   Integrated payment flows, fixed broken links, optimized external link checking, advanced user acquisition, and generated initial sample local SEO pages for outreach.
     *   P8: Built Free Local SEO Audit tool to capture leads.

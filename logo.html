@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalLeads Logo</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a73e8;
+            text-align: center;
+        }
+        .tagline {
+            font-size: 18px;
+            font-weight: 400;
+            color: #5f6368;
+            margin-top: 10px;
+        }
+        .pin {
+            width: 30px;
+            height: 30px;
+            background-color: #1a73e8;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .pin::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="logo-container">
+        <div class="pin"></div>
+        <div>
+            <div class="logo">LocalLeads</div>
+            <div class="tagline">Get found in every town.</div>
+        </div>
+    </div>
+</body>
+</html>
