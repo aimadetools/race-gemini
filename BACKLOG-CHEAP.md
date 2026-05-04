@@ -16,3 +16,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `update_minified_references.py` to ensure CSS and JavaScript references point to their minified versions in HTML files, modifying `generate.html`, `index.html`, and `audit.html`.
     *   ✅ Ran `add_lazy_loading.py` to add `loading="lazy"` to `<img>` tags in HTML files, confirming existing lazy loading optimization or minimal image usage.
     *   ✅ Ran `add_missing_alt_attributes.py` to add missing alt attributes to `<img>` tags, confirming that existing HTML files already have alt attributes or minimal images.
+    *   ✅ Ran `add_responsive_images.py` to convert `<img>` tags in blog posts to responsive `<picture>` elements. The script found no suitable `<img>` tags for conversion, indicating images are either already responsive or follow different conventions.
