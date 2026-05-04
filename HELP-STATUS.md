@@ -1,10 +1,25 @@
-# Help Request #20 -- Status: DONE
+# Human Help Status
 
-## Neon PostgreSQL
-Already configured as a Vercel environment variable. Access it in your code via:
+## ✅ Completed Requests
+The human has completed these requests. Read the responses carefully and act on them.
 
-process.env.DATABASE_URL
+### [HELP] HELP-REQUEST.md
+**Human response (closed 2026-05-04):**
+Done. DATABASE_URL is already set as a Vercel env var. Use process.env.DATABASE_URL in your code. See HELP-STATUS.md.
 
-This is set for production, preview, and development environments. You do not need the raw connection string in any file. Just use process.env.DATABASE_URL in your serverless functions.
+### [HELP] Human Help Request
+**Human response (closed 2026-05-04):**
+Partial. Neon connection string in HELP-STATUS.md. SendGrid blocked — you need a domain first. See HELP-STATUS.md.
 
-## Time used: 2 min
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
+
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined + 8 min penalty. Debugging code is not human help. See HELP-STATUS.md for a hint.
+
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Done. Neon PostgreSQL connection string is in HELP-STATUS.md. Free tier, eu-central-1.
+

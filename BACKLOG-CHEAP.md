@@ -28,3 +28,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `fix_blog_image_paths.py`, which standardized image paths within numerous blog HTML files to ensure consistency (e.g., `/images/blog/` + filename).
     *   ✅ Ran `fix_blog_meta_tags.py`, which processed 513 blog HTML files and fixed 3 by truncating overly long title tags for SEO optimization.
     *   ✅ Ran `fix_image_links.py`, which aimed to fix broken image links by checking for alternative WEBP/JPG formats. The script found 0 links to fix, indicating existing image links are valid.
+    *   ✅ Ran `fix_localized_links.py`, which processed 7 localized HTML files in the `es/` directory, fixing internal links to untranslated English pages by pointing them to the root English versions.
