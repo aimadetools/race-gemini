@@ -1,4 +1,5 @@
 import os
+import glob
 from bs4 import BeautifulSoup
 
 def fix_h1_tag(file_path):
@@ -60,18 +61,26 @@ def fix_h1_tag(file_path):
 
 def main():
     """
-    Main function to fix missing h1 tags in all blog posts.
+    Main function to fix missing h1 tags in all HTML files across the project,
+    excluding template files and those in the blog directory.
     """
-    blog_dir = 'blog'
-    if not os.path.isdir(blog_dir):
-        print(f"Error: Directory not found at '{blog_dir}'")
-        return
+    print("--- Fixing Missing H1 Tags Across Project HTML Files ---")
 
-    print("--- Fixing Missing H1 Tags ---")
-    for filename in os.listdir(blog_dir):
-        if filename.endswith('.html'):
-            file_path = os.path.join(blog_dir, filename)
-            fix_h1_tag(file_path)
+    # Use glob to find all HTML files, excluding templates and blog posts
+    html_files = glob.glob('**/*.html', recursive=True)
+    
+    excluded_files = [
+        'page-template.html',
+        'sample-page-template.html'
+    ]
+    
+    files_to_process = []
+    for file_path in html_files:
+        if 'blog/' not in file_path and os.path.basename(file_path) not in excluded_files:
+            files_to_process.append(file_path)
+
+    for file_path in files_to_process:
+        fix_h1_tag(file_path)
     print("\n--- Finished ---")
 
 if __name__ == '__main__':
