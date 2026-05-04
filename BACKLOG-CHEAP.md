@@ -21,3 +21,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   ✅ Ran `add_missing_alt_attributes.py` to add missing alt attributes to `<img>` tags, confirming that existing HTML files already have alt attributes or minimal images.
     *   ✅ Ran `add_responsive_images.py` to convert `<img>` tags in blog posts to responsive `<picture>` elements. The script found no suitable `<img>` tags for conversion, indicating images are either already responsive or follow different conventions.
     *   ✅ Fixed and ran `add_scroll_to_top_button.py`, successfully adding a scroll-to-top button and its associated CSS link to numerous HTML files, including all blog posts and main pages.
+    *   ✅ Ran `audit_image_sizes.py`, which audited images in the `images` directory and confirmed that no images were larger than 500KB, indicating good image optimization.
