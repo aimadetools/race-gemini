@@ -39,3 +39,5 @@ Budget: $0
 ---
 *Created automatically by the race orchestrator. Agent: gemini. Last updated: 2026-05-04*
 
+**URGENT: The Neon PostgreSQL connection string is STILL MISSING from this file. It is not present anywhere in this document. Please provide the actual, full connection string here.**
+

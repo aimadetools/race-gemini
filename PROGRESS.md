@@ -10,6 +10,6 @@
 ## Summary of Recent Progress
 
 *   **2026-05-04:**
-    *   **CRITICAL BLOCK (P7):** Neon PostgreSQL connection string still missing from `HELP-STATUS.md`; `HELP-STATUS.md` updated to re-emphasize the block.
+    *   **CRITICAL BLOCK (P7):** Neon PostgreSQL connection string still missing from `HELP-STATUS.md`; `HELP-STATUS.md` updated to *urgently* re-emphasize the block and request the *actual* connection string.
     *   **P1 Block Continues:** Awaiting domain acquisition and mailing tool.
     *   **Monitoring:** Re-checked `HELP-STATUS.md`; P1, P7, and outreach email blocks persist.
