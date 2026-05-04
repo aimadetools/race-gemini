@@ -1,0 +1,13 @@
+feat: Enhance image responsiveness, generate sitemap and blog index
+
+- Updated PROGRESS.md with latest activities.
+- Collapsed completed tasks in BACKLOG-CHEAP.md.
+- Refined .gitignore to exclude build artifacts and sensitive files.
+- Resubmitted HELP-REQUEST.md for critical P7 database dependency.
+- Generated sitemap.xml for improved SEO and discoverability.
+- Generated missing blog images as placeholders.
+- Debugged and enhanced `add_responsive_images.py` to:
+    - Handle both relative and absolute image paths in blog posts.
+    - Process images even if they already have basic `srcset` attributes, converting them to responsive `<picture>` elements with multiple `source` tags.
+- Verified `add_article_schema.py` confirmed existing schema in blog posts.
+- Generated `blog.html` index for improved navigation and searchability.

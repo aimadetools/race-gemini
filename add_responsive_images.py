@@ -67,12 +67,12 @@ def process_blog_post(file_path):
         src = img_tag.get('src', '')
         
         # Check conditions separately for better readability and to avoid syntax errors
-        is_blog_image = src.startswith('../images/blog/')
+        is_blog_image = src.startswith('../images/blog/') or src.startswith('/images/blog/')
         is_placeholder_image = src.startswith('https://via.placeholder.com/') or src.startswith('https://placehold.co/')
         has_srcset = img_tag.has_attr('srcset')
         is_social_icon = 'icons8.com' in src
 
-        if (is_blog_image or is_placeholder_image) and not has_srcset and not is_social_icon:
+        if (is_blog_image or is_placeholder_image) and not is_social_icon:
             img_tags_to_process.append(img_tag)
 
     if not img_tags_to_process:
@@ -124,7 +124,7 @@ def process_blog_post(file_path):
     {'    '.join(sources)}
     <img src="{final_img_src}" alt="{alt_text}" class="{img_tag.get('class', '')}" loading="{img_tag.get('loading', 'lazy')}" sizes="(max-width: 1200px) 100vw, 1200px">
 </picture>'''
-        elif original_src.startswith('../images/blog/'):
+        elif original_src.startswith('../images/blog/') or original_src.startswith('/images/blog/'):
             # For local webp images, we need to generate new files
             width, height = get_image_dimensions(original_src) # Get assumed dimensions
             aspect_ratio = width / height
