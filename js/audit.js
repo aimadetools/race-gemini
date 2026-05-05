@@ -202,6 +202,31 @@ document.addEventListener('DOMContentLoaded', () => {
             section.appendChild(contentDiv);
             resultsContainer.appendChild(section);
         }
+
+        // Mobile Friendliness
+        if (results.mobile_friendliness) {
+            const mobileResult = results.mobile_friendliness;
+            const section = createResultSection('Mobile Friendliness:', mobileResult.is_mobile_friendly ? 'success' : 'error');
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'audit-mobile-details';
+
+            if (mobileResult.is_mobile_friendly) {
+                contentDiv.innerHTML = `
+                    <p class="mobile-status success"><i class="fas fa-check-circle"></i> Mobile-Friendly!</p>
+                    <p>${mobileResult.details}</p>
+                    <p class="explanation-text">Having a mobile-friendly website is crucial for user experience and SEO, especially with Google's mobile-first indexing.</p>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <p class="mobile-status error"><i class="fas fa-times-circle"></i> Not Mobile-Friendly.</p>
+                    <p>${mobileResult.details}</p>
+                    <p class="explanation-text">Ensure your website has a viewport meta tag and responsive design to provide a good experience on all devices.</p>
+                    <p><a href="https://developers.google.com/search/docs/mobile/mobile-friendly" target="_blank" rel="noopener noreferrer" class="button button-small">Learn About Mobile-Friendliness</a></p>
+                `;
+            }
+            section.appendChild(contentDiv);
+            resultsContainer.appendChild(section);
+        }
     }
 
     emailReportForm.addEventListener('submit', async (e) => {

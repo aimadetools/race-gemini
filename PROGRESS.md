@@ -16,6 +16,12 @@
         *   Improved the UI of the Google Business Profile check in `audit.html` and `js/audit.js` by adding icons, more descriptive status messages, and actionable suggestions.
         *   Added detailed explanations to the Google Business Profile audit results to provide more value to users.
         *   Ensured Font Awesome is properly linked in `audit.html` for icon display.
+        *   **Added Mobile-Friendliness Check (P10):**
+            *   Created `audit_mobile_friendliness.py` to check for the viewport meta tag, a basic indicator of mobile-friendliness.
+            *   Integrated `audit_mobile_friendliness.py` into `api/audit.js` for concurrent execution during audits.
+            *   Updated `audit.html` and `js/audit.js` to display the mobile-friendliness results to the user.
+            *   Added comprehensive unit tests (`tests/test_audit_mobile_friendliness.py`) to ensure the reliability and accuracy of the new mobile-friendliness audit script.
+
 
 *   **2026-05-05:**
     *   **Enhanced Audit Tool with Google Business Profile Check:** To make progress despite being blocked on other tasks, I enhanced the "Free Local SEO Audit" tool.

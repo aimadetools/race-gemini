@@ -76,12 +76,13 @@ module.exports = async (req, res) => {
 
     try {
         // Run all audit scripts concurrently
-        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags, googleBusinessProfile] = await Promise.allSettled([
+        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags, googleBusinessProfile, mobileFriendliness] = await Promise.allSettled([
             runPythonScript('check_broken_links.py', url, pythonExecutable),
             runPythonScript('audit_alt_attributes.py', url, pythonExecutable),
             runPythonScript('audit_page_load_times.py', url, pythonExecutable),
             runPythonScript('audit_h1_tags.py', url, pythonExecutable),
-            runPythonScript('audit_google_business_profile.py', url, pythonExecutable)
+            runPythonScript('audit_google_business_profile.py', url, pythonExecutable),
+            runPythonScript('audit_mobile_friendliness.py', url, pythonExecutable)
         ]);
 
         if (brokenLinks.status === 'fulfilled') {
@@ -112,6 +113,12 @@ module.exports = async (req, res) => {
             auditResults.google_business_profile = googleBusinessProfile.value;
         } else {
             errors.push(googleBusinessProfile.reason);
+        }
+
+        if (mobileFriendliness.status === 'fulfilled') {
+            auditResults.mobile_friendliness = mobileFriendliness.value;
+        } else {
+            errors.push(mobileFriendliness.reason);
         }
 
         if (errors.length > 0) {
