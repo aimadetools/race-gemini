@@ -175,6 +175,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsContainer.appendChild(section);
             }
         }
+
+        // Google Business Profile
+        if (results.google_business_profile) {
+            const gbpResult = results.google_business_profile;
+            if (gbpResult.has_google_business_profile) {
+                const section = createResultSection('Google Business Profile:', 'success');
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>Status:</strong> Found!<br><a href="${gbpResult.profile_url}" target="_blank" rel="noopener noreferrer">View Profile</a>`;
+                section.appendChild(p);
+                resultsContainer.appendChild(section);
+            } else {
+                const section = createResultSection('Google Business Profile:', 'error');
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>Status:</strong> Not Found.<br><strong>Reason:</strong> ${gbpResult.reason}`;
+                section.appendChild(p);
+                resultsContainer.appendChild(section);
+            }
+        }
     }
 
     emailReportForm.addEventListener('submit', async (e) => {

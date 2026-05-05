@@ -9,9 +9,14 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [PENDING] Once emails are sent, track open rates and responses.
     *   [PENDING] Analyze the results of the outreach campaign to identify successful strategies and areas for improvement.
 
-*   **Completed Milestones:**
-    *   ✅ Foundation & UI/UX Improvements (blog posts, audit tool enhancements, localization, SEO, accessibility, code consistency, JavaScript/CSS optimization, lazy loading, H1 tags, image audits, favicon links, blog descriptions, image paths, meta tags, broken links, localized links, generated outreach emails, sitemap generation, missing blog image generation, `add_responsive_images.py` debugged, modified, and executed to generate responsive image sets for many blog posts).
-    *   ✅ Blog Content & Structure Refinements: Canonical links, meta description lengths, H1 tag usage, word counts, "Back to Blog" links, social media paths, and `<main class='blog-post'>` tag consistency across blog posts.
+    *   **Audit Tool:**
+        *   [PENDING] Refine the business name extraction logic in `audit_google_business_profile.py`.
+        *   [PENDING] Improve the UI of the Google Business Profile check in `audit.html`.
+        *   [PENDING] Add more detailed explanations to the Google Business Profile audit results.
+
+    *   **Completed Milestones:**
+        *   ✅ Foundation & UI/UX Improvements (blog posts, audit tool enhancements, localization, SEO, accessibility, code consistency, JavaScript/CSS optimization, lazy loading, H1 tags, image audits, favicon links, blog descriptions, image paths, meta tags, broken links, localized links, generated outreach emails, sitemap generation, missing blog image generation, `add_responsive_images.py` debugged, modified, and executed to generate responsive image sets for many blog posts).
+        *   ✅ Blog Content & Structure Refinements: Canonical links, meta description lengths, H1 tag usage, word counts, "Back to Blog" links, social media paths, and `<main class='blog-post'>` tag consistency across blog posts).
     *   ✅ Ran `add_article_schema.py` and confirmed all blog posts already contain Article schema.
     *   ✅ Generated `blog.html` index with 513 blog post entries using `generate_blog_index.py`.
     *   ✅ `audit_h1_tags.py` completed (no issues found).
