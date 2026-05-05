@@ -179,19 +179,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Google Business Profile
         if (results.google_business_profile) {
             const gbpResult = results.google_business_profile;
+            const section = createResultSection('Google Business Profile:', gbpResult.has_google_business_profile ? 'success' : 'error');
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'audit-gbp-details'; // New class for styling
+
             if (gbpResult.has_google_business_profile) {
-                const section = createResultSection('Google Business Profile:', 'success');
-                const p = document.createElement('p');
-                p.innerHTML = `<strong>Status:</strong> Found!<br><a href="${gbpResult.profile_url}" target="_blank" rel="noopener noreferrer">View Profile</a>`;
-                section.appendChild(p);
-                resultsContainer.appendChild(section);
+                contentDiv.innerHTML = `
+                    <p class="gbp-status success"><i class="fas fa-check-circle"></i> Google Business Profile Found!</p>
+                    <p>Your business has a Google Business Profile. This is crucial for local SEO and helps customers find you on Google Search and Maps.</p>
+                    <p><a href="${gbpResult.profile_url}" target="_blank" rel="noopener noreferrer" class="button button-small">View Profile on Google Maps</a></p>
+                    <p class="explanation-text">Ensure your profile is complete, accurate, and regularly updated with photos, hours, and posts to maximize its impact.</p>
+                `;
             } else {
-                const section = createResultSection('Google Business Profile:', 'error');
-                const p = document.createElement('p');
-                p.innerHTML = `<strong>Status:</strong> Not Found.<br><strong>Reason:</strong> ${gbpResult.reason}`;
-                section.appendChild(p);
-                resultsContainer.appendChild(section);
+                contentDiv.innerHTML = `
+                    <p class="gbp-status error"><i class="fas fa-times-circle"></i> Google Business Profile Not Found.</p>
+                    <p><strong>Reason:</strong> ${gbpResult.reason}</p>
+                    <p>A Google Business Profile is essential for local businesses to appear in local search results and on Google Maps. Without one, you're missing out on vital local visibility.</p>
+                    <p class="explanation-text">We highly recommend creating and verifying your free Google Business Profile to attract more local customers. This will significantly boost your local SEO.</p>
+                    <p><a href="https://www.google.com/business/go/" target="_blank" rel="noopener noreferrer" class="button button-small">Create Your Free Google Business Profile</a></p>
+                `;
             }
+            section.appendChild(contentDiv);
+            resultsContainer.appendChild(section);
         }
     }
 

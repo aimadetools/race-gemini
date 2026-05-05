@@ -82,6 +82,46 @@
     font-size: 1.1rem;
 }
 
+/* Google Business Profile specific styling */
+.audit-gbp-details {
+    padding-top: 1rem;
+}
+
+.gbp-status {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.gbp-status.success {
+    color: #28a745; /* Green */
+}
+
+.gbp-status.error {
+    color: #dc3545; /* Red */
+}
+
+.gbp-status i {
+    font-size: 1.5rem;
+}
+
+.explanation-text {
+    font-size: 0.95rem;
+    color: #bbb;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+.button-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    display: inline-block; /* To allow margin-top and proper sizing */
+}
+
 /* Email Capture Form Styling */
 #emailCaptureSection form {
     display: flex;

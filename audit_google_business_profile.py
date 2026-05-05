@@ -10,20 +10,47 @@ def get_business_name(url):
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
-        
-        # Try to get from <title>
-        if soup.title and soup.title.string:
-            # Clean up the title
-            title = soup.title.string.split('|')[0].strip()
-            return title
-            
-        # Fallback to Open Graph site name
+
+        # 1. Try to get from Schema.org Organization name
+        for script in soup.find_all('script', type='application/ld+json'):
+            try:
+                schema_data = json.loads(script.string)
+                if isinstance(schema_data, list):
+                    for item in schema_data:
+                        if item.get('@type') == 'Organization' and item.get('name'):
+                            return item['name'].strip()
+                elif schema_data.get('@type') == 'Organization' and schema_data.get('name'):
+                    return schema_data['name'].strip()
+            except json.JSONDecodeError:
+                continue
+
+        # 2. Fallback to Open Graph site name
         og_site_name = soup.find('meta', property='og:site_name')
         if og_site_name and og_site_name.get('content'):
             return og_site_name.get('content').strip()
 
+        # 3. Fallback to <title>
+        if soup.title and soup.title.string:
+            title = soup.title.string
+            # Attempt to extract common patterns: "Business Name | Slogan", "Slogan - Business Name", "Business Name"
+            if '|' in title:
+                return title.split('|')[0].strip()
+            if '-' in title:
+                # Prioritize part before first '-' if it seems like a name
+                parts = title.split('-')
+                if len(parts) > 1 and len(parts[0].strip()) > 3: # Avoid single letter or very short names
+                    return parts[0].strip()
+            # If no common delimiters, just return the whole title string, cleaned
+            return title.strip()
+            
+        # 4. Fallback to <h1> tag
+        h1 = soup.find('h1')
+        if h1 and h1.string:
+            return h1.string.strip()
+
         return None
     except requests.exceptions.RequestException as e:
+        # Log error or handle more gracefully if needed
         return None
 
 def check_google_business_profile(business_name):
