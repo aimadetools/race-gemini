@@ -1,18 +1,17 @@
-// JavaScript for the Niche-Specific Local SEO Page Generator
-// This file will handle form submission and page generation logic.
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#generator-form form');
     const generatedOutputSection = document.getElementById('generated-pages-output');
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Prevent default form submission
 
         const businessType = document.getElementById('business-type').value.trim();
         const cityList = document.getElementById('city-list').value.trim();
+        const enableAICopy = document.getElementById('enable-ai-copy').checked;
+        const aiStyle = document.getElementById('ai-style').value.trim();
 
         if (!businessType || !cityList) {
-            alert('Please fill in both fields.');
+            alert('Please fill in both Business Type and Cities fields.');
             return;
         }
 
@@ -23,36 +22,56 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        generatedOutputSection.innerHTML = '<h2>Your Generated Pages</h2>';
+        generatedOutputSection.innerHTML = '<h2>Your Generated Pages</h2><div id="generated-links"></div>'; // Clear previous output
         generatedOutputSection.style.display = 'block';
 
-        cities.forEach(city => {
-            const metaTitle = `${businessType} Services in ${city} | Your Company Name`;
-            const metaDescription = `Get expert ${businessType} services in ${city}. We provide high-quality solutions for all your ${businessType} needs in the ${city} area. Contact us today!`;
-            const h1Content = `Expert ${businessType} Services in ${city}`;
-            const bodyParagraph1 = `Looking for reliable ${businessType} services in ${city}? You've come to the right place! Our expert team offers top-notch ${businessType} solutions tailored to your needs in the ${city} area. We specialize in [Specific Service 1], [Specific Service 2], and [Specific Service 3], ensuring your complete satisfaction.`;
-            const bodyParagraph2 = `Why choose us for your ${businessType} needs in ${city}? We are committed to delivering exceptional service, using only the highest quality materials, and providing transparent pricing. Our certified professionals are ready to assist you.`;
+        const generatedLinksDiv = document.getElementById('generated-links');
+        generatedLinksDiv.innerHTML = '<p>Generating pages... This may take a moment.</p>';
 
-            const generatedPageDiv = document.createElement('div');
-            generatedPageDiv.classList.add('generated-page-preview');
-            generatedPageDiv.innerHTML = `
-                <h4>Simulated Page for ${city}</h4>
-                <div class="page-meta-preview" style="border: 1px solid #ddd; background: #eef; padding: 10px; margin-bottom: 10px;">
-                    <p style="color: purple; margin: 0; font-size: 0.9em;">${metaTitle}</p>
-                    <p style="color: green; margin: 0; font-size: 0.8em;">https://yourcompany.com/${businessType.toLowerCase().replace(/\s/g, '-')}-${city.toLowerCase().replace(/\s/g, '-')}</p>
-                    <p style="color: #555; margin: 0; font-size: 0.8em;">${metaDescription}</p>
-                </div>
-                <div class="page-body-preview" style="border: 1px solid #ccc; padding: 15px; margin-top: 5px; background: #f9f9f9;">
-                    <h1>${h1Content}</h1>
-                    <p>${bodyParagraph1}</p>
-                    <p>${bodyParagraph2}</p>
-                    <p><em>(This is a generated content preview. The actual page would have more detailed, unique content and calls to action.)</em></p>
-                </div>
-                <hr style="margin: 20px 0;">
-            `;
-            generatedOutputSection.appendChild(generatedPageDiv);
-        });
+        try {
+            const response = await fetch('/api/generate-seo-pages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    businessName: businessType, // Using businessType as businessName
+                    services: [businessType], // Sending businessType as a single service for now
+                    towns: cities,
+                    enableAICopy,
+                    aiStyle: aiStyle || undefined, // Send undefined if empty
+                }),
+            });
 
-        alert('Page previews generated successfully! This is an enhanced example. Real generation would involve more complex logic, potentially an AI content API, and server-side processing for final HTML files.');
+            const data = await response.json();
+
+            if (response.ok) {
+                generatedLinksDiv.innerHTML = ''; // Clear "Generating pages..." message
+                if (data.pages && data.pages.length > 0) {
+                    const ul = document.createElement('ul');
+                    data.pages.forEach(page => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = page.url; // Relative URL to the generated file
+                        a.textContent = page.fileName;
+                        a.target = '_blank'; // Open in new tab
+                        li.appendChild(a);
+                        ul.appendChild(li);
+                    });
+                    generatedLinksDiv.appendChild(ul);
+                    alert(data.message);
+                } else {
+                    generatedLinksDiv.innerHTML = '<p>No pages were generated. Please check your inputs.</p>';
+                }
+            } else {
+                generatedLinksDiv.innerHTML = `<p style="color: red;">Error: ${data.message || 'Unknown error during generation.'}</p>`;
+                alert(`Error: ${data.message || 'Unknown error during generation.'}`);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            generatedLinksDiv.innerHTML = `<p style="color: red;">Network error or server unreachable: ${error.message}</p>`;
+            alert('A network error occurred. Please check your connection or try again later.');
+        }
     });
 });
+
