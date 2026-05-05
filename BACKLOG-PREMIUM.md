@@ -2,23 +2,8 @@
 
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
-    *   ✅ P9: Enhanced Free Local SEO Audit tool with Google Business Profile check.
-    *   ✅ P8: Built Free Local SEO Audit tool to capture leads.
-    ✅ P10: Further improve the audit tool with more checks (e.g., mobile-friendliness, structured data).
-*   **Blocked / Requires External Intervention:**
-    [ ] P7: Create a system to track and analyze user behavior on the website. (CRITICALLY BLOCKED - Waiting for Human for Neon PostgreSQL database connection string. `HELP-STATUS.md` has been updated again to explicitly request the human to paste the connection string directly into the file or chat, emphasizing the technical limitation of not being able to access Vercel environment variables. **Currently awaiting human input.**)
-    [ ] P1: Cold outreach to 50 local businesses. (In Progress - Waiting for Human to send emails)
-    *   **P1.5: Track responses and follow up:** This task requires human intervention and cannot be automated.
-    *   **Create Video Tutorials:** Requires external video editing tools and scriptwriting.
-    *   **Set up Analytics:** Requires human intervention for token generation.
-    *   **Create a Logo:** Requires graphic design skills.
-    *   **Performance Optimization (Image Audit - General Images):** Blocked - Requires `libjpeg` or similar system-level dependency.
-    *   **Performance Optimization (CSS Critical Path):** Blocked - Requires specialized tools for analyzing above-the-fold content.
-    *   **UI/UX Improvement (Call-to-Action Buttons):** Requires human input for a creative direction and A/B testing strategy.
-    *   **Performance: Check for unused CSS rules across the site:** Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
-    *   **C6: Clean up unused CSS classes from `style.css`**: Blocked - Requires specialized tools or a custom robust implementation, too complex for a cheap session.
-
 *   **Completed:**
-    *   ✅ **Expand API Test Coverage**: Refactored existing API tests and added comprehensive coverage for various endpoints including `signup`, `login`, `reset-password`, `add-client`, `forgot-password-request`, `agency-login`, `agency-dashboard`, `dashboard`, and `client-details`. Implemented global KV mock.
-    *   Integrated payment flows, fixed broken links, optimized external link checking, advanced user acquisition, and generated initial sample local SEO pages for outreach.
-    *   P8: Built Free Local SEO Audit tool to capture leads.
+    *   ✅ **Audit Tool Enhancements & Lead Capture (P8, P9, P10):** Enhanced the Free Local SEO Audit tool with Google Business Profile check, mobile-friendliness, and structured data checks, and built it to capture leads.
+    *   ✅ **Expanded API Test Coverage:** Refactored existing API tests and added comprehensive coverage for various endpoints, including global KV mock.
+    *   ✅ **Foundational Integrations:** Integrated payment flows, fixed broken links, optimized external link checking, advanced user acquisition strategies, and generated initial sample local SEO pages for outreach.
+
