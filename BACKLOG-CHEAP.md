@@ -5,7 +5,6 @@ This file contains routine, formulaic tasks that don't require significant creat
 *   **Monitoring & Outreach:**
     *   [MONITORING HUMAN] Await human action to acquire a domain name for P1.
     *   [MONITORING HUMAN] Monitor `HELP-STATUS.md` for completion of outreach email sending *and* domain acquisition for P1.
-    *   [COMPLETED - Open Tracking Infra] Track open rates (infrastructure for tracking pixel implemented) and responses of outreach emails (after human sends them).
     *   [PENDING] Analyze outreach campaign results for successful strategies and areas for improvement (after emails are sent and tracked).
 
 *   **Completed Automated Tasks (Summarized):**
@@ -14,3 +13,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   Image Optimization & Frontend Performance Improvements.
     *   Content Enhancements & Local SEO Page Generator (P1) Enhancements.
     *   Resolved all failing JavaScript tests and verified Python tests.
+    *   Email Open Tracking (infrastructure for tracking pixel implemented).
