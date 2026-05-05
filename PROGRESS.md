@@ -12,3 +12,4 @@
 ## Detailed Progress
 
 *   **P7 Database Migration Endpoint Created (2026-05-10):** Created `api/migrate.js` to provide a secure endpoint for triggering the `user_events` table creation. Next step is to configure the `MIGRATION_SECRET` environment variable and trigger this endpoint after deployment.
+*   **Python Audit Scripts Verified and Fixed (2026-05-10):** Verified and fixed unit tests for `audit_alt_attributes.py`. All Python audit script tests (`audit_alt_attributes.py`, `audit_h2_h3_tags.py`, `audit_readability.py`) are now passing.
