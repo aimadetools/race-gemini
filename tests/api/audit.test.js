@@ -131,7 +131,19 @@ describe('audit API', () => {
         const brokenLinksScriptPath = path.resolve(MOCK_CWD, 'check_broken_links.py');
         const altAttributesScriptPath = path.resolve(MOCK_CWD, 'audit_alt_attributes.py');
         const pageLoadTimesScriptPath = path.resolve(MOCK_CWD, 'audit_page_load_times.py');
+        const h1TagsScriptPath = path.resolve(MOCK_CWD, 'audit_h1_tags.py');
+        const googleBusinessProfileScriptPath = path.resolve(MOCK_CWD, 'audit_google_business_profile.py');
+        const mobileFriendlinessScriptPath = path.resolve(MOCK_CWD, 'audit_mobile_friendliness.py');
+        const structuredDataScriptPath = path.resolve(MOCK_CWD, 'audit_structured_data.py');
+        const h2h3TagsScriptPath = path.resolve(MOCK_CWD, 'audit_h2_h3_tags.py');
+        const readabilityScriptPath = path.resolve(MOCK_CWD, 'audit_readability.py');
 
+        const mockH1Tags = { present: true, count: 1 };
+        const mockGoogleBusinessProfile = { found: true, rating: 4.5 };
+        const mockMobileFriendliness = { mobileFriendly: true, viewport: true };
+        const mockStructuredData = { valid: true, schemaType: 'Organization' };
+        const mockH2H3Tags = { h2: [{ text: 'Section 1' }], h3: [{ text: 'Subsection 1' }] };
+        const mockReadabilityScores = { fleschReadingEase: 65, gradeLevel: 8 };
 
         const req = { method: 'POST', body: { url: 'https://example.com' } };
         const res = {
@@ -139,35 +151,65 @@ describe('audit API', () => {
             json: jest.fn(),
         };
 
-        // Expect 3 calls to spawn, one for each script
+        // Expect 9 calls to spawn, one for each script
         mockSpawn.mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockBrokenLinks), '', 0))
                  .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockAltAttributes), '', 0))
-                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockPageLoadTimes), '', 0));
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockPageLoadTimes), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH1Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockGoogleBusinessProfile), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockMobileFriendliness), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockStructuredData), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH2H3Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockReadabilityScores), '', 0));
 
         await handler(req, res);
 
-        expect(mockSpawn).toHaveBeenCalledTimes(3);
+        expect(mockSpawn).toHaveBeenCalledTimes(9);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [brokenLinksScriptPath, 'https://example.com']);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [altAttributesScriptPath, 'https://example.com']);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [pageLoadTimesScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [h1TagsScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [googleBusinessProfileScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [mobileFriendlinessScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [structuredDataScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [h2h3TagsScriptPath, 'https://example.com']);
+        expect(mockSpawn).toHaveBeenCalledWith(pythonExecutablePath, [readabilityScriptPath, 'https://example.com']);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             broken_links: mockBrokenLinks,
             alt_attributes: mockAltAttributes,
             page_load_times: mockPageLoadTimes,
+            h1_tags: mockH1Tags,
+            google_business_profile: mockGoogleBusinessProfile,
+            mobile_friendliness: mockMobileFriendliness,
+            structured_data: mockStructuredData,
+            h2_h3_tags: mockH2H3Tags,
+            readability_scores: mockReadabilityScores,
         });
     });
 
     it('should return 500 if a Python script fails', async () => {
         const mockBrokenLinks = { broken: [] };
-        const mockAltAttributes = { missing: ['/img1'] };
-        const pythonErrorMessage = 'Error from audit_page_load_times.py';
+        const mockAltAttributes = { missing: [] };
+        const mockPageLoadTimes = { time: '2s' };
+        const mockH1Tags = { present: true };
+        const mockGoogleBusinessProfile = { present: true };
+        const mockMobileFriendliness = { mobileFriendly: true };
+        const mockStructuredData = { valid: true };
+        const mockH2H3Tags = { h2: [], h3: [] };
+        const pythonErrorMessage = 'Error from audit_readability.py';
 
-        // Simulate broken_links and alt_attributes success, page_load_times failure
+        // Simulate success for all except readability_scores
         mockSpawn.mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockBrokenLinks), '', 0))
                  .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockAltAttributes), '', 0))
-                 .mockImplementationOnce(() => simulatePythonProcess('', pythonErrorMessage, 1)); // Simulate failure for page_load_times
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockPageLoadTimes), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH1Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockGoogleBusinessProfile), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockMobileFriendliness), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockStructuredData), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH2H3Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess('', pythonErrorMessage, 1)); // Simulate failure for readability_scores
 
         const req = { method: 'POST', body: { url: 'https://example.com' } };
         const res = {
@@ -177,34 +219,52 @@ describe('audit API', () => {
 
         await handler(req, res);
 
-        expect(mockSpawn).toHaveBeenCalledTimes(3);
+        expect(mockSpawn).toHaveBeenCalledTimes(9);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Some audit checks failed.',
             results: {
                 broken_links: mockBrokenLinks,
                 alt_attributes: mockAltAttributes,
+                page_load_times: mockPageLoadTimes,
+                h1_tags: mockH1Tags,
+                google_business_profile: mockGoogleBusinessProfile,
+                mobile_friendliness: mockMobileFriendliness,
+                structured_data: mockStructuredData,
+                h2_h3_tags: mockH2H3Tags,
             },
             errors: expect.arrayContaining([
                 expect.objectContaining({
-                    script: 'audit_page_load_times.py',
-                    message: 'Error executing script: audit_page_load_times.py',
+                    script: 'audit_readability.py',
+                    message: 'Error executing script: audit_readability.py',
                     error: pythonErrorMessage,
                 }),
             ]),
         }));
-        expect(consoleErrorSpy).toHaveBeenCalled(); // Ensure console.error was called due to Python script failure
+        expect(consoleErrorSpy).toHaveBeenCalled();
     });
 
     it('should return 500 if a Python script returns invalid JSON', async () => {
         const mockBrokenLinks = { broken: [] };
         const invalidJsonOutput = 'This is not JSON';
-        const mockPageLoadTimes = { time: '2s' }; // This script still succeeds
+        const mockPageLoadTimes = { time: '2s' };
+        const mockH1Tags = { present: true };
+        const mockGoogleBusinessProfile = { present: true };
+        const mockMobileFriendliness = { mobileFriendly: true };
+        const mockStructuredData = { valid: true };
+        const mockH2H3Tags = { h2: [], h3: [] };
+        const mockReadabilityScores = { score: 70 };
 
-        // Simulate broken_links success, alt_attributes returns invalid JSON
+        // Simulate success for all except alt_attributes
         mockSpawn.mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockBrokenLinks), '', 0))
                  .mockImplementationOnce(() => simulatePythonProcess(invalidJsonOutput, '', 0)) // Invalid JSON for alt_attributes
-                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockPageLoadTimes), '', 0));
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockPageLoadTimes), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH1Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockGoogleBusinessProfile), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockMobileFriendliness), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockStructuredData), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockH2H3Tags), '', 0))
+                 .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify(mockReadabilityScores), '', 0));
 
         const req = { method: 'POST', body: { url: 'https://example.com' } };
         const res = {
@@ -214,13 +274,19 @@ describe('audit API', () => {
 
         await handler(req, res);
 
-        expect(mockSpawn).toHaveBeenCalledTimes(3);
+        expect(mockSpawn).toHaveBeenCalledTimes(9);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Some audit checks failed.',
             results: {
                 broken_links: mockBrokenLinks,
-                page_load_times: mockPageLoadTimes, // Expect this to be present
+                page_load_times: mockPageLoadTimes,
+                h1_tags: mockH1Tags,
+                google_business_profile: mockGoogleBusinessProfile,
+                mobile_friendliness: mockMobileFriendliness,
+                structured_data: mockStructuredData,
+                h2_h3_tags: mockH2H3Tags,
+                readability_scores: mockReadabilityScores,
             },
             errors: expect.arrayContaining([
                 expect.objectContaining({
@@ -230,7 +296,7 @@ describe('audit API', () => {
                 }),
             ]),
         }));
-        expect(consoleErrorSpy).toHaveBeenCalled(); // Ensure console.error was called due to JSON parsing error
+        expect(consoleErrorSpy).toHaveBeenCalled();
     });
 
     it('should handle process spawning errors', async () => {
@@ -253,7 +319,13 @@ describe('audit API', () => {
             return mockProcess;
         })
         .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ missing: [] }), '', 0))
-        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ time: '2s' }), '', 0));
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ time: '2s' }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ present: true }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ present: true }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ mobileFriendly: true }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ valid: true }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ h2: [], h3: [] }), '', 0))
+        .mockImplementationOnce(() => simulatePythonProcess(JSON.stringify({ score: 70 }), '', 0));
 
         const req = { method: 'POST', body: { url: 'https://example.com' } };
         const res = {
@@ -263,7 +335,7 @@ describe('audit API', () => {
 
         await handler(req, res);
 
-        expect(mockSpawn).toHaveBeenCalledTimes(3);
+        expect(mockSpawn).toHaveBeenCalledTimes(9);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Some audit checks failed.',
