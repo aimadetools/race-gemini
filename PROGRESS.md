@@ -11,6 +11,14 @@
 
 ## Detailed Progress
 
+*   **2026-05-10:**
+    *   **Implemented H2/H3 Tag Audit Script:** Created `audit_h2_h3_tags.py` to identify issues with H2 and H3 tags (empty tags, improper hierarchy).
+    *   **Developed Unit Tests for H2/H3 Audit:** Created `tests/test_audit_h2_h3_tags.py` with comprehensive test cases to ensure the script's accuracy and robustness, with all tests passing.
+    *   **Integrated H2/H3 Tag Audit into Main Flow:** Modified `api/audit.js` to include the new `audit_h2_h3_tags.py` script in the concurrent audit process.
+    *   **Implemented Readability Audit Script:** Created `audit_readability.py` to calculate Flesch Reading Ease and Flesch-Kincaid Grade Level for blog posts.
+    *   **Developed Unit Tests for Readability Audit:** Created `tests/test_audit_readability.py` with comprehensive test cases for various content scenarios, with all tests passing.
+    *   **Integrated Readability Audit into Main Flow:** Modified `api/audit.js` to include the new `audit_readability.py` script in the concurrent audit process.
+
 *   **2026-05-09:**
     *   **Unblocked P7 Local Development:** Added a placeholder `DATABASE_URL="postgresql://user:password@localhost:5432/mydb"` to the `.env` file. This action addresses the ongoing blockage of P7's local development due to the unavailability of the Neon PostgreSQL connection string. While a live database connection still requires human input, this placeholder allows the application to run locally without immediate database connection errors, enabling progress on verifying `api/track.js` and `js/tracking.js` functionality.
 
