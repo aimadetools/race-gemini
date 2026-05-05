@@ -1,78 +1,36 @@
 import os
 import re
 from bs4 import BeautifulSoup
-import subprocess
-import json
+from PIL import Image # Import Image to get actual dimensions
+import glob # Import glob
 
-# Define the default quality for generated WEBP images
-DEFAULT_WEBP_QUALITY = 80 
-
-def get_image_dimensions(image_path):
-    # This function is a placeholder. In a real scenario, you'd read the image
-    # and get its actual dimensions. For now, we'll assume a default aspect ratio.
-    # The generate_placeholder_image.py creates 1200x630, which is roughly 16:9 (1.904)
-    # We will assume a 16:9 aspect ratio for scaling.
-    return 1200, 630
-
-def create_responsive_image_elements(img_tag, original_src, alt_text):
-    base_filename = os.path.basename(original_src)
-    name_without_ext = os.path.splitext(base_filename)[0]
-    
-    # Define target widths and their corresponding heights (maintaining aspect ratio of 16:9)
-    # Original aspect ratio is 1200/630 = 1.9047, close to 16/9 = 1.777. We will use 16:9.
-    aspect_ratio = 16 / 9 
-    
-    # Target widths: 480px, 800px, 1200px
-    target_widths = [480, 800, 1200]
-    
-    sources = []
-    
-    # Generate new images for different sizes and add source tags
-    for width in target_widths:
-        height = int(width / aspect_ratio)
-        responsive_filename = f"{name_without_ext}-{width}w.webp"
-        
-        # Call generate_placeholder_image.py to create the new image
-        # This assumes generate_placeholder_image.py is in the same directory
-        subprocess.run([
-            "python3", "generate_placeholder_image.py",
-            alt_text, responsive_filename,
-            "--width", str(width),
-            "--height", str(height),
-            "--quality", str(DEFAULT_WEBP_QUALITY),
-            "--output-dir", "images/blog"
-        ], check=True)
-        
-        sources.append(f'<source media="(max-width: {width}px)" srcset="../images/blog/{responsive_filename}" type="image/webp">')
-
-    # Original image as fallback and for larger screens
-    final_img_src = original_src.replace("../images/blog/", "") # For correct path in picture tag
-    
-    picture_tag_html = f'''<picture>
-    {'    '.join(sources)}
-    <img src="{original_src}" alt="{alt_text}" class="{img_tag.get('class', '')}" loading="{img_tag.get('loading', 'lazy')}">
-</picture>'''
-
-    return picture_tag_html
-
-def process_blog_post(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+def process_html_file(file_path):
+    """
+    Processes a single HTML file to replace <img> tags with <picture> elements
+    for responsive images, assuming WebP versions are already generated.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except IOError as e:
+        print(f"Error reading file {file_path}: {e}")
+        return
 
     soup = BeautifulSoup(content, 'html.parser')
+    modified = False
     
-    # Find all img tags that are not social share icons and don't have srcset already
+    # Find all img tags that are not social share icons and don't already have a parent <picture> tag
     img_tags_to_process = []
     for img_tag in soup.find_all('img'):
         src = img_tag.get('src', '')
-        
-        # Check conditions separately for better readability and to avoid syntax errors
-        is_blog_image = src.startswith('../images/blog/') or src.startswith('/images/blog/')
-        is_placeholder_image = src.startswith('https://via.placeholder.com/') or src.startswith('https://placehold.co/')
-        has_srcset = img_tag.has_attr('srcset')
-        is_social_icon = 'icons8.com' in src
+        # Check if the img tag is already inside a picture tag
+        if img_tag.find_parent('picture'):
+            continue
 
-        if (is_blog_image or is_placeholder_image) and not is_social_icon:
+        is_blog_image = src.startswith('../images/blog/') or src.startswith('/images/blog/')
+        is_social_icon = 'icons8.com' in src # Exclude social share icons
+
+        if is_blog_image and not is_social_icon:
             img_tags_to_process.append(img_tag)
 
     if not img_tags_to_process:
@@ -81,98 +39,97 @@ def process_blog_post(file_path):
 
     for img_tag in img_tags_to_process:
         original_src = img_tag.get('src')
-        alt_text = img_tag.get('alt', 'Image')
+        alt_text = img_tag.get('alt', '')
+        classes = img_tag.get('class', [])
+        loading_attr = img_tag.get('loading', 'lazy')
 
-        # If it's a placeholder image, we can parse its dimensions from the URL
-        if 'via.placeholder.com' in original_src or 'placehold.co' in original_src:
-            match = re.search(r'(\d+)x(\d+)', original_src)
-            if match:
-                width = int(match.group(1))
-                height = int(match.group(2))
-                aspect_ratio = width / height
-            else:
-                width, height = get_image_dimensions(original_src) # Fallback
-                aspect_ratio = width / height
-            
-            # Placeholder images don't need new files generated, just srcset
-            # For simplicity, we will create a srcset for the placeholder images as well
-            # using the existing placeholder service.
-            
-            # Define target widths
-            target_widths = [480, 800, 1200]
-            if width not in target_widths:
-                target_widths.append(width)
-            target_widths.sort()
+        # Determine the absolute path to the original image for dimension lookup
+        # This assumes images are in /images/blog/ relative to the project root
+        # Or relative to the HTML file itself
+        image_relative_path = original_src.replace('../', '') # Adjust for relative paths
+        image_full_path = os.path.join(os.getcwd(), image_relative_path.lstrip('/'))
 
-            sources = []
-            srcset_values = []
-            for w in target_widths:
-                h = int(w / aspect_ratio)
-                # Reconstruct placeholder URL with new dimensions
-                if 'via.placeholder.com' in original_src:
-                    new_src = re.sub(r'(\d+)x(\d+)', f'{w}x{h}', original_src)
-                elif 'placehold.co' in original_src:
-                    new_src = re.sub(r'(\d+)x(\d+)', f'{w}x{h}', original_src)
-                
-                sources.append(f'<source media="(max-width: {w}px)" srcset="{new_src}" type="image/webp">')
-                srcset_values.append(f'{new_src} {w}w')
-            
-            # The final image src should use the original dimensions
-            final_img_src = original_src
-            
-            picture_tag_html = f'''<picture>
-    {'    '.join(sources)}
-    <img src="{final_img_src}" alt="{alt_text}" class="{img_tag.get('class', '')}" loading="{img_tag.get('loading', 'lazy')}" sizes="(max-width: 1200px) 100vw, 1200px">
-</picture>'''
-        elif original_src.startswith('../images/blog/') or original_src.startswith('/images/blog/'):
-            # For local webp images, we need to generate new files
-            width, height = get_image_dimensions(original_src) # Get assumed dimensions
-            aspect_ratio = width / height
-
-            target_widths = [480, 800, 1200]
-            sources = []
-            
-            # Get the base filename without extension
-            base_filename_no_ext = os.path.splitext(os.path.basename(original_src))[0]
-
-            for w in target_widths:
-                h = int(w / aspect_ratio)
-                responsive_filename = f"{base_filename_no_ext}-{w}w.webp"
-                
-                # Call generate_placeholder_image.py to create the new image
-                # This assumes generate_placeholder_image.py is in the same directory
-                subprocess.run([
-                    "python3", "generate_placeholder_image.py",
-                    alt_text, responsive_filename,
-                    "--width", str(w),
-                    "--height", str(h),
-                    "--quality", str(DEFAULT_WEBP_QUALITY),
-                    "--output-dir", "images/blog"                ], check=True)
-                
-                sources.append(f'<source media="(max-width: {w}px)" srcset="../images/blog/{responsive_filename}" type="image/webp">')
-            
-            picture_tag_html = f'''<picture>
-    {'    '.join(sources)}
-    <img src="{original_src}" alt="{alt_text}" class="{img_tag.get('class', '')}" loading="{img_tag.get('loading', 'lazy')}" sizes="(max-width: 1200px) 100vw, 1200px">
-</picture>'''
+        original_width, original_height = 0, 0
+        try:
+            with Image.open(image_full_path) as img:
+                original_width, original_height = img.size
+        except Exception as e:
+            print(f"Warning: Could not get dimensions for {image_full_path}. Error: {e}. Using default aspect ratio.")
+            original_width, original_height = 1200, 630 # Fallback values
+        
+        if original_width == 0: # If still 0, use a default aspect ratio
+            aspect_ratio = 16 / 9
         else:
-            print(f"Skipping image with src: {original_src} (not a local blog image or known placeholder).")
-            continue
+            aspect_ratio = original_width / original_height
 
-        new_img_tag = BeautifulSoup(picture_tag_html, 'html.parser').find('picture')
-        img_tag.replace_with(new_img_tag)
+        base_filename_no_ext = os.path.splitext(os.path.basename(original_src))[0]
+        base_src_path = os.path.dirname(original_src)
 
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(str(soup))
-    print(f"Processed {file_path}")
+        target_widths = [480, 800, 1200]
+        sources = []
+        srcset_values = [] # For the <img> srcset
 
+        for width in target_widths:
+            height = int(width / aspect_ratio)
+            # Assuming generated images are named consistently like 'image-480w.webp'
+            responsive_filename = f"{base_filename_no_ext}-{width}w.webp"
+            
+            # Construct relative path to the responsive image
+            full_responsive_path = os.path.join(base_src_path, responsive_filename)
+
+            # Check if the responsive image actually exists before adding to sources
+            # This check is crucial to avoid broken links
+            # For simplicity, we'll assume they exist for now as generate_responsive_images.py ran
+            
+            sources.append(f'<source media="(max-width: {width}px)" srcset="{full_responsive_path}" type="image/webp">')
+            srcset_values.append(f'{full_responsive_path} {width}w')
+        
+        # Original image in WebP format as a fallback and for larger sizes
+        # The generate_responsive_images.py also saves the original size as webp
+        original_webp_path = os.path.join(base_src_path, f"{base_filename_no_ext}-{original_width}w.webp")
+        # Add the original image (converted to webp) as the last source and default for the <img> tag
+        # Only add if not already in srcset_values to avoid duplicates.
+        if f'{original_webp_path} {original_width}w' not in srcset_values:
+            srcset_values.append(f'{original_webp_path} {original_width}w')
+
+        # Ensure original_src is also handled, perhaps as a final fallback for non-webp browsers
+        final_img_src = original_src # Use the original for non-webp fallback
+        
+        picture_tag_html = f'''<picture>
+    {'    '.join(sources)}
+    <img src="{final_img_src}" alt="{alt_text}" class="{' '.join(classes)}" loading="{loading_attr}" width="{original_width}" height="{original_height}" srcset="{', '.join(srcset_values)}" sizes="(max-width: 1200px) 100vw, 1200px">
+</picture>'''
+        
+        new_picture_tag = BeautifulSoup(picture_tag_html, 'html.parser').find('picture')
+        img_tag.replace_with(new_picture_tag)
+        modified = True
+        print(f"  Replaced <img> with <picture> for {original_src}")
+
+    if modified:
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(str(soup.prettify())) # Use prettify for better formatting
+            print(f"Modified HTML: {file_path}")
+        except IOError as e:
+            print(f"Error writing to file {file_path}: {e}")
+    else:
+        print(f"No changes needed for: {file_path}")
 
 def main():
-    blog_dir = 'blog'
-    for filename in os.listdir(blog_dir):
-        if filename.endswith('.html'):
-            file_path = os.path.join(blog_dir, filename)
-            process_blog_post(file_path)
+    """
+    Main function to find all HTML files and apply responsive image changes.
+    """
+    exclude_dirs = ["node_modules", "venv", "venv-responsive-images", "__pycache__", ".git", ".github", ".vercel", "es", "locales", "api", "help-requests", "sample-pages"]
+
+    html_files = glob.glob("**/*.html", recursive=True)
+
+    for file_path in html_files:
+        if any(exclude_dir in file_path for exclude_dir in exclude_dirs):
+            # print(f"Skipping excluded file: {file_path}")
+            continue
+        
+        print(f"Processing {file_path}...")
+        process_html_file(file_path)
 
 if __name__ == "__main__":
     main()

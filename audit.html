@@ -17,8 +17,8 @@
    {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localleads.pro/images/logo.png","url": "https://www.localleads.pro","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localleads.pro/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com/LocalLeadsApp","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
   </script>
 <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
-  <link href="style_scroll_to_top.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" referrerpolicy="no-referrer" rel="stylesheet"/>
 </head>
 <body>
 <div id="mobile-nav-overlay">
@@ -130,22 +130,22 @@
        Audit Results
       </h2>
 <div id="results-container">
-    <div id="mobile-friendliness-results" class="audit-section">
-        <h3>Mobile Friendliness <i class="fas fa-mobile-alt"></i></h3>
-        <div class="audit-item">
-            <span class="audit-status"></span>
-            <p class="audit-message"></p>
-            <div class="audit-details"></div>
-        </div>
-    </div>
-    <div id="structured-data-results" class="audit-section">
-        <h3>Structured Data <i class="fas fa-database"></i></h3>
-        <div class="audit-item">
-            <span class="audit-status"></span>
-            <p class="audit-message"></p>
-            <div class="audit-details"></div>
-        </div>
-    </div>
+<div class="audit-section" id="mobile-friendliness-results">
+<h3>Mobile Friendliness <i class="fas fa-mobile-alt"></i></h3>
+<div class="audit-item">
+<span class="audit-status"></span>
+<p class="audit-message"></p>
+<div class="audit-details"></div>
+</div>
+</div>
+<div class="audit-section" id="structured-data-results">
+<h3>Structured Data <i class="fas fa-database"></i></h3>
+<div class="audit-item">
+<span class="audit-status"></span>
+<p class="audit-message"></p>
+<div class="audit-details"></div>
+</div>
+</div>
 </div>
 <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
 <h3>
@@ -278,6 +278,6 @@
 </button>
 <script src="/js/app.min.js">
 </script>
-  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 </body>
 </html>
