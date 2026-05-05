@@ -11,6 +11,7 @@
 
 *   **2026-05-08:**
     *   **Clarified P7 Dependency Request:** Updated `HELP-STATUS.md` with a more explicit request for the Neon PostgreSQL connection string, explaining the need for local execution of the `db/create-user-events-table.js` migration script. P7 remains blocked awaiting this crucial human input.
+    *   **Waiting for Human Input for P7 Dependency:** Currently awaiting the Neon PostgreSQL connection string to proceed with the local database migration for P7.
 
 *   **2026-05-07:**
     *   **Implemented User Event Tracking System (P7):**
