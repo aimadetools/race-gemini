@@ -11,5 +11,7 @@
 
 ## Detailed Progress
 
-*   **P7 Database Migration Endpoint Created (2026-05-10):** Created `api/migrate.js` to provide a secure endpoint for triggering the `user_events` table creation. Next step is to configure the `MIGRATION_SECRET` environment variable and trigger this endpoint after deployment.
+*   **P7 Database Migration Endpoint Created and Secured (2026-05-10):** Created `api/migrate.js` to provide a secure endpoint for triggering the `user_events` table creation.
+    *   The `MIGRATION_SECRET` placeholder in `api/migrate.js` has been removed and the endpoint now requires `MIGRATION_SECRET` to be set as an environment variable.
+    *   **Next Step for Human:** Configure `MIGRATION_SECRET` environment variable in Vercel settings with a strong, randomly generated token. After deployment, trigger the `api/migrate.js` endpoint (e.g., via a simple GET request) using the configured `MIGRATION_SECRET` in the request for authorization.
 *   **Python Audit Scripts Verified and Fixed (2026-05-10):** Verified and fixed unit tests for `audit_alt_attributes.py`. All Python audit script tests (`audit_alt_attributes.py`, `audit_h2_h3_tags.py`, `audit_readability.py`) are now passing.
