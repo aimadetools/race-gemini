@@ -227,6 +227,33 @@ document.addEventListener('DOMContentLoaded', () => {
             section.appendChild(contentDiv);
             resultsContainer.appendChild(section);
         }
+
+        // Structured Data
+        if (results.structured_data) {
+            const sdResult = results.structured_data;
+            const section = createResultSection('Structured Data:', sdResult.has_structured_data ? 'success' : 'error');
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'audit-structured-data-details';
+
+            if (sdResult.has_structured_data) {
+                contentDiv.innerHTML = `
+                    <p class="sd-status success"><i class="fas fa-check-circle"></i> Structured Data Found!</p>
+                    <p><strong>Types:</strong> ${sdResult.structured_data_types.join(', ')}</p>
+                    <p>${sdResult.details}</p>
+                    <p class="explanation-text">Structured data helps search engines understand the content of your pages, which can improve your visibility in search results (e.g., rich snippets).</p>
+                    <p><a href="https://developers.google.com/search/docs/guides/sd-overview" target="_blank" rel="noopener noreferrer" class="button button-small">Learn About Structured Data</a></p>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <p class="sd-status error"><i class="fas fa-times-circle"></i> No Structured Data Found.</p>
+                    <p>${sdResult.details}</p>
+                    <p class="explanation-text">Implementing structured data can significantly enhance your presence in search engine results. Consider adding relevant schema markup to your pages.</p>
+                    <p><a href="https://developers.google.com/search/docs/guides/sd-overview" target="_blank" rel="noopener noreferrer" class="button button-small">Learn About Structured Data</a></p>
+                `;
+            }
+            section.appendChild(contentDiv);
+            resultsContainer.appendChild(section);
+        }
     }
 
     emailReportForm.addEventListener('submit', async (e) => {

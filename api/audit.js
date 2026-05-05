@@ -76,13 +76,14 @@ module.exports = async (req, res) => {
 
     try {
         // Run all audit scripts concurrently
-        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags, googleBusinessProfile, mobileFriendliness] = await Promise.allSettled([
+        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags, googleBusinessProfile, mobileFriendliness, structuredData] = await Promise.allSettled([
             runPythonScript('check_broken_links.py', url, pythonExecutable),
             runPythonScript('audit_alt_attributes.py', url, pythonExecutable),
             runPythonScript('audit_page_load_times.py', url, pythonExecutable),
             runPythonScript('audit_h1_tags.py', url, pythonExecutable),
             runPythonScript('audit_google_business_profile.py', url, pythonExecutable),
-            runPythonScript('audit_mobile_friendliness.py', url, pythonExecutable)
+            runPythonScript('audit_mobile_friendliness.py', url, pythonExecutable),
+            runPythonScript('audit_structured_data.py', url, pythonExecutable)
         ]);
 
         if (brokenLinks.status === 'fulfilled') {
@@ -119,6 +120,12 @@ module.exports = async (req, res) => {
             auditResults.mobile_friendliness = mobileFriendliness.value;
         } else {
             errors.push(mobileFriendliness.reason);
+        }
+
+        if (structuredData.status === 'fulfilled') {
+            auditResults.structured_data = structuredData.value;
+        } else {
+            errors.push(structuredData.reason);
         }
 
         if (errors.length > 0) {

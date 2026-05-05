@@ -21,6 +21,11 @@
             *   Integrated `audit_mobile_friendliness.py` into `api/audit.js` for concurrent execution during audits.
             *   Updated `audit.html` and `js/audit.js` to display the mobile-friendliness results to the user.
             *   Added comprehensive unit tests (`tests/test_audit_mobile_friendliness.py`) to ensure the reliability and accuracy of the new mobile-friendliness audit script.
+        *   **Added Structured Data Check (P10):**
+            *   Created `audit_structured_data.py` to detect JSON-LD structured data and extract its types.
+            *   Integrated `audit_structured_data.py` into `api/audit.js` for concurrent execution during audits.
+            *   Updated `audit.html` and `js/audit.js` to display the structured data results to the user.
+            *   Added comprehensive unit tests (`tests/test_audit_structured_data.py`) to ensure the reliability and accuracy of the new structured data audit script.
 
 
 *   **2026-05-05:**
