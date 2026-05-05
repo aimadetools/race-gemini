@@ -20,14 +20,11 @@ async function createUserEventsTable() {
     console.log('Table "user_events" created or already exists.');
   } catch (error) {
     console.error('Error creating user_events table:', error);
-    process.exit(1);
+    throw error;
   } finally {
     if (client) {
       client.release();
     }
-    // It's generally not good practice to exit here in a migration script
-    // but for a simple standalone script, it's acceptable.
-    process.exit(0); 
   }
 }
 
