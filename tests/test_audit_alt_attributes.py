@@ -3,6 +3,8 @@ from unittest.mock import patch, MagicMock
 import json
 import requests
 from audit_alt_attributes import audit_alt_attributes, main
+import os
+import shutil
 
 class TestAuditAltAttributes(unittest.TestCase):
 
@@ -10,7 +12,7 @@ class TestAuditAltAttributes(unittest.TestCase):
 
     def test_no_images(self):
         html_content = "<html><body><h1>Hello</h1></body></html>"
-        issues = audit_alt_attributes(html_content)
+        issues = audit_alt_attributes(html_content, "test_file.html")
         self.assertEqual(issues, [])
 
     def test_all_images_have_alt(self):
@@ -22,7 +24,7 @@ class TestAuditAltAttributes(unittest.TestCase):
             </body>
         </html>
         """
-        issues = audit_alt_attributes(html_content)
+        issues = audit_alt_attributes(html_content, "test_file.html")
         self.assertEqual(issues, [])
 
     def test_images_missing_alt(self):
@@ -35,20 +37,23 @@ class TestAuditAltAttributes(unittest.TestCase):
             </body>
         </html>
         """
-        issues = audit_alt_attributes(html_content)
+        issues = audit_alt_attributes(html_content, "test_file.html")
         expected_issues = [
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img src="img1.png"/>',
                 "src": "img1.png"
             },
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img alt="" src="img2.jpg"/>',
                 "src": "img2.jpg"
             },
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img alt=" " src="img3.gif"/>',
                 "src": "img3.gif"
             }
@@ -65,15 +70,17 @@ class TestAuditAltAttributes(unittest.TestCase):
             </body>
         </html>
         """
-        issues = audit_alt_attributes(html_content)
+        issues = audit_alt_attributes(html_content, "test_file.html")
         expected_issues = [
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img src="img2.jpg"/>',
                 "src": "img2.jpg"
             },
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img alt=" " src="img3.gif"/>',
                 "src": "img3.gif"
             }
@@ -90,20 +97,23 @@ class TestAuditAltAttributes(unittest.TestCase):
             </body>
         </html>
         """
-        issues = audit_alt_attributes(html_content)
+        issues = audit_alt_attributes(html_content, "test_file.html")
         expected_issues = [
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img src="/static/img.png"/>',
                 "src": "/static/img.png"
             },
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img src="http://example.com/logo.jpg"/>',
                 "src": "http://example.com/logo.jpg"
             },
             {
                 "type": "Missing or Empty Alt Attribute",
+                "file": "test_file.html",
                 "element": '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>',
                 "src": "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
             }
@@ -113,66 +123,90 @@ class TestAuditAltAttributes(unittest.TestCase):
 
     # --- Tests for main function ---
 
-    @patch('requests.get')
+    def setUp(self):
+        # Create a temporary directory for test HTML files
+        self.test_dir = "temp_test_html_alt"
+        os.makedirs(self.test_dir, exist_ok=True)
+
+    def tearDown(self):
+        # Clean up the temporary directory
+        if os.path.exists(self.test_dir):
+            shutil.rmtree(self.test_dir)
+
+    def _create_html_file(self, filename, content):
+        filepath = os.path.join(self.test_dir, filename)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return filepath
+
     @patch('builtins.print')
     @patch('argparse.ArgumentParser.parse_args')
-    def test_main_successful_audit_no_issues(self, mock_parse_args, mock_print, mock_requests_get):
-        mock_parse_args.return_value.url = "http://example.com/no-issues"
+    def test_main_no_issues_local_files(self, mock_parse_args, mock_print):
+        mock_parse_args.return_value.dir_path = self.test_dir
         
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.text = "<html><body><img src='good.png' alt='Good Alt'></body></html>"
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
+        self._create_html_file("good1.html", "<html><body><img src='img1.png' alt='Good Alt'></body></html>")
+        self._create_html_file("good2.html", "<html><body><img src='img2.jpg' alt='Another Good Alt'></body></html>")
 
         main()
-        mock_requests_get.assert_called_once_with("http://example.com/no-issues")
-        mock_print.assert_called_once_with(json.dumps([], indent=2))
+        # Capture the printed output and parse it as JSON
+        printed_output = mock_print.call_args[0][0]
+        self.assertEqual(json.loads(printed_output), {"message": "No issues found."})
 
-    @patch('requests.get')
     @patch('builtins.print')
     @patch('argparse.ArgumentParser.parse_args')
-    def test_main_successful_audit_with_issues(self, mock_parse_args, mock_print, mock_requests_get):
-        mock_parse_args.return_value.url = "http://example.com/with-issues"
+    def test_main_with_issues_local_files(self, mock_parse_args, mock_print):
+        mock_parse_args.return_value.dir_path = self.test_dir
         
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.text = "<html><body><img src='bad.png'></body></html>"
-        mock_response.raise_for_status.return_value = None
-        mock_requests_get.return_value = mock_response
+        self._create_html_file("bad1.html", "<html><body><img src='img1.png'></body></html>")
+        self._create_html_file("bad2.html", "<html><body><img src='img2.jpg' alt=' '></body></html>")
 
         main()
-        mock_requests_get.assert_called_once_with("http://example.com/with-issues")
-        expected_issues = [{"type": "Missing or Empty Alt Attribute", "element": '<img src="bad.png"/>', "src": "bad.png"}]
-        mock_print.assert_called_once_with(json.dumps(expected_issues, indent=2))
+        printed_output = mock_print.call_args[0][0]
+        issues = json.loads(printed_output)
 
-    @patch('requests.get')
+        self.assertEqual(len(issues), 2)
+        self.assertIn({
+            "type": "Missing or Empty Alt Attribute",
+            "file": os.path.join(self.test_dir, "bad1.html"),
+            "element": '<img src="img1.png"/>',
+            "src": "img1.png"
+        }, issues)
+        self.assertIn({
+            "type": "Missing or Empty Alt Attribute",
+            "file": os.path.join(self.test_dir, "bad2.html"),
+            "element": '<img alt=" " src="img2.jpg"/>',
+            "src": "img2.jpg"
+        }, issues)
+
     @patch('builtins.print')
     @patch('argparse.ArgumentParser.parse_args')
-    def test_main_url_fetch_failure(self, mock_parse_args, mock_print, mock_requests_get):
-        mock_parse_args.return_value.url = "http://invalid.com"
-        mock_requests_get.side_effect = requests.exceptions.RequestException("DNS lookup failed")
+    def test_main_no_html_files(self, mock_parse_args, mock_print):
+        mock_parse_args.return_value.dir_path = self.test_dir
+        # No HTML files created in self.test_dir
 
         main()
-        mock_requests_get.assert_called_once_with("http://invalid.com")
-        mock_print.assert_called_once_with(json.dumps({"error": "Failed to fetch URL http://invalid.com: DNS lookup failed"}, indent=2))
+        mock_print.assert_called_once_with(json.dumps({"message": f"No HTML files found in the directory: {self.test_dir}"}, indent=2))
 
-    @patch('requests.get')
     @patch('builtins.print')
     @patch('argparse.ArgumentParser.parse_args')
-    def test_main_unexpected_error(self, mock_parse_args, mock_print, mock_requests_get):
-        mock_parse_args.return_value.url = "http://example.com/error"
+    def test_main_file_processing_error(self, mock_parse_args, mock_print):
+        mock_parse_args.return_value.dir_path = self.test_dir
         
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.text = "<html><body><img src='bad.png'></body></html>"
-        mock_response.raise_for_status.side_effect = Exception("Arbitrary error") # Simulate error after fetch
-        mock_requests_get.return_value = mock_response
+        # Create a file that will cause an error (e.g., malformed encoding, but for simplicity, we'll just mock open for now)
+        # For a real scenario, you'd create a file that's hard to parse or mock the file reading
+        self._create_html_file("error.html", "this is not valid html, and will cause an exception if audit_alt_attributes is strict")
 
-        main()
-        mock_requests_get.assert_called_once_with("http://example.com/error")
-        mock_print.assert_called_once_with(json.dumps({"error": "An unexpected error occurred: Arbitrary error"}, indent=2))
-
+        # To properly test file processing error, we need to mock open or the audit_alt_attributes function
+        # Here we'll rely on the exception handling in main if audit_alt_attributes were to raise one.
+        # However, audit_alt_attributes expects valid html content and will parse what it gets.
+        # A more direct test would be to mock audit_alt_attributes to raise an exception.
+        with patch('audit_alt_attributes.audit_alt_attributes', side_effect=Exception("Simulated processing error")):
+            main()
+            printed_output = mock_print.call_args[0][0]
+            error_output = json.loads(printed_output)
+            self.assertEqual(len(error_output), 1)
+            self.assertIn("error", error_output[0])
+            self.assertIn("Simulated processing error", error_output[0]["error"])
 
 if __name__ == "__main__":
     unittest.main()
