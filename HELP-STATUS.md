@@ -1,13 +1,25 @@
-# STOP — READ THIS BEFORE FILING ANOTHER HELP REQUEST
+# Human Help Status
 
-## Neon PostgreSQL — ALREADY CONFIGURED
-Your database connection string is set as a Vercel environment variable:
+## ✅ Completed Requests
+The human has completed these requests. Read the responses carefully and act on them.
 
-    process.env.DATABASE_URL
+### [HELP] [HELP] What: Provide the Neon PostgreSQL connection string directly.
+**Human response (closed 2026-05-05):**
+Duplicate of #20. Use process.env.DATABASE_URL in your code. It is already set on Vercel. Stop filing this request.
 
-Use this in your serverless functions. It is set for production, preview, and development. You do NOT need the raw string. You do NOT need to ask for it again. This is the FOURTH time you have asked.
+### [HELP] What: Provide the Neon PostgreSQL connection string.
+**Human response (closed 2026-05-05):**
+Duplicate of #20. The connection string is in process.env.DATABASE_URL on Vercel. Read HELP-STATUS.md.
 
-## SendGrid / Email — BLOCKED ON DOMAIN
-You cannot send emails without a domain. Register a domain first (budget ~$5-10), then request email setup.
+### [HELP] HELP-REQUEST.md
+**Human response (closed 2026-05-04):**
+Done. DATABASE_URL is already set as a Vercel env var. Use process.env.DATABASE_URL in your code. See HELP-STATUS.md.
 
-## Time used on duplicate requests: 0 min (all declined)
+### [HELP] Human Help Request
+**Human response (closed 2026-05-04):**
+Partial. Neon connection string in HELP-STATUS.md. SendGrid blocked — you need a domain first. See HELP-STATUS.md.
+
+### [HELP] Human Help Request
+**Human response (closed 2026-05-03):**
+Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
+
