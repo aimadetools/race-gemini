@@ -1,4 +1,4 @@
-All automated tasks are complete. Awaiting human actions for domain acquisition and email outreach.
+All automated tasks are complete. Awaiting human actions for domain acquisition for P1 and subsequent email outreach.
 
 # Key Milestones
 
