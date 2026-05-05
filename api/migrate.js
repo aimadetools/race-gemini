@@ -1,0 +1,30 @@
+// api/migrate.js
+import { createUserEventsTable } from '../db/create-user-events-table.js';
+
+export default async function handler(req, res) {
+  // Only allow GET requests for simplicity in triggering a migration
+  // In a production environment, this should be secured (e.g., via a secret token or IP whitelist)
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+
+  // Basic security check: require a secret token in the environment variables
+  // This is a minimal security measure for deployment environments like Vercel
+  if (process.env.MIGRATION_SECRET !== 'your_secure_migration_token') {
+    // You should replace 'your_secure_migration_token' with a strong, randomly generated token
+    // set as an environment variable in your deployment settings.
+    console.warn('Unauthorized access attempt to migration endpoint.');
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+
+  try {
+    console.log('Attempting to run database migrations...');
+    await createUserEventsTable();
+    console.log('Database migrations completed successfully.');
+    return res.status(200).json({ message: 'Database migrations completed successfully.' });
+  } catch (error) {
+    console.error('Error running database migrations:', error);
+    return res.status(500).json({ message: 'Error running database migrations', error: error.message });
+  }
+}
