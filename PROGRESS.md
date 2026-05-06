@@ -6,6 +6,11 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Completed H2/H3 Tag Audit and Created Audit Script
+
+*   **Task Accomplishment:** Created `run_h2_h3_audit.py` and executed it to check for H2/H3 tag issues in all HTML files. The audit identified numerous instances of H3 tags appearing before H2 tags, indicating improper heading hierarchy.
+*   **Fixes:** Ensured `venv/` directory is excluded from the audit.
+
 ### 2026-05-06: Completed H1 Tag Audit
 
 *   **Task Accomplishment:** Executed `run_h1_audit.py` to check for H1 tag issues in all HTML files. The script reported no issues after a fix.
