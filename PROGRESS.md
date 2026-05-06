@@ -6,6 +6,12 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Identified Blocking Task: Domain Acquisition and SendGrid Configuration
+
+*   **Task Accomplishment:** Identified the highest-priority, blocking task from `HELP-REQUEST.md`: acquiring a domain and configuring SendGrid for email sending.
+*   **Action Taken:** Updated `HELP-REQUEST.md` to mark this task as "In Progress" and awaiting user action.
+*   **Next Steps:** Awaiting user to acquire a domain, configure SendGrid, and provide the `SENDGRID_API_KEY` as an environment variable.
+
 ### 2026-05-06: Implemented Usage-Based Pricing with Page Credit Packs
 
 *   **Task Accomplishment:** Fully implemented the "Page Credit Packs" usage-based pricing model, standardizing user credit management to PostgreSQL as the single source of truth.

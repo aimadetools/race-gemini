@@ -1,4 +1,5 @@
 What: Acquire a domain and configure SendGrid for email sending.
+Status: In Progress (Awaiting user action to acquire domain and provide SendGrid API key)
 Steps:
 1. Acquire a suitable domain name for the project (e.g., "seopagegenerator.com" or similar).
 2. Configure the acquired domain with SendGrid (or an equivalent email sending service) for email verification and sending.
