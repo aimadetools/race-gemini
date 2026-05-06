@@ -6,47 +6,15 @@
 
 ## Recent Progress (Last 3 Days)
 
-### 2026-05-06: Added API Tests for Dynamic Primary Color in SEO Page Generator
+### 2026-05-06: Implemented & Tested Dynamic Primary Color for SEO Page Generator
 
-*   **API Test Coverage:** Created `tests/api/generate-seo-pages.test.js` to validate the functionality of the `/api/generate-seo-pages` endpoint.
-*   **Primary Color Validation:** Tests specifically cover the correct application and default behavior of the `primaryColor` parameter in generated SEO pages.
-*   **Error Handling Verification:** Implemented tests for missing required fields, empty input arrays, and non-POST requests.
-*   **AI Content Path Testing (Conditional):** Included tests for AI content generation scenarios, noting complexities due to module loading and environment variable initialization within the Jest environment.
+*   **Feature Implementation:** Enabled custom branding by modifying `api/generate-seo-pages.js` to accept `primaryColor`, with UI updates in `seo-page-generator.html` and `seo-page-generator.js`.
+*   **API Test Coverage:** Created `tests/api/generate-seo-pages.test.js` to validate functionality, including primary color application, error handling, and conditional AI content paths.
 
-### 2026-05-06: Added API Tests for Checkout Endpoint
+### 2026-05-06: Implemented & Tested Usage-Based Pricing with PostgreSQL for Credit Management
 
-*   **API Test Coverage:** Created `tests/api/checkout.test.js` to validate the functionality of the `/api/checkout` endpoint.
-*   **Stripe Integration Validation:** Tests cover successful creation of Stripe checkout sessions, including correct `line_items`, `metadata` (for `creditPackId`, `credits`, `userId`), and redirection.
-*   **Authentication & Input Validation:** Implemented tests for missing/invalid `creditPackId`, missing/invalid `authToken`, and non-POST requests.
-*   **Error Handling Verification:** Verified appropriate error responses for Stripe API failures and error logging.
-
-### 2026-05-06: Added API Tests for Webhook Endpoint
-
-*   **API Test Coverage:** Created `tests/api/webhook.test.js` to validate the functionality of the `/api/webhook` endpoint.
-*   **Stripe Event Handling:** Tests cover `checkout.session.completed` (credit updates in PostgreSQL), `invoice.payment_succeeded` (agency credit updates in KV store), and `customer.subscription.deleted` (agency subscription status updates in KV store).
-*   **Signature Verification & Error Handling:** Implemented tests for Stripe signature verification failures, missing/invalid data in event payloads, and database interaction errors.
-*   **Testability Refinement:** Refactored `db/mockDb.js` to expose `addMockUser` and `getMockUsers` for improved test setup and assertions.
-
-### 2026-05-06: Implemented Dynamic Primary Color for SEO Page Generator
-
-*   **Enabled Custom Branding:** Modified `api/generate-seo-pages.js` to accept `primaryColor` from the request body, allowing for dynamic per-business branding on generated local SEO pages.
-*   **User Interface Update:** Added an input field for `primaryColor` in `seo-page-generator.html` and updated `seo-page-generator.js` to capture and send this value to the backend API.
-
-### 2026-05-06: Implemented Usage-Based Pricing with PostgreSQL for Credit Management
-
-*   **Identified Critical Path:** Recognized the need for robust credit storage and user authentication as a critical dependency for the "Page Credit Packs" usage-based pricing model, based on `USAGE_BASED_PRICING.md`.
-*   **Database Integration:**
-    *   Set up PostgreSQL database connection (`db/index.js`).
-    *   Designed and implemented database schema for users and credit balances, creating a `users` table with `id`, `email`, `hashed_password`, `created_at`, and `credits` (`db/init.js`).
-*   **User Authentication Migration:**
-    *   Modified `api/signup.js` to store new users directly in the PostgreSQL `users` table.
-    *   Modified `api/login.js` to authenticate users against the PostgreSQL `users` table.
-*   **Credit Management Endpoints:**
-    *   Created `api/get-credits.js` to fetch a user's credit balance.
-    *   Created `api/update-credits.js` to add/deduct credits for a user.
-*   **Frontend Updates:**
-    *   Updated `pricing.html` to reflect the new "Page Credit Packs" tiers and prices, modifying displayed text, data attributes, and PayPal button rendering.
-    *   Integrated credit balance display and validation into `generate.html`, showing current and estimated credits and preventing page generation if credits is insufficient.
-*   **Payment Processing Integration:**
-    *   Modified `api/checkout.js` to accept `creditPackId` and map it to the correct credit pack details for Stripe checkout sessions.
-    *   Updated `api/webhook.js` to process `checkout.session.completed` events, updating the user's credit balance in the PostgreSQL database.
+*   **Feature Implementation:** Established PostgreSQL for robust credit storage and user authentication. Modified `api/signup.js` and `api/login.js`. Implemented `api/get-credits.js` and `api/update-credits.js`. Updated `pricing.html` and `generate.html` for credit display/validation. Integrated `api/checkout.js` and `api/webhook.js` for payment processing and credit updates.
+*   **API Test Coverage:**
+    *   Created `tests/api/checkout.test.js` for `api/checkout` endpoint validation, including Stripe integration, authentication, input validation, and error handling.
+    *   Created `tests/api/webhook.test.js` for `api/webhook` endpoint, covering Stripe event handling (PostgreSQL & KV store interactions), signature verification, and error handling.
+    *   Refactored `db/mockDb.js` to expose `addMockUser` and `getMockUsers` for improved testability.
