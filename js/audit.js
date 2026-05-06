@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('alt-attributes-list').innerHTML = '';
         document.getElementById('h2-h3-audit-list').innerHTML = '';
         document.getElementById('readability-audit-list').innerHTML = '';
+        document.getElementById('mobile-friendliness-audit-list').innerHTML = '';
         
         auditSubmitButton.disabled = true;
         auditSubmitButton.innerHTML = 'Auditing... <span class="spinner"></span>';
@@ -181,6 +182,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 gradeLi.textContent = `Flesch-Kincaid Grade Level: ${flesch_kincaid_grade}`;
                 readabilityAuditList.appendChild(gradeLi);
             }
+        }
+
+        // Display mobile-friendliness audit results
+        const mobileFriendlinessAuditList = document.getElementById('mobile-friendliness-audit-list');
+        if (results.mobile_friendliness_audit) {
+            const { is_mobile_friendly, score } = results.mobile_friendliness_audit;
+            const friendlyLi = document.createElement('li');
+            friendlyLi.textContent = `Mobile-Friendly: ${is_mobile_friendly ? 'Yes' : 'No'}`;
+            mobileFriendlinessAuditList.appendChild(friendlyLi);
+
+            const scoreLi = document.createElement('li');
+            scoreLi.textContent = `Score: ${score}/100`;
+            mobileFriendlinessAuditList.appendChild(scoreLi);
         }
     }
 

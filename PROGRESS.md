@@ -6,7 +6,15 @@
 *   **Audit & Test Refinements:** Enhanced audit logic, fixed tests, and ensured full Python/JavaScript test coverage. Implemented and integrated H2/H3 tag hierarchy and content readability (Flesch-Kincaid) audit scripts, complete with unit tests.
 *   **Local SEO Page Generator (P1) Ready:** Implemented server-side generation, AI content integration, and updated related files. Implemented server-side HTML generation (`api/generate-seo-pages.js`), updated `seo-page-generator.html` and `seo-page-generator.js` to integrate AI content options and leverage the new API.
 
-## Recent Progress (Last 2 Days)
+## Recent Progress (Last 3 Days)
+
+### 2026-05-08: Mobile-Friendliness Audit
+
+*   **New Audit Script:** Created `audit_mobile_friendliness.py` to check if a URL is mobile-friendly.
+*   **Unit Test:** Added `tests/test_audit_mobile_friendliness.py` to ensure the new script works correctly.
+*   **Backend Integration:** Updated `api/audit.js` to include the new mobile-friendliness audit in the parallel execution of audit scripts.
+*   **Frontend Integration:** Modified `audit.html` to add a new section for the mobile-friendliness results.
+*   **JavaScript Update:** Updated `js/audit.js` to display the mobile-friendliness score and status.
 
 ### 2026-05-07: Re-integrated Technical SEO Audits
 
@@ -24,12 +32,3 @@
 *   **JavaScript Update:** Rewrote `js/audit.js` to handle the new form, send data to the backend, and display the "mentioned" vs. "missed" locations.
 *   **Backend API:** Updated the `api/audit.js` serverless function to use the new `audit_locations.py` script.
 *   **Build Process:** Updated the javascript build process to include the changes.
-
-### 2026-05-05: Automated Task Completion
-
-*   **Python Audit Scripts:** Verified and fixed alt attributes, H2/H3 tags, and readability scripts.
-*   **Image Optimization:** Applied lazy loading, handled missing alt attributes, and implemented responsive image generation.
-*   **Frontend Performance:** Consolidated JavaScript, updated minified CSS/JS references.
-*   **Content Enhancements:** Verified article schema and added missing meta descriptions.
-*   **Email Open Tracking:** Implemented `api/track-email-open.js` to enable tracking of email open rates via a tracking pixel.
-*   **Test Verification & Fixes:** Addressed and resolved issues in `tests/api/dashboard.test.js` and `tests/api/audit.test.js`. Confirmed all 14 JavaScript test suites (97 tests) and all 53 Python audit script tests passed successfully.
