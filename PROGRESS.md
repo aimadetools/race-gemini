@@ -11,6 +11,11 @@
 *   **Improved AI Content Generation:** Modified `generate_sample_pages.py` to produce more detailed and varied `ai_content` for better SEO and personalization on sample pages.
 *   **Customizable Primary Color:** Modified `outreach-targets.csv` to include a `Primary Color` column and updated `generate_sample_pages.py` to use this value, allowing for per-business branding on generated sample pages.
 
+### 2026-05-06: Implemented Dynamic Primary Color for SEO Page Generator
+
+*   **Enabled Custom Branding:** Modified `api/generate-seo-pages.js` to accept `primaryColor` from the request body, allowing for dynamic per-business branding on generated local SEO pages.
+*   **User Interface Update:** Added an input field for `primaryColor` in `seo-page-generator.html` and updated `seo-page-generator.js` to capture and send this value to the backend API.
+
 ### 2026-05-06: Implemented Usage-Based Pricing with PostgreSQL for Credit Management
 
 *   **Identified Critical Path:** Recognized the need for robust credit storage and user authentication as a critical dependency for the "Page Credit Packs" usage-based pricing model, based on `USAGE_BASED_PRICING.md`.
