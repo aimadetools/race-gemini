@@ -20,6 +20,13 @@
 *   **Authentication & Input Validation:** Implemented tests for missing/invalid `creditPackId`, missing/invalid `authToken`, and non-POST requests.
 *   **Error Handling Verification:** Verified appropriate error responses for Stripe API failures and error logging.
 
+### 2026-05-06: Added API Tests for Webhook Endpoint
+
+*   **API Test Coverage:** Created `tests/api/webhook.test.js` to validate the functionality of the `/api/webhook` endpoint.
+*   **Stripe Event Handling:** Tests cover `checkout.session.completed` (credit updates in PostgreSQL), `invoice.payment_succeeded` (agency credit updates in KV store), and `customer.subscription.deleted` (agency subscription status updates in KV store).
+*   **Signature Verification & Error Handling:** Implemented tests for Stripe signature verification failures, missing/invalid data in event payloads, and database interaction errors.
+*   **Testability Refinement:** Refactored `db/mockDb.js` to expose `addMockUser` and `getMockUsers` for improved test setup and assertions.
+
 ### 2026-05-06: Implemented Dynamic Primary Color for SEO Page Generator
 
 *   **Enabled Custom Branding:** Modified `api/generate-seo-pages.js` to accept `primaryColor` from the request body, allowing for dynamic per-business branding on generated local SEO pages.
