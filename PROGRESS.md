@@ -8,6 +8,10 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Integrated Python Tests into CI/CD Pipeline
+
+*   **Integrated Python Tests:** Modified the `package.json`'s "test" script to first execute the "python-test" script and then the existing JavaScript Jest tests. This ensures both Python and JavaScript test suites are run sequentially as part of the primary test command, thereby integrating Python test execution into the CI/CD pipeline.
+
 ### 2026-05-09: Python Test Execution Fixes
 
 *   **Python Test Setup:** Created a Python virtual environment (`venv`) to manage project dependencies.

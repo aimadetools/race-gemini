@@ -28,7 +28,7 @@
     "jest": "^29.7.0"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test": "npm run python-test && node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "python-test": "./venv/bin/python3 -m unittest discover tests",
     "build:js": "cat \\\njs/ab-test-home.js \\\njs/ab-test.js \\\njs/accordion.js \\\njs/admin-agency-inquiries.js \\\njs/agency-billing.js \\\njs/agency-form.js \\\njs/agency-subscription.js \\\njs/analytics.js \\\njs/app.js \\\njs/audit-form.js \\\njs/audit.js \\\njs/blog-search.js \\\njs/contact.js \\\njs/dashboard.js \\\njs/generate-form-validation.js \\\njs/generate.js \\\njs/mobile-swipe-nav.js \\\njs/referral-form.js \\\njs/social-share.js \\\njs/stripe-checkout.js \\\njs/testimonial-carousel.js \\\njs/tracking.js \\\n| ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
   }
