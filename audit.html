@@ -103,14 +103,23 @@
 <section class="audit-form-section">
 <div class="container">
 <h2 data-i18n-key="audit_form_title">
-      Start Your Free Audit
+      Find Your Missing Customers
      </h2>
+<p class="subtitle" data-i18n-key="audit_form_subtitle">
+      Enter your website and service locations to see how many towns you're missing out on.
+     </p>
 <form id="auditUrlForm">
 <label data-i18n-key="audit_label_url" for="auditUrl">
        Website URL:
       </label>
-<input class="form-input" id="auditUrl" name="url" placeholder="https://example.com" required="" type="url"/>
+<input class="form-input" id="auditUrl" name="url" placeholder="https://your-business.com" required="" type="url"/>
 <span class="input-error-message" id="auditUrl-error">
+</span>
+<label data-i18n-key="audit_label_locations" for="locations">
+       Service Locations (comma-separated):
+      </label>
+<textarea class="form-input" id="locations" name="locations" placeholder="e.g., New York, Los Angeles, Chicago" required=""></textarea>
+<span class="input-error-message" id="locations-error">
 </span>
 <button class="button" data-i18n-key="audit_submit_button" type="submit">
        Start Audit
@@ -127,24 +136,26 @@
 </div>
 <div id="auditResults" style="display:none;">
 <h2 data-i18n-key="audit_results_title">
-       Audit Results
+       Location Audit Results
       </h2>
 <div id="results-container">
-<div class="audit-section" id="mobile-friendliness-results">
-<h3>Mobile Friendliness <i class="fas fa-mobile-alt"></i></h3>
-<div class="audit-item">
-<span class="audit-status"></span>
-<p class="audit-message"></p>
-<div class="audit-details"></div>
+<div class="audit-section" id="mentioned-locations">
+<h3>
+         Mentioned Locations
+         <span class="count" id="mentioned-count">
+</span>
+</h3>
+<ul id="mentioned-list">
+</ul>
 </div>
-</div>
-<div class="audit-section" id="structured-data-results">
-<h3>Structured Data <i class="fas fa-database"></i></h3>
-<div class="audit-item">
-<span class="audit-status"></span>
-<p class="audit-message"></p>
-<div class="audit-details"></div>
-</div>
+<div class="audit-section" id="missed-locations">
+<h3>
+         Missed Locations
+         <span class="count" id="missed-count">
+</span>
+</h3>
+<ul id="missed-list">
+</ul>
 </div>
 </div>
 <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">

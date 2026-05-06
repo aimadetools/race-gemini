@@ -1,10 +1,10 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const runPythonScript = (scriptName, url, pythonExecutable) => {
+const runPythonScript = (scriptName, args, pythonExecutable) => {
     return new Promise((resolve, reject) => {
         const scriptPath = path.resolve(process.cwd(), scriptName);
-        const pythonProcess = spawn(pythonExecutable, [scriptPath, url]);
+        const pythonProcess = spawn(pythonExecutable, [scriptPath, ...args]);
 
         let stdout = '';
         let stderr = '';
@@ -58,12 +58,12 @@ module.exports = async (req, res) => {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    const { url } = req.body;
+    const { url, locations } = req.body;
 
-    // Basic URL validation
-    if (!url) {
-        return res.status(400).json({ message: 'URL is required.' });
+    if (!url || !locations || !Array.isArray(locations) || locations.length === 0) {
+        return res.status(400).json({ message: 'URL and a list of locations are required.' });
     }
+
     try {
         new URL(url);
     } catch (error) {
@@ -72,83 +72,12 @@ module.exports = async (req, res) => {
 
     const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
     const auditResults = {};
-    const errors = [];
 
     try {
-        // Run all audit scripts concurrently
-        const [brokenLinks, altAttributes, pageLoadTimes, h1Tags, googleBusinessProfile, mobileFriendliness, structuredData, h2h3Tags, readabilityScores] = await Promise.allSettled([
-            runPythonScript('check_broken_links.py', url, pythonExecutable),
-            runPythonScript('audit_alt_attributes.py', url, pythonExecutable),
-            runPythonScript('audit_page_load_times.py', url, pythonExecutable),
-            runPythonScript('audit_h1_tags.py', url, pythonExecutable),
-            runPythonScript('audit_google_business_profile.py', url, pythonExecutable),
-            runPythonScript('audit_mobile_friendliness.py', url, pythonExecutable),
-            runPythonScript('audit_structured_data.py', url, pythonExecutable),
-            runPythonScript('audit_h2_h3_tags.py', url, pythonExecutable),
-            runPythonScript('audit_readability.py', url, pythonExecutable)
-        ]);
-
-        if (brokenLinks.status === 'fulfilled') {
-            auditResults.broken_links = brokenLinks.value;
-        } else {
-            errors.push(brokenLinks.reason);
-        }
-
-        if (altAttributes.status === 'fulfilled') {
-            auditResults.alt_attributes = altAttributes.value;
-        } else {
-            errors.push(altAttributes.reason);
-        }
-
-        if (pageLoadTimes.status === 'fulfilled') {
-            auditResults.page_load_times = pageLoadTimes.value;
-        } else {
-            errors.push(pageLoadTimes.reason);
-        }
-
-        if (h1Tags.status === 'fulfilled') {
-            auditResults.h1_tags = h1Tags.value;
-        } else {
-            errors.push(h1Tags.reason);
-        }
-
-        if (googleBusinessProfile.status === 'fulfilled') {
-            auditResults.google_business_profile = googleBusinessProfile.value;
-        } else {
-            errors.push(googleBusinessProfile.reason);
-        }
-
-        if (mobileFriendliness.status === 'fulfilled') {
-            auditResults.mobile_friendliness = mobileFriendliness.value;
-        } else {
-            errors.push(mobileFriendliness.reason);
-        }
-
-        if (structuredData.status === 'fulfilled') {
-            auditResults.structured_data = structuredData.value;
-        } else {
-            errors.push(structuredData.reason);
-        }
-
-        if (h2h3Tags.status === 'fulfilled') {
-            auditResults.h2_h3_tags = h2h3Tags.value;
-        } else {
-            errors.push(h2h3Tags.reason);
-        }
-
-        if (readabilityScores.status === 'fulfilled') {
-            auditResults.readability_scores = readabilityScores.value;
-        } else {
-            errors.push(readabilityScores.reason);
-        }
-
-        if (errors.length > 0) {
-            return res.status(500).json({
-                message: 'Some audit checks failed.',
-                results: auditResults,
-                errors: errors
-            });
-        }
+        const locationsJSON = JSON.stringify(locations);
+        const locationAudit = await runPythonScript('audit_locations.py', [url, locationsJSON], pythonExecutable);
+        
+        auditResults.location_audit = locationAudit;
 
         res.status(200).json(auditResults);
 

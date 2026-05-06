@@ -6,7 +6,8 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [MONITORING HUMAN] Await human action to acquire a domain name for P1.
     *   [MONITORING HUMAN] Monitor `HELP-STATUS.md` for completion of outreach email sending *and* domain acquisition for P1.
     *   [PENDING] Analyze outreach campaign results for successful strategies and areas for improvement (after emails are sent and tracked).
-
+*   **Audit Tool Enhancement:**
+    *   [PENDING] Re-integrate the technical SEO audit scripts (broken links, alt attributes, etc.) into the new location-based audit tool UI. The results should be displayed alongside the location audit results.
 *   **Completed Automated Tasks (Summarized):**
     *   P7 Implementation & Database Migration (setup verified).
     *   Comprehensive Audit Tool Enhancements (including Python scripts).
