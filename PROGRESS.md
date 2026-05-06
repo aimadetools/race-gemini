@@ -6,6 +6,11 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Completed H1 Tag Audit
+
+*   **Task Accomplishment:** Executed `run_h1_audit.py` to check for H1 tag issues in all HTML files. The script reported no issues after a fix.
+*   **Fixes:** Modified `run_h1_audit.py` to correctly exclude the `venv/` directory from the audit to prevent reporting on internal package files.
+
 ### 2026-05-06: Completed Alt Attribute Audit
 
 *   **Task Accomplishment:** Executed `run_alt_attribute_audit.py` to check for missing or empty `alt` attributes in all HTML files. The script reported no issues.

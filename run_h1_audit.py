@@ -5,8 +5,8 @@ from audit_h1_tags import audit_h1_tags
 def run_h1_audit_on_html_files(root_dir):
     all_issues = {}
     for dirpath, _, filenames in os.walk(root_dir):
-        # Skip node_modules and .vercel directories
-        if 'node_modules' in dirpath or '.vercel' in dirpath:
+        # Skip node_modules, .vercel and venv directories
+        if 'node_modules' in dirpath or '.vercel' in dirpath or 'venv' in dirpath:
             continue
         
         for filename in filenames:
