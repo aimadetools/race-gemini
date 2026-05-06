@@ -71,33 +71,33 @@ describe('Update Credits API', () => {
 
     // Test Case 1: Successful credit addition using targetUserId
     it('should return 200 and add credits using targetUserId', async () => {
-        mockReq.body = { targetUserId: '1', amount: 20 }; // User '1' is inserted by originalMockQuery in beforeEach
+        mockReq.body = { targetUserId: testUserId, amount: 20 };
         const expectedNewCredits = initialCredits + 20;
 
         await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Credits updated successfully.', newCredits: expectedNewCredits });
-        expect(await getCurrentCredits('1')).toBe(expectedNewCredits);
+        expect(await getCurrentCredits(testUserId)).toBe(expectedNewCredits);
         expect(mockQuery).toHaveBeenCalledWith(
             'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
-            [20, '1']
+            [20, testUserId]
         );
     });
 
     // Test Case 2: Successful credit deduction using targetUserId
     it('should return 200 and deduct credits using targetUserId', async () => {
-        mockReq.body = { targetUserId: '1', amount: -10 };
+        mockReq.body = { targetUserId: testUserId, amount: -10 };
         const expectedNewCredits = initialCredits - 10;
 
         await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Credits updated successfully.', newCredits: expectedNewCredits });
-        expect(await getCurrentCredits('1')).toBe(expectedNewCredits);
+        expect(await getCurrentCredits(testUserId)).toBe(expectedNewCredits);
         expect(mockQuery).toHaveBeenCalledWith(
             'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
-            [-10, '1']
+            [-10, testUserId]
         );
     });
 
