@@ -42,6 +42,14 @@ export const mockQuery = async (text, params) => {
     return { rows: [] };
 };
 
+export const getMockUsers = () => {
+    return mockUsers;
+};
+
+export const addMockUser = (user) => {
+    mockUsers.push(user);
+};
+
 export const clearMockUsers = () => {
     mockUsers.length = 0;
     nextId = 1;
