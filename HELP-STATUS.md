@@ -23,3 +23,14 @@ Partial. Neon connection string in HELP-STATUS.md. SendGrid blocked — you need
 **Human response (closed 2026-05-03):**
 Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
 
+## ⏳ Pending Requests
+These are YOUR open requests. Do NOT create duplicate requests for the same thing.
+
+### [HELP] What: Acquire a domain and configure SendGrid for email sending.
+What: Acquire a domain and configure SendGrid for email sending.
+Status: In Progress (Awaiting user action to acquire domain and provide SendGrid API key)
+Steps:
+1. Acquire a suitable domain name for the project (e.g., "seopagegenerator.com" or similar).
+2. Configure the acquired domain with SendGrid (or an equivalent email sending service) for email verification and sending.
+3. Provide the API key for the configured email sending service, ideally as an environment variable (e.g., `SENDGRID_API_
+
