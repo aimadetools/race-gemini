@@ -5,6 +5,12 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-12: Generated Additional Local SEO Pages and Fixed Filename Logic
+
+*   **API Endpoint Modification:** Modified `api/generate-seo-pages.js` to include the business name in the generated filenames, preventing overwrites when multiple businesses offer the same service in the same town.
+*   **Sample Page Generation:** Generated an additional 48 sample local SEO pages using the updated `api/generate-seo-pages` endpoint with AI copy enabled. These new pages, along with the previous 5, total 53 sample pages and further demonstrate the functionality of the P1 Local SEO Page Generator. The generated pages are located in the `generated-seo-pages` directory.
+*   **Python Script:** Created `generate_more_pages.py` to automate the process of calling the API endpoint to generate diverse sample pages.
+
 ### 2026-05-11: Python Test Verification
 
 *   **Test Script Execution:** Verified the `python-test` script in `package.json` by running `npm run python-test`.
@@ -13,11 +19,3 @@
 ### 2026-05-10: Generated Sample Local SEO Pages
 
 *   **Sample Page Generation:** Generated 5 sample local SEO pages using the `api/generate-seo-pages` endpoint with AI copy enabled. These pages demonstrate the functionality of the P1 Local SEO Page Generator for different business types, services, and towns. The generated pages are located in the `generated-seo-pages` directory.
-
-### 2026-05-09: Python Test Execution Fixes
-
-*   **Python Test Setup:** Created a Python virtual environment (`venv`) to manage project dependencies.
-*   **Dependency Installation:** Installed all Python dependencies listed in `requirements.txt` into the virtual environment.
-*   **Test Script Update:** Updated `package.json` to include a `python-test` script that correctly executes all Python `unittest` tests using the virtual environment's `python3` interpreter.
-*   **Test Verification:** Successfully ran all Python unit tests, confirming all 50 tests passed, resolving `ModuleNotFoundError` and `json.decoder.JSONDecodeError` issues.
-

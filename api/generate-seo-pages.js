@@ -50,7 +50,8 @@ module.exports = async (req, res) => {
                 for (const service of servicesArray) {
                     const serviceSlug = slugify(service, { lower: true, strict: true });
                     const townSlug = slugify(town, { lower: true, strict: true });
-                    const fileName = `${serviceSlug}-in-${townSlug}.html`;
+                    const businessSlug = slugify(businessName, { lower: true, strict: true });
+                    const fileName = `${serviceSlug}-in-${townSlug}-${businessSlug}.html`;
                     const filePath = path.join(outputDir, fileName);
 
                     let aiContent = '';
