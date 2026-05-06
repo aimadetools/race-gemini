@@ -43,3 +43,8 @@
     *   Created `tests/api/checkout.test.js` for `api/checkout` endpoint validation, including Stripe integration, authentication, input validation, and error handling.
     *   Created `tests/api/webhook.test.js` for `api/webhook` endpoint, covering Stripe event handling (PostgreSQL & KV store interactions), signature verification, and error handling.
     *   Refactored `db/mockDb.js` to expose `addMockUser` and `getMockUsers` for improved testability.
+
+### 2026-05-06: Optimized `index.html` Performance
+
+*   **Task Accomplishment:** Removed a duplicate CSS link to `style_scroll_to_top.min.css` and relocated the `ab-test.min.js` script from the `<head>` to the end of the `<body>` to improve render-blocking performance. Also removed a duplicated `scrollToTopBtn` element.
+*   **Impact:** Reduced redundant resource loading and improved initial page load speed.
