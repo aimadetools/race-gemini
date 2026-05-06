@@ -37,8 +37,13 @@ def generate_for_business(business, template_content):
     service_type = business.get("Service Type", "Plumbing Services") # Get Service Type dynamically
 
     # Define these inside the loop so they use the current business's data
-    current_ai_content = f"<p>Looking for reliable {service_type} in {city}? {business_name} is your trusted local expert. We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. Contact us today for all your {service_type.lower()} needs!</p>"
-    current_primary_color = "#007bff"
+    current_ai_content = (
+        f"<p>Looking for reliable {service_type} in {city}? {business_name} is your trusted local expert. "
+        f"We are dedicated to providing top-quality service and ensuring customer satisfaction in {city}. "
+        f"Our team at {business_name} specializes in {service_type.lower()} and is ready to help you with all your needs. "
+        f"Contact us today for a free consultation or to schedule an appointment!</p>"
+    )
+    current_primary_color = business.get("Primary Color", "#007bff")
     current_agency_logo = f"<span>{business_name}</span>"
 
     generated_files = []
