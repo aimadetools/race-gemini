@@ -13,6 +13,13 @@
 *   **Error Handling Verification:** Implemented tests for missing required fields, empty input arrays, and non-POST requests.
 *   **AI Content Path Testing (Conditional):** Included tests for AI content generation scenarios, noting complexities due to module loading and environment variable initialization within the Jest environment.
 
+### 2026-05-06: Added API Tests for Checkout Endpoint
+
+*   **API Test Coverage:** Created `tests/api/checkout.test.js` to validate the functionality of the `/api/checkout` endpoint.
+*   **Stripe Integration Validation:** Tests cover successful creation of Stripe checkout sessions, including correct `line_items`, `metadata` (for `creditPackId`, `credits`, `userId`), and redirection.
+*   **Authentication & Input Validation:** Implemented tests for missing/invalid `creditPackId`, missing/invalid `authToken`, and non-POST requests.
+*   **Error Handling Verification:** Verified appropriate error responses for Stripe API failures and error logging.
+
 ### 2026-05-06: Implemented Dynamic Primary Color for SEO Page Generator
 
 *   **Enabled Custom Branding:** Modified `api/generate-seo-pages.js` to accept `primaryColor` from the request body, allowing for dynamic per-business branding on generated local SEO pages.
