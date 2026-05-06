@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cityList = document.getElementById('city-list').value.trim();
         const enableAICopy = document.getElementById('enable-ai-copy').checked;
         const aiStyle = document.getElementById('ai-style').value.trim();
+        const primaryColor = document.getElementById('primary-color').value.trim();
 
         if (!businessType || !cityList) {
             alert('Please fill in both Business Type and Cities fields.');
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     towns: cities,
                     enableAICopy,
                     aiStyle: aiStyle || undefined, // Send undefined if empty
+                    primaryColor: primaryColor || undefined, // Send undefined if empty
                 }),
             });
 

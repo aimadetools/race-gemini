@@ -20,7 +20,7 @@ if (geminiApiKey) {
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
-        const { businessName, services, towns, enableAICopy = false, aiStyle } = req.body;
+        const { businessName, services, towns, enableAICopy = false, aiStyle, primaryColor } = req.body;
 
         if (!businessName || !services || !towns) {
             return res.status(400).json({ message: 'Missing required fields: businessName, services, and towns.' });
@@ -71,18 +71,16 @@ module.exports = async (req, res) => {
                         aiContent = '<p>Contact us today for a free estimate!</p>';
                     }
 
-                    // For now, agencyLogo and primaryColor are not dynamic via this endpoint,
-                    // but placeholders are kept for future expansion or if template changes.
                     // Default values are used for now.
                     const agencyLogoHtml = businessName; // Placeholder
-                    const primaryColorValue = '#007bff'; // Placeholder
+                    const resolvedPrimaryColor = primaryColor || '#007bff'; // Use provided color or default
 
                     let pageContent = template
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
                         .replace(/{{town}}/g, town)
                         .replace(/{{agencyLogo}}/g, agencyLogoHtml)
-                        .replace(/{{primaryColor}}/g, primaryColorValue)
+                        .replace(/{{primaryColor}}/g, resolvedPrimaryColor)
                         .replace(/{{ai_content}}/g, aiContent)
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug);
