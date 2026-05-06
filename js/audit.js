@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessageDiv.style.display = 'none';
         mentionedList.innerHTML = '';
         missedList.innerHTML = '';
+        document.getElementById('broken-links-list').innerHTML = '';
+        document.getElementById('h1-audit-list').innerHTML = '';
+        document.getElementById('alt-attributes-list').innerHTML = '';
+        document.getElementById('h2-h3-audit-list').innerHTML = '';
+        document.getElementById('readability-audit-list').innerHTML = '';
         
         auditSubmitButton.disabled = true;
         auditSubmitButton.innerHTML = 'Auditing... <span class="spinner"></span>';
@@ -72,21 +77,117 @@ document.addEventListener('DOMContentLoaded', () => {
         auditResultsDiv.style.display = 'block';
 
         // Display mentioned locations
-        mentionedCountSpan.textContent = `(${results.location_audit.mentioned_count})`;
-        results.location_audit.mentioned_locations.forEach(location => {
-            const li = document.createElement('li');
-            li.textContent = location;
-            mentionedList.appendChild(li);
-        });
+        if (results.location_audit && results.location_audit.mentioned_locations) {
+            mentionedCountSpan.textContent = `(${results.location_audit.mentioned_count})`;
+            results.location_audit.mentioned_locations.forEach(location => {
+                const li = document.createElement('li');
+                li.textContent = location;
+                mentionedList.appendChild(li);
+            });
+        }
 
         // Display missed locations
-        missedCountSpan.textContent = `(${results.location_audit.missed_count})`;
-        results.location_audit.missed_locations.forEach(location => {
-            const li = document.createElement('li');
-            li.textContent = location;
-            missedList.appendChild(li);
-        });
+        if (results.location_audit && results.location_audit.missed_locations) {
+            missedCountSpan.textContent = `(${results.location_audit.missed_count})`;
+            results.location_audit.missed_locations.forEach(location => {
+                const li = document.createElement('li');
+                li.textContent = location;
+                missedList.appendChild(li);
+            });
+        }
+
+        // Display broken links
+        const brokenLinksList = document.getElementById('broken-links-list');
+        const brokenLinksCount = document.getElementById('broken-links-count');
+        if (results.broken_links_audit && results.broken_links_audit.broken_links) {
+            const brokenLinks = results.broken_links_audit.broken_links;
+            brokenLinksCount.textContent = `(${brokenLinks.length})`;
+            if (brokenLinks.length > 0) {
+                brokenLinks.forEach(link => {
+                    const li = document.createElement('li');
+                    li.textContent = `${link.url} (Status: ${link.status_code || link.error})`;
+                    brokenLinksList.appendChild(li);
+                });
+            } else {
+                brokenLinksList.innerHTML = '<li>No broken links found.</li>';
+            }
+        }
+
+        // Display H1 audit results
+        const h1AuditList = document.getElementById('h1-audit-list');
+        const h1AuditCount = document.getElementById('h1-audit-count');
+        if (results.h1_audit) {
+            const issues = results.h1_audit.issues;
+            h1AuditCount.textContent = `(${issues.length})`;
+            if (issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    h1AuditList.appendChild(li);
+                });
+            } else {
+                h1AuditList.innerHTML = '<li>H1 tag setup is optimal.</li>';
+            }
+        }
+
+        // Display alt attribute audit results
+        const altAttributesList = document.getElementById('alt-attributes-list');
+        const altAttributesCount = document.getElementById('alt-attributes-count');
+        if (results.alt_attributes_audit) {
+            const issues = results.alt_attributes_audit;
+            altAttributesCount.textContent = `(${issues.length})`;
+            if (issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `Missing alt on: <code>${escapeHtml(issue.element)}</code>`;
+                    altAttributesList.appendChild(li);
+                });
+            } else {
+                altAttributesList.innerHTML = '<li>All images have alt attributes.</li>';
+            }
+        }
+
+        // Display H2/H3 audit results
+        const h2h3AuditList = document.getElementById('h2-h3-audit-list');
+        const h2h3AuditCount = document.getElementById('h2-h3-audit-count');
+        if (results.h2_h3_audit && results.h2_h3_audit.issues) {
+            const issues = results.h2_h3_audit.issues;
+            h2h3AuditCount.textContent = `(${issues.length})`;
+            if (issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    h2h3AuditList.appendChild(li);
+                });
+            } else {
+                h2h3AuditList.innerHTML = '<li>H2/H3 tag structure is optimal.</li>';
+            }
+        }
+
+        // Display readability audit results
+        const readabilityAuditList = document.getElementById('readability-audit-list');
+        if (results.readability_audit) {
+            const { flesch_reading_ease, flesch_kincaid_grade, issues } = results.readability_audit;
+            if (issues && issues.length > 0) {
+                const li = document.createElement('li');
+                li.textContent = issues[0].description;
+                readabilityAuditList.appendChild(li);
+            } else {
+                const easeLi = document.createElement('li');
+                easeLi.textContent = `Flesch Reading Ease: ${flesch_reading_ease}`;
+                readabilityAuditList.appendChild(easeLi);
+
+                const gradeLi = document.createElement('li');
+                gradeLi.textContent = `Flesch-Kincaid Grade Level: ${flesch_kincaid_grade}`;
+                readabilityAuditList.appendChild(gradeLi);
+            }
+        }
     }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
 
     // Email report functionality remains similar, but you might want to adjust the payload
     const emailReportForm = document.getElementById('emailReportForm');

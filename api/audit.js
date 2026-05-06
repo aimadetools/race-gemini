@@ -75,10 +75,25 @@ module.exports = async (req, res) => {
 
     try {
         const locationsJSON = JSON.stringify(locations);
-        const locationAudit = await runPythonScript('audit_locations.py', [url, locationsJSON], pythonExecutable);
-        
-        auditResults.location_audit = locationAudit;
 
+        const auditPromises = [
+            runPythonScript('audit_locations.py', [url, locationsJSON], pythonExecutable),
+            runPythonScript('check_broken_links.py', [url], pythonExecutable),
+            runPythonScript('audit_h1_tags.py', [url], pythonExecutable),
+            runPythonScript('audit_alt_attributes.py', [url], pythonExecutable),
+            runPythonScript('audit_h2_h3_tags.py', [url], pythonExecutable),
+            runPythonScript('audit_readability.py', [url], pythonExecutable)
+        ];
+
+        const results = await Promise.allSettled(auditPromises);
+
+        auditResults.location_audit = results[0].status === 'fulfilled' ? results[0].value : { error: results[0].reason };
+        auditResults.broken_links_audit = results[1].status === 'fulfilled' ? results[1].value : { error: results[1].reason };
+        auditResults.h1_audit = results[2].status === 'fulfilled' ? results[2].value : { error: results[2].reason };
+        auditResults.alt_attributes_audit = results[3].status === 'fulfilled' ? results[3].value : { error: results[3].reason };
+        auditResults.h2_h3_audit = results[4].status === 'fulfilled' ? results[4].value : { error: results[4].reason };
+        auditResults.readability_audit = results[5].status === 'fulfilled' ? results[5].value : { error: results[5].reason };
+        
         res.status(200).json(auditResults);
 
     } catch (error) {

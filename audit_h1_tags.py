@@ -39,15 +39,35 @@ def audit_h1_tags(html_content, filepath="N/A"):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(json.dumps({"error": "Usage: python audit_h1_tags.py <filepath>"}))
+        print(json.dumps({"error": "Usage: python audit_h1_tags.py <filepath_or_url>"}))
         sys.exit(1)
     
-    filepath = sys.argv[1]
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        print(audit_h1_tags(html_content, filepath))
-    except FileNotFoundError:
-        print(json.dumps({"error": f"File not found: {filepath}"}))
-    except Exception as e:
-        print(json.dumps({"error": f"An unexpected error occurred while reading {filepath}: {e}"}))
+    target = sys.argv[1]
+    html_content = ""
+    
+    # Check if the target is a URL
+    if target.startswith('http://') or target.startswith('https://'):
+        try:
+            import requests
+            response = requests.get(target, timeout=10)
+            response.raise_for_status()
+            html_content = response.text
+        except requests.exceptions.RequestException as e:
+            print(json.dumps({"error": f"Failed to fetch URL: {e}"}))
+            sys.exit(1)
+        except ImportError:
+            print(json.dumps({"error": "The 'requests' library is required to fetch URLs. Please install it by running 'pip install requests'"}))
+            sys.exit(1)
+    else:
+        # Assume it's a local file path
+        try:
+            with open(target, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+        except FileNotFoundError:
+            print(json.dumps({"error": f"File not found: {target}"}))
+            sys.exit(1)
+        except Exception as e:
+            print(json.dumps({"error": f"An unexpected error occurred while reading {target}: {e}"}))
+            sys.exit(1)
+
+    print(audit_h1_tags(html_content, target))
