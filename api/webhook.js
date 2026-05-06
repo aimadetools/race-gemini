@@ -3,6 +3,7 @@ const { buffer } = require('micro');
 import { kv } from '@vercel/kv'; // Import kv
 const fs = require('fs');
 const path = require('path');
+import { query } from '../db/index.js'; // Import PostgreSQL query utility
 
 async function logError(error, context) {
   const logDir = path.join(process.cwd(), 'logs');
@@ -41,37 +42,27 @@ module.exports = async (req, res, currentKvClient) => {
             }
 
             try {
-                const transaction = {
-                    date: new Date().toISOString(),
-                    credits: parseInt(credits, 10),
-                    amount: session.amount_total,
-                    currency: session.currency,
-                    payment_status: session.payment_status,
-                };
-
-                // Retrieve user email from userId
-                const userEmail = await currentKv.get(`userId:${userId}`);
-                if (!userEmail) {
-                    await logError(new Error(`User email not found for userId: ${userId}`), 'Stripe Webhook - User Retrieval');
-                    return res.status(404).json({ message: 'User not found.' });
+                // Update user credits in PostgreSQL
+                const parsedCredits = parseInt(credits, 10);
+                if (isNaN(parsedCredits)) {
+                    await logError(new Error(`Invalid credits value received: ${credits}`), 'Stripe Webhook - Invalid Credits');
+                    return res.status(400).json({ message: 'Invalid credits value received.' });
                 }
 
-                // Retrieve full user object
-                const userString = await currentKv.get(`user:${userEmail}`);
-                if (!userString) {
-                    await logError(new Error(`User profile not found for email: ${userEmail}`), 'Stripe Webhook - User Profile Retrieval');
-                    return res.status(404).json({ message: 'User profile not found.' });
-                }
-                let user = JSON.parse(userString);
+                const result = await query(
+                    'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
+                    [parsedCredits, userId]
+                );
 
-                // Update user credits
-                user.credits = (user.credits || 0) + parseInt(credits, 10);
-                await currentKv.set(`user:${userEmail}`, JSON.stringify(user));
-                await currentKv.zadd(`user:${userId}:billing`, { score: Date.now(), member: JSON.stringify(transaction) });
-                console.log(`User ${userId} successfully purchased ${credits} credits.`);
+                if (result.rows.length === 0) {
+                    await logError(new Error(`User not found for userId: ${userId}`), 'Stripe Webhook - User Not Found in DB');
+                    return res.status(404).json({ message: 'User not found in database.' });
+                }
+
+                console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
             } catch (error) {
-                await logError(error, 'Stripe Webhook - Credit Update Failed');
-                return res.status(500).json({ message: 'Error updating credits.' });
+                await logError(error, 'Stripe Webhook - Credit Update Failed (PostgreSQL)');
+                return res.status(500).json({ message: 'Error updating credits in database.' });
             }
         }
 

@@ -1,9 +1,10 @@
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; // Keep for session management
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import fs from 'fs';
 import path from 'path';
+import { query } from '../db/index.js'; // Import PostgreSQL query utility
 
 async function logError(error, context) {
   const logDir = path.join(process.cwd(), 'logs');
@@ -20,8 +21,8 @@ Stack: ${error.stack}
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res, currentKvClient) {
-  const currentKv = currentKvClient || kv;
+export default async function handler(req, res) { // Removed currentKvClient parameter
+  const currentKv = kv; // Use kv directly for session management
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -31,14 +32,15 @@ export default async function handler(req, res, currentKvClient) {
     }
 
     try {
-      const userString = await currentKv.get(`user:${email}`);
-      if (!userString) {
+      // Fetch user from PostgreSQL
+      const result = await query('SELECT id, hashed_password FROM users WHERE email = $1', [email]);
+      if (result.rows.length === 0) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
 
-      const user = JSON.parse(userString);
+      const user = result.rows[0];
 
-      const isValidPassword = await bcrypt.compare(password, user.hashedPassword);
+      const isValidPassword = await bcrypt.compare(password, user.hashed_password); // Compare with hashed_password from DB
       if (!isValidPassword) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
@@ -46,12 +48,12 @@ export default async function handler(req, res, currentKvClient) {
       // Generate JWT token
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-      // Create a session in KV
+      // Create a session in KV (unchanged)
       const sessionId = `sess_${Date.now()}_${user.id}`;
       await currentKv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
       // Set session to expire in KV after 1 hour, matching JWT expiration
 
-      // Set HttpOnly cookie
+      // Set HttpOnly cookie (unchanged)
       res.setHeader('Set-Cookie', serialize('authToken', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development', // Use secure in production

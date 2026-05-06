@@ -394,6 +394,76 @@ const variant = await ABTest.init('ai-content-test');
 if (variant === 'A') {
 document.getElementById('enable-ai-group').style.display = 'none';
 }
+
+const currentCreditsSpan = document.getElementById('current-credits');
+const estimatedCreditsSpan = document.getElementById('estimated-credits');
+const servicesInput = document.getElementById('services');
+const townsTextarea = document.getElementById('towns');
+const generateButton = document.getElementById('generate-pages-button');
+const creditsStatusMessage = document.getElementById('credits-status-message');
+const generateForm = document.getElementById('generate-form');
+
+let userCredits = 0;
+
+async function fetchCredits() {
+try {
+const response = await fetch('/api/get-credits');
+if (response.ok) {
+const data = await response.json();
+userCredits = data.credits;
+currentCreditsSpan.textContent = userCredits;
+} else {
+// Handle cases where user is not logged in or token expired
+currentCreditsSpan.textContent = 'N/A (Login required)';
+console.warn('Could not fetch credits:', await response.text());
+}
+} catch (error) {
+console.error('Error fetching credits:', error);
+currentCreditsSpan.textContent = 'Error';
+}
+}
+
+function calculateEstimatedCredits() {
+const services = servicesInput.value.split(',').filter(s => s.trim() !== '').length;
+const towns = townsTextarea.value.split(',').filter(t => t.trim() !== '').length;
+return services * towns;
+}
+
+function updateCreditDisplayAndButton() {
+const estimated = calculateEstimatedCredits();
+estimatedCreditsSpan.textContent = estimated;
+
+if (userCredits === 0 && estimated > 0) { // If user has 0 credits and wants to generate pages
+creditsStatusMessage.textContent = 'You have no credits. Please buy more.';
+creditsStatusMessage.style.color = 'red';
+generateButton.disabled = true;
+} else if (estimated > userCredits) {
+creditsStatusMessage.textContent = `You need ${estimated - userCredits} more credits.`;
+creditsStatusMessage.style.color = 'orange';
+generateButton.disabled = true;
+} else {
+creditsStatusMessage.textContent = ''; // Clear message
+generateButton.disabled = false;
+}
+}
+
+// Initial fetch and update
+await fetchCredits();
+updateCreditDisplayAndButton();
+
+// Event listeners for input changes
+servicesInput.addEventListener('input', updateCreditDisplayAndButton);
+townsTextarea.addEventListener('input', updateCreditDisplayAndButton);
+
+// Form submission logic
+generateForm.addEventListener('submit', function(event) {
+if (generateButton.disabled) { // Prevent submission if button is disabled due to insufficient credits
+event.preventDefault();
+alert('Please acquire enough credits to generate the pages.');
+}
+// Further validation (like generate-form-validation.min.js) would run after this.
+});
+
 })();
   </script>
 <script src="/js/app.min.js">

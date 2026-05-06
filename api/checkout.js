@@ -17,28 +17,29 @@ async function logError(error, context) {
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
-        const { credits } = req.body; // Expect credits to be sent from the frontend
+        const { creditPackId } = req.body; // Expect creditPackId to be sent from the frontend
 
-        if (!credits) {
-            await logError(new Error('Missing credits in request body.'), 'Checkout Validation');
-            return res.status(400).json({ message: 'Missing credits in request body.' });
+        if (!creditPackId) {
+            await logError(new Error('Missing creditPackId in request body.'), 'Checkout Validation');
+            return res.status(400).json({ message: 'Missing creditPackId in request body.' });
         }
         
-        const productDetails = {
-            '50': { name: '50 Page Credits', amount: 500 },    // $5.00
-            '200': { name: '200 Page Credits', amount: 1500 },  // $15.00
-            '1000': { name: '1000 Page Credits', amount: 5000 }, // $50.00
+        // Define credit pack details matching USAGE_BASED_PRICING.md
+        const creditPackDetails = {
+            'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 5000 },    // $50.00
+            'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 18000 },  // $180.00
+            'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 80000 }, // $800.00
         };
 
-        const selectedProduct = productDetails[credits];
+        const selectedPack = creditPackDetails[creditPackId];
 
-        if (!selectedProduct) {
-            await logError(new Error(`Payment details not found for ${credits} credits.`), 'Checkout Product Selection');
-            return res.status(404).json({ message: 'Payment details not found for the selected credits.' });
+        if (!selectedPack) {
+            await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection');
+            return res.status(404).json({ message: 'Credit pack details not found for the selected ID.' });
         }
 
         const cookies = parse(req.headers.cookie || '');
-        const token = cookies.auth_token;
+        const token = cookies.authToken; // Correct cookie name is authToken
 
         if (!token) {
             return res.status(401).json({ message: 'Not authenticated' });
@@ -49,6 +50,7 @@ module.exports = async (req, res) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             userId = decoded.userId;
         } catch (error) {
+            await logError(error, 'JWT Verification Failed');
             return res.status(401).json({ message: 'Invalid token' });
         }
 
@@ -60,19 +62,21 @@ module.exports = async (req, res) => {
                         price_data: {
                             currency: 'usd',
                             product_data: {
-                                name: selectedProduct.name,
+                                name: selectedPack.name,
                             },
-                            unit_amount: selectedProduct.amount,
+                            unit_amount: selectedPack.amount,
                         },
                         quantity: 1,
                     },
                 ],
                 mode: 'payment',
                 success_url: `https://${req.headers.host}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `https://${req.headers.host}/buy-credits.html`,
+                cancel_url: `https://${req.headers.host}/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
-                    credits: credits,
+                    creditPackId: creditPackId, // Pass the pack ID
+                    credits: selectedPack.credits, // Pass the actual credits
+                    userId: userId // Explicitly pass userId
                 },
             });
 

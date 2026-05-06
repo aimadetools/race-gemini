@@ -1,7 +1,7 @@
-import { kv } from '@vercel/kv';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
+import { query } from '../db/index.js'; // Import PostgreSQL query utility
 
 async function logError(error, context) {
   const logDir = path.join(process.cwd(), 'logs');
@@ -14,8 +14,7 @@ async function logError(error, context) {
   fs.appendFileSync(logFilePath, errorMessage);
 }
 
-export default async function handler(req, res, currentKvClient) {
-  const currentKv = currentKvClient || kv;
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
@@ -25,29 +24,21 @@ export default async function handler(req, res, currentKvClient) {
     }
 
     try {
-      // Check if user already exists
-      const existingUser = await currentKv.get(`user:${email}`);
-      if (existingUser) {
+      // Check if user already exists in PostgreSQL
+      const existingUser = await query('SELECT id FROM users WHERE email = $1', [email]);
+      if (existingUser.rows.length > 0) {
         return res.status(409).json({ message: 'User with this email already exists.' });
       }
 
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds = 10
 
-      // Generate a unique user ID (simple timestamp for now, can be improved)
-      const userId = `user_${Date.now()}`;
-
-      // Store user in KV
-      await currentKv.set(`user:${email}`, JSON.stringify({
-        id: userId,
-        email,
-        hashedPassword,
-        createdAt: new Date().toISOString(),
-        credits: 50 // Initial credits
-      }));
-
-      // Optionally, store a reverse lookup from userId to email if needed
-      await currentKv.set(`userId:${userId}`, email);
+      // Store user in PostgreSQL
+      const result = await query(
+        'INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id',
+        [email, hashedPassword, 50] // Initial credits set to 50
+      );
+      const userId = result.rows[0].id;
 
       return res.status(201).json({ message: 'User registered successfully!', userId });
     } catch (error) {
