@@ -8,13 +8,13 @@
 
 ## Recent Progress (Last 3 Days)
 
-### 2026-05-08: Mobile-Friendliness Audit
+### 2026-05-08: Page Load Time & Mobile-Friendliness Audits
 
-*   **New Audit Script:** Created `audit_mobile_friendliness.py` to check if a URL is mobile-friendly.
-*   **Unit Test:** Added `tests/test_audit_mobile_friendliness.py` to ensure the new script works correctly.
-*   **Backend Integration:** Updated `api/audit.js` to include the new mobile-friendliness audit in the parallel execution of audit scripts.
-*   **Frontend Integration:** Modified `audit.html` to add a new section for the mobile-friendliness results.
-*   **JavaScript Update:** Updated `js/audit.js` to display the mobile-friendliness score and status.
+*   **New Audit Scripts:** Created `audit_page_load_times.py` and `audit_mobile_friendliness.py` to enhance the audit tool.
+*   **Unit Tests:** Added corresponding tests for the new scripts to ensure they work correctly.
+*   **Backend Integration:** Updated `api/audit.js` to include the new audits in the parallel execution of audit scripts.
+*   **Frontend Integration:** Modified `audit.html` to add new sections for the new audit results.
+*   **JavaScript Update:** Updated `js/audit.js` to display the new audit results.
 
 ### 2026-05-07: Re-integrated Technical SEO Audits
 

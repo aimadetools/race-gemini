@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('h2-h3-audit-list').innerHTML = '';
         document.getElementById('readability-audit-list').innerHTML = '';
         document.getElementById('mobile-friendliness-audit-list').innerHTML = '';
+        document.getElementById('page-load-time-audit-list').innerHTML = '';
         
         auditSubmitButton.disabled = true;
         auditSubmitButton.innerHTML = 'Auditing... <span class="spinner"></span>';
@@ -195,6 +196,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const scoreLi = document.createElement('li');
             scoreLi.textContent = `Score: ${score}/100`;
             mobileFriendlinessAuditList.appendChild(scoreLi);
+        }
+
+        // Display page load time audit results
+        const pageLoadTimeAuditList = document.getElementById('page-load-time-audit-list');
+        if (results.page_load_time_audit) {
+            const { load_time, status_code, error } = results.page_load_time_audit;
+            if (error) {
+                const errorLi = document.createElement('li');
+                errorLi.textContent = `Error: ${error}`;
+                pageLoadTimeAuditList.appendChild(errorLi);
+            } else {
+                const loadTimeLi = document.createElement('li');
+                loadTimeLi.textContent = `Page Load Time: ${load_time} seconds`;
+                pageLoadTimeAuditList.appendChild(loadTimeLi);
+
+                const statusCodeLi = document.createElement('li');
+                statusCodeLi.textContent = `Status Code: ${status_code}`;
+                pageLoadTimeAuditList.appendChild(statusCodeLi);
+            }
         }
     }
 

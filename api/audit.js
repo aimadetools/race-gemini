@@ -83,7 +83,8 @@ module.exports = async (req, res) => {
             runPythonScript('audit_alt_attributes.py', [url], pythonExecutable),
             runPythonScript('audit_h2_h3_tags.py', [url], pythonExecutable),
             runPythonScript('audit_readability.py', [url], pythonExecutable),
-            runPythonScript('audit_mobile_friendliness.py', [url], pythonExecutable)
+            runPythonScript('audit_mobile_friendliness.py', [url], pythonExecutable),
+            runPythonScript('audit_page_load_times.py', [url], pythonExecutable)
         ];
 
         const results = await Promise.allSettled(auditPromises);
@@ -95,6 +96,7 @@ module.exports = async (req, res) => {
         auditResults.h2_h3_audit = results[4].status === 'fulfilled' ? results[4].value : { error: results[4].reason };
         auditResults.readability_audit = results[5].status === 'fulfilled' ? results[5].value : { error: results[5].reason };
         auditResults.mobile_friendliness_audit = results[6].status === 'fulfilled' ? results[6].value : { error: results[6].reason };
+        auditResults.page_load_time_audit = results[7].status === 'fulfilled' ? results[7].value : { error: results[7].reason };
 
         res.status(200).json(auditResults);
 
