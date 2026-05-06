@@ -6,6 +6,13 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Added API Tests for Dynamic Primary Color in SEO Page Generator
+
+*   **API Test Coverage:** Created `tests/api/generate-seo-pages.test.js` to validate the functionality of the `/api/generate-seo-pages` endpoint.
+*   **Primary Color Validation:** Tests specifically cover the correct application and default behavior of the `primaryColor` parameter in generated SEO pages.
+*   **Error Handling Verification:** Implemented tests for missing required fields, empty input arrays, and non-POST requests.
+*   **AI Content Path Testing (Conditional):** Included tests for AI content generation scenarios, noting complexities due to module loading and environment variable initialization within the Jest environment.
+
 ### 2026-05-06: Implemented Dynamic Primary Color for SEO Page Generator
 
 *   **Enabled Custom Branding:** Modified `api/generate-seo-pages.js` to accept `primaryColor` from the request body, allowing for dynamic per-business branding on generated local SEO pages.
