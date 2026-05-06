@@ -1,10 +1,11 @@
+import { kv } from '@vercel/kv'; // Keep kv import for agency data
+import { query } from '../db/index.js'; // Import PostgreSQL query utility
+const jwt = require('jsonwebtoken');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const archiver = require('archiver');
 const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
-import { kv } from '@vercel/kv';
-const jwt = require('jsonwebtoken');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -20,8 +21,7 @@ if (geminiApiKey) {
     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
 }
 
-module.exports = async (req, res, currentKvClient) => {
-    const currentKv = currentKvClient || kv;
+module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle } = req.body;
 
@@ -53,18 +53,12 @@ module.exports = async (req, res, currentKvClient) => {
         const pagesToGenerate = servicesArray.length * townsArray.length;
 
         try {
-            // Retrieve user email from userId
-            const userEmail = await currentKv.get(`userId:${userId}`);
-            if (!userEmail) {
+            // Retrieve user from PostgreSQL
+            const userResult = await query('SELECT id, credits, "agencyId" FROM users WHERE id = $1', [userId]);
+            if (userResult.rows.length === 0) {
                 return res.status(404).json({ message: 'User not found. Please log in again.' });
             }
-
-            // Retrieve full user object
-            const userString = await currentKv.get(`user:${userEmail}`);
-            if (!userString) {
-                return res.status(404).json({ message: 'User profile not found. Please log in again.' });
-            }
-            let user = JSON.parse(userString);
+            const user = userResult.rows[0];
 
             if (user.credits < pagesToGenerate) {
                 return res.status(402).json({ message: `Insufficient credits. You need ${pagesToGenerate} credits but only have ${user.credits}. Please buy more credits.` });
@@ -72,7 +66,8 @@ module.exports = async (req, res, currentKvClient) => {
 
             let agency = null;
             if (user.agencyId) {
-                const agencyData = await currentKv.get(`agency:${user.agencyId}`);
+                // Assuming agency data still lives in KV for now, as it's a separate concern.
+                const agencyData = await kv.get(`agency:${user.agencyId}`);
                 if (agencyData) {
                     agency = JSON.parse(agencyData);
                 }
@@ -155,9 +150,8 @@ module.exports = async (req, res, currentKvClient) => {
                 }
             }
 
-            // Decrement user credits and save updated user object
-            user.credits -= pagesToGenerate;
-            await currentKv.set(`user:${userEmail}`, JSON.stringify(user));
+            // Decrement user credits in PostgreSQL
+            await query('UPDATE users SET credits = credits - $1 WHERE id = $2', [pagesToGenerate, userId]);
 
             archive.finalize();
 

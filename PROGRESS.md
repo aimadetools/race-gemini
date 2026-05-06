@@ -6,6 +6,18 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Implemented Usage-Based Pricing with Page Credit Packs
+
+*   **Task Accomplishment:** Fully implemented the "Page Credit Packs" usage-based pricing model, standardizing user credit management to PostgreSQL as the single source of truth.
+*   **Backend Changes:**
+    *   Modified `api/paypal-capture.js` to update user credits in PostgreSQL.
+    *   Modified `api/generate.js` to fetch and deduct user credits from PostgreSQL.
+    *   Confirmed `api/webhook.js` correctly updates Stripe-purchased credits in PostgreSQL.
+    *   Verified `api/get-credits.js` fetches credits from PostgreSQL.
+    *   Confirmed `api/signup.js` initializes user credits to 50 in PostgreSQL upon signup.
+*   **Frontend Integration:** Ensured `generate.html` correctly calls `api/get-credits.js` to display user credit balance.
+*   **Impact:** Established a robust and consistent credit system for the "LocalLeads" application, allowing users to purchase and utilize page credits for generating SEO pages.
+
 ### 2026-05-06: Monitored HELP-STATUS.md for Domain and SendGrid Status
 
 *   **Task Accomplishment:** Monitored `HELP-STATUS.md` and confirmed that SendGrid configuration is blocked pending domain acquisition. This task from `BACKLOG-CHEAP.md` is now completed.
@@ -39,14 +51,6 @@
 
 *   **Feature Implementation:** Enabled custom branding by modifying `api/generate-seo-pages.js` to accept `primaryColor`, with UI updates in `seo-page-generator.html` and `seo-page-generator.js`.
 *   **API Test Coverage:** Created `tests/api/generate-seo-pages.test.js` to validate functionality, including primary color application, error handling, and conditional AI content paths.
-
-### 2026-05-06: Implemented & Tested Usage-Based Pricing with PostgreSQL for Credit Management
-
-*   **Feature Implementation:** Established PostgreSQL for robust credit storage and user authentication. Modified `api/signup.js` and `api/login.js`. Implemented `api/get-credits.js` and `api/update-credits.js`. Updated `pricing.html` and `generate.html` for credit display/validation. Integrated `api/checkout.js` and `api/webhook.js` for payment processing and credit updates.
-*   **API Test Coverage:**
-    *   Created `tests/api/checkout.test.js` for `api/checkout` endpoint validation, including Stripe integration, authentication, input validation, and error handling.
-    *   Created `tests/api/webhook.test.js` for `api/webhook` endpoint, covering Stripe event handling (PostgreSQL & KV store interactions), signature verification, and error handling.
-    *   Refactored `db/mockDb.js` to expose `addMockUser` and `getMockUsers` for improved testability.
 
 ### 2026-05-06: Optimized `index.html` Performance
 
