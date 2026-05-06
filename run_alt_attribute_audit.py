@@ -16,7 +16,7 @@ def run_audit_on_html_files(root_dir):
                     with open(filepath, 'r', encoding='utf-8') as f:
                         html_content = f.read()
                     
-                    issues = audit_alt_attributes(html_content)
+                    issues = audit_alt_attributes(html_content, filepath)
                     
                     if issues:
                         all_issues[filepath] = issues
