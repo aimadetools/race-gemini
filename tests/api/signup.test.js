@@ -1,31 +1,21 @@
 // tests/api/signup.test.js
-import handler from '../../api/signup'; // Import the refactored handler
+import handler from '../../api/signup';
 import { jest } from '@jest/globals';
+import { mockQuery as originalMockQuery, clearMockUsers, mockBcrypt } from '../../db/mockDb';
 
+// Re-declare mockQuery as a Jest mock function
+const mockQuery = jest.fn(originalMockQuery);
 
+// Mock the ../db/index.js module to use our mockQuery
+jest.mock('../../db/index.js', () => ({
+    query: (...args) => mockQuery(...args),
+}));
 
-
-// Mock KV store for in-memory testing
-const mockKvStore = new Map();
-
-const mockKv = {
-    async get(key) {
-        const value = mockKvStore.get(key);
-        return value;
-    },
-    async set(key, value) {
-        mockKvStore.set(key, typeof value === 'object' && value !== null ? JSON.stringify(value) : value);
-    },
-    async delete(key) {
-        mockKvStore.delete(key);
-    },
-    async incr(key) {
-        let current = parseInt(mockKvStore.get(key) || '0', 10);
-        current += 1;
-        mockKvStore.set(key, current.toString());
-        return current;
-    },
-};
+// Mock the bcrypt module to use our mockBcrypt
+jest.mock('bcrypt', () => ({
+    hash: (password, saltRounds) => import('../../db/mockDb').then(m => m.mockBcrypt.hash(password, saltRounds)),
+    compare: (password, hashedPassword) => import('../../db/mockDb').then(m => m.mockBcrypt.compare(password, hashedPassword)),
+}));
 
 describe('Signup API', () => {
     let mockReq;
@@ -33,7 +23,8 @@ describe('Signup API', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockKvStore.clear(); // Clear the mock KV store for each test
+        clearMockUsers(); // Clear the mock users for each test
+        mockQuery.mockClear();
 
         mockReq = {
             method: 'POST',
@@ -61,7 +52,7 @@ describe('Signup API', () => {
         const password = 'securepassword123';
         mockReq.body = { email, password };
 
-        await handler(mockReq, mockRes, mockKv);
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(201);
         expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
@@ -69,21 +60,19 @@ describe('Signup API', () => {
             userId: expect.any(String),
         }));
 
-        // Verify user data stored in KV
-        const storedUser = JSON.parse(await mockKv.get(`user:${email}`));
-        expect(storedUser).toMatchObject({
-            email,
-            hashedPassword: `mock-hashed-${password}`,
-            credits: 50,
-        });
-        expect(await mockKv.get(`userId:${storedUser.id}`)).toBe(email);
+        // Verify that the user was inserted into the mock database with initial credits
+        expect(mockQuery).toHaveBeenCalledWith(
+            'INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id',
+            [email, `mock-hashed-${password}`, 50]
+        );
+
     });
 
     it('should return 400 if email is missing', async () => {
         const password = 'securepassword123';
         mockReq.body = { password };
 
-        await handler(mockReq, mockRes, mockKv);
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
@@ -93,7 +82,7 @@ describe('Signup API', () => {
         const email = generateUniqueEmail();
         mockReq.body = { email };
 
-        await handler(mockReq, mockRes, mockKv);
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
@@ -102,7 +91,7 @@ describe('Signup API', () => {
     it('should return 400 if both email and password are missing', async () => {
         mockReq.body = {};
 
-        await handler(mockReq, mockRes, mockKv);
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(400);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Email and password are required.' });
@@ -112,34 +101,55 @@ describe('Signup API', () => {
         const email = generateUniqueEmail();
         const password = 'securepassword123';
 
-        // First signup
-        mockReq.body = { email, password };
-        await handler(mockReq, mockRes, mockKv);
-        expect(mockRes.status).toHaveBeenCalledWith(201);
+        // Create fresh mockReq and mockRes for the first signup attempt
+        const firstMockReq = {
+            method: 'POST',
+            body: { email, password },
+        };
+        const firstMockRes = {
+            _status: 200,
+            _json: {},
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockReturnThis(),
+            setHeader: jest.fn().mockReturnThis(),
+            end: jest.fn().mockReturnThis(),
+        };
 
-        // Clear mock calls for the second attempt
-        jest.clearAllMocks();
+        // First signup to create the user in the mock DB
+        await handler(firstMockReq, firstMockRes);
+        expect(firstMockRes.status).toHaveBeenCalledWith(201);
+        expect(mockQuery).toHaveBeenCalledWith(
+            'INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id',
+            [email, `mock-hashed-${password}`, 50]
+        );
+
+        // Clear mock calls for the second attempt, and re-initialize mockRes for the second call
+        jest.clearAllMocks(); // Clear calls for all mocks including mockQuery
+        // clearMockUsers(); // REMOVED: Do not clear users, as we need the user to exist for the 409 test
+        mockQuery.mockClear(); // Clear mockQuery calls for the second attempt
+
         mockRes = { // Re-initialize mockRes for second call
             _status: 200,
             _json: {},
             status: jest.fn().mockReturnThis(),
             json: jest.fn().mockReturnThis(),
+            setHeader: jest.fn().mockReturnThis(),
             end: jest.fn().mockReturnThis(),
         };
 
-        // Second signup with same email
-        mockReq.body = { email, password: 'anotherpassword' };
-        await handler(mockReq, mockRes, mockKv);
+        // Second signup with same email, using the `mockReq` from `beforeEach` (which has empty body)
+        // Need to explicitly set body again for the second call
+        mockReq.body = { email, password: 'anotherpassword' }; 
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(409);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'User with this email already exists.' });
     });
-
     it('should return 405 for non-POST methods', async () => {
         mockReq.method = 'GET';
         mockReq.body = { email: generateUniqueEmail(), password: 'anypassword' };
 
-        await handler(mockReq, mockRes, mockKv);
+        await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(405);
         expect(mockRes.end).toHaveBeenCalledWith('Method GET Not Allowed');

@@ -1,0 +1,48 @@
+const mockUsers = [];
+let nextId = 1;
+
+export const mockQuery = async (text, params) => {
+    if (text.startsWith('SELECT id FROM users WHERE email = $1')) {
+        const email = params[0];
+        const existingUser = mockUsers.find(user => user.email === email);
+        return { rows: existingUser ? [{ id: existingUser.id }] : [] };
+    } else if (text.startsWith('INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id')) {
+        const [email, hashedPassword, credits] = params;
+        const newUser = { id: (nextId++).toString(), email, hashed_password: hashedPassword, credits };
+        mockUsers.push(newUser);
+        return { rows: [{ id: newUser.id }] };
+    } else if (text.startsWith('SELECT id, email, hashed_password, credits FROM users WHERE email = $1')) {
+        const email = params[0];
+        const user = mockUsers.find(u => u.email === email);
+        return { rows: user ? [user] : [] };
+    } else if (text.startsWith('UPDATE users SET credits = $1 WHERE id = $2')) {
+        const [newCredits, userId] = params;
+        const userIndex = mockUsers.findIndex(u => u.id === userId);
+        if (userIndex > -1) {
+            mockUsers[userIndex].credits = newCredits;
+            return { rowCount: 1 };
+        }
+        return { rowCount: 0 };
+    } else if (text.startsWith('SELECT credits FROM users WHERE id = $1')) {
+        const userId = params[0];
+        const user = mockUsers.find(u => u.id === userId);
+        return { rows: user ? [{ credits: user.credits }] : [] };
+    } else if (text.startsWith('SELECT * FROM users WHERE id = $1')) {
+        const userId = params[0];
+        const user = mockUsers.find(u => u.id === userId);
+        return { rows: user ? [user] : [] };
+    }
+    // Add other query mocks as needed
+    return { rows: [] };
+};
+
+export const clearMockUsers = () => {
+    mockUsers.length = 0;
+    nextId = 1;
+};
+
+// Mock the bcrypt hash function since it's used in signup.js
+export const mockBcrypt = {
+    hash: (password, saltRounds) => Promise.resolve(`mock-hashed-${password}`),
+    compare: (password, hashedPassword) => Promise.resolve(hashedPassword === `mock-hashed-${password}`),
+};
