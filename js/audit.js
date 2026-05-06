@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('readability-audit-list').innerHTML = '';
         document.getElementById('mobile-friendliness-audit-list').innerHTML = '';
         document.getElementById('page-load-time-audit-list').innerHTML = '';
+        document.getElementById('structured-data-audit-list').innerHTML = '';
         
         auditSubmitButton.disabled = true;
         auditSubmitButton.innerHTML = 'Auditing... <span class="spinner"></span>';
@@ -214,6 +215,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statusCodeLi = document.createElement('li');
                 statusCodeLi.textContent = `Status Code: ${status_code}`;
                 pageLoadTimeAuditList.appendChild(statusCodeLi);
+            }
+        }
+
+        // Display structured data audit results
+        const structuredDataAuditList = document.getElementById('structured-data-audit-list');
+        if (results.structured_data_audit) {
+            const { structured_data, error } = results.structured_data_audit;
+            if (error) {
+                const errorLi = document.createElement('li');
+                errorLi.textContent = `Error: ${error}`;
+                structuredDataAuditList.appendChild(errorLi);
+            } else if (structured_data && structured_data.length > 0) {
+                structured_data.forEach(item => {
+                    const li = document.createElement('li');
+                    const pre = document.createElement('pre');
+                    pre.textContent = JSON.stringify(item, null, 2);
+                    li.appendChild(pre);
+                    structuredDataAuditList.appendChild(li);
+                });
+            } else {
+                structuredDataAuditList.innerHTML = '<li>No structured data found.</li>';
             }
         }
     }

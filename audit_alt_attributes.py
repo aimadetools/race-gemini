@@ -1,6 +1,8 @@
 import argparse
 import json
 import os
+import sys
+import requests
 from bs4 import BeautifulSoup
 from glob import glob
 
@@ -22,31 +24,42 @@ def audit_alt_attributes(html_content, file_path):
     return issues
 
 def main():
-    if len(sys.argv) != 2:
-        print(json.dumps({"error": "Usage: python audit_alt_attributes.py <url>"}))
-        sys.exit(1)
-    
-    url = sys.argv[1]
-    
-    try:
-        import requests
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        html_content = response.text
-    except ImportError:
-        print(json.dumps({"error": "The 'requests' library is required. Please install it."}))
-        sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        print(json.dumps({"error": f"Failed to fetch URL: {e}"}))
+    parser = argparse.ArgumentParser(description='Audit images for missing alt attributes in HTML files or from a URL.')
+    parser.add_argument('--dir', help='Directory containing HTML files to audit.')
+    parser.add_argument('--url', help='URL of a page to audit.')
+    args = parser.parse_args()
+
+    all_issues = []
+    if args.dir:
+        if not os.path.isdir(args.dir):
+            print(json.dumps({"error": f"Directory not found: {args.dir}"}))
+            sys.exit(1)
+        for filepath in glob(os.path.join(args.dir, '**', '*.html'), recursive=True):
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
+                all_issues.extend(audit_alt_attributes(html_content, filepath))
+            except Exception as e:
+                all_issues.append({"error": f"Could not process file {filepath}: {e}"})
+    elif args.url:
+        try:
+            response = requests.get(args.url, timeout=10)
+            response.raise_for_status()
+            html_content = response.text
+            all_issues.extend(audit_alt_attributes(html_content, args.url))
+        except requests.exceptions.RequestException as e:
+            print(json.dumps({"error": f"Failed to fetch URL: {e}"}))
+            sys.exit(1)
+    else:
+        print(json.dumps({"error": "Either --dir or --url must be provided."}))
         sys.exit(1)
 
-    issues = audit_alt_attributes(html_content, url)
-    
-    if issues:
-        print(json.dumps(issues, indent=2))
+    if all_issues:
+        print(json.dumps(all_issues, indent=2))
+        sys.exit(1)
     else:
         print(json.dumps({"message": "No issues found."}))
+        sys.exit(0)
 
 if __name__ == "__main__":
-    import sys
     main()

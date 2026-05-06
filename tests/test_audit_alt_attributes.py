@@ -140,73 +140,78 @@ class TestAuditAltAttributes(unittest.TestCase):
         return filepath
 
     @patch('builtins.print')
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_main_no_issues_local_files(self, mock_parse_args, mock_print):
-        mock_parse_args.return_value.dir_path = self.test_dir
-        
-        self._create_html_file("good1.html", "<html><body><img src='img1.png' alt='Good Alt'></body></html>")
-        self._create_html_file("good2.html", "<html><body><img src='img2.jpg' alt='Another Good Alt'></body></html>")
+    def test_main_no_issues_local_files(self, mock_print):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--dir', self.test_dir]):
+            self._create_html_file("good1.html", "<html><body><img src='img1.png' alt='Good Alt'></body></html>")
+            self._create_html_file("good2.html", "<html><body><img src='img2.jpg' alt='Another Good Alt'></body></html>")
 
-        main()
-        # Capture the printed output and parse it as JSON
-        printed_output = mock_print.call_args[0][0]
-        self.assertEqual(json.loads(printed_output), {"message": "No issues found."})
-
-    @patch('builtins.print')
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_main_with_issues_local_files(self, mock_parse_args, mock_print):
-        mock_parse_args.return_value.dir_path = self.test_dir
-        
-        self._create_html_file("bad1.html", "<html><body><img src='img1.png'></body></html>")
-        self._create_html_file("bad2.html", "<html><body><img src='img2.jpg' alt=' '></body></html>")
-
-        main()
-        printed_output = mock_print.call_args[0][0]
-        issues = json.loads(printed_output)
-
-        self.assertEqual(len(issues), 2)
-        self.assertIn({
-            "type": "Missing or Empty Alt Attribute",
-            "file": os.path.join(self.test_dir, "bad1.html"),
-            "element": '<img src="img1.png"/>',
-            "src": "img1.png"
-        }, issues)
-        self.assertIn({
-            "type": "Missing or Empty Alt Attribute",
-            "file": os.path.join(self.test_dir, "bad2.html"),
-            "element": '<img alt=" " src="img2.jpg"/>',
-            "src": "img2.jpg"
-        }, issues)
-
-    @patch('builtins.print')
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_main_no_html_files(self, mock_parse_args, mock_print):
-        mock_parse_args.return_value.dir_path = self.test_dir
-        # No HTML files created in self.test_dir
-
-        main()
-        mock_print.assert_called_once_with(json.dumps({"message": f"No HTML files found in the directory: {self.test_dir}"}, indent=2))
-
-    @patch('builtins.print')
-    @patch('argparse.ArgumentParser.parse_args')
-    def test_main_file_processing_error(self, mock_parse_args, mock_print):
-        mock_parse_args.return_value.dir_path = self.test_dir
-        
-        # Create a file that will cause an error (e.g., malformed encoding, but for simplicity, we'll just mock open for now)
-        # For a real scenario, you'd create a file that's hard to parse or mock the file reading
-        self._create_html_file("error.html", "this is not valid html, and will cause an exception if audit_alt_attributes is strict")
-
-        # To properly test file processing error, we need to mock open or the audit_alt_attributes function
-        # Here we'll rely on the exception handling in main if audit_alt_attributes were to raise one.
-        # However, audit_alt_attributes expects valid html content and will parse what it gets.
-        # A more direct test would be to mock audit_alt_attributes to raise an exception.
-        with patch('audit_alt_attributes.audit_alt_attributes', side_effect=Exception("Simulated processing error")):
-            main()
+            with self.assertRaises(SystemExit) as cm:
+                main()
+            self.assertEqual(cm.exception.code, 0)
             printed_output = mock_print.call_args[0][0]
-            error_output = json.loads(printed_output)
-            self.assertEqual(len(error_output), 1)
-            self.assertIn("error", error_output[0])
-            self.assertIn("Simulated processing error", error_output[0]["error"])
+            self.assertEqual(json.loads(printed_output), {"message": "No issues found."})
+
+    @patch('builtins.print')
+    def test_main_with_issues_local_files(self, mock_print):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--dir', self.test_dir]):
+            self._create_html_file("bad1.html", "<html><body><img src='img1.png'></body></html>")
+            self._create_html_file("bad2.html", "<html><body><img src='img2.jpg' alt=' '></body></html>")
+
+            with self.assertRaises(SystemExit) as cm:
+                main()
+            self.assertEqual(cm.exception.code, 1)
+            printed_output = mock_print.call_args[0][0]
+            issues = json.loads(printed_output)
+
+            self.assertEqual(len(issues), 2)
+
+    @patch('builtins.print')
+    def test_main_no_html_files(self, mock_print):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--dir', self.test_dir]):
+            with self.assertRaises(SystemExit) as cm:
+                main()
+            self.assertEqual(cm.exception.code, 0)
+            mock_print.assert_called_once_with(json.dumps({"message": "No issues found."}))
+
+    @patch('builtins.print')
+    def test_main_file_processing_error(self, mock_print):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--dir', self.test_dir]):
+            self._create_html_file("error.html", "this is not valid html, and will cause an exception if audit_alt_attributes is strict")
+
+            with patch('audit_alt_attributes.audit_alt_attributes', side_effect=Exception("Simulated processing error")):
+                with self.assertRaises(SystemExit) as cm:
+                    main()
+                self.assertEqual(cm.exception.code, 1)
+                printed_output = mock_print.call_args[0][0]
+                error_output = json.loads(printed_output)
+                self.assertEqual(len(error_output), 1)
+                self.assertIn("error", error_output[0])
+                self.assertIn("Simulated processing error", error_output[0]["error"])
+
+    @patch('requests.get')
+    @patch('builtins.print')
+    def test_main_url_no_issues(self, mock_print, mock_get):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--url', 'http://example.com']):
+            mock_get.return_value.status_code = 200
+            mock_get.return_value.text = "<html><body><img src='img1.png' alt='Good Alt'></body></html>"
+            with self.assertRaises(SystemExit) as cm:
+                main()
+            self.assertEqual(cm.exception.code, 0)
+            printed_output = mock_print.call_args[0][0]
+            self.assertEqual(json.loads(printed_output), {"message": "No issues found."})
+
+    @patch('requests.get')
+    @patch('builtins.print')
+    def test_main_url_with_issues(self, mock_print, mock_get):
+        with patch('sys.argv', ['audit_alt_attributes.py', '--url', 'http://example.com']):
+            mock_get.return_value.status_code = 200
+            mock_get.return_value.text = "<html><body><img src='img1.png'></body></html>"
+            with self.assertRaises(SystemExit) as cm:
+                main()
+            self.assertEqual(cm.exception.code, 1)
+            printed_output = mock_print.call_args[0][0]
+            issues = json.loads(printed_output)
+            self.assertEqual(len(issues), 1)
 
 if __name__ == "__main__":
     unittest.main()

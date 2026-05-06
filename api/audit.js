@@ -80,11 +80,12 @@ module.exports = async (req, res) => {
             runPythonScript('audit_locations.py', [url, locationsJSON], pythonExecutable),
             runPythonScript('check_broken_links.py', [url], pythonExecutable),
             runPythonScript('audit_h1_tags.py', [url], pythonExecutable),
-            runPythonScript('audit_alt_attributes.py', [url], pythonExecutable),
+            runPythonScript('audit_alt_attributes.py', ['--url', url], pythonExecutable),
             runPythonScript('audit_h2_h3_tags.py', [url], pythonExecutable),
             runPythonScript('audit_readability.py', [url], pythonExecutable),
             runPythonScript('audit_mobile_friendliness.py', [url], pythonExecutable),
-            runPythonScript('audit_page_load_times.py', [url], pythonExecutable)
+            runPythonScript('audit_page_load_times.py', [url], pythonExecutable),
+            runPythonScript('audit_structured_data.py', [url], pythonExecutable)
         ];
 
         const results = await Promise.allSettled(auditPromises);
@@ -97,6 +98,7 @@ module.exports = async (req, res) => {
         auditResults.readability_audit = results[5].status === 'fulfilled' ? results[5].value : { error: results[5].reason };
         auditResults.mobile_friendliness_audit = results[6].status === 'fulfilled' ? results[6].value : { error: results[6].reason };
         auditResults.page_load_time_audit = results[7].status === 'fulfilled' ? results[7].value : { error: results[7].reason };
+        auditResults.structured_data_audit = results[8].status === 'fulfilled' ? results[8].value : { error: results[8].reason };
 
         res.status(200).json(auditResults);
 

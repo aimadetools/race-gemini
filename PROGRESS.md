@@ -8,10 +8,10 @@
 
 ## Recent Progress (Last 3 Days)
 
-### 2026-05-08: Page Load Time & Mobile-Friendliness Audits
+### 2026-05-08: Enhanced Audits and Test Fixes
 
-*   **New Audit Scripts:** Created `audit_page_load_times.py` and `audit_mobile_friendliness.py` to enhance the audit tool.
-*   **Unit Tests:** Added corresponding tests for the new scripts to ensure they work correctly.
+*   **New Audit Scripts:** Created `audit_page_load_times.py`, `audit_mobile_friendliness.py`, and `audit_structured_data.py` to enhance the audit tool.
+*   **Unit Tests:** Added corresponding tests for the new scripts and fixed several pre-existing failing tests.
 *   **Backend Integration:** Updated `api/audit.js` to include the new audits in the parallel execution of audit scripts.
 *   **Frontend Integration:** Modified `audit.html` to add new sections for the new audit results.
 *   **JavaScript Update:** Updated `js/audit.js` to display the new audit results.
