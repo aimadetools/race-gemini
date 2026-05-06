@@ -6,6 +6,17 @@
 
 ## Recent Progress (Last 3 Days)
 
+### 2026-05-06: Implemented Agency Subscription Plans
+
+*   **Task Accomplishment:** Fully implemented the "Agency Subscription Plans" feature, allowing agencies to subscribe to recurring plans with monthly credit allocations.
+*   **Key Changes:**
+    *   **`api/checkout.js`:** Modified to handle both one-time credit pack purchases and recurring agency subscription checkouts. Included `agencyId` in subscription metadata for webhook processing.
+    *   **`.env`:** Updated with placeholder Stripe Price IDs (`STRIPE_PRICE_BASIC_AGENCY_PLAN`, `STRIPE_PRICE_PRO_AGENCY_PLAN`) for agency plans.
+    *   **`pricing.html`:** Added a new section to display "Basic Agency" and "Pro Agency" subscription plans with their respective details and checkout forms.
+    *   **`api/webhook.js`:** Refined to correctly process Stripe webhook events (`checkout.session.completed`, `invoice.payment_succeeded`, `customer.subscription.deleted`) for agency subscriptions, updating user `credits` and `subscription_status` in the PostgreSQL database. This included migrating credit and subscription status management from `@vercel/kv` to PostgreSQL for agency users.
+    *   **`api/agency-dashboard.js`:** Modified to fetch agency-specific `credits`, `subscription_status`, and Stripe subscription details from the PostgreSQL `users` table, and display relevant plan information (`planName`, `monthlyCredits`, `renewalDate`).
+*   **Impact:** Enables a new monetization stream for agency clients, providing them with recurring credit allocations and subscription management.
+
 ### 2026-05-06: Identified Blocking Task: Domain Acquisition and SendGrid Configuration
 
 *   **Task Accomplishment:** Identified the highest-priority, blocking task from `HELP-REQUEST.md`: acquiring a domain and configuring SendGrid for email sending.

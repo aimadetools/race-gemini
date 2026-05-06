@@ -276,6 +276,83 @@
       </a>
 </div>
 </div>
+<h2 style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
+     Agency Subscription Plans
+    </h2>
+<div class="price-cards">
+<div class="card">
+<h2 data-i18n-key="pricing_plan_basic_agency_title">
+       Basic Agency
+      </h2>
+<p class="price">
+       $49
+      </p>
+<p data-i18n-key="pricing_per_month">
+       per month
+      </p>
+<ul>
+<li data-i18n-key="pricing_basic_agency_feature1">
+<strong>
+         100 Credits
+        </strong>
+        per month
+       </li>
+<li data-i18n-key="pricing_basic_agency_feature2">
+        Access to Agency Dashboard
+       </li>
+<li data-i18n-key="pricing_basic_agency_feature3">
+        Client Management Features
+       </li>
+<li data-i18n-key="pricing_basic_agency_feature4">
+        Standard Support
+       </li>
+</ul>
+<form action="/api/checkout" method="POST">
+<input name="agencyPlanId" type="hidden" value="plan_basic_agency"/>
+<button class="button" data-i18n-key="pricing_choose_basic_agency" type="submit">
+        Choose Basic Agency
+       </button>
+</form>
+</div>
+<div class="card">
+<h2 data-i18n-key="pricing_plan_pro_agency_title">
+       Pro Agency
+      </h2>
+<p class="price">
+       $99
+      </p>
+<p data-i18n-key="pricing_per_month">
+       per month
+      </p>
+<ul>
+<li data-i18n-key="pricing_pro_agency_feature1">
+<strong>
+         250 Credits
+        </strong>
+        per month
+       </li>
+<li data-i18n-key="pricing_pro_agency_feature2">
+        All Basic Agency Features
+       </li>
+<li data-i18n-key="pricing_pro_agency_feature3">
+<strong>
+         Advanced Analytics
+        </strong>
+</li>
+<li data-i18n-key="pricing_pro_agency_feature4">
+<strong>
+         Priority Support
+        </strong>
+</li>
+</ul>
+<form action="/api/checkout" method="POST">
+<input name="agencyPlanId" type="hidden" value="plan_pro_agency"/>
+<button class="button" data-i18n-key="pricing_choose_pro_agency" type="submit">
+        Choose Pro Agency
+       </button>
+</form>
+</div>
+</div>
 <div class="usage-pricing-card">
 <h2 data-i18n-key="pricing_usage_based_title">
       Flexible Usage-Based Pricing

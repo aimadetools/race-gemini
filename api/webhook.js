@@ -34,35 +34,69 @@ module.exports = async (req, res, currentKvClient) => {
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
             const userId = session.client_reference_id;
-            const credits = session.metadata.credits;
-
-            if (!userId || !credits) {
-                await logError(new Error('Missing userId (from client_reference_id) or credits in session.'), 'Stripe Webhook - Missing Data');
-                return res.status(400).json({ message: 'Missing user identifier or credits in session.' });
+            
+            if (!userId) {
+                await logError(new Error('Missing userId (from client_reference_id) in session.'), 'Stripe Webhook - Missing Data (userId)');
+                return res.status(400).json({ message: 'Missing user identifier in session.' });
             }
 
             try {
-                // Update user credits in PostgreSQL
-                const parsedCredits = parseInt(credits, 10);
-                if (isNaN(parsedCredits)) {
-                    await logError(new Error(`Invalid credits value received: ${credits}`), 'Stripe Webhook - Invalid Credits');
-                    return res.status(400).json({ message: 'Invalid credits value received.' });
+                if (session.mode === 'subscription') {
+                    const subscription = await stripe.subscriptions.retrieve(session.subscription);
+                    const agencyPlanId = session.metadata.agencyPlanId; // This was set in checkout.js
+                    const priceId = subscription.items.data[0].price.id;
+
+                    let creditsToAdd = 0;
+                    if (priceId === process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN) {
+                        creditsToAdd = 100;
+                    } else if (priceId === process.env.STRIPE_PRICE_PRO_AGENCY_PLAN) {
+                        creditsToAdd = 250;
+                    }
+
+                    if (creditsToAdd > 0) {
+                        const result = await query(
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_subscription_id = $3 WHERE id = $4 RETURNING credits',
+                            [creditsToAdd, 'active', session.subscription, userId]
+                        );
+
+                        if (result.rows.length === 0) {
+                            await logError(new Error(`User not found for userId: ${userId} during subscription checkout.`), 'Stripe Webhook - User Not Found for Subscription');
+                            return res.status(404).json({ message: 'User not found in database for subscription.' });
+                        }
+                        console.log(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`);
+                    } else {
+                        await logError(new Error(`No credits defined for priceId: ${priceId} during subscription checkout.`), 'Stripe Webhook - No Credits Defined for Subscription');
+                        return res.status(400).json({ message: 'No credits defined for subscription plan.' });
+                    }
+
+                } else if (session.mode === 'payment') {
+                    const credits = session.metadata.credits; // This is for one-time credit packs
+
+                    if (!credits) {
+                        await logError(new Error('Missing credits in session metadata for payment mode.'), 'Stripe Webhook - Missing Credits for Payment');
+                        return res.status(400).json({ message: 'Missing credits in session metadata for payment.' });
+                    }
+
+                    const parsedCredits = parseInt(credits, 10);
+                    if (isNaN(parsedCredits)) {
+                        await logError(new Error(`Invalid credits value received for payment mode: ${credits}`), 'Stripe Webhook - Invalid Credits for Payment');
+                        return res.status(400).json({ message: 'Invalid credits value received for payment mode.' });
+                    }
+
+                    const result = await query(
+                        'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
+                        [parsedCredits, userId]
+                    );
+
+                    if (result.rows.length === 0) {
+                        await logError(new Error(`User not found for userId: ${userId} during credit pack purchase.`), 'Stripe Webhook - User Not Found for Credit Pack');
+                        return res.status(404).json({ message: 'User not found in database for credit pack purchase.' });
+                    }
+                    console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
                 }
-
-                const result = await query(
-                    'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
-                    [parsedCredits, userId]
-                );
-
-                if (result.rows.length === 0) {
-                    await logError(new Error(`User not found for userId: ${userId}`), 'Stripe Webhook - User Not Found in DB');
-                    return res.status(404).json({ message: 'User not found in database.' });
-                }
-
-                console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
             } catch (error) {
-                await logError(error, 'Stripe Webhook - Credit Update Failed (PostgreSQL)');
-                return res.status(500).json({ message: 'Error updating credits in database.' });
+                await logError(error, 'Stripe Webhook - Checkout Session Completed Processing Failed');
+                return res.status(500).json({ message: 'Error processing checkout.session.completed event.' });
             }
         }
 
@@ -70,39 +104,62 @@ module.exports = async (req, res, currentKvClient) => {
             const invoice = event.data.object;
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
             const priceId = subscription.items.data[0].price.id;
-            const agencyId = subscription.metadata.agencyId;
+            const userId = subscription.metadata.agencyId; // agencyId is the userId
 
-            if (agencyId) {
+            if (userId) {
                 let creditsToAdd = 0;
-                if (priceId === 'price_BASIC_AGENCY_PLAN') {
+                if (priceId === process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN) {
                     creditsToAdd = 100;
-                } else if (priceId === 'price_PRO_AGENCY_PLAN') {
+                } else if (priceId === process.env.STRIPE_PRICE_PRO_AGENCY_PLAN) {
                     creditsToAdd = 250;
                 }
 
                 if (creditsToAdd > 0) {
-                    const agency = await currentKv.get(`agency:${agencyId}`);
-                    if (agency) {
-                        agency.credits = (agency.credits || 0) + creditsToAdd;
-                        agency.subscriptionStatus = 'active';
-                        await currentKv.set(`agency:${agencyId}`, agency);
-                        console.log(`Added ${creditsToAdd} credits to agency ${agencyId}`);
+                    try {
+                        const result = await query(
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2 WHERE id = $3 RETURNING credits',
+                            [creditsToAdd, 'active', userId]
+                        );
+
+                        if (result.rows.length === 0) {
+                            await logError(new Error(`User not found for userId: ${userId} during invoice payment succeeded.`), 'Stripe Webhook - User Not Found for Invoice');
+                            return res.status(404).json({ message: 'User not found in database for invoice payment.' });
+                        }
+                        console.log(`Added ${creditsToAdd} credits to agency user ${userId} on invoice payment. New balance: ${result.rows[0].credits}`);
+                    } catch (error) {
+                        await logError(error, 'Stripe Webhook - Invoice Payment Succeeded Processing Failed (PostgreSQL)');
+                        return res.status(500).json({ message: 'Error processing invoice.payment_succeeded event.' });
                     }
                 }
+            } else {
+                await logError(new Error('Missing userId (agencyId) in subscription metadata for invoice payment succeeded.'), 'Stripe Webhook - Missing userId for Invoice');
+                return res.status(400).json({ message: 'Missing user identifier in subscription metadata for invoice payment.' });
             }
         }
 
         if (event.type === 'customer.subscription.deleted') {
             const subscription = event.data.object;
-            const agencyId = subscription.metadata.agencyId;
+            const userId = subscription.metadata.agencyId; // agencyId is the userId
 
-            if (agencyId) {
-                const agency = await currentKv.get(`agency:${agencyId}`);
-                if (agency) {
-                    agency.subscriptionStatus = 'canceled';
-                    await currentKv.set(`agency:${agencyId}`, agency);
-                    console.log(`Subscription for agency ${agencyId} canceled.`);
+            if (userId) {
+                try {
+                    const result = await query(
+                        'UPDATE users SET subscription_status = $1 WHERE id = $2 RETURNING id',
+                        ['canceled', userId]
+                    );
+
+                    if (result.rows.length === 0) {
+                        await logError(new Error(`User not found for userId: ${userId} during subscription deletion.`), 'Stripe Webhook - User Not Found for Subscription Deletion');
+                        return res.status(404).json({ message: 'User not found in database for subscription deletion.' });
+                    }
+                    console.log(`Subscription for agency user ${userId} canceled in PostgreSQL.`);
+                } catch (error) {
+                    await logError(error, 'Stripe Webhook - Subscription Deletion Processing Failed (PostgreSQL)');
+                    return res.status(500).json({ message: 'Error processing customer.subscription.deleted event.' });
                 }
+            } else {
+                await logError(new Error('Missing userId (agencyId) in subscription metadata for subscription deletion.'), 'Stripe Webhook - Missing userId for Subscription Deletion');
+                return res.status(400).json({ message: 'Missing user identifier in subscription metadata for subscription deletion.' });
             }
         }
 

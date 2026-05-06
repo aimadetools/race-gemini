@@ -17,45 +17,25 @@ async function logError(error, context) {
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
-        const { creditPackId } = req.body; // Expect creditPackId to be sent from the frontend
+        const { creditPackId, agencyPlanId } = req.body; // Expect either creditPackId or agencyPlanId
+        let sessionConfig = {}; // Initialize a configuration object for the Stripe session
 
-        if (!creditPackId) {
-            await logError(new Error('Missing creditPackId in request body.'), 'Checkout Validation');
-            return res.status(400).json({ message: 'Missing creditPackId in request body.' });
-        }
-        
-        // Define credit pack details matching USAGE_BASED_PRICING.md
-        const creditPackDetails = {
-            'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 5000 },    // $50.00
-            'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 18000 },  // $180.00
-            'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 80000 }, // $800.00
-        };
+        if (creditPackId) {
+            // Logic for one-time credit pack purchase
+            const creditPackDetails = {
+                'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 5000 },    // $50.00
+                'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 18000 },  // $180.00
+                'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 80000 }, // $800.00
+            };
 
-        const selectedPack = creditPackDetails[creditPackId];
+            const selectedPack = creditPackDetails[creditPackId];
 
-        if (!selectedPack) {
-            await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection');
-            return res.status(404).json({ message: 'Credit pack details not found for the selected ID.' });
-        }
+            if (!selectedPack) {
+                await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection');
+                return res.status(404).json({ message: 'Credit pack details not found for the selected ID.' });
+            }
 
-        const cookies = parse(req.headers.cookie || '');
-        const token = cookies.authToken; // Correct cookie name is authToken
-
-        if (!token) {
-            return res.status(401).json({ message: 'Not authenticated' });
-        }
-
-        let userId;
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            userId = decoded.userId;
-        } catch (error) {
-            await logError(error, 'JWT Verification Failed');
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        try {
-            const session = await stripe.checkout.sessions.create({
+            sessionConfig = {
                 payment_method_types: ['card'],
                 line_items: [
                     {
@@ -78,14 +58,53 @@ module.exports = async (req, res) => {
                     credits: selectedPack.credits, // Pass the actual credits
                     userId: userId // Explicitly pass userId
                 },
-            });
+            };
+        } else if (agencyPlanId) {
+            // Logic for agency subscription plan
+            const agencyPlanDetails = {
+                'plan_basic_agency': { name: 'Basic Agency Plan', priceId: process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN },
+                'plan_pro_agency': { name: 'Pro Agency Plan', priceId: process.env.STRIPE_PRICE_PRO_AGENCY_PLAN },
+            };
 
-            res.writeHead(303, { Location: session.url });
-            res.end();
-        } catch (error) {
-            await logError(error, 'Stripe Checkout Session Creation');
-            res.status(500).json({ message: 'Error creating checkout session.', error: error.message });
+            const selectedPlan = agencyPlanDetails[agencyPlanId];
+
+            if (!selectedPlan) {
+                await logError(new Error(`Agency plan details not found for ${agencyPlanId}.`), 'Checkout Agency Plan Selection');
+                return res.status(404).json({ message: 'Agency plan details not found for the selected ID.' });
+            }
+
+            // Ensure the priceId is available in environment variables
+            if (!selectedPlan.priceId) {
+                await logError(new Error(`Stripe Price ID not configured for agency plan ${agencyPlanId}.`), 'Checkout Agency Plan Price ID Missing');
+                return res.status(500).json({ message: `Stripe Price ID not configured for agency plan ${agencyPlanId}.` });
+            }
+
+            sessionConfig = {
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price: selectedPlan.priceId,
+                        quantity: 1,
+                    },
+                ],
+                mode: 'subscription', // Use subscription mode for recurring payments
+                success_url: `https://${req.headers.host}/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
+                cancel_url: `https://${req.headers.host}/agency-partnerships.html`, // Redirect back to agency pricing page
+                client_reference_id: userId,
+                customer_creation: 'always', // Ensure a customer is created in Stripe
+                metadata: {
+                    agencyPlanId: agencyPlanId,
+                    userId: userId, // Explicitly pass userId
+                    agencyId: userId // Pass userId as agencyId for subscription metadata
+                },
+            };
+        } else {
+            await logError(new Error('Neither creditPackId nor agencyPlanId provided in request body.'), 'Checkout Validation');
+            return res.status(400).json({ message: 'Missing creditPackId or agencyPlanId in request body.' });
         }
+
+        try {
+            const session = await stripe.checkout.sessions.create(sessionConfig);
     } else {
         res.status(405).send('Method Not Allowed');
     }
