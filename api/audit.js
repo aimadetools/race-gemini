@@ -53,6 +53,8 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
     });
 };
 
+const audits = require('../lib/audits');
+
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -71,34 +73,20 @@ module.exports = async (req, res) => {
     }
 
     const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
-    const auditResults = {};
 
     try {
-        const locationsJSON = JSON.stringify(locations);
-
-        const auditPromises = [
-            runPythonScript('audit_locations.py', [url, locationsJSON], pythonExecutable),
-            runPythonScript('check_broken_links.py', [url], pythonExecutable),
-            runPythonScript('audit_h1_tags.py', [url], pythonExecutable),
-            runPythonScript('audit_alt_attributes.py', ['--url', url], pythonExecutable),
-            runPythonScript('audit_h2_h3_tags.py', [url], pythonExecutable),
-            runPythonScript('audit_readability.py', [url], pythonExecutable),
-            runPythonScript('audit_mobile_friendliness.py', [url], pythonExecutable),
-            runPythonScript('audit_page_load_times.py', [url], pythonExecutable),
-            runPythonScript('audit_structured_data.py', [url], pythonExecutable)
-        ];
+        const auditPromises = audits.map(audit => {
+            const args = audit.args(url, locations);
+            return runPythonScript(audit.script, args, pythonExecutable);
+        });
 
         const results = await Promise.allSettled(auditPromises);
 
-        auditResults.location_audit = results[0].status === 'fulfilled' ? results[0].value : { error: results[0].reason };
-        auditResults.broken_links_audit = results[1].status === 'fulfilled' ? results[1].value : { error: results[1].reason };
-        auditResults.h1_audit = results[2].status === 'fulfilled' ? results[2].value : { error: results[2].reason };
-        auditResults.alt_attributes_audit = results[3].status === 'fulfilled' ? results[3].value : { error: results[3].reason };
-        auditResults.h2_h3_audit = results[4].status === 'fulfilled' ? results[4].value : { error: results[4].reason };
-        auditResults.readability_audit = results[5].status === 'fulfilled' ? results[5].value : { error: results[5].reason };
-        auditResults.mobile_friendliness_audit = results[6].status === 'fulfilled' ? results[6].value : { error: results[6].reason };
-        auditResults.page_load_time_audit = results[7].status === 'fulfilled' ? results[7].value : { error: results[7].reason };
-        auditResults.structured_data_audit = results[8].status === 'fulfilled' ? results[8].value : { error: results[8].reason };
+        const auditResults = results.reduce((acc, result, index) => {
+            const auditName = audits[index].name;
+            acc[auditName] = result.status === 'fulfilled' ? result.value : { error: result.reason };
+            return acc;
+        }, {});
 
         res.status(200).json(auditResults);
 

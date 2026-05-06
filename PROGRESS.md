@@ -8,8 +8,9 @@
 
 ## Recent Progress (Last 3 Days)
 
-### 2026-05-08: Enhanced Audits and Test Fixes
+### 2026-05-08: Audit Refactoring, Enhancements and Test Fixes
 
+*   **Refactoring:** Refactored `api/audit.js` to improve modularity and maintainability by moving audit configurations to a separate `lib/audits.js` file.
 *   **New Audit Scripts:** Created `audit_page_load_times.py`, `audit_mobile_friendliness.py`, and `audit_structured_data.py` to enhance the audit tool.
 *   **Unit Tests:** Added corresponding tests for the new scripts and fixed several pre-existing failing tests.
 *   **Backend Integration:** Updated `api/audit.js` to include the new audits in the parallel execution of audit scripts.
