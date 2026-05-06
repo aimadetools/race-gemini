@@ -21,14 +21,14 @@ export const mockQuery = async (text, params) => {
         const email = params[0];
         const user = mockUsers.find(u => u.email === email);
         return { rows: user ? [user] : [] };
-    } else if (text.startsWith('UPDATE users SET credits = $1 WHERE id = $2')) {
-        const [newCredits, userId] = params;
+    } else if (text.startsWith('UPDATE users SET credits = credits + $1 WHERE id = $2')) {
+        const [amount, userId] = params;
         const userIndex = mockUsers.findIndex(u => u.id === userId);
         if (userIndex > -1) {
-            mockUsers[userIndex].credits = newCredits;
-            return { rowCount: 1 };
+            mockUsers[userIndex].credits += amount;
+            return { rows: [{ credits: mockUsers[userIndex].credits }] };
         }
-        return { rowCount: 0 };
+        return { rows: [] };
     } else if (text.startsWith('SELECT credits FROM users WHERE id = $1')) {
         const userId = params[0];
         const user = mockUsers.find(u => u.id === userId);
