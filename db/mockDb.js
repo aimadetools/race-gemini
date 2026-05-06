@@ -6,9 +6,15 @@ export const mockQuery = async (text, params) => {
         const email = params[0];
         const existingUser = mockUsers.find(user => user.email === email);
         return { rows: existingUser ? [{ id: existingUser.id }] : [] };
-    } else if (text.startsWith('INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id')) {
-        const [email, hashedPassword, credits] = params;
-        const newUser = { id: (nextId++).toString(), email, hashed_password: hashedPassword, credits };
+    } else if (text.startsWith('INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id') || text.startsWith('INSERT INTO users (id, email, hashed_password, credits) VALUES ($1, $2, $3, $4) RETURNING id')) {
+        let newUser;
+        if (text.startsWith('INSERT INTO users (id, email, hashed_password, credits)')) {
+            const [id, email, hashedPassword, credits] = params;
+            newUser = { id, email, hashed_password: hashedPassword, credits };
+        } else {
+            const [email, hashedPassword, credits] = params;
+            newUser = { id: (nextId++).toString(), email, hashed_password: hashedPassword, credits };
+        }
         mockUsers.push(newUser);
         return { rows: [{ id: newUser.id }] };
     } else if (text.startsWith('SELECT id, email, hashed_password, credits FROM users WHERE email = $1')) {
