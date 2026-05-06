@@ -1,8 +1,12 @@
 # Key Milestones (Summarized)
 
-*   **Project Foundation & Key Features:** Established core UI/UX, API testing, payment systems, lead generation, blog infrastructure, and comprehensive audit tools. Significant progress on P1 Local SEO Page Generator and P7 user event tracking. Implemented Python audit suite, integrated Python tests into CI/CD, and developed a location-based audit tool.
+*   **Project Foundation & Key Features:** Established core UI/UX, API testing, payment systems, lead generation, blog infrastructure, and comprehensive audit tools. Implemented Python audit suite, integrated Python tests into CI/CD, and developed a location-based audit tool.
 *   **Audit Tool Refinements:** Refactored audit configurations, added new audit scripts (page load times, mobile friendliness, structured data), and integrated technical SEO audits into the location-based audit tool UI.
 *   **Past Feature Development (Summarized):** Generated additional local SEO pages, refined filename logic in `api/generate-seo-pages.js`, verified Python unit tests, enhanced sample page generation, and implemented customizable primary colors for sample pages.
+*   **Pricing & Subscriptions:** Implemented usage-based pricing with page credit packs, standardized user credit management to PostgreSQL, and fully implemented agency subscription plans.
+*   **SEO & Auditing Enhancements:** Completed H1, H2/H3, and Alt attribute audits. Developed automated fixes for H2/H3 tag hierarchy issues and enhanced blog post SEO audit tool.
+*   **Performance Optimization:** Optimized `index.html` performance by removing duplicate CSS and relocating render-blocking scripts.
+*   **Lead Generation:** Generated outreach emails and sample pages.
 
 ## Recent Progress (Last 3 Days)
 
