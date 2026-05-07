@@ -16,5 +16,6 @@
 *   **Video Tutorial Creation:** Created a tailored video tutorial script for "Local SEO for Plumbers."
 *   **Video Tutorial Creation (2026-05-07):** Created a tailored video tutorial script for "Local SEO for Small Businesses."
 *   **Agency & White Label Program:** Created a dedicated landing page (`agency-white-label.html`) for the white-label agency offering, complete with tailored content and form submission.
+*   **Product Hunt Launch Preparation (2026-05-09):** Began preparing for Product Hunt launch by refining the launch description and detailing required assets in `promotional_content.md`. Updated `BACKLOG-PREMIUM.md` with granular sub-tasks for the launch.
 
 *   **Usage-Based Pricing Implemented (2026-05-09):** Clarified PostgreSQL database availability, confirmed Stripe Product Setup as manual, and verified that `api/checkout.js`, `api/webhook.js`, and `api/generate.js` already handle credit logic. Updated `pricing.html` and `generate.html` for credit display and removed `buy-credits.html`.
