@@ -5,6 +5,7 @@ import os
 from audits_v2.alt_attributes import audit as alt_attributes_audit
 from audits_v2.h1_tags import audit as h1_tags_audit
 from audits_v2.broken_links import audit as broken_links_audit
+from audits_v2.google_business_profile import audit as google_business_profile_audit
 
 def _determine_target_type(target):
     if target.startswith('http://') or target.startswith('https://'):
@@ -42,6 +43,11 @@ def main():
     broken_links_parser.add_argument('target', help='Path to the HTML file or URL to audit')
     broken_links_parser.set_defaults(func=run_broken_links_audit)
 
+    # Google Business Profile Audit
+    gmb_parser = subparsers.add_parser('gmb', help='Checks for the presence of a Google Business Profile for a given URL')
+    gmb_parser.add_argument('target', help='The URL of the business website to audit')
+    gmb_parser.set_defaults(func=run_google_business_profile_audit)
+
     args = parser.parse_args()
 
     if not args.command:
@@ -68,6 +74,11 @@ def run_h1_tags_audit(args):
 def run_broken_links_audit(args):
     target_type = _determine_target_type(args.target)
     results = broken_links_audit(args.target, target_type=target_type)
+    print(json.dumps(results, indent=2))
+
+def run_google_business_profile_audit(args):
+    # For GMB audit, the target is always a URL, so target_type is 'url'
+    results = google_business_profile_audit(args.target, target_type='url')
     print(json.dumps(results, indent=2))
 
 if __name__ == '__main__':

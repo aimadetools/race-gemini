@@ -97,13 +97,13 @@ def check_google_business_profile(business_name):
             'reason': f"An error occurred while searching Google: {e}"
         }
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print(json.dumps({'error': 'No URL provided.'}))
-        sys.exit(1)
-        
-    url = sys.argv[1]
-    business_name = get_business_name(url)
+# Main audit function for integration with auditor_cli.py
+def audit(target, target_type):
+    if target_type != 'url':
+        return {'error': 'Google Business Profile audit only supports URLs as targets.'}
+
+    business_name = get_business_name(target)
     result = check_google_business_profile(business_name)
     
-    print(json.dumps(result))
+    return result
+
