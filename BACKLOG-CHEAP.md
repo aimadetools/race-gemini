@@ -7,9 +7,9 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [PENDING] Monitor sign-ups and revenue from the Product Hunt launch.
 
 *   **Blog Content Improvements:**
-    *   [IN PROGRESS] Increase Word Count of Blog Posts: Continue expanding content of posts below 300 words.
-    *   [IN PROGRESS] Add External Links to Blog Posts: Continue adding relevant, high-quality external links to other posts missing them.
-    *   [TODO] Add internal links between blog posts.
+    *   [DONE] Increase Word Count of Blog Posts: Continue expanding content of posts below 300 words.
+    *   [DONE] Add External Links to Blog Posts: Continue adding relevant, high-quality external links to other posts missing them.
+    *   [DONE] Add internal links between blog posts.
 
 *   **Technical Debt & Refinement:**
     *   [TODO] Refactor Python audit scripts into a single, configurable script.
