@@ -13,7 +13,7 @@ This file contains tasks that are more complex, require external tools or human 
         *   [PENDING] Actively engage with Product Hunt community on launch day.
 
 *   **P2: Grow the Funnel**
-    *   Completed tasks: Created first video tutorial: "Local SEO for Plumbers."
+    *   Completed tasks: Created video tutorial for "Local SEO for Plumbers."
     *   [ ] Analyze user interaction with the free audit tool and generated pages to identify drop-off points.
 
 *   **P3: Agency & Referral Program**
