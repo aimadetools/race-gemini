@@ -7,7 +7,7 @@ from datetime import datetime
 # Function to call the Gemini API
 def call_gemini_api(prompt, api_key):
     if not api_key:
-        print("GEMINI_API_KEY not set. Using placeholder content.")
+        print(f"Warning: GEMINI_API_KEY not set. Generating placeholder content for '{prompt.splitlines()[0][:50]}...'")
         return None
 
     headers = {
@@ -235,6 +235,14 @@ def create_new_blog_posts(start_num, count):
     os.makedirs(blog_dir, exist_ok=True)
     
     gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+    if not gemini_api_key:
+        print("\n" + "="*80)
+        print("WARNING: GEMINI_API_KEY environment variable is NOT set.")
+        print("LLM content generation for blog posts will be skipped.")
+        print("Placeholder content will be used instead.")
+        print("To generate real content, please set the GEMINI_API_KEY environment variable.")
+        print("="*80 + "\n")
 
     for i in range(count):
         post_number = start_num + i
