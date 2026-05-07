@@ -1,3 +1,4 @@
+import argparse
 import os
 import requests
 import json
@@ -300,6 +301,11 @@ def create_new_blog_posts(start_num, count):
         print(f"Created new blog post: {file_name}")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate new blog posts.")
+    parser.add_argument("--count", type=int, default=3,
+                        help="Number of new blog posts to generate (default: 3).")
+    args = parser.parse_args()
+
     # Find the highest existing post number
     blog_files = [f for f in os.listdir("blog") if f.startswith("post") and f.endswith(".html")]
     max_post_num = 0
@@ -312,7 +318,7 @@ if __name__ == "__main__":
             continue
     
     start_post_number = max_post_num + 1
-    num_posts_to_generate = 3 # Generate fewer posts for testing with LLM
+    num_posts_to_generate = args.count
     
     print(f"Generating {num_posts_to_generate} new blog posts starting from post{start_post_number}.html...")
     create_new_blog_posts(start_post_number, num_posts_to_generate)
