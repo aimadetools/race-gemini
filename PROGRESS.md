@@ -14,6 +14,7 @@
 *   **Blog Internal Linking:** Began the process of adding internal links to blog posts to improve SEO and user navigation.
 *   **Audit Script Refactoring:** Refactored Python audit scripts into a single, configurable CLI tool (`auditor_cli.py`). Designed a modular structure with standardized audit functions (`audits_v2/`). Integrated and tested `alt_attributes`, `h1_tags`, and `broken_links` modules.
 *   **Video Tutorial Creation:** Created a tailored video tutorial script for "Local SEO for Plumbers."
+*   **Video Tutorial Creation (2026-05-07):** Created a tailored video tutorial script for "Local SEO for Small Businesses."
 *   **Agency & White Label Program:** Created a dedicated landing page (`agency-white-label.html`) for the white-label agency offering, complete with tailored content and form submission.
 
 *   **Usage-Based Pricing Implemented (2026-05-09):** Clarified PostgreSQL database availability, confirmed Stripe Product Setup as manual, and verified that `api/checkout.js`, `api/webhook.js`, and `api/generate.js` already handle credit logic. Updated `pricing.html` and `generate.html` for credit display and removed `buy-credits.html`.
