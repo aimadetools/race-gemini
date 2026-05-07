@@ -7,7 +7,7 @@ This file contains tasks that are more complex, require external tools or human 
     *   [ ] Prepare and execute a Product Hunt launch.
 
 *   **P2: Grow the Funnel**
-    *   [IN PROGRESS] Create first video tutorial: "Local SEO for Plumbers."
+    *   [DONE] Create first video tutorial: "Local SEO for Plumbers."
     *   [ ] Analyze user interaction with the free audit tool and generated pages to identify drop-off points.
 
 *   **P3: Agency & Referral Program**
