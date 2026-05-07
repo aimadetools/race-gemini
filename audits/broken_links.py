@@ -1,70 +1,41 @@
 
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 import os
 
-def audit(source):
+def audit(file_paths):
     """
-    Fetches content from a URL or reads from a local file, finds all unique external links, and checks their status.
-
-    Args:
-        source (str): The URL or file path to audit.
-
-    Returns:
-        list: A list of dictionaries, where each dictionary represents a broken
-              link and contains 'url' and 'status_code' or 'error'.
+    Finds all unique external links in a list of HTML files and checks their status.
     """
-    broken_links = []
-    content = None
-    
-    parsed_source = urlparse(source)
-
-    if parsed_source.scheme and parsed_source.netloc: # It's a URL
-        try:
-            response = requests.get(source, timeout=10)
-            response.raise_for_status()
-            content = response.content
-        except requests.exceptions.RequestException as e:
-            return [{'url': source, 'error': f"Failed to fetch URL: {e}"}]
-    elif os.path.exists(source): # It's a local file path
-        try:
-            with open(source, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except IOError as e:
-            return [{'file': source, 'error': f"Failed to read local file: {e}"}]
-    else:
-        return [{'source': source, 'error': "Invalid source: Not a valid URL or existing file path."}]
-
-    if content is None:
-        return [{'source': source, 'error': "Could not retrieve content from source."}]
-
-    soup = BeautifulSoup(content, 'html.parser')
-
     links_to_check = set()
-    for a_tag in soup.find_all('a', href=True):
-        link = a_tag['href']
-        parsed_link = urlparse(link)
-
-        if parsed_link.scheme and parsed_link.netloc:
-            # Absolute external link
-            links_to_check.add(link)
-        elif not parsed_link.scheme and parsed_link.netloc:
-             # Protocol-relative URL, e.g. //example.com
-            links_to_check.add(f"https:{link}")
-        # We are ignoring internal links and relative links for now.
-
+    for file_path in file_paths:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            soup = BeautifulSoup(content, 'html.parser')
+            for a_tag in soup.find_all('a', href=True):
+                link = a_tag['href']
+                parsed_link = urlparse(link)
+                if parsed_link.scheme and parsed_link.netloc:
+                    links_to_check.add(link)
+                elif not parsed_link.scheme and parsed_link.netloc:
+                    links_to_check.add(f"https:{link}")
+        except Exception as e:
+            print(f"Error processing file {file_path}: {e}")
+    
+    broken_links = []
     session = requests.Session()
     session.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
-
-    for link in links_to_check:
+    
+    for i, link in enumerate(links_to_check):
+        print(f"Checking link {i+1}/{len(links_to_check)}: {link}")
         try:
-            # Use a HEAD request for efficiency
-            check = session.get(link, allow_redirects=True, timeout=5, stream=True)
+            check = session.get(link, allow_redirects=True, timeout=10, stream=True)
             if 400 <= check.status_code < 600:
                 broken_links.append({'url': link, 'status_code': check.status_code})
-            check.close() # Ensure the connection is closed
+            check.close()
         except requests.exceptions.RequestException as e:
             broken_links.append({'url': link, 'error': f'Failed to connect or timeout: {e}'})
-
+            
     return broken_links

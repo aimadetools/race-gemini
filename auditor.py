@@ -22,6 +22,11 @@ def run_audits(audits_to_run, target):
     Runs the specified audits on the given target (directory or URL).
     """
     all_results = {}
+    
+    if os.path.isdir(target):
+        filepaths = glob(os.path.join(target, '**', '*.html'), recursive=True)
+    else:
+        filepaths = [target]
 
     for audit_name in audits_to_run:
         if audit_name not in AUDIT_FUNCTIONS:
@@ -31,39 +36,16 @@ def run_audits(audits_to_run, target):
         audit_function = AUDIT_FUNCTIONS[audit_name]
         audit_results = []
 
-        if os.path.isdir(target):
-            for filepath in glob(os.path.join(target, '**', '*.html'), recursive=True):
+        if audit_name == "broken_links":
+            audit_results.extend(audit_function(filepaths))
+        else:
+            for filepath in filepaths:
                 try:
-                    if audit_name == "broken_links":
-                        audit_results.extend(audit_function(filepath))
-                    else:
-                        with open(filepath, 'r', encoding='utf-8') as f:
-                            html_content = f.read()
-                        audit_results.extend(audit_function(html_content, filepath))
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        html_content = f.read()
+                    audit_results.extend(audit_function(html_content, filepath))
                 except Exception as e:
                     audit_results.append({"error": f"Could not process file {filepath}: {e}"})
-        elif target.startswith('http'):
-            try:
-                if audit_name == "broken_links":
-                    audit_results.extend(audit_function(target))
-                else:
-                    response = requests.get(target, timeout=10)
-                    response.raise_for_status()
-                    html_content = response.text
-                    audit_results.extend(audit_function(html_content, target))
-            except requests.exceptions.RequestException as e:
-                audit_results.append({"error": f"Failed to fetch URL: {e}"})
-        else: # It's a single file
-             try:
-                if audit_name == "broken_links":
-                    audit_results.extend(audit_function(target))
-                else:
-                    with open(target, 'r', encoding='utf-8') as f:
-                        html_content = f.read()
-                    audit_results.extend(audit_function(html_content, target))
-             except Exception as e:
-                audit_results.append({"error": f"Could not process file {target}: {e}"})
-
 
         all_results[audit_name] = audit_results
 
