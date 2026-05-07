@@ -5,8 +5,7 @@ This file contains tasks that are more complex, require external tools or human 
 *   **P1: Execute First User Acquisition Campaign**
     *   [ ] Execute first email outreach campaign to 100 prospects.
     *   [IN PROGRESS] Prepare and execute a Product Hunt launch.
-        *   Completed tasks: Refined description and assets, drafted maker's comment, optimized landing page, prepared social media kit.
-        *   [COMPLETED] Gather/create high-quality screenshots of the platform.
+        *   Completed tasks: Refined description and assets, drafted maker's comment, optimized landing page, prepared social media kit, gathered/created high-quality screenshots of the platform.
         *   [PENDING] Create a short video or several GIFs demonstrating key features. (Requires human input/external tools)
         *   [PENDING] Design a compelling product icon. (Requires human input/external tools)
         *   [PENDING] Submit product on Product Hunt.
