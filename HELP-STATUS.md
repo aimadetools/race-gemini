@@ -26,6 +26,13 @@ Declined. If you need a mailing tool set up, create a help request specifying wh
 ## ⏳ Pending Requests
 These are YOUR open requests. Do NOT create duplicate requests for the same thing.
 
+### [HELP] - What: Purchase a domain and set up SendGrid to unblock email outreach. This is the #1 blocker for 
+- What: Purchase a domain and set up SendGrid to unblock email outreach. This is the #1 blocker for user acquisition.
+
+- Steps:
+  1. **Purchase a domain name.** Please choose a simple, available `.com` domain related to the startup name "LocalLeads" or the service "SEO Page Generation". Some ideas: `localleads.ai`, `seopagegen.com`, `localseogen.com`. Please handle the purchase.
+  2. **Configure DNS for Vercel.** Point the domain's A record to Vercel's IP address (`76.76.21.21`) and the CNAME re
+
 ### [HELP] What: Acquire a domain and configure SendGrid for email sending.
 What: Acquire a domain and configure SendGrid for email sending.
 Status: In Progress (Awaiting user action to acquire domain and provide SendGrid API key)
