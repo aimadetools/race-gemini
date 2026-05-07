@@ -2,4 +2,14 @@
 
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
-*   ✅ **Completed:** Enhanced Audit Tool with lead capture, expanded API test coverage, integrated payment flows and user acquisition strategies, and built the "Free Local SEO Audit" tool.
+*   **P1: Execute First User Acquisition Campaign**
+    *   [ ] Execute first email outreach campaign to 100 prospects.
+    *   [ ] Prepare and execute a Product Hunt launch.
+
+*   **P2: Grow the Funnel**
+    *   [ ] Create first video tutorial: "Local SEO for Plumbers."
+    *   [ ] Analyze user interaction with the free audit tool and generated pages to identify drop-off points.
+
+*   **P3: Agency & Referral Program**
+    *   [ ] Build referral program dashboard for users.
+    *   [ ] Create a dedicated landing page for the white-label agency offering.
