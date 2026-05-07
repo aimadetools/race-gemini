@@ -33,5 +33,15 @@
     Thanks for checking us out!
     ```
 *   **Product Hunt Landing Page Optimized (2026-05-09):** De-emphasized the "Agency Callout" section in `index.html` by commenting it out, aligning the landing page's focus with the Product Hunt audience (individual users/small businesses).
+*   **Product Hunt Social Media Kit & Communities (2026-05-09):** Drafted social media posts and identified potential communities for outreach.
+    *   **Drafted Social Media Posts (from `promotional_content.md`):**
+        *   **Post 1 (Twitter/LinkedIn):** 🚀 Small business owners, tired of being invisible in local searches? LocalLeads generates hyper-localized SEO pages effortlessly, turning nearby searches into *your* customers. Get found by who matters most! Try LocalLeads today and boost your local presence. #LocalSEO #SmallBusiness #Marketing
+        *   **Post 2 (Twitter/LinkedIn):** 📈 Want more local customers but dread complex SEO? LocalLeads automates your local SEO with ease! Generate powerful, localized pages that rank high on Google and drive real business. Sign up for a free audit and see your local potential! #LocalBusiness #SEO #DigitalMarketing
+    *   **Suggested Communities for Outreach:**
+        *   **Reddit:** `r/smallbusiness`, `r/SEO`, `r/marketing`, `r/Entrepreneur`
+        *   **Facebook Groups:** Local business owner groups, SEO/Digital Marketing communities
+        *   **LinkedIn Groups:** Small Business Owners, Digital Marketing Professionals, Local SEO Professionals
+        *   **Indie Hackers**
+        *   **Product Hunt** (engaging in comments)
 
 *   **Usage-Based Pricing Implemented (2026-05-09):** Clarified PostgreSQL database availability, confirmed Stripe Product Setup as manual, and verified that `api/checkout.js`, `api/webhook.js`, and `api/generate.js` already handle credit logic. Updated `pricing.html` and `generate.html` for credit display and removed `buy-credits.html`.
