@@ -12,3 +12,6 @@
     *   **Product Hunt Launch Asset Verification (2026-05-09):** Verified UI consistency and readiness for screenshots across `seo-page-generator.html`, `pricing.html`, `index.html`, `dashboard.html`, and `generate.html`. Confirmed integration of global header/footer/CSS and local scripts where appropriate, and removal of deprecated elements.
         *   **Remaining Product Hunt Tasks (Human Action Required):** Create video/GIFs, design product icon, submit to Product Hunt, engage with community.
         *   **Critical Blocker - Email Outreach:** Acquire domain, configure DNS for Vercel, set up SendGrid, and provide API key.
+    *   **Improved `add_internal_links.py` (2026-05-09):** Refactored `add_internal_links.py` to ensure idempotency when adding sequential internal links to blog posts, preventing duplicate content insertion.
+    *   **Improved `generate_outreach_emails.py` (2026-05-09):** Modified `generate_outreach_emails.py` to correctly extract and include the subject line from `outreach-email-template.md` in `generated_outreach_emails.txt`, making it compatible with `send_outreach_emails.py`.
+    *   **Verified H2/H3 Tag Hierarchy (2026-05-09):** Ran `fix_h2_h3_issues.py` to verify and ensure correct H2/H3 tag hierarchy across all HTML files. No issues were found, confirming good SEO structure.

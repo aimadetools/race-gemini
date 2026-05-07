@@ -29,9 +29,31 @@ def add_internal_link(current_post_path, next_post_path):
 
     current_post_content = current_post_path.read_text()
 
-    # Don't add a link if it's already there
-    if f'href="{next_post_path.name}"' in current_post_content:
-        print(f"Link already exists in {current_post_path.name}")
+    link_to_add = f"""<section class="blog-cta">
+<div class="container">
+<h2>
+      Ready to Generate More Local Leads?
+     </h2>
+<p>
+      Don't let your competitors capture your local market. Get found in every town you serve!
+     </p>
+<div class="button-group">
+<a class="button" href="../generate.html">
+       Generate Your Pages Now
+      </a>
+<a class="button button-secondary" href="../audit.html">
+       Get a Free SEO Audit
+      </a>
+</div>
+</div>
+</section>
+<p>
+     Read our next article on <a href="{next_post_path.name}">{next_post_title}</a>.
+    </p>
+"""
+
+    if link_to_add in current_post_content:
+        print(f"Link and CTA already exists in {current_post_path.name}. Skipping.")
         return
 
     # Find the end of the content section

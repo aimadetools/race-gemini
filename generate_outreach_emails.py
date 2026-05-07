@@ -1,3 +1,4 @@
+import re
 from generate_sample_pages import generate_for_business, slugify
 import csv
 import os
@@ -26,7 +27,15 @@ def generate_outreach_emails():
         return
 
     with open(template_path, 'r', encoding='utf-8') as f:
-        email_template = f.read()
+        email_template_full = f.read()
+
+    # Extract subject and body
+    subject_match = re.search(r"Subject: (.*)\n\n(.*)", email_template_full, re.DOTALL)
+    if not subject_match:
+        print("Error: Could not extract subject and body from outreach-email-template.md")
+        return
+    email_subject_template = subject_match.group(1).strip()
+    email_body_template = subject_match.group(2).strip()
 
     with open(page_template_path, 'r', encoding='utf-8') as f:
         page_template_content = f.read()
@@ -51,16 +60,20 @@ def generate_outreach_emails():
                 else:
                     sample_page_link = f"[{my_website}/sample-pages/](No pages generated)"
 
+                # Personalize subject
+                personalized_subject = email_subject_template.replace("[Business Name]", business_name)
+                personalized_subject = personalized_subject.replace("[City/Town Name]", city)
 
-                personalized_email = email_template.replace("[Business Name]", business_name)
-                personalized_email = personalized_email.replace("[City/Town Name]", city)
-                personalized_email = personalized_email.replace("[mention current city, e.g., Austin]", city)
-                personalized_email = personalized_email.replace("[My Name]", my_name)
-                personalized_email = personalized_email.replace("[Link to sample pages]", sample_page_link)
-                personalized_email = personalized_email.replace("[Booking Link]", booking_link)
-                personalized_email = personalized_email.replace("[My Website]", my_website)
+                # Personalize email body
+                personalized_email_body = email_body_template.replace("[Business Name]", business_name)
+                personalized_email_body = personalized_email_body.replace("[City/Town Name]", city)
+                personalized_email_body = personalized_email_body.replace("[mention current city, e.g., Austin]", city)
+                personalized_email_body = personalized_email_body.replace("[My Name]", my_name)
+                personalized_email_body = personalized_email_body.replace("[Link to sample pages]", sample_page_link)
+                personalized_email_body = personalized_email_body.replace("[Booking Link]", booking_link)
+                personalized_email_body = personalized_email_body.replace("[My Website]", my_website)
                 
-                generated_emails.append("--- EMAIL FOR: " + business_name + " in " + city + " ---\n" + personalized_email + "\n\n")
+                generated_emails.append(f"--- EMAIL FOR: {business_name} in {city} ---\nSubject: {personalized_subject}\n\n{personalized_email_body}\n\n")
 
     if generated_emails:
         with open(output_file_path, 'w', encoding='utf-8') as f:
