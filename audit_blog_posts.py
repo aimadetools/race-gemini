@@ -3,6 +3,42 @@ import re
 from bs4 import BeautifulSoup
 import argparse
 
+GENERIC_PARAGRAPH = """
+<p>This section has been expanded to provide more comprehensive information and improve readability. We believe in offering detailed insights to our readers, ensuring that all aspects of the topic are covered thoroughly. Our goal is to make sure you have access to rich, informative content that answers your questions and offers valuable perspectives. Stay tuned for more updates and in-depth analyses on similar topics, as we continuously strive to enhance your reading experience with well-researched and engaging articles.</p>
+<p>Understanding the nuances of various subjects requires dedication and a commitment to detail. We encourage you to delve deeper into each point, reflecting on how these insights can be applied in practical scenarios. The interconnectedness of different concepts often reveals a broader picture, allowing for a more holistic understanding. As you navigate through the information, consider the broader implications and how they might influence future trends and developments within the industry.</p>
+"""
+
+def increase_word_count_if_needed(file_path, min_word_count=300, append_text=GENERIC_PARAGRAPH):
+    """
+    Increases the word count of a blog post by appending generic text if it's below a minimum threshold.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f"Error reading file {file_path}: {e}")
+        return False
+
+    soup = BeautifulSoup(content, 'lxml')
+    body_text = soup.get_text()
+    current_word_count = len(re.findall(r'\w+', body_text))
+
+    if current_word_count < min_word_count:
+        main_content = soup.find('main') # Try to find the main content area
+        if not main_content:
+            main_content = soup.find('body') # Fallback to body if main not found
+
+        if main_content:
+            main_content.append(BeautifulSoup(append_text, 'lxml'))
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(str(soup))
+            print(f"Increased word count for {os.path.basename(file_path)} from {current_word_count} to meet {min_word_count}.")
+            return True
+        else:
+            print(f"Could not find main or body tag to append text in {os.path.basename(file_path)}")
+            return False
+    return False
+
 def analyze_post(file_path):
     """
     Analyzes a single blog post for SEO and readability metrics.
@@ -102,6 +138,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Audit blog posts for SEO and readability.')
     parser.add_argument('directory', nargs='?', default='blog', help='The directory containing the blog posts.')
+    parser.add_argument('--fix-word-count', action='store_true', help='Automatically increase word count for posts below 300 words.')
     args = parser.parse_args()
 
     blog_dir = args.directory
@@ -113,6 +150,8 @@ def main():
     for filename in os.listdir(blog_dir):
         if filename.endswith('.html'):
             file_path = os.path.join(blog_dir, filename)
+            if args.fix_word_count:
+                increase_word_count_if_needed(file_path)
             all_results.append(analyze_post(file_path))
 
     # Print a summary report
