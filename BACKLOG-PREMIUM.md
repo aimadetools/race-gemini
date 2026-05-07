@@ -10,7 +10,7 @@ This file contains tasks that are more complex, require external tools or human 
         *   [PENDING] Create a short video or several GIFs demonstrating key features.
         *   [PENDING] Design a compelling product icon.
         *   [DONE] Draft maker's first comment for Product Hunt.
-        *   [PENDING] Optimize landing page for Product Hunt traffic.
+        *   [DONE] Optimize landing page for Product Hunt traffic.
         *   [PENDING] Prepare social media kit and identify communities for outreach.
         *   [PENDING] Submit product on Product Hunt.
         *   [PENDING] Actively engage with Product Hunt community on launch day.
