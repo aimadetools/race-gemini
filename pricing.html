@@ -85,11 +85,7 @@
         Login/Signup
        </a>
 </li>
-<li>
-<a data-i18n-key="header_buy_credits" href="/buy-credits.html">
-        Buy Credits
-       </a>
-</li>
+
 </ul>
 </div>
 </nav>
@@ -139,12 +135,9 @@
 <form action="/api/checkout" method="POST">
 <input name="creditPackId" type="hidden" value="pack_small_business"/>
 <button class="button" data-i18n-key="pricing_choose_small_business" type="submit">
-        Choose Small Business Pack
-       </button>
-</form>
-<div id="paypal-button-container-small-business">
-</div>
-</div>
+ Choose Small Business Pack
+</button>
+</form></div>
 <div class="card" data-credits="200" data-price="180" data-stripe-price-id="price_PRO_PACK">
 <h2 data-i18n-key="pricing_plan_pro_title">
        Pro Pack
@@ -187,8 +180,6 @@
         Choose Pro Pack
        </button>
 </form>
-<div id="paypal-button-container-pro">
-</div>
 </div>
 <div class="card" data-credits="1000" data-price="800" data-stripe-price-id="price_AGENCY_PACK">
 <h2 data-i18n-key="pricing_plan_agency_title">
@@ -232,8 +223,6 @@
         Choose Agency Pack
        </button>
 </form>
-<div id="paypal-button-container-agency">
-</div>
 </div>
 <div class="card">
 <h2 data-i18n-key="pricing_plan_whitelabel_title">
@@ -469,60 +458,6 @@
 </div>
 </div>
 </footer>
-<script data-sdk-integration-source="developer-studio" src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID">
-</script>
-<script>
-   fetch('/api/paypal-client-id')
-.then(response => response.json())
-.then(data => {
-const script = document.querySelector('script[src*="paypal.com/sdk/js"]');
-script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}`;
-});
-function renderPayPalButton(containerId, credits, price) {
-paypal.Buttons({
-createOrder: function(data, actions) {
-return fetch('/api/paypal-checkout', {
-method: 'post',
-headers: {
-'content-type': 'application/json'
-},
-body: JSON.stringify({
-purchase_units: [{
-amount: {
-value: price
-}
-}]
-})
-}).then(function(res) {
-return res.json();
-}).then(function(data) {
-return data.orderID;
-});
-},
-onApprove: function(data, actions) {
-return fetch('/api/paypal-capture', {
-method: 'post',
-headers: {
-'content-type': 'application/json'
-},
-body: JSON.stringify({
-orderID: data.orderID,
-credits: credits
-})
-}).then(function(res) {
-return res.json();
-}).then(function(data) {
-window.location.href = 'success.html';
-});
-}
-}).render(`#${containerId}`);
-}
-document.addEventListener('DOMContentLoaded', function() {
-renderPayPalButton('paypal-button-container-small-business', '50', '50.00');
-renderPayPalButton('paypal-button-container-pro', '200', '180.00');
-renderPayPalButton('paypal-button-container-agency', '1000', '800.00');
-});
-  </script>
 <script src="/js/app.min.js">
 </script>
 <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
