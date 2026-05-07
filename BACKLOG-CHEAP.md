@@ -8,4 +8,4 @@ This file contains routine, formulaic tasks that don't require significant creat
 
 *   **Blog Content Improvements:** Completed tasks include increasing word count, adding external and internal links.
 
-*   **Technical Debt & Refinement:** Completed tasks include refactoring Python audit scripts, periodically running broken link checks, and fixing broken Twitter share links. Added more unit tests for API endpoints is marked as WONT DO.
+*   **Technical Debt & Refinement:** Refactored Python audit scripts; periodically ran broken link checks; fixed broken Twitter share links. Added more unit tests for API endpoints is marked as WONT DO.
