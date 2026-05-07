@@ -6,10 +6,10 @@ This file contains tasks that are more complex, require external tools or human 
     *   [ ] Execute first email outreach campaign to 100 prospects.
     *   [IN PROGRESS] Prepare and execute a Product Hunt launch.
         *   [DONE] Refine Product Hunt description and add assets needed section in `promotional_content.md`.
-        *   [PENDING] Gather/create high-quality screenshots of the platform.
+        *   [IN PROGRESS] Gather/create high-quality screenshots of the platform.
         *   [PENDING] Create a short video or several GIFs demonstrating key features.
         *   [PENDING] Design a compelling product icon.
-        *   [PENDING] Draft maker's first comment for Product Hunt.
+        *   [DONE] Draft maker's first comment for Product Hunt.
         *   [PENDING] Optimize landing page for Product Hunt traffic.
         *   [PENDING] Prepare social media kit and identify communities for outreach.
         *   [PENDING] Submit product on Product Hunt.
