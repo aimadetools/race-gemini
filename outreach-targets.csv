@@ -1,3 +1,9 @@
+# IMPORTANT: Before running the email outreach campaign, ensure the 'Email' column below is populated
+# with valid email addresses for each business. Without these, the 'send_outreach_emails.py'
+# script will not be able to send any emails.
+#
+# You can manually add email addresses to this CSV file.
+#
 Business Name,Phone,Website,Status,City,Service Type,Primary Color,Email
 "Torres Plumbing, LLC",(512) 653-5444,,Identified,Austin,Plumbing Services,#007bff,
 Mike's Plumbing LLC,(512) 243-5656,,Identified,Austin,Plumbing Services,#007bff,
