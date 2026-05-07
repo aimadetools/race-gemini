@@ -15,3 +15,4 @@
     *   **Improved `add_internal_links.py` (2026-05-09):** Refactored `add_internal_links.py` to ensure idempotency when adding sequential internal links to blog posts, preventing duplicate content insertion.
     *   **Improved `generate_outreach_emails.py` (2026-05-09):** Modified `generate_outreach_emails.py` to correctly extract and include the subject line from `outreach-email-template.md` in `generated_outreach_emails.txt`, making it compatible with `send_outreach_emails.py`.
     *   **Verified H2/H3 Tag Hierarchy (2026-05-09):** Ran `fix_h2_h3_issues.py` to verify and ensure correct H2/H3 tag hierarchy across all HTML files. No issues were found, confirming good SEO structure.
+    *   **Email Outreach Preparations (2026-05-09):** Added a placeholder 'Email' column to `outreach-targets.csv` to ensure `send_outreach_emails.py` runs without a critical CSV parsing error, providing clearer guidance for missing environment variables and email addresses.
