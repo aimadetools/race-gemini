@@ -12,6 +12,7 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [DONE] Add internal links between blog posts.
 
 *   **Technical Debt & Refinement:**
-    *   [TODO] Refactor Python audit scripts into a single, configurable script.
-    *   [TODO] Add more unit tests for API endpoints.
-    *   [TODO] Periodically run `check_broken_links.py` to ensure site health.
+    *   [IN PROGRESS] Refactor Python audit scripts into a single, configurable script.
+    *   [WONT DO] Add more unit tests for API endpoints.
+    *   [DONE] Periodically run `check_broken_links.py` to ensure site health.
+    *   [DONE] Fix broken Twitter share links in blog posts.

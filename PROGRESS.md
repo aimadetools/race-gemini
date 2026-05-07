@@ -16,3 +16,4 @@
 *   **Technical SEO & Performance:** Conducted and completed a full site audit for H1, H2/H3, and image alt tags. Created and ran a script (`fix_h2_h3_issues.py`) to automatically resolve heading hierarchy issues across hundreds of files. Improved `index.html` load performance by removing redundant scripts and styles.
 *   **Core Product Enhancements:** Implemented a feature allowing users to customize the primary color of their generated SEO pages, a key step towards white-labeling for agencies. Added corresponding API tests.
 *   **Blog Internal Linking:** Began the process of adding internal links to blog posts to improve SEO and user navigation.
+*   **Audit Script Refactoring:** Initiated refactoring of Python audit scripts into a single, configurable CLI tool (`auditor_cli.py`). Designed a modular structure with standardized audit functions (`audits_v2/`). Successfully integrated and tested the first audit module (`alt_attributes`).
