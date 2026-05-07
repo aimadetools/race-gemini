@@ -4,12 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niche-Specific Local SEO Page Generator</title>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="seo-page-generator.css">
 </head>
 <body>
-    <header>
-        <h1>Local SEO Page Generator</h1>
-    </header>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="container">
+<a class="logo" href="/">
+<div class="pin">
+</div>
+<span>
+       LocalLeads
+      </span>
+</a>
+<div aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+</div>
+</div>
+<div class="mobile-menu-container">
+<button class="close-menu-btn" id="close-menu-btn">
+<i class="fas fa-times">
+</i>
+</button>
+<ul class="nav-links" id="nav-menu">
+<li>
+<a data-i18n-key="header_generate_pages" href="/generate.html">
+        Generate Pages
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_pricing" href="/pricing.html">
+        Pricing
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_blog" href="/blog.html">
+        Blog
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_about" href="/about.html">
+        About
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_audit" href="/audit.html">
+        Free Audit
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_contact" href="/contact.html">
+        Contact
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_login_signup" href="/auth.html">
+        Login/Signup
+       </a>
+</li>
+<li>
+<a data-i18n-key="header_buy_credits" href="/buy-credits.html">
+        Buy Credits
+       </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
     <main>
         <section id="generator-form">
             <h2>Generate Your Optimized Local SEO Pages</h2>
@@ -43,9 +116,118 @@
             <!-- Output will appear here -->
         </section>
     </main>
-    <footer>
-        <p>&copy; 2026 Local SEO Page Generator</p>
-    </footer>
+<div class="sticky-cta-bar">
+<p>
+    Ready to get more local customers?
+   </p>
+<a class="button" href="generate.html">
+    Generate Pages Now
+   </a>
+<a class="button button-secondary" href="audit.html">
+    Get Free Audit
+   </a>
+</div>
+<footer>
+<div class="container">
+<div class="footer-columns">
+<div class="footer-col">
+<h2>
+       LocalLeads
+      </h2>
+<p>
+       Dominate your local market, effortlessly.
+      </p>
+<div class="social-icons">
+<a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
+<i class="fab fa-facebook-f">
+</i>
+</a>
+<a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
+<i class="fab fa-linkedin-in">
+</i>
+</a>
+<a aria-label="Twitter" href="https://twitter.com/LocalLeadsApp" target="_blank">
+<i class="fab fa-twitter">
+</i>
+</a>
+</div>
+</div>
+<div class="footer-col">
+<h2>
+       Quick Links
+      </h2>
+<ul>
+<li>
+<a href="about.html">
+         About Us
+        </a>
+</li>
+<li>
+<a href="pricing.html">
+         Pricing
+        </a>
+</li>
+<li>
+<a href="blog.html">
+         Blog
+        </a>
+</li>
+<li>
+<a href="contact.html">
+         Contact
+        </a>
+</li>
+<li>
+<a href="faq.html">
+         FAQ
+        </a>
+</li>
+<li>
+<a href="referral-program.html">
+         Referral Program
+        </a>
+</li>
+</ul>
+</div>
+<div class="footer-col">
+<h2>
+       Legal
+      </h2>
+<ul>
+<li>
+<a href="privacy.html">
+         Privacy Policy
+        </a>
+</li>
+<li>
+<a href="terms.html">
+         Terms of Service
+        </a>
+</li>
+<li>
+<a href="audit.html">
+         Free SEO Audit
+        </a>
+</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>
+      © 2026 LocalLeads. All rights reserved.
+     </p>
+</div>
+</div>
+</footer>
     <script src="seo-page-generator.js"></script>
+<script src="/js/accordion.min.js">
+</script>
+<button id="scrollToTopBtn" title="Go to top">
+<i class="fas fa-arrow-up">
+</i>
+</button>
+<script src="/js/app.min.js">
+</script>
+<script src="/js/ab-test.min.js"></script>
 </body>
 </html>
