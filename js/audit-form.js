@@ -117,6 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Populate auditResultsDiv with dynamic content
                 const auditSummary = result.auditSummary;
                 const auditId = result.auditId;
+                trackEvent('audit_form_completed', {
+                    businessName: data.businessName,
+                    services: data.services,
+                    towns: data.towns,
+                    auditId: auditId,
+                    auditSummary: auditSummary
+                });
 
                 let resultsHtml = `<h2 data-i18n-key="audit_results_title">Audit Results</h2>`;
                 resultsHtml += `<p>Thank you for submitting your information. Your Audit ID is: <strong>${auditId}</strong></p>`;

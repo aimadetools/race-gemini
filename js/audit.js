@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
             currentAuditResults = results;
             displayResults(results);
             emailCaptureSection.style.display = 'block';
+            trackEvent('audit_completed', { url: url, locations: locations });
+
 
         } catch (error) {
             errorMessageDiv.textContent = error.message;
@@ -278,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emailMessageDiv.textContent = 'Report sent successfully!';
             emailMessageDiv.style.color = 'green';
             reportEmailInput.value = '';
-
+            trackEvent('email_report_sent', { email: email, success: true });
         } catch (error) {
             emailMessageDiv.textContent = error.message;
             emailMessageDiv.style.color = 'red';

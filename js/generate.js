@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
+                trackEvent('page_generation_completed', data);
                 generateForm.reset(); // Clear form on successful download
                 if (enableAICopyCheckbox.checked) {
                     aiStyleGroup.style.display = 'none'; // Hide AI style options if AI copy was enabled
