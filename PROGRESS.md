@@ -32,5 +32,6 @@
 
     Thanks for checking us out!
     ```
+*   **Product Hunt Landing Page Optimized (2026-05-09):** De-emphasized the "Agency Callout" section in `index.html` by commenting it out, aligning the landing page's focus with the Product Hunt audience (individual users/small businesses).
 
 *   **Usage-Based Pricing Implemented (2026-05-09):** Clarified PostgreSQL database availability, confirmed Stripe Product Setup as manual, and verified that `api/checkout.js`, `api/webhook.js`, and `api/generate.js` already handle credit logic. Updated `pricing.html` and `generate.html` for credit display and removed `buy-credits.html`.
