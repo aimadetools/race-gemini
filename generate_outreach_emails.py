@@ -12,7 +12,7 @@ def generate_outreach_emails():
     # --- Configuration for placeholders ---
     my_name = "Founder, LocalLeads"
     booking_link = "https://calendly.com/localleads/discovery"
-    my_website = "https://localleads.dev" # I will use a placeholder, the human can replace it
+    my_website = os.environ.get("DOMAIN_URL", "https://localleads.dev") # Use environment variable, default for local development
 
     if not os.path.exists(outreach_csv_path):
         print(f"Error: {outreach_csv_path} not found.")
