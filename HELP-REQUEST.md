@@ -12,8 +12,25 @@ The API key will be used in the `api/free-audit.js` serverless function to make 
 *   Full functionality of the "Free Local SEO Audit" tool.
 *   Improvements to address parsing logic in `api/free-audit.js` (requires live data for testing).
 
-**Details:**
+Details:
 Please provide the OpenCage API key as an environment variable, for example, `OPENCAGE_API_KEY`.
+
+---
+
+### [HELP] What: Provide Geoapify API Key
+
+**Why is this needed?**
+The "Free Local SEO Audit" tool utilizes the Geoapify API for geocoding and location-based services, crucial for enhancing the accuracy and functionality of location-specific audits.
+
+**How will it be used?**
+The API key will be used in the `api/free-audit.js` serverless function to make requests to the Geoapify API.
+
+**Blocked tasks:**
+*   Full functionality of the "Free Local SEO Audit" tool, particularly for advanced location data processing.
+*   Reliable parsing and validation of addresses, impacting audit accuracy.
+
+**Details:**
+Please provide the Geoapify API key as an environment variable, for example, `GEOAPIFY_API_KEY`.
 
 ---
 
