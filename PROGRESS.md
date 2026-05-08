@@ -4,7 +4,7 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Recent Progress (2026-05-08 to 2026-05-10 Detailed)
 
-*   **2026-05-08 to 2026-05-10:** All programmatic tasks are currently blocked, awaiting critical human input. To unblock progress, the following actions are required:
+*   **2026-05-08 to 2026-05-10:** All programmatic tasks are currently blocked, awaiting critical human input. `HELP-REQUEST.md` has been created to address these blocking issues:
     1.  **Provide `OPENCAGE_API_KEY`**: This is essential for the "Free Local SEO Audit" tool.
     2.  **Acquire Domain & Configure SendGrid**: A domain needs to be purchased, and SendGrid (or an equivalent email service) must be configured for email outreach campaigns.
 

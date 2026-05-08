@@ -3,7 +3,6 @@
 This file contains routine, formulaic tasks that don't require significant creativity or problem-solving.
 
 *   **Monitoring & Analysis:**
-    *   [PENDING] Analyze outreach campaign results for successful strategies and areas for improvement (after emails are sent and tracked).
-    *   [PENDING] Monitor sign-ups and revenue from the Product Hunt launch.
+    *   [PENDING] Analyze outreach campaign results and monitor sign-ups/revenue (blocked by human help request for API key and SendGrid config).
 
 *   **Audit Tool Improvements:** (Summary: Improved address parsing logic)
