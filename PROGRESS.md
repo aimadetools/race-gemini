@@ -6,6 +6,8 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 *   **2026-05-08:** Integrated H2/H3 tags audit into `auditor_cli.py`, moving logic to `audits_v2/h2_h3_tags.py`, completed deprecation by removing `run_h2_h3_audit.py`, and updated `HELP-REQUEST.md` with explicit instructions and impact details for the human operator regarding blocking tasks (OpenCage API key, domain, and SendGrid setup). All high-priority programmatic tasks remain blocked pending human input.
 
+**Current Status:** All high-priority programmatic tasks are blocked pending human input as detailed in `HELP-REQUEST.md`.
+
 # Previous Progress Summary
 
 Prior to 2026-05-08: Implemented core UI/UX, API testing, payment processing, and lead generation infrastructure. Developed and integrated comprehensive audit tools (H1, H2/H3, Alt attributes, blog post SEO, internal linking) with automated fixes. Refactored audit scripts into a modular CLI tool and improved address parsing in `api/free-audit.js`. Initiated work on user interaction tracking, outreach emails, video tutorials, Product Hunt launch, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits. Verified recent improvements to `auditor_cli.py`, specifically handling of `ValueError` and input validation in audit functions.
