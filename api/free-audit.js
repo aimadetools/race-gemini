@@ -46,12 +46,12 @@ module.exports = async (req, res) => {
 
     if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
         console.error('OpenCage API key is not set.');
-        return res.status(500).json({ message: 'Server configuration error: Geocoding service is not available.' });
+        return res.status(503).json({ message: 'Geocoding service is unavailable: OPENCAGE_API_KEY is not configured.' });
     }
 
     if (!geoapifyApiKey || geoapifyApiKey === 'your_geoapify_api_key') {
         console.error('Geoapify API key is not set.');
-        return res.status(500).json({ message: 'Server configuration error: Nearby places service is not available.' });
+        return res.status(503).json({ message: 'Nearby places service is unavailable: GEOAPIFY_API_KEY is not configured.' });
     }
 
     if (!url) {
