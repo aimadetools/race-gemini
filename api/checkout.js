@@ -16,6 +16,26 @@ async function logError(error, context) {
 }
 
 module.exports = async (req, res) => {
+    const cookies = parse(req.headers.cookie || '');
+    const token = cookies.auth;
+    let userId = null;
+
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            userId = decoded.userId;
+        } catch (error) {
+            console.error('Error verifying token:', error);
+            await logError(error, 'Token Verification');
+            return res.status(401).json({ message: 'Invalid or expired token.' });
+        }
+    }
+
+    if (!userId) {
+        await logError(new Error('User not authenticated.'), 'Authentication Check');
+        return res.status(401).json({ message: 'User not authenticated.' });
+    }
+
     if (req.method === 'POST') {
         const { creditPackId, agencyPlanId } = req.body; // Expect either creditPackId or agencyPlanId
         let sessionConfig = {}; // Initialize a configuration object for the Stripe session
@@ -105,8 +125,14 @@ module.exports = async (req, res) => {
 
         try {
             const session = await stripe.checkout.sessions.create(sessionConfig);
+            res.status(200).json({ sessionId: session.id });
+        } catch (error) {
+            await logError(error, 'Stripe Session Creation');
+            res.status(500).json({ message: 'Failed to create Stripe checkout session.' });
+        }
     } else {
-        res.status(405).send('Method Not Allowed');
+        res.setHeader('Allow', 'POST');
+        res.status(405).end('Method Not Allowed');
     }
 };
 

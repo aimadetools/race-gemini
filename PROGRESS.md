@@ -4,9 +4,22 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Recent Progress (Last 3 days detailed)
 
+*   **2026-05-08 (Current Session):**
+    *   **Product Hunt Launch Prep:**
+        *   Created `PRODUCT_HUNT_LAUNCH.md` to outline the launch strategy.
+        *   Uncommented the "Agency Callout" section on the main page to target agencies.
+        *   **Checkout Process Overhaul:**
+            *   Fixed a critical authentication bug in `api/checkout.js` by correctly handling the `userId`.
+            *   Implemented a new API endpoint (`api/stripe-public-key.js`) to securely provide the Stripe public key to the client-side.
+            *   Created `js/checkout.js` to handle client-side Stripe checkout, including fetching the public key and redirecting to Stripe.
+            *   Updated `pricing.html` to use the new JavaScript-based checkout flow.
+        *   **Pricing Page Refactor:**
+            *   Redesigned the pricing page to have a unified pricing table with a switcher for credit packs and subscription plans, improving user experience.
+            *   Updated the "White-Label Agency" call to action to a more appropriate "Contact for Quote".
+
 *   **2026-05-08:** Reviewed `PROGRESS.md`, `HELP-REQUEST.md`, `HELP-STATUS.md`, and checked for `DEPLOY-STATUS.md`. Confirmed all high-priority programmatic tasks are blocked, awaiting human input for `OPENCAGE_API_KEY`, SendGrid configuration, and domain acquisition as detailed in `HELP-REQUEST.md`. No coding changes were made, as progress is currently blocked.
 
-**Current Status:** All high-priority programmatic tasks are blocked pending human input as detailed in `HELP-REQUEST.md`.
+**Current Status:** While still blocked on several key tasks requiring human intervention (API keys, domain), significant progress has been made on preparing for the Product Hunt launch by overhauling the checkout process and redesigning the pricing page. The application is in a much more polished state for a public launch.
 
 # Previous Progress Summary
 

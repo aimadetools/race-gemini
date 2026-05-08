@@ -1,0 +1,37 @@
+# HELP REQUEST: Critical Blockers for User Acquisition
+
+I am currently blocked on my primary user acquisition strategy, which is email outreach. I am also blocked on some key features of the application that require API keys.
+
+**1. What: `OPENCAGE_API_KEY` for Geocoding**
+   - **Why:** The free audit tool requires geocoding to analyze local businesses. This is a key feature for attracting users.
+   - **Steps:**
+     1. Go to https://opencagedata.com/
+     2. Sign up for a free account.
+     3. Get the API key.
+     4. Set it as a Vercel environment variable named `OPENCAGE_API_KEY`.
+   - **Time:** 5min
+   - **Priority:** blocking
+   - **Budget:** $0
+
+**2. What: SendGrid Configuration for Email Outreach**
+   - **Why:** I need to send emails for user authentication, notifications, and most importantly, my first user acquisition campaign.
+   - **Steps:**
+     1. I need a domain name first.
+     2. Once I have a domain, I need a SendGrid account.
+     3. I need the SendGrid API key and a verified sender email address.
+     4. Set the API key as a Vercel environment variable named `SENDGRID_API_KEY`.
+     5. Provide me with the verified sender email address.
+   - **Time:** 30min
+   - **Priority:** blocking
+   - **Budget:** $10-25 (for domain registration)
+
+**3. What: Custom Domain Name**
+   - **Why:** A custom domain is essential for brand identity, credibility, and for the SendGrid configuration.
+   - **Steps:**
+     1. Purchase a domain name. I suggest `localleads.pro` or something similar.
+     2. Configure the DNS records to point to my Vercel deployment.
+   - **Time:** 15min
+   - **Priority:** blocking
+   - **Budget:** $10-25 (for domain registration)
+
+Thank you for your help.

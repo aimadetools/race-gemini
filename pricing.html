@@ -22,6 +22,8 @@
    {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localleads.pro/images/logo.png","url": "https://www.localleads.pro","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localleads.pro/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com/LocalLeadsApp","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
   </script>
 <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="/js/checkout.js" defer></script>
 </head>
 <body>
 <div id="mobile-nav-overlay">
@@ -98,252 +100,271 @@
 <p data-i18n-key="pricing_hero_subtitle" style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
      LocalLeads offers flexible Page Credit Packs, allowing you to invest in SEO-optimized landing pages as needed. Purchase credits once and use them to generate powerful pages designed to capture customers in every town you serve. No subscriptions, just targeted local results on your terms.
     </p>
-<div class="price-cards">
-<div class="card" data-credits="50" data-price="50" data-stripe-price-id="price_SMALL_BUSINESS_PACK">
-<h2 data-i18n-key="pricing_plan_small_business_title">
-       Small Business Pack
-      </h2>
-<p class="price">
-       $50
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       One-Time Fee
-      </p>
-<ul>
-<li data-i18n-key="pricing_starter_feature1">
-<strong>
-         50 Page Credits:
-        </strong>
-        Target your core service areas effectively.
-       </li>
-<li data-i18n-key="pricing_starter_feature2">
-<strong>
-         Built-in SEO Optimization:
-        </strong>
-        Pages designed to rank high in local search results.
-       </li>
-<li data-i18n-key="pricing_starter_feature3">
-<strong>
-         Mobile-First &amp; Responsive Design:
-        </strong>
-        Flawless experience on any device.
-       </li>
-<li data-i18n-key="pricing_starter_feature4">
-        Ideal for new businesses or highly focused local services.
-       </li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="creditPackId" type="hidden" value="pack_small_business"/>
-<button class="button" data-i18n-key="pricing_choose_small_business" type="submit">
- Choose Small Business Pack
-</button>
-</form></div>
-<div class="card" data-credits="200" data-price="180" data-stripe-price-id="price_PRO_PACK">
-<h2 data-i18n-key="pricing_plan_pro_title">
-       Pro Pack
-      </h2>
-<p class="price">
-       $180
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       One-Time Fee
-      </p>
-<ul>
-<li data-i18n-key="pricing_pro_feature1">
-<strong>
-         200 Page Credits:
-        </strong>
-        Expand your reach across more towns and services.
-       </li>
-<li data-i18n-key="pricing_pro_feature2">
-<strong>
-         Advanced SEO Structuring:
-        </strong>
-        Deeper optimization for competitive keywords.
-       </li>
-<li data-i18n-key="pricing_pro_feature3">
-<strong>
-         Mobile-First &amp; Responsive Design:
-        </strong>
-        Ensures accessibility and performance.
-       </li>
-<li data-i18n-key="pricing_pro_feature4">
-        Includes everything in Small Business, plus extended coverage.
-       </li>
-<li data-i18n-key="pricing_pro_feature5">
-        Perfect for growing businesses looking for wider local dominance.
-       </li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="creditPackId" type="hidden" value="pack_pro"/>
-<button class="button" data-i18n-key="pricing_choose_pro" type="submit">
-        Choose Pro Pack
-       </button>
-</form>
+<div class="pricing-switcher" style="text-align: center; margin-bottom: 2rem;">
+    <button class="button" id="showCredits" style="margin-right: 1rem;">Credit Packs</button>
+    <button class="button" id="showSubscriptions">Agency Subscriptions</button>
 </div>
-<div class="card" data-credits="1000" data-price="800" data-stripe-price-id="price_AGENCY_PACK">
-<h2 data-i18n-key="pricing_plan_agency_title">
-       Agency Pack
-      </h2>
-<p class="price">
-       $800
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       One-Time Fee
-      </p>
-<ul>
-<li data-i18n-key="pricing_agency_feature1">
-<strong>
-         1000 Page Credits:
-        </strong>
-        Maximize your presence across entire regions.
-       </li>
-<li data-i18n-key="pricing_agency_feature2">
-<strong>
-         Comprehensive SEO Strategy:
-        </strong>
-        Tailored for extensive geographic and service targeting.
-       </li>
-<li data-i18n-key="pricing_agency_feature3">
-<strong>
-         Mobile-First &amp; Responsive Design:
-        </strong>
-        Top-tier user experience across all devices.
-       </li>
-<li data-i18n-key="pricing_agency_feature4">
-        Includes all Pro features, scaled for ultimate local market saturation.
-       </li>
-<li data-i18n-key="pricing_agency_feature5">
-        Best for multi-location businesses or marketing agencies.
-       </li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="creditPackId" type="hidden" value="pack_agency"/>
-<button class="button" data-i18n-key="pricing_choose_agency" type="submit">
-        Choose Agency Pack
-       </button>
-</form>
+<div id="credit-packs">
+    <div class="price-cards">
+        <div class="card" data-credits="50" data-price="50" data-stripe-price-id="price_SMALL_BUSINESS_PACK">
+            <h2 data-i18n-key="pricing_plan_small_business_title">
+                Small Business Pack
+            </h2>
+            <p class="price">
+                $50
+            </p>
+            <p data-i18n-key="pricing_one_time_fee">
+                One-Time Fee
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_starter_feature1">
+                    <strong>
+                        50 Page Credits:
+                    </strong>
+                    Target your core service areas effectively.
+                </li>
+                <li data-i18n-key="pricing_starter_feature2">
+                    <strong>
+                        Built-in SEO Optimization:
+                    </strong>
+                    Pages designed to rank high in local search results.
+                </li>
+                <li data-i18n-key="pricing_starter_feature3">
+                    <strong>
+                        Mobile-First &amp; Responsive Design:
+                    </strong>
+                    Flawless experience on any device.
+                </li>
+                <li data-i18n-key="pricing_starter_feature4">
+                    Ideal for new businesses or highly focused local services.
+                </li>
+            </ul>
+            <form action="/api/checkout" method="POST">
+                <input name="creditPackId" type="hidden" value="pack_small_business"/>
+                <button class="button" data-i18n-key="pricing_choose_small_business" type="submit">
+                    Choose Small Business Pack
+                </button>
+            </form>
+        </div>
+        <div class="card" data-credits="200" data-price="180" data-stripe-price-id="price_PRO_PACK">
+            <h2 data-i18n-key="pricing_plan_pro_title">
+                Pro Pack
+            </h2>
+            <p class="price">
+                $180
+            </p>
+            <p data-i18n-key="pricing_one_time_fee">
+                One-Time Fee
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_pro_feature1">
+                    <strong>
+                        200 Page Credits:
+                    </strong>
+                    Expand your reach across more towns and services.
+                </li>
+                <li data-i18n-key="pricing_pro_feature2">
+                    <strong>
+                        Advanced SEO Structuring:
+                    </strong>
+                    Deeper optimization for competitive keywords.
+                </li>
+                <li data-i18n-key="pricing_pro_feature3">
+                    <strong>
+                        Mobile-First &amp; Responsive Design:
+                    </strong>
+                    Ensures accessibility and performance.
+                </li>
+                <li data-i18n-key="pricing_pro_feature4">
+                    Includes everything in Small Business, plus extended coverage.
+                </li>
+                <li data-i18n-key="pricing_pro_feature5">
+                    Perfect for growing businesses looking for wider local dominance.
+                </li>
+            </ul>
+            <form action="/api/checkout" method="POST">
+                <input name="creditPackId" type="hidden" value="pack_pro"/>
+                <button class="button" data-i18n-key="pricing_choose_pro" type="submit">
+                    Choose Pro Pack
+                </button>
+            </form>
+        </div>
+        <div class="card" data-credits="1000" data-price="800" data-stripe-price-id="price_AGENCY_PACK">
+            <h2 data-i18n-key="pricing_plan_agency_title">
+                Agency Pack
+            </h2>
+            <p class="price">
+                $800
+            </p>
+            <p data-i18n-key="pricing_one_time_fee">
+                One-Time Fee
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_agency_feature1">
+                    <strong>
+                        1000 Page Credits:
+                    </strong>
+                    Maximize your presence across entire regions.
+                </li>
+                <li data-i18n-key="pricing_agency_feature2">
+                    <strong>
+                        Comprehensive SEO Strategy:
+                    </strong>
+                    Tailored for extensive geographic and service targeting.
+                </li>
+                <li data-i18n-key="pricing_agency_feature3">
+                    <strong>
+                        Mobile-First &amp; Responsive Design:
+                    </strong>
+                    Top-tier user experience across all devices.
+                </li>
+                <li data-i18n-key="pricing_agency_feature4">
+                    Includes all Pro features, scaled for ultimate local market saturation.
+                </li>
+                <li data-i18n-key="pricing_agency_feature5">
+                    Best for multi-location businesses or marketing agencies.
+                </li>
+            </ul>
+            <form action="/api/checkout" method="POST">
+                <input name="creditPackId" type="hidden" value="pack_agency"/>
+                <button class="button" data-i18n-key="pricing_choose_agency" type="submit">
+                    Choose Agency Pack
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
-<div class="card">
-<h2 data-i18n-key="pricing_plan_whitelabel_title">
-       White-Label Agency
-      </h2>
-<p class="price" data-i18n-key="pricing_contact_us">
-       Contact Us
-      </p>
-<p data-i18n-key="pricing_custom_solution">
-       For a custom solution
-      </p>
-<ul>
-<li data-i18n-key="pricing_whitelabel_feature1">
-<strong>
-         Unlimited Clients:
-        </strong>
-        Manage all your clients under one roof.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature2">
-<strong>
-         Custom Branding:
-        </strong>
-        White-label the platform with your own brand.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature3">
-<strong>
-         Client-Facing Dashboard:
-        </strong>
-        A dashboard for your clients to track their results.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature4">
-<strong>
-         Dedicated Support:
-        </strong>
-        Get priority support from our team.
-       </li>
-</ul>
-<a class="button" data-i18n-key="pricing_agency_signup" href="agency-signup.html">
-       Agency Signup
-      </a>
-</div>
-</div>
-<h2 style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
-     Agency Subscription Plans
+<div id="subscription-plans" style="display: none;">
+    <h2 style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
+        Agency Subscription Plans
     </h2>
-<div class="price-cards">
-<div class="card">
-<h2 data-i18n-key="pricing_plan_basic_agency_title">
-       Basic Agency
-      </h2>
-<p class="price">
-       $49
-      </p>
-<p data-i18n-key="pricing_per_month">
-       per month
-      </p>
-<ul>
-<li data-i18n-key="pricing_basic_agency_feature1">
-<strong>
-         100 Credits
-        </strong>
-        per month
-       </li>
-<li data-i18n-key="pricing_basic_agency_feature2">
-        Access to Agency Dashboard
-       </li>
-<li data-i18n-key="pricing_basic_agency_feature3">
-        Client Management Features
-       </li>
-<li data-i18n-key="pricing_basic_agency_feature4">
-        Standard Support
-       </li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="agencyPlanId" type="hidden" value="plan_basic_agency"/>
-<button class="button" data-i18n-key="pricing_choose_basic_agency" type="submit">
-        Choose Basic Agency
-       </button>
-</form>
+    <div class="price-cards">
+        <div class="card">
+            <h2 data-i18n-key="pricing_plan_basic_agency_title">
+                Basic Agency
+            </h2>
+            <p class="price">
+                $49
+            </p>
+            <p data-i18n-key="pricing_per_month">
+                per month
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_basic_agency_feature1">
+                    <strong>
+                        100 Credits
+                    </strong>
+                    per month
+                </li>
+                <li data-i18n-key="pricing_basic_agency_feature2">
+                    Access to Agency Dashboard
+                </li>
+                <li data-i18n-key="pricing_basic_agency_feature3">
+                    Client Management Features
+                </li>
+                <li data-i18n-key="pricing_basic_agency_feature4">
+                    Standard Support
+                </li>
+            </ul>
+            <form action="/api/checkout" method="POST">
+                <input name="agencyPlanId" type="hidden" value="plan_basic_agency"/>
+                <button class="button" data-i18n-key="pricing_choose_basic_agency" type="submit">
+                    Choose Basic Agency
+                </button>
+            </form>
+        </div>
+        <div class="card">
+            <h2 data-i18n-key="pricing_plan_pro_agency_title">
+                Pro Agency
+            </h2>
+            <p class="price">
+                $99
+            </p>
+            <p data-i18n-key="pricing_per_month">
+                per month
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_pro_agency_feature1">
+                    <strong>
+                        250 Credits
+                    </strong>
+                    per month
+                </li>
+                <li data-i18n-key="pricing_pro_agency_feature2">
+                    All Basic Agency Features
+                </li>
+                <li data-i18n-key="pricing_pro_agency_feature3">
+                    <strong>
+                        Advanced Analytics
+                    </strong>
+                </li>
+                <li data-i18n-key="pricing_pro_agency_feature4">
+                    <strong>
+                        Priority Support
+                    </strong>
+                </li>
+            </ul>
+            <form action="/api/checkout" method="POST">
+                <input name="agencyPlanId" type="hidden" value="plan_pro_agency"/>
+                <button class="button" data-i18n-key="pricing_choose_pro_agency" type="submit">
+                    Choose Pro Agency
+                </button>
+            </form>
+        </div>
+        <div class="card">
+            <h2 data-i18n-key="pricing_plan_whitelabel_title">
+                White-Label Agency
+            </h2>
+            <p class="price" data-i18n-key="pricing_contact_us">
+                Contact Us
+            </p>
+            <p data-i18n-key="pricing_custom_solution">
+                For a custom solution
+            </p>
+            <ul>
+                <li data-i18n-key="pricing_whitelabel_feature1">
+                    <strong>
+                        Unlimited Clients:
+                    </strong>
+                    Manage all your clients under one roof.
+                </li>
+                <li data-i18n-key="pricing_whitelabel_feature2">
+                    <strong>
+                        Custom Branding:
+                    </strong>
+                    White-label the platform with your own brand.
+                </li>
+                <li data-i18n-key="pricing_whitelabel_feature3">
+                    <strong>
+                        Client-Facing Dashboard:
+                    </strong>
+                    A dashboard for your clients to track their results.
+                </li>
+                <li data-i18n-key="pricing_whitelabel_feature4">
+                    <strong>
+                        Dedicated Support:
+                    </strong>
+                    Get priority support from our team.
+                </li>
+            </ul>
+            <a class="button" data-i18n-key="pricing_agency_contact" href="contact.html">
+                Contact for Quote
+            </a>
+        </div>
+    </div>
 </div>
-<div class="card">
-<h2 data-i18n-key="pricing_plan_pro_agency_title">
-       Pro Agency
-      </h2>
-<p class="price">
-       $99
-      </p>
-<p data-i18n-key="pricing_per_month">
-       per month
-      </p>
-<ul>
-<li data-i18n-key="pricing_pro_agency_feature1">
-<strong>
-         250 Credits
-        </strong>
-        per month
-       </li>
-<li data-i18n-key="pricing_pro_agency_feature2">
-        All Basic Agency Features
-       </li>
-<li data-i18n-key="pricing_pro_agency_feature3">
-<strong>
-         Advanced Analytics
-        </strong>
-</li>
-<li data-i18n-key="pricing_pro_agency_feature4">
-<strong>
-         Priority Support
-        </strong>
-</li>
-</ul>
-<form action="/api/checkout" method="POST">
-<input name="agencyPlanId" type="hidden" value="plan_pro_agency"/>
-<button class="button" data-i18n-key="pricing_choose_pro_agency" type="submit">
-        Choose Pro Agency
-       </button>
-</form>
-</div>
-</div>
-
 </section>
+<script>
+    document.getElementById('showCredits').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'block';
+        document.getElementById('subscription-plans').style.display = 'none';
+    });
+
+    document.getElementById('showSubscriptions').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'none';
+        document.getElementById('subscription-plans').style.display = 'block';
+    });
+</script>
 </main>
 <div class="sticky-cta-bar">
 <p>
