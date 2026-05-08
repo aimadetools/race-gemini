@@ -99,9 +99,6 @@ def check_google_business_profile(business_name):
 
 # Main audit function for integration with auditor_cli.py
 def audit(target, target_type):
-    if target_type != 'url':
-        return {'error': f"An unexpected error occurred: Google Business Profile audit only supports URLs as targets."}
-
     business_name = get_business_name(target)
     result = check_google_business_profile(business_name)
     
