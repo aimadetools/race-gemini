@@ -10,9 +10,9 @@ This file contains routine, formulaic tasks that don't require significant creat
 *   **Product Hunt Launch Follow-up:**
     *   [PENDING] Create a compelling video/GIF showcasing the product.
     *   [PENDING] Design a high-quality product icon.
-    *   [PENDING] Write a clear and concise tagline.
-    *   [PENDING] Craft a compelling first comment to kick off the discussion.
-    *   [PENDING] Prepare engaging social media posts for the launch day.
+    *   [COMPLETED] Write a clear and concise tagline.
+    *   [COMPLETED] Craft a compelling first comment to kick off the discussion.
+    *   [COMPLETED] Prepare engaging social media posts for the launch day.
     *   [PENDING] Schedule the launch for a weekday with high Product Hunt traffic.
     *   [PENDING] Reach out to our network for support.
     *   [PENDING] Engage with the Product Hunt community on launch day.
