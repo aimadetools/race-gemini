@@ -48,26 +48,36 @@ def parse_generated_emails(file_path):
         print(f"ERROR: Could not find the generated emails file at {file_path}")
         return emails
 
-    email_blocks = content.split("--- EMAIL FOR:")[1:]
+    email_blocks = content.split("--- EMAIL FOR:")[1:] # Split by the new header
 
     for block in email_blocks:
         lines = block.strip().split('\n')
-        # Extract business name from the first line, e.g., "Torres Plumbing, LLC in Austin ---"
+        
+        # Extract business name from the first line, e.g., " Jensen's Plumbing in Dallas ---"
         match = re.search(r"^(.*?) in .*? ---", lines[0])
         if not match:
+            print(f"Could not parse business name from block: {lines[0]}")
             continue
         business_name = match.group(1).strip()
 
-        # Extract subject from the second line
-        subject_match = re.search(r"Subject: (.*)", lines[1])
+        # Extract 'To' email from the second line
+        to_email_match = re.search(r"To: (.*)", lines[1])
+        if not to_email_match:
+            print(f"Could not parse 'To' email from block: {lines[1]}")
+            continue
+        to_email = to_email_match.group(1).strip()
+
+        # Extract subject from the third line
+        subject_match = re.search(r"Subject: (.*)", lines[2])
         if not subject_match:
+            print(f"Could not parse subject from block: {lines[2]}")
             continue
         subject = subject_match.group(1).strip()
 
-        # The rest is the HTML body
-        body = "\n".join(lines[2:]).strip()
+        # The rest is the HTML body (skip header, To, Subject, and empty line after Subject)
+        body = "\n".join(lines[4:]).strip() # Lines 0 is header, 1 is To, 2 is Subject, 3 is empty line.
 
-        emails[business_name] = {"subject": subject, "body": body}
+        emails[business_name] = {"to_email": to_email, "subject": subject, "body": body}
 
     return emails
 
@@ -78,57 +88,37 @@ def main():
     print("Starting outreach email campaign...")
 
     #
-    # TODO: The outreach-targets.csv file currently does NOT have an 'Email' column.
-    # This script will fail until that column is added and populated with email addresses.
-    # The human assistant has been asked to find a way to get these emails.
+    # The 'Email' column in outreach-targets.csv is now populated via extract_emails.py
+    # or can be manually populated. This script now primarily uses generated_outreach_emails.txt
+    # for the email content and recipient.
     #
 
-    emails_to_send = parse_generated_emails(GENERATED_EMAILS_FILE)
-    if not emails_to_send:
+    parsed_emails = parse_generated_emails(GENERATED_EMAILS_FILE)
+    if not parsed_emails:
         print("No emails found in the generated emails file. Exiting.")
         return
 
     try:
-        with open(OUTREACH_TARGETS_FILE, "r") as f:
-            reader = csv.DictReader(f)
-            # Check if 'Email' column exists
-            if 'Email' not in reader.fieldnames:
-                print(f"CRITICAL ERROR: The '{OUTREACH_TARGETS_FILE}' file is missing the required 'Email' column.")
-                print("Please add the 'Email' column and populate it with the email addresses for each business.")
-                return
+        # Instead of reading outreach-targets.csv here to get emails,
+        # we iterate through the parsed emails from GENERATED_EMAILS_FILE
+        for business_name, email_data in parsed_emails.items():
+            to_email = email_data["to_email"]
+            subject = email_data["subject"]
+            body = email_data["body"]
+            
+            # Replace placeholder domain - this is now handled by generate_outreach_emails.py
+            # body = body.replace("https://localleads.dev", DOMAIN_URL)
 
-            for row in reader:
-                business_name = row.get("Business Name")
-                to_email = row.get("Email")
+            print("---")
+            print(f"PREPARING EMAIL FOR: {business_name}")
+            print(f"TO: {to_email}")
+            print(f"SUBJECT: {subject}")
+            # print(f"BODY: {body[:200]}...") # Uncomment for debugging
+            print("---")
 
-                if not business_name or not to_email:
-                    print(f"Skipping row due to missing Business Name or Email: {row}")
-                    continue
+            # UNCOMMENT THE LINE BELOW TO ACTUALLY SEND EMAILS
+            send_email(to_email, subject, body)
 
-                if business_name in emails_to_send:
-                    email_data = emails_to_send[business_name]
-                    subject = email_data["subject"]
-                    body = email_data["body"]
-                    # Replace placeholder domain
-                    body = body.replace("https://localleads.dev", DOMAIN_URL)
-
-                    # For now, we will just print the email to be sent.
-                    # Once the domain and SendGrid are set up, we can uncomment the send_email call.
-                    print("---")
-                    print(f"PREPARING EMAIL FOR: {business_name}")
-                    print(f"TO: {to_email}")
-                    print(f"SUBJECT: {subject}")
-                    # print(f"BODY: {body[:200]}...") # Uncomment for debugging
-                    print("---")
-
-                    # UNCOMMENT THE LINE BELOW TO ACTUALLY SEND EMAILS
-                    send_email(to_email, subject, body)
-
-                else:
-                    print(f"Could not find a generated email for '{business_name}'. Skipping.")
-
-    except FileNotFoundError:
-        print(f"ERROR: Could not find the outreach targets file at {OUTREACH_TARGETS_FILE}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 

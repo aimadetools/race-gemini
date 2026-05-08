@@ -70,6 +70,7 @@ def main():
             body = generate_email_content(email_template.split('\n', 1)[1], business_name, city, SAMPLE_PAGES_LINK, BOOKING_LINK, MY_NAME, MY_WEBSITE)
 
             generated_emails.append((
+                f"--- EMAIL FOR: {business_name} in {city} ---\n"
                 f"To: {email}\n"
                 f"Subject: {subject}\n\n"
                 f"{body}\n"
