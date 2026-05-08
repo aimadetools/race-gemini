@@ -88,9 +88,15 @@ def run_broken_links_audit(args):
         sys.exit(1)
 
 def run_google_business_profile_audit(args):
-    # For GMB audit, the target is always a URL, so target_type is 'url'
-    results = google_business_profile_audit(args.target, target_type='url')
-    print(json.dumps(results, indent=2))
+    try:
+        target_type = _determine_target_type(args.target)
+        if target_type != 'url':
+            raise ValueError("Google Business Profile audit only supports URLs as targets.")
+        results = google_business_profile_audit(args.target, target_type=target_type)
+        print(json.dumps(results, indent=2))
+    except ValueError as e:
+        print(json.dumps({"error": str(e)}, indent=2))
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

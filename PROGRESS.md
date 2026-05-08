@@ -4,6 +4,11 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 # Recent Progress (Last 3 Days Detailed)
 
+## 2026-05-08 - End of Day
+*   Improved `auditor_cli.py`:
+    *   Enhanced `run_google_business_profile_audit` to use `_determine_target_type` for input validation.
+    *   Implemented `try-except ValueError` block in `run_google_business_profile_audit` to gracefully handle invalid targets and output JSON error messages, ensuring consistency with other audit functions.
+
 ## 2026-05-12 - End of Day
 *   Re-evaluated current project status by reviewing all backlog and help status files.
 *   Confirmed that the project remains blocked by pending human interventions:
