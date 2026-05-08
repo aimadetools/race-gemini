@@ -4,7 +4,7 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Recent Progress (Last 3 days detailed)
 
-*   **2026-05-08:** Integrated H2/H3 tags audit into `auditor_cli.py`, moving logic to `audits_v2/h2_h3_tags.py`, completed deprecation by removing `run_h2_h3_audit.py`, and updated `HELP-REQUEST.md` with explicit instructions and impact details for the human operator regarding blocking tasks (OpenCage API key, domain, and SendGrid setup). All high-priority programmatic tasks remain blocked pending human input.
+*   **2026-05-08:** Updated `pricing.html` hero section for "Page Credit Packs"; integrated H2/H3 tags audit into `auditor_cli.py` with related refactoring and deprecation; updated `HELP-REQUEST.md` with critical blocking tasks (OpenCage API key, domain, SendGrid setup) pending human input. All high-priority programmatic tasks remain blocked.
 
 **Current Status:** All high-priority programmatic tasks are blocked pending human input as detailed in `HELP-REQUEST.md`.
 
