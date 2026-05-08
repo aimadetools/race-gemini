@@ -13,8 +13,7 @@ def _determine_target_type(target):
     elif os.path.exists(target):
         return 'file_path'
     else:
-        print(json.dumps({"error": f"Invalid target: {target}. Must be a valid URL or file path."}, indent=2))
-        sys.exit(1)
+        raise ValueError(f"Invalid target: {target}. Must be a valid URL or file path.")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -62,19 +61,31 @@ def main():
         sys.exit(1)
 
 def run_alt_attributes_audit(args):
-    target_type = _determine_target_type(args.target)
-    results = alt_attributes_audit(args.target, target_type=target_type)
-    print(json.dumps(results, indent=2))
+    try:
+        target_type = _determine_target_type(args.target)
+        results = alt_attributes_audit(args.target, target_type=target_type)
+        print(json.dumps(results, indent=2))
+    except ValueError as e:
+        print(json.dumps({"error": str(e)}, indent=2))
+        sys.exit(1)
 
 def run_h1_tags_audit(args):
-    target_type = _determine_target_type(args.target)
-    results = h1_tags_audit(args.target, target_type=target_type)
-    print(json.dumps(results, indent=2))
+    try:
+        target_type = _determine_target_type(args.target)
+        results = h1_tags_audit(args.target, target_type=target_type)
+        print(json.dumps(results, indent=2))
+    except ValueError as e:
+        print(json.dumps({"error": str(e)}, indent=2))
+        sys.exit(1)
 
 def run_broken_links_audit(args):
-    target_type = _determine_target_type(args.target)
-    results = broken_links_audit(args.target, target_type=target_type)
-    print(json.dumps(results, indent=2))
+    try:
+        target_type = _determine_target_type(args.target)
+        results = broken_links_audit(args.target, target_type=target_type)
+        print(json.dumps(results, indent=2))
+    except ValueError as e:
+        print(json.dumps({"error": str(e)}, indent=2))
+        sys.exit(1)
 
 def run_google_business_profile_audit(args):
     # For GMB audit, the target is always a URL, so target_type is 'url'
