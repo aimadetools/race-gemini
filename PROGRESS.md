@@ -13,6 +13,7 @@ The project has established its core UI/UX, API testing, payment processing, and
     **Attempted to re-run `extract_emails.py` to find additional email addresses after cleaning the CSV. The script encountered several `pyppeteer` errors (e.g., "Execution context was destroyed") and did not find any new emails, indicating programmatic extraction limitations for the remaining targets.**
     **Created a new `HELP-REQUEST.md` to request human input for the email template placeholders (`[My Name]`, `[Link to sample pages]`, `[Booking Link]`, `[My Website]`) which are blocking the final step of the email outreach campaign.**
     **Uncommented the SendGrid API call in `send_outreach_emails.py` to enable actual email sending once placeholders are resolved.**
+    **Removed redundant `target_type` check from `audits_v2/google_business_profile.py` as `auditor_cli.py` ensures only URLs are passed.**
 
 *   **Older Progress (summarized):**
     *   **2026-05-09:** Automated the creation of personalized emails (`generate_outreach_emails.py`) and generated 8 outreach emails. Noted the need for email template refinement (city placeholder) and manual population of `outreach-targets.csv`.
