@@ -1,16 +1,10 @@
-# IMPORTANT: Before running the email outreach campaign, ensure the 'Email' column below is populated
-# with valid email addresses for each business. Without these, the 'send_outreach_emails.py'
-# script will not be able to send any emails.
-#
-# You can manually add email addresses to this CSV file.
-#
 Business Name,Phone,Website,Status,City,Service Type,Primary Color,Email
 "Torres Plumbing, LLC",(512) 653-5444,,Identified,Austin,Plumbing Services,#007bff,
 Mike's Plumbing LLC,(512) 243-5656,,Identified,Austin,Plumbing Services,#007bff,
 Lone Star Pipe Works,(512) 905-1234,,Identified,Austin,Plumbing Services,#007bff,
 FastDrain Solutions,(512) 555-0199,,Identified,Austin,Plumbing Services,#007bff,
 TexFlow Plumbing Co.,(512) 555-0122,,Identified,Austin,Plumbing Services,#007bff,
-Jensen's Plumbing,214-287-0445,jensenplumbingllc.com,Identified,Dallas,Plumbing Services,#007bff,
+Jensen's Plumbing,214-287-0445,jensenplumbingllc.com,Identified,Dallas,Plumbing Services,#007bff,info@jensenplumbingllc.com
 Bill Worthy Plumbing,(940) 323-1755,,Identified,Denton,Plumbing Services,#007bff,
 Advanced Plumbing Services,972-499-4276,advancedplumbingdfw.com,Identified,Dallas,Plumbing Services,#007bff,
 Superior Plumbing Solutions,(512) 700-1111,,Identified,Austin,Plumbing Services,#007bff,
@@ -55,8 +49,8 @@ Gold Standard Plumbing,(512) 703-9999,,Identified,Austin,Plumbing Services,#007b
 Reliant Plumbing,(512) 704-0000,,Identified,Austin,Plumbing Services,#007bff,
 Community Plumbing Services,(512) 704-1111,,Identified,Austin,Plumbing Services,#007bff,
 Total Flow Plumbing,(512) 704-2222,,Identified,Austin,Plumbing Services,#007bff,
-HydroWorks Plumbing,(512) 704-3333,hydroworks.com,Identified,Austin,Plumbing Services,#007bff,
-Drain Master Pro,(512) 704-4444,drainmasterpro.com,Identified,Austin,Plumbing Services,#007bff,
+HydroWorks Plumbing,(512) 704-3333,hydroworks.com,Identified,Austin,Plumbing Services,#007bff,support@hydroworks.com
+Drain Master Pro,(512) 704-4444,drainmasterpro.com,Identified,Austin,Plumbing Services,#007bff,Ratehello@drainmaster.app
 Pipe Perfect Plumbing,(512) 704-5555,,Identified,Austin,Plumbing Services,#007bff,
 A-Z Plumbing Solutions,(512) 704-6666,azplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Rooter Ranger,(512) 704-7777,,Identified,Austin,Plumbing Services,#007bff,
@@ -66,7 +60,7 @@ Summit Plumbing,(512) 705-0000,summitplumbing.com,Identified,Austin,Plumbing Ser
 Elite Water Works,(512) 705-1111,,Identified,Austin,Plumbing Services,#007bff,
 AquaTech Plumbing,(512) 705-2222,aquatechplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Reliable Flow Systems,(512) 705-3333,,Identified,Austin,Plumbing Services,#007bff,
-Gold Star Plumbing,(512) 705-4444,goldstarplumbing.com,Identified,Austin,Plumbing Services,#007bff,
+Gold Star Plumbing,(512) 705-4444,goldstarplumbing.com,Identified,Austin,Plumbing Services,#007bff,customerservice@fhfurr.com
 Master Drain Service,(512) 705-5555,,Identified,Austin,Plumbing Services,#007bff,
 City Stream Plumbing,(512) 705-6666,citystreamplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Dependable Plumbing Co.,(512) 705-7777,,Identified,Austin,Plumbing Services,#007bff,
@@ -82,8 +76,8 @@ Urban Plumbers Alliance,(512) 706-6666,urbanplumbersalliance.com,Identified,Aust
 Quick Flow Plumbing,(512) 706-7777,quickflowplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Premier Pipe Solutions,(512) 706-8888,premierpipesolutions.com,Identified,Austin,Plumbing Services,#007bff,
 Vanguard Plumbing,(512) 706-9999,vanguardplumbing.com,Identified,Austin,Plumbing Services,#007bff,
-Elite Service Plumbing,(512) 707-0000,eliteserviceplumbing.com,Identified,Austin,Plumbing Services,#007bff,
-River City Plumbing,(512) 707-1111,rivercityplumbing.com,Identified,Austin,Plumbing Services,#007bff,
+Elite Service Plumbing,(512) 707-0000,eliteserviceplumbing.com,Identified,Austin,Plumbing Services,#007bff,filler@godaddy.comMy
+River City Plumbing,(512) 707-1111,rivercityplumbing.com,Identified,Austin,Plumbing Services,#007bff,interested@domainmarket.com
 Foundation Plumbing,(512) 707-2222,foundationplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Central Flow Plumbing,(512) 707-3333,centralflowplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Active Plumbing,(512) 707-4444,activeplumbing.com,Identified,Austin,Plumbing Services,#007bff,
@@ -95,7 +89,7 @@ EcoFlow Plumbing,(512) 707-9999,ecoflowplumbing.com,Identified,Austin,Plumbing S
 Finest Flow Plumbing,(512) 708-0000,finestflowplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Grand Canyon Plumbing,(512) 708-1111,grandcanyonplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Harmony Plumbing,(512) 708-2222,harmonyplumbing.com,Identified,Austin,Plumbing Services,#007bff,
-Ironclad Plumbing,(512) 708-3333,ironcladplumbing.com,Identified,Austin,Plumbing Services,#007bff,
+Ironclad Plumbing,(512) 708-3333,ironcladplumbing.com,Identified,Austin,Plumbing Services,#007bff,info@ironcladplumbing.com
 Journey Plumbing,(512) 708-4444,journeyplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Keystone Plumbing,(512) 708-5555,keystoneplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Legacy Plumbing Co.,(512) 708-6666,legacyplumbingco.com,Identified,Austin,Plumbing Services,#007bff,
@@ -104,4 +98,4 @@ Nexus Plumbing Solutions,(512) 708-8888,nexusplumbingsolutions.com,Identified,Au
 Oasis Plumbing,(512) 708-9999,oasisplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Pinnacle Plumbing,(512) 709-0000,pinnacleplumbing.com,Identified,Austin,Plumbing Services,#007bff,
 Quantum Plumbing,(512) 709-1111,quantumplumbing.com,Identified,Austin,Plumbing Services,#007bff,
-Regal Plumbing Services,(512) 709-2222,regalplumbingservices.com,Identified,Austin,Plumbing Services,#007bff
+Regal Plumbing Services,(512) 709-2222,regalplumbingservices.com,Identified,Austin,Plumbing Services,#007bff,info@regalplumbingservices.com

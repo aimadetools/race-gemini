@@ -51,8 +51,7 @@ def parse_generated_emails(file_path):
     email_blocks = content.split("--- EMAIL FOR:")[1:]
 
     for block in email_blocks:
-        lines = block.strip().split('
-')
+        lines = block.strip().split('\n')
         # Extract business name from the first line, e.g., "Torres Plumbing, LLC in Austin ---"
         match = re.search(r"^(.*?) in .*? ---", lines[0])
         if not match:
@@ -66,8 +65,7 @@ def parse_generated_emails(file_path):
         subject = subject_match.group(1).strip()
 
         # The rest is the HTML body
-        body = "
-".join(lines[2:]).strip()
+        body = "\n".join(lines[2:]).strip()
 
         emails[business_name] = {"subject": subject, "body": body}
 
@@ -124,7 +122,7 @@ def main():
                     print("---")
 
                     # UNCOMMENT THE LINE BELOW TO ACTUALLY SEND EMAILS
-                    # send_email(to_email, subject, body)
+                    send_email(to_email, subject, body)
 
                 else:
                     print(f"Could not find a generated email for '{business_name}'. Skipping.")
