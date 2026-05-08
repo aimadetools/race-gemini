@@ -13,7 +13,7 @@ This file contains tasks that are more complex, require external tools or human 
         *   [PENDING] Actively engage with Product Hunt community on launch day.
 
 *   **P2: Grow the Funnel**
-    *   [COMPLETED] Built a "Free Local SEO Audit" tool, including frontend, initial serverless function with mocked data, geocoding and "nearby places" API integration, refined address parsing, email capture, and reporting. Also completed video tutorial creation and user interaction analysis.
+    *   [COMPLETED] Built "Free Local SEO Audit" tool.
 
 *   **P3: Agency & Referral Program**
-    *   [COMPLETED] Implemented referral program dashboard and agency landing page.
+    *   [COMPLETED] Implemented referral program.
