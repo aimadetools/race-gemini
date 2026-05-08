@@ -6,6 +6,7 @@ from audits_v2.alt_attributes import audit as alt_attributes_audit
 from audits_v2.h1_tags import audit as h1_tags_audit
 from audits_v2.broken_links import audit as broken_links_audit
 from audits_v2.google_business_profile import audit as google_business_profile_audit
+from audits_v2.h2_h3_tags import audit as h2_h3_tags_audit
 
 def _determine_target_type(target):
     if target.startswith('http://') or target.startswith('https://'):
@@ -41,6 +42,11 @@ def main():
     broken_links_parser = html_subparsers.add_parser('broken-links', help='Checks for broken external links')
     broken_links_parser.add_argument('target', help='Path to the HTML file or URL to audit')
     broken_links_parser.set_defaults(func=run_broken_links_audit)
+
+    # H2/H3 Tags Audit
+    h2_h3_parser = html_subparsers.add_parser('h2-h3-tags', help='Checks for H2 and H3 tags, their content, and hierarchical issues')
+    h2_h3_parser.add_argument('target', help='Path to the HTML file or URL to audit')
+    h2_h3_parser.set_defaults(func=run_h2_h3_tags_audit)
 
     # Google Business Profile Audit
     gmb_parser = subparsers.add_parser('gmb', help='Checks for the presence of a Google Business Profile for a given URL')
@@ -82,6 +88,15 @@ def run_broken_links_audit(args):
     try:
         target_type = _determine_target_type(args.target)
         results = broken_links_audit(args.target, target_type=target_type)
+        print(json.dumps(results, indent=2))
+    except ValueError as e:
+        print(json.dumps({"error": str(e)}, indent=2))
+        sys.exit(1)
+
+def run_h2_h3_tags_audit(args):
+    try:
+        target_type = _determine_target_type(args.target)
+        results = h2_h3_tags_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
     except ValueError as e:
         print(json.dumps({"error": str(e)}, indent=2))

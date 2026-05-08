@@ -4,6 +4,7 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Recent Progress (Last 3 days detailed)
 
+*   **2026-05-08:** Integrated H2/H3 tags audit into `auditor_cli.py` from `audit_h2_h3_tags.py`, moving the logic to `audits_v2/h2_h3_tags.py` and deprecating the old script.
 *   **2026-05-08:** Updated `HELP-REQUEST.md` with explicit instructions and impact details for the human operator regarding the blocking tasks (OpenCage API key, domain, and SendGrid setup). All high-priority programmatic tasks remain blocked pending human input.
 
 # Previous Progress Summary
