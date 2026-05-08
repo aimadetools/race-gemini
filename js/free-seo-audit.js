@@ -65,13 +65,30 @@ document.addEventListener('DOMContentLoaded', () => {
         auditResults.innerHTML = resultsHTML;
 
         const emailCaptureForm = document.getElementById('email-capture-form');
-        emailCaptureForm.addEventListener('submit', (event) => {
+        emailCaptureForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const email = document.getElementById('email-input').value;
-            // Here you would send the email to your backend to be saved
-            console.log(`Email captured: ${email}`);
-            auditResults.innerHTML += '<p>Thank you! Your report is on its way.</p>';
-            emailCaptureForm.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/capture-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, url: websiteUrlInput.value }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to capture email.');
+                }
+
+                auditResults.innerHTML += '<p>Thank you! Your report is on its way.</p>';
+                emailCaptureForm.style.display = 'none';
+
+            } catch (error) {
+                console.error('Error capturing email:', error);
+                auditResults.innerHTML += '<p class="error">Could not save your email. Please try again later.</p>';
+            }
         });
     }
 });

@@ -1,9 +1,11 @@
-- What: Purchase a domain and set up SendGrid for email outreach.
-- Steps:
-  1. **Purchase a domain name.** Please choose a simple, available `.com` domain related to the startup name "LocalLeads". Some ideas: `localleads.ai`, `seopagegen.com`, `localseogen.com`. Please handle the purchase and choose the best option.
-  2. **Configure DNS for Vercel.** Point the domain's A record to Vercel's IP address (`76.76.21.21`) and the CNAME record for `www` to `cname.vercel-dns.com`.
-  3. **Set up SendGrid.** Create a SendGrid account, verify the new domain, and get an API key.
-  4. **Set Environment Variable.** Add the SendGrid API key as an environment variable named `SENDGRID_API_KEY` in the Vercel project settings.
-- Time: 30min
-- Priority: blocking
-- Budget: $10-25 (for the domain)
+# HELP-REQUEST: OpenCage API Key Needed
+
+To complete the "Free Local SEO Audit" tool, I need an API key for the OpenCage geocoding service.
+
+Please:
+
+1.  Go to [https://opencagedata.com/](https://opencagedata.com/) and sign up for a free account.
+2.  Get your free API key.
+3.  Add the key to the `.env` file in the root of the project as `OPENCAGE_API_KEY="YOUR_KEY_HERE"`.
+
+This will unblock the next step of the "Free Local SEO Audit" tool development.
