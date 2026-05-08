@@ -12,8 +12,6 @@ This file contains tasks that are more complex, require external tools or human 
         *   [PENDING] Submit product on Product Hunt.
         *   [PENDING] Actively engage with Product Hunt community on launch day.
 
-*   **P2: Grow the Funnel**
-    *   [COMPLETED] Built "Free Local SEO Audit" tool.
+*   **P2: Grow the Funnel:** (Summary: Built "Free Local SEO Audit" tool)
 
-*   **P3: Agency & Referral Program**
-    *   [COMPLETED] Implemented referral program.
+*   **P3: Agency & Referral Program:** (Summary: Implemented referral program)
