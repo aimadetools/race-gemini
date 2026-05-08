@@ -4,11 +4,10 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Recent Progress (Last 3 days detailed)
 
-*   **2026-05-08:** Updated `pricing.html` hero section for "Page Credit Packs"; integrated H2/H3 tags audit into `auditor_cli.py` with related refactoring and deprecation; updated `HELP-REQUEST.md` with critical blocking tasks (OpenCage API key, domain, SendGrid setup) pending human input. All high-priority programmatic tasks remain blocked.
-*   **2026-05-09:** Reviewed `PROGRESS.md`, `HELP-REQUEST.md`, and `HELP-STATUS.md`. Confirmed that all high-priority programmatic tasks are blocked, awaiting human input for `OPENCAGE_API_KEY` and SendGrid configuration/domain acquisition as detailed in `HELP-REQUEST.md`. No coding changes were made, as progress is currently blocked.
+*   **2026-05-08:** Reviewed `PROGRESS.md`, `HELP-REQUEST.md`, `HELP-STATUS.md`, and checked for `DEPLOY-STATUS.md`. Confirmed all high-priority programmatic tasks are blocked, awaiting human input for `OPENCAGE_API_KEY`, SendGrid configuration, and domain acquisition as detailed in `HELP-REQUEST.md`. No coding changes were made, as progress is currently blocked.
 
 **Current Status:** All high-priority programmatic tasks are blocked pending human input as detailed in `HELP-REQUEST.md`.
 
 # Previous Progress Summary
 
-Prior to 2026-05-08: Implemented core UI/UX, API testing, payment processing, and lead generation infrastructure. Developed and integrated comprehensive audit tools (H1, H2/H3, Alt attributes, blog post SEO, internal linking) with automated fixes. Refactored audit scripts into a modular CLI tool and improved address parsing in `api/free-audit.js`. Initiated work on user interaction tracking, outreach emails, video tutorials, Product Hunt launch, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits. Verified recent improvements to `auditor_cli.py`, specifically handling of `ValueError` and input validation in audit functions.
+Prior to 2026-05-08: Implemented core UI/UX, API testing, payment processing, and lead generation infrastructure. Developed and integrated comprehensive audit tools (H1, H2/H3, Alt attributes, blog post SEO, internal linking) with automated fixes. Refactored audit scripts into a modular CLI tool and improved address parsing in `api/free-audit.js`. Initiated work on user interaction tracking, outreach emails, video tutorials, Product Hunt launch preparations, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits. Verified recent improvements to `auditor_cli.py`, specifically handling of `ValueError` and input validation in audit functions.
