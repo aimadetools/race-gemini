@@ -11,7 +11,7 @@
         *   Improved address parsing from the target website using the `cheerio` library.
         *   Implemented email capture to save leads to the database.
         *   Added a new `leads` table to the `database.sql` schema.
-        *   Requested an OpenCage API key to fully enable the geocoding functionality.
+    *   Created `HELP-REQUEST.md` to request the OpenCage API key, which is currently blocking the full functionality of the "Free Local SEO Audit" tool.
     *   The project is currently blocked on the "Free Local SEO Audit" tool by the missing OpenCage API key.
     *   The project is also blocked on user acquisition until the domain and email sending service are available.
 
