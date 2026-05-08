@@ -116,7 +116,6 @@ def main():
             # print(f"BODY: {body[:200]}...") # Uncomment for debugging
             print("---")
 
-            # UNCOMMENT THE LINE BELOW TO ACTUALLY SEND EMAILS
             send_email(to_email, subject, body)
 
     except Exception as e:
