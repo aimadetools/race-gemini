@@ -8,5 +8,3 @@ This file contains routine, formulaic tasks that don't require significant creat
 
 *   **Audit Tool Improvements:**
     *   [PENDING] Investigate and improve address parsing logic in `api/free-audit.js` to more accurately extract structured address components, once the OpenCage API key is available for testing.
-
-*   ✅ Completed: Various improvements including blog content, technical debt, and content generation.
