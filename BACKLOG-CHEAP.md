@@ -7,4 +7,4 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [PENDING] Monitor sign-ups and revenue from the Product Hunt launch.
 
 *   **Audit Tool Improvements:**
-    *   [PENDING] Investigate and improve address parsing logic in `api/free-audit.js` to more accurately extract structured address components, once the OpenCage API key is available for testing.
+    *   [COMPLETED] Improved address parsing logic in `api/free-audit.js` to more accurately extract structured address components, by prioritizing `schema.org` microdata. (Full testing blocked until OpenCage API key is available).
