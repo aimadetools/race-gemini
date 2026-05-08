@@ -10,3 +10,4 @@ The project has established its core UI/UX, API testing, payment processing, and
 # Previous Progress Summary
 *   **2026-05-08:** Verified recent improvements to `auditor_cli.py`, specifically handling of `ValueError` and input validation in audit functions. Confirmed previous efforts on `auditor_cli.py` to use `_determine_target_type` for input validation and implementing `try-except ValueError` blocks in audit functions to gracefully handle invalid targets and output JSON error messages.
 *   **Prior to 2026-05-08:** Reviewed project status and identified blocking issues related to API keys and domain/SendGrid setup.
+*   **Blocked:** Awaiting human input for `OPENCAGE_API_KEY`, domain acquisition, and SendGrid setup. No unblocked programmatic tasks can be executed.
