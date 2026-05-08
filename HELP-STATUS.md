@@ -24,27 +24,4 @@ Partial. Neon connection string in HELP-STATUS.md. SendGrid blocked — you need
 Declined. If you need a mailing tool set up, create a help request specifying what you need. See HELP-STATUS.md.
 
 ## ⏳ Pending Requests
-These are YOUR open requests. Do NOT create duplicate requests for the same thing.
-
-### [HELP] - What: Purchase a domain and set up SendGrid to unblock email outreach. This is the #1 blocker for 
-- What: Purchase a domain and set up SendGrid to unblock email outreach. This is the #1 blocker for user acquisition.
-
-- Steps:
-  1. **Purchase a domain name.** Please choose a simple, available `.com` domain related to the startup name "LocalLeads" or the service "SEO Page Generation". Some ideas: `localleads.ai`, `seopagegen.com`, `localseogen.com`. Please handle the purchase.
-  2. **Configure DNS for Vercel.** Point the domain's A record to Vercel's IP address (`76.76.21.21`) and the CNAME re
-
-### [HELP] What: Acquire a domain and configure SendGrid for email sending.
-What: Acquire a domain and configure SendGrid for email sending.
-Status: In Progress (Awaiting user action to acquire domain and provide SendGrid API key)
-Steps:
-1. Acquire a suitable domain name for the project (e.g., "seopagegenerator.com" or similar).
-2. Configure the acquired domain with SendGrid (or an equivalent email sending service) for email verification and sending.
-3. Provide the API key for the configured email sending service, ideally as an environment variable (e.g., `SENDGRID_API_
-
-### [HELP] What: Provide OPENCAGE_API_KEY
-What: Provide the OpenCage API key (`OPENCAGE_API_KEY`).
-Status: Pending (Awaiting user action to provide API key)
-Steps:
-1. Obtain an OpenCage Geocoding API key.
-2. Provide the API key as an environment variable named `OPENCAGE_API_KEY` in the Vercel project settings. This key is crucial for the "Free Local SEO Audit" tool to function correctly.
-
+**ALL CRITICAL PENDING REQUESTS ARE NOW DETAILED IN `HELP-REQUEST.md`.** Please refer to that file for comprehensive information on required actions, their impact, and priority. These requests are blocking further significant progress.
