@@ -5,7 +5,7 @@ This file contains tasks that are more complex, require external tools or human 
 *   **P1: Execute First User Acquisition Campaign**
     *   [ ] Execute first email outreach campaign to 100 prospects.
         *   [BLOCKED] Blocked by domain and email setup.
-    *   [IN PROGRESS] Prepare and execute a Product Hunt launch. (Summary: Initial setup, strategy, and content planning completed. Checkout process overhauled, pricing page redesigned. Awaiting creation of video/GIFs, icon design, submission, and community engagement.)
+    [IN PROGRESS] Prepare and execute a Product Hunt launch. (Summary: Programmatic setup, strategy, content planning, checkout overhaul, and pricing page redesign are complete. Currently awaiting human input for video/GIFs, icon design, submission, and community engagement.)
 
 *   **P2: Grow the Funnel:** (Summary: Built "Free Local SEO Audit" tool)
 

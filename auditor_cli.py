@@ -105,8 +105,6 @@ def run_h2_h3_tags_audit(args):
 def run_google_business_profile_audit(args):
     try:
         target_type = _determine_target_type(args.target)
-        if target_type != 'url':
-            raise ValueError("Google Business Profile audit only supports URLs as targets.")
         results = google_business_profile_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
     except Exception as e:
