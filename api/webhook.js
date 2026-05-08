@@ -4,6 +4,7 @@ import { kv } from '@vercel/kv'; // Import kv
 const fs = require('fs');
 const path = require('path');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
+import trackEventHandler from './track.js'; // Import the event tracking handler
 
 async function logError(error, context) {
   const logDir = path.join(process.cwd(), 'logs');
@@ -64,6 +65,24 @@ module.exports = async (req, res, currentKvClient) => {
                             return res.status(404).json({ message: 'User not found in database for subscription.' });
                         }
                         console.log(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`);
+                        // Track revenue generated from subscription
+                        await trackEventHandler({
+                            method: 'POST',
+                            body: {
+                                eventName: 'revenue_generated',
+                                userId: userId,
+                                eventData: {
+                                    type: 'subscription',
+                                    planId: agencyPlanId,
+                                    creditsAdded: creditsToAdd,
+                                    stripePriceId: priceId,
+                                    stripeSubscriptionId: session.subscription,
+                                    amountTotal: session.amount_total // Use amount_total from session if available
+                                }
+                            }
+                        }, {
+                            status: () => ({ json: () => {} }) // Mock response for tracking
+                        });
                     } else {
                         await logError(new Error(`No credits defined for priceId: ${priceId} during subscription checkout.`), 'Stripe Webhook - No Credits Defined for Subscription');
                         return res.status(400).json({ message: 'No credits defined for subscription plan.' });
@@ -93,6 +112,21 @@ module.exports = async (req, res, currentKvClient) => {
                         return res.status(404).json({ message: 'User not found in database for credit pack purchase.' });
                     }
                     console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
+                    // Track revenue generated from one-time credit pack purchase
+                    await trackEventHandler({
+                        method: 'POST',
+                        body: {
+                            eventName: 'revenue_generated',
+                            userId: userId,
+                            eventData: {
+                                type: 'credit_pack',
+                                creditsPurchased: parsedCredits,
+                                amountTotal: session.amount_total // Use amount_total from session if available
+                            }
+                        }
+                    }, {
+                        status: () => ({ json: () => {} }) // Mock response for tracking
+                    });
                 }
             } catch (error) {
                 await logError(error, 'Stripe Webhook - Checkout Session Completed Processing Failed');
@@ -126,6 +160,23 @@ module.exports = async (req, res, currentKvClient) => {
                             return res.status(404).json({ message: 'User not found in database for invoice payment.' });
                         }
                         console.log(`Added ${creditsToAdd} credits to agency user ${userId} on invoice payment. New balance: ${result.rows[0].credits}`);
+                        // Track revenue generated from recurring invoice payment
+                        await trackEventHandler({
+                            method: 'POST',
+                            body: {
+                                eventName: 'revenue_generated',
+                                userId: userId,
+                                eventData: {
+                                    type: 'invoice_payment',
+                                    creditsAdded: creditsToAdd,
+                                    stripePriceId: priceId,
+                                    stripeSubscriptionId: invoice.subscription,
+                                    amountTotal: invoice.amount_due // Use amount_due from invoice
+                                }
+                            }
+                        }, {
+                            status: () => ({ json: () => {} }) // Mock response for tracking
+                        });
                     } catch (error) {
                         await logError(error, 'Stripe Webhook - Invoice Payment Succeeded Processing Failed (PostgreSQL)');
                         return res.status(500).json({ message: 'Error processing invoice.payment_succeeded event.' });

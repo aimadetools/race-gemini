@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
+import trackEventHandler from './track.js'; // Import the event tracking handler
 
 async function logError(error, context) {
   const logDir = path.join(process.cwd(), 'logs');
@@ -39,6 +40,20 @@ export default async function handler(req, res) {
         [email, hashedPassword, 50] // Initial credits set to 50
       );
       const userId = result.rows[0].id;
+
+      // Track the signup event
+      // We need to mock res object for trackEventHandler as it expects a res object.
+      // The actual response for signup is handled by the signup handler itself.
+      await trackEventHandler({
+        method: 'POST',
+        body: {
+          eventName: 'user_signup',
+          userId: userId,
+          eventData: { email: email }
+        }
+      }, {
+        status: () => ({ json: () => {} }) // Mock response for tracking
+      });
 
       return res.status(201).json({ message: 'User registered successfully!', userId });
     } catch (error) {

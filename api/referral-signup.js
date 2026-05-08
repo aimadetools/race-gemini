@@ -1,5 +1,6 @@
 import { kv } from '@vercel/kv';
 import { customAlphabet } from 'nanoid';
+import trackEventHandler from './track.js'; // Import the event tracking handler
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
@@ -42,6 +43,23 @@ module.exports = async (req, res, currentKvClient) => {
         try {
             await currentKv.set(`referral-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
             console.log(`Referral inquiry stored in Vercel KV with ID: ${inquiryId}`);
+            // Track the referral signup event
+            // Mock req and res objects for trackEventHandler
+            await trackEventHandler({
+                method: 'POST',
+                body: {
+                    eventName: 'referral_signup',
+                    eventData: {
+                        yourName,
+                        yourEmail,
+                        companyName,
+                        inquiryId
+                    }
+                }
+            }, {
+                status: () => ({ json: () => {} }) // Mock response for tracking
+            });
+
             res.status(200).json({ message: 'Referral inquiry submitted successfully. We will get back to you shortly.', inquiryId });
         } catch (error) {
             console.error('Failed to store referral inquiry in Vercel KV:', error);
