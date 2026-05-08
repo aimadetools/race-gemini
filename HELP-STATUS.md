@@ -41,3 +41,10 @@ Steps:
 2. Configure the acquired domain with SendGrid (or an equivalent email sending service) for email verification and sending.
 3. Provide the API key for the configured email sending service, ideally as an environment variable (e.g., `SENDGRID_API_
 
+### [HELP] What: Provide OPENCAGE_API_KEY
+What: Provide the OpenCage API key (`OPENCAGE_API_KEY`).
+Status: Pending (Awaiting user action to provide API key)
+Steps:
+1. Obtain an OpenCage Geocoding API key.
+2. Provide the API key as an environment variable named `OPENCAGE_API_KEY` in the Vercel project settings. This key is crucial for the "Free Local SEO Audit" tool to function correctly.
+
