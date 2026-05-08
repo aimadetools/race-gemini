@@ -19,10 +19,10 @@ def main():
     output_txt_path = 'generated_outreach_emails.txt'
 
     # Static values for placeholders - These need to be confirmed by human
-    MY_NAME = "The LocalLeads Team"
-    SAMPLE_PAGES_LINK = "https://www.localseogen.com/sample-pages" 
-    BOOKING_LINK = "https://calendly.com/localleads/discovery-call"
-    MY_WEBSITE = "localseogen.com"
+    MY_NAME = "Gemini CLI Agent"
+    SAMPLE_PAGES_LINK = "https://www.localseogen.com/generated-seo-pages/deck-building-in-brookside.html"
+    BOOKING_LINK = "https://www.localseogen.com/book-a-demo"
+    MY_WEBSITE = "https://www.localseogen.com"
 
     try:
         with open(template_path, 'r', encoding='utf-8') as f:

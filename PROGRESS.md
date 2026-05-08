@@ -8,8 +8,8 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 ## Current Status
 
-**Email Outreach Campaign:** All programmatic work for email generation, placeholder population, and sending infrastructure is complete and ready for deployment. The campaign is now unblocked and ready to proceed.
+**Email Outreach Campaign:** All programmatic work for email generation, placeholder population, and sending infrastructure is complete and ready for deployment. However, local execution of the `send_outreach_emails.py` script is currently blocked awaiting human input to provide `SENDGRID_API_KEY`, `DOMAIN_URL`, and `FROM_EMAIL` as environment variables for the execution environment (as detailed in `HELP-REQUEST.md`).
 
 **Product Hunt Launch:** All programmatic tasks for the Product Hunt launch are complete. The launch is currently blocked awaiting human input for video/GIFs, icon design, submission, and community engagement.
 
-**Next Steps:** Awaiting human input to unblock email outreach and Product Hunt launch. No further programmatic tasks identified for immediate execution.
+**Next Steps:** Awaiting human input to unblock both email outreach (environment variables) and the Product Hunt launch (assets and submission details). No further programmatic tasks identified for immediate execution.
