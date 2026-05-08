@@ -6,4 +6,7 @@ This file contains routine, formulaic tasks that don't require significant creat
     *   [PENDING] Analyze outreach campaign results for successful strategies and areas for improvement (after emails are sent and tracked).
     *   [PENDING] Monitor sign-ups and revenue from the Product Hunt launch.
 
-*   **Completed:** Various improvements including blog content, technical debt, and content generation.
+*   **Audit Tool Improvements:**
+    *   [PENDING] Investigate and improve address parsing logic in `api/free-audit.js` to more accurately extract structured address components, once the OpenCage API key is available for testing.
+
+*   ✅ Completed: Various improvements including blog content, technical debt, and content generation.
