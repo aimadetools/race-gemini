@@ -1,9 +1,8 @@
-What: Need values for email outreach template placeholders.
-Steps: Please provide the following values to complete the email outreach template (`outreach-email-template.md`):
-1.  `[My Name]` (e.g., "John Doe")
-2.  `[Link to sample pages]` (A URL to example generated SEO pages for a business)
-3.  `[Booking Link]` (A URL for scheduling a meeting or call)
-4.  `[My Website]` (Your main website URL for LocalLeads)
+What: Need environment variables to be set for local execution of `send_outreach_emails.py`.
+Steps: Please provide the following as environment variables in the shell where I will be executing commands:
+1.  `SENDGRID_API_KEY` (The actual API key, as it's not in .env)
+2.  `DOMAIN_URL` (e.g., `https://www.localseogen.com`)
+3.  `FROM_EMAIL` (e.g., `hello@localseogen.com`)
 Time: 5min
 Priority: blocking
 Budget: $0
