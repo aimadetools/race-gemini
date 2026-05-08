@@ -18,25 +18,33 @@ def consolidate_js_in_html(filepath):
         # List of old script files that should be removed
         old_scripts = [
             'ab-test-home.js', 'ab-test-home.min.js',
+            'ab-test.js', 'ab-test.min.js',
+            'accordion.js', 'accordion.min.js',
             'admin-agency-inquiries.js', 'admin-agency-inquiries.min.js',
             'agency-billing.js', 'agency-billing.min.js',
             'agency-form.js', 'agency-form.min.js',
             'agency-subscription.js', 'agency-subscription.min.js',
-            'app.js', # The old app.js (which was already minified)
-            'app.unminified.js', # The old app.unminified.js
+            'analytics.js', 'analytics.min.js',
+            'app.js', 'app.unminified.js',
             'audit-form.js', 'audit-form.min.js',
+            'audit.js', 'audit.min.js',
             'blog-search.js', 'blog-search.min.js',
             'contact.js', 'contact.min.js',
             'dashboard.js', 'dashboard.min.js',
+            'generate-form-validation.js', 'generate-form-validation.min.js',
             'generate.js', 'generate.min.js',
             'mobile-swipe-nav.js', 'mobile-swipe-nav.min.js',
             'referral-form.js', 'referral-form.min.js',
             'social-share.js', 'social-share.min.js',
             'stripe-checkout.js', 'stripe-checkout.min.js',
             'testimonial-carousel.js', 'testimonial-carousel.min.js',
-            # Existing entries from the original script that might still be present individually
-            'nav.js', 'analytics.js', 'scroll-to-top.js', 'cookie-consent.js',
-            'sticky-cta.js', 'main.js', 'auth.js'
+            'tracking.js', 'tracking.min.js',
+            'nav.js', 'nav.min.js',
+            'scroll-to-top.js', 'scroll-to-top.min.js',
+            'cookie-consent.js', 'cookie-consent.min.js',
+            'sticky-cta.js', 'sticky-cta.min.js',
+            'main.js', 'main.min.js',
+            'auth.js', 'auth.min.js'
         ]
 
         # Find and remove old script references

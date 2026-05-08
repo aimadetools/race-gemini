@@ -13,9 +13,16 @@ The project has established its core UI/UX, API testing, payment processing, and
             *   Implemented a new API endpoint (`api/stripe-public-key.js`) to securely provide the Stripe public key to the client-side.
             *   Created `js/checkout.js` to handle client-side Stripe checkout, including fetching the public key and redirecting to Stripe.
             *   Updated `pricing.html` to use the new JavaScript-based checkout flow.
-        *   **Pricing Page Refactor:**
-            *   Redesigned the pricing page to have a unified pricing table with a switcher for credit packs and subscription plans, improving user experience.
-            *   Updated the "White-Label Agency" call to action to a more appropriate "Contact for Quote".
+        *   **Scroll-to-top Button Refactor:**
+        *   Removed redundant dynamic injection of the scroll-to-top button HTML from `js/app.js`.
+        *   Updated `js/app.min.js` by running the `npm run build:js` script to reflect changes in `js/app.js`.
+    *   **Auditor CLI Error Handling:**
+        *   Enhanced error handling in `auditor_cli.py` by adding a general `try-except Exception` block to `run_*_audit` functions, ensuring all unexpected errors are caught and reported in a consistent JSON format.
+    *   **Scroll-to-top CSS Link Update:**
+        *   Modified `add_scroll_to_top_button.py` to ensure it links to `style_scroll_to_top.min.css` instead of `style_scroll_to_top.css` in all HTML files.
+        *   Executed `add_scroll_to_top_button.py` to apply this change across the codebase, first removing old non-minified links and then adding the new minified ones.
+    *   **JS Reference Consolidation Update:**
+        *   Updated `consolidate_js_references.py`'s `old_scripts` list to accurately reflect all individual JavaScript files (both .js and .min.js versions) that are now consolidated into `app.min.js`, based on the `npm run build:js` script.
 
 *   **2026-05-08:** Reviewed `PROGRESS.md`, `HELP-REQUEST.md`, `HELP-STATUS.md`, and checked for `DEPLOY-STATUS.md`. Confirmed all high-priority programmatic tasks are blocked, awaiting human input for `OPENCAGE_API_KEY`, SendGrid configuration, and domain acquisition as detailed in `HELP-REQUEST.md`. No coding changes were made, as progress is currently blocked.
 

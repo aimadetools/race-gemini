@@ -71,8 +71,8 @@ def run_alt_attributes_audit(args):
         target_type = _determine_target_type(args.target)
         results = alt_attributes_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
-    except ValueError as e:
-        print(json.dumps({"error": str(e)}, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
         sys.exit(1)
 
 def run_h1_tags_audit(args):
@@ -80,8 +80,8 @@ def run_h1_tags_audit(args):
         target_type = _determine_target_type(args.target)
         results = h1_tags_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
-    except ValueError as e:
-        print(json.dumps({"error": str(e)}, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
         sys.exit(1)
 
 def run_broken_links_audit(args):
@@ -89,8 +89,8 @@ def run_broken_links_audit(args):
         target_type = _determine_target_type(args.target)
         results = broken_links_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
-    except ValueError as e:
-        print(json.dumps({"error": str(e)}, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
         sys.exit(1)
 
 def run_h2_h3_tags_audit(args):
@@ -98,8 +98,8 @@ def run_h2_h3_tags_audit(args):
         target_type = _determine_target_type(args.target)
         results = h2_h3_tags_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
-    except ValueError as e:
-        print(json.dumps({"error": str(e)}, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
         sys.exit(1)
 
 def run_google_business_profile_audit(args):
@@ -109,8 +109,8 @@ def run_google_business_profile_audit(args):
             raise ValueError("Google Business Profile audit only supports URLs as targets.")
         results = google_business_profile_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
-    except ValueError as e:
-        print(json.dumps({"error": str(e)}, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
         sys.exit(1)
 
 if __name__ == '__main__':

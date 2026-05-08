@@ -1,6 +1,8 @@
 import os
 import re
 
+
+
 def add_scroll_to_top_to_html(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -9,9 +11,9 @@ def add_scroll_to_top_to_html(file_path):
     # Determine the correct path for the CSS file
     path_parts = file_path.split(os.sep)
     if "blog" in path_parts or "es" in path_parts:
-        css_link = '<link href="../style_scroll_to_top.css" rel="stylesheet"/>'
+        css_link = '<link href="../style_scroll_to_top.min.css" rel="stylesheet"/>'
     else:
-        css_link = '<link href="style_scroll_to_top.css" rel="stylesheet"/>'
+        css_link = '<link href="style_scroll_to_top.min.css" rel="stylesheet"/>'
 
     # Check if the CSS link already exists
     if re.search(re.escape(css_link), content) is None:
