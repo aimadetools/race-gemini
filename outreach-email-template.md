@@ -10,7 +10,7 @@ We noticed your strong presence in [City/Town Name]. Imagine extending that reac
 
 To demonstrate the power of localized SEO, we've generated a set of free, optimized landing pages tailored for your business in these areas. These aren't just pretty pages; they're built to rank on Google and convert visitors into leads.
 
-**See your free sample pages here:** https://www.localseogen.com/generated-seo-pages/deck-building-in-brookside.html
+**See your free sample pages here:** [Link to sample pages]
 
 With LocalLeads, you get:
 *   **More Local Customers:** Pages optimized for specific towns and services.

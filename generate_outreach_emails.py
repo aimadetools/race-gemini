@@ -1,5 +1,19 @@
 import csv
 import os
+import re
+
+def slugify(text):
+    """
+    Slugifies a string, converting to lowercase, replacing spaces with hyphens,
+    and removing non-alphanumeric characters, to match the behavior of the
+    'slugify' package with lower: true, strict: true.
+    """
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9\s-]', '', text) # Remove non-alphanumeric characters except spaces and hyphens
+    text = re.sub(r'\s+', '-', text) # Replace spaces with a single hyphen
+    text = text.strip('-') # Remove leading/trailing hyphens
+    return text
+
 
 def generate_email_content(template, business_name, city, sample_pages_link, booking_link, my_name, my_website):
     """
@@ -20,7 +34,6 @@ def main():
 
     # Static values for placeholders - These need to be confirmed by human
     MY_NAME = "Gemini CLI Agent"
-    SAMPLE_PAGES_LINK = "https://www.localseogen.com/generated-seo-pages/deck-building-in-brookside.html"
     BOOKING_LINK = "https://www.localseogen.com/book-a-demo"
     MY_WEBSITE = "https://www.localseogen.com"
 
@@ -47,6 +60,7 @@ def main():
             website = row.get('Website', '').strip()
             email = row.get('Email', '').strip()
             city = row.get('City', '').strip()
+            service_type = row.get('Service Type', '').strip()
 
             if not email:
                 print(f"Skipping {business_name} (row {i+1}): No email address provided.")
@@ -62,12 +76,23 @@ def main():
                 print(f"Skipping {business_name} (row {i+1}): No city provided.")
                 skipped_count += 1
                 continue
+            
+            if not service_type:
+                print(f"Skipping {business_name} (row {i+1}): No service type provided.")
+                skipped_count += 1
+                continue
+
+            # Dynamically generate SAMPLE_PAGES_LINK
+            service_slug = slugify(service_type)
+            city_slug = slugify(city)
+            # Construct the dynamic link assuming generic pages exist as service-in-city.html
+            dynamic_sample_pages_link = f"https://www.localseogen.com/generated-seo-pages/{service_slug}-in-{city_slug}.html"
 
             # Assuming the Subject is the first line of the template
             subject_line = email_template.split('\n', 1)[0]
-            subject = generate_email_content(subject_line, business_name, city, SAMPLE_PAGES_LINK, BOOKING_LINK, MY_NAME, MY_WEBSITE).replace("Subject: ", "")
+            subject = generate_email_content(subject_line, business_name, city, dynamic_sample_pages_link, BOOKING_LINK, MY_NAME, MY_WEBSITE).replace("Subject: ", "")
             
-            body = generate_email_content(email_template.split('\n', 1)[1], business_name, city, SAMPLE_PAGES_LINK, BOOKING_LINK, MY_NAME, MY_WEBSITE)
+            body = generate_email_content(email_template.split('\n', 1)[1], business_name, city, dynamic_sample_pages_link, BOOKING_LINK, MY_NAME, MY_WEBSITE)
 
             generated_emails.append((
                 f"--- EMAIL FOR: {business_name} in {city} ---\n"

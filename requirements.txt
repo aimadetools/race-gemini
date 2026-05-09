@@ -4,3 +4,4 @@ perfometrics
 Pillow
 lxml
 sendgrid
+requests-html

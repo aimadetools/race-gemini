@@ -5,6 +5,18 @@ from bs4 import BeautifulSoup
 import time
 from requests_html import HTMLSession # Import HTMLSession
 
+def clean_email(email):
+    """
+    Cleans an email string by extracting the first valid email pattern found.
+    Returns None if no valid email pattern is found.
+    """
+    if not isinstance(email, str):
+        return None
+    # More robust email regex, but still allows for some edge cases.
+    # The goal here is to catch obvious malformations and extraneous text.
+    match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', email)
+    return match.group(0) if match else None
+
 def extract_email_from_url(url):
     """
     Extracts an email address from the given URL using requests-html to handle JavaScript.
@@ -61,15 +73,18 @@ def extract_email_from_url(url):
                 if 'mailto:' in link['href']:
                     email_match = re.search(r'mailto:([^?]+)', link['href'])
                     if email_match:
-                        session.close() # Close the session before returning
-                        return email_match.group(1)
+                        cleaned = clean_email(email_match.group(1))
+                        if cleaned:
+                            session.close() # Close the session before returning
+                            return cleaned
 
             # 2. Look for email patterns in the page text
             email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
             emails = re.findall(email_pattern, soup.get_text())
             
             # Filter out common false positives (e.g., placeholder emails, image names)
-            valid_emails = [email for email in emails if not email.endswith(('.png', '.jpg', '.gif', '.svg')) and 'example.com' not in email]
+            valid_emails = [clean_email(email) for email in emails if not email.endswith(('.png', '.jpg', '.gif', '.svg')) and 'example.com' not in email]
+            valid_emails = [email for email in valid_emails if email] # Remove None values after cleaning
             if valid_emails:
                 session.close() # Close the session before returning
                 return valid_emails[0]
