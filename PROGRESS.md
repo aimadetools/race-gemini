@@ -9,23 +9,25 @@
 *   **2026-05-09:**
     *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to include more robust regex patterns for common email obfuscation methods (e.g., `[at]`, `[dot]`) and improved error logging for `RequestException` for better diagnostics.
     *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 5 new emails for 31 websites checked. However, some found emails appear to be false positives (e.g., `hesit@ion.Page`), and persistent issues like `Execution context was destroyed`, `Name or service not known`, and `403 Forbidden` errors continue to limit extraction for certain websites.
-*   **2026-05-11:** Enhanced email outreach lead generation. Improved `extract_emails.py` with a robust `clean_email` function and integrated it to ensure only well-formed emails are extracted. Modified `outreach-email-template.md` to include a dynamic placeholder for sample page links. Updated `generate_outreach_emails.py` to dynamically create relevant `SAMPLE_PAGES_LINK` URLs based on `Service Type` and `City` from `outreach-targets.csv` and correctly populate the new placeholder in the email template. Added `requests-html` to `requirements.txt` and ensured all Python dependencies are installed and scripts run within the virtual environment.
 *   **2026-05-13:**
     *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to search within `<script>` tags in addition to general page text, and updated the email regex for broader matching.
     *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 2 new emails out of 33 websites checked, updating `outreach-targets.csv` with these new leads. While an improvement, the process still faces challenges with website complexities and rendering issues.
     *   Generated outreach emails using `generate_outreach_emails.py`. This process created 12 emails saved to `generated_outreach_emails.txt`, with 88 emails skipped due to missing email addresses in `outreach-targets.csv`.
-
 *   **2026-05-12:**
     *   Addressed Vercel serverless function timeout in `api/execute-outreach.js`. Refactored `sendEmails` to utilize `Promise.allSettled` for concurrent email sending, significantly reducing the likelihood of timeouts. The `module.exports` function was updated to provide a detailed summary of sent and failed emails.
     *   Troubleshot and re-established Python virtual environment after facing execution issues. Installed all dependencies successfully.
     *   Attempted to programmatically enhance email lead generation by running `extract_emails.py` to populate missing email addresses in `outreach-targets.csv`. The script completed but found 0 new emails for 33 websites, indicating limitations in automatic email extraction with current tools.
     *   Generated `generated_outreach_emails.txt` with 10 emails from existing addresses in `outreach-targets.csv`, skipping 90 due to missing email addresses.
 
+## Earlier Progress (Summarized)
+
+*   **Email Outreach Lead Generation (2026-05-11):** Enhanced `extract_emails.py` with `clean_email` function, dynamic sample page links in `outreach-email-template.md`, and updated `generate_outreach_emails.py`. Ensured `requests-html` in `requirements.txt` and virtual environment setup.
+
 ## Current Status
 
 **Email Outreach Campaign:** The email sending mechanism (`api/execute-outreach.js`) has been optimized for Vercel, reducing timeout risks through concurrent sending. The programmatic generation of emails is complete, resulting in 12 emails from the available data. The campaign is now ready for human execution with these limited targets, assuming the `SENDGRID_API_KEY` is correctly configured in the Vercel environment as indicated by `HELP-STATUS.md`.
-**Google Business Profile Audit:** This task is blocked. The current implementation scrapes Google search results, which is unreliable. A rewrite using the Google Places API is planned, but this is blocked waiting for a Google Places API key.
-**Product Hunt Launch:** All programmatic tasks for the Product Hunt launch are complete. The launch is currently blocked awaiting human input for video/GIFs, icon design, submission, and community engagement.
+**Google Business Profile Audit:** This task requires a rewrite using the Google Places API. Waiting for a Google Places API key.
+**Product Hunt Launch:** All programmatic tasks for the Product Hunt launch are complete. The launch is awaiting human input for video/GIFs, icon design, submission, and community engagement.
 
 ## Next Steps:** Focus on executing the email outreach campaign with the available targets and monitoring its performance.
 
