@@ -2,11 +2,14 @@
 
 import sys
 import json
+import requests # Moved here
 from bs4 import BeautifulSoup
 import textstat
+import argparse
 
-def audit_readability(html_content, filepath="N/A"):
+def audit_readability(html_content, target="N/A"):
     results = {
+        "target": target,
         "flesch_reading_ease": None,
         "flesch_kincaid_grade": None,
         "issues": []
@@ -33,53 +36,49 @@ def audit_readability(html_content, filepath="N/A"):
             else:
                 results["issues"].append({
                     "type": "No Readable Text Found",
-                    "description": f"Could not extract sufficient readable text from {filepath} for readability audit."
+                    "description": f"Could not extract sufficient readable text from {target} for readability audit."
                 })
         else:
             results["issues"].append({
                 "type": "No Main Content Container Found",
-                "description": f"Could not find a main content container (e.g., <div class='blog-content'> or <article>) in {filepath} to audit readability."
+                "description": f"Could not find a main content container (e.g., <div class='blog-content'> or <article>) in {target} to audit readability."
             })
         
     except Exception as e:
         results["issues"].append({
             "type": "Processing Error",
-            "description": f"An unexpected error occurred while processing {filepath}: {e}"
+            "description": f"An unexpected error occurred while processing {target}: {e}"
         })
     
-    return json.dumps(results)
+    return results
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(json.dumps({"error": "Usage: python audit_readability.py <filepath_or_url>"}))
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Audit readability (Flesch-Kincaid) of an HTML file or URL.')
+    parser.add_argument('target', type=str, help='Path to an HTML file or a URL to audit.')
+    args = parser.parse_args()
     
-    target = sys.argv[1]
     html_content = ""
     
     # Check if the target is a URL
-    if target.startswith('http://') or target.startswith('https://'):
+    if args.target.startswith('http://') or args.target.startswith('https://'):
         try:
-            import requests
-            response = requests.get(target, timeout=10)
+            response = requests.get(args.target, timeout=10)
             response.raise_for_status()
             html_content = response.text
         except requests.exceptions.RequestException as e:
-            print(json.dumps({"error": f"Failed to fetch URL: {e}"}))
-            sys.exit(1)
-        except ImportError:
-            print(json.dumps({"error": "The 'requests' library is required to fetch URLs. Please install it by running 'pip install requests'"}))
+            print(json.dumps({"error": f"Failed to fetch URL: {e}"}, indent=2))
             sys.exit(1)
     else:
         # Assume it's a local file path
         try:
-            with open(target, 'r', encoding='utf-8') as f:
+            with open(args.target, 'r', encoding='utf-8') as f:
                 html_content = f.read()
         except FileNotFoundError:
-            print(json.dumps({"error": f"File not found: {target}"}))
+            print(json.dumps({"error": f"File not found: {args.target}"}, indent=2))
             sys.exit(1)
         except Exception as e:
-            print(json.dumps({"error": f"An unexpected error occurred while reading {target}: {e}"}))
+            print(json.dumps({"error": f"An unexpected error occurred while reading {args.target}: {e}"}, indent=2))
             sys.exit(1)
 
-    print(audit_readability(html_content, target))
+    result = audit_readability(html_content, args.target)
+    print(json.dumps(result, indent=2))
