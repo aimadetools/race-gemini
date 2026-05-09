@@ -18,6 +18,7 @@
     *   Attempted programmatic email lead enhancement via `extract_emails.py`, but found 0 new emails for 33 websites.
     *   Generated 10 outreach emails from existing addresses in `outreach-targets.csv`, skipping 90.
 *   **2026-05-09 (Current Session):**
+    *   Enhanced `audit_locations.py` with `argparse`, configurable `max_depth` for crawling, and support for reading locations from a JSON file.
     *   Enhanced `audit_structured_data.py` with `argparse` for better CLI usability and improved error handling for network requests.
     *   Enhanced `audit_blog_posts.py` to include a `--domain` argument, allowing more accurate internal/external link classification.
     *   Confirmed `SENDGRID_API_KEY` configuration based on `HELP-STATUS.md` feedback.
