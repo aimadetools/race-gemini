@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
+const { logError } = require('../../lib/logger');
 
 export default async function handler(req, res, currentKvClient) {
   const currentKv = currentKvClient || kv;
@@ -9,6 +10,7 @@ export default async function handler(req, res, currentKvClient) {
     const { email, password } = req.body;
 
     if (!email || !password) {
+      await logError(new Error('Email and password are required.'), 'Agency Login - Validation Error', 'agency_login_error.log');
       return res.status(400).json({ message: 'Email and password are required.' });
     }
 
@@ -40,7 +42,7 @@ export default async function handler(req, res, currentKvClient) {
 
       return res.status(200).json({ message: 'Agency logged in successfully!', agencyId: agency.id });
     } catch (error) {
-      console.error(error);
+      await logError(error, 'Agency Login - General Error', 'agency_login_error.log');
       return res.status(500).json({ message: 'Internal server error.' });
     }
   } else {
