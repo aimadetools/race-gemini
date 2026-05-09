@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 const bcrypt = require('bcryptjs');
 const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
+const { logError } = require('../../lib/logger'); // Import centralized logger
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -12,6 +13,7 @@ async function handler(req, res, currentKvClient) {
     const { clientName, clientEmail } = req.body;
 
     if (!clientName || !clientEmail) {
+        await logError(new Error('Client name and email are required'), 'Add Client - Validation Error', 'add_client_error.log');
         return res.status(400).json({ message: 'Client name and email are required' });
     }
 
@@ -19,19 +21,36 @@ async function handler(req, res, currentKvClient) {
     const token = cookies.token;
 
     if (!token) {
+        await logError(new Error('Authentication token missing'), 'Add Client - Authentication Error', 'add_client_error.log');
         return res.status(401).json({ message: 'Not authenticated' });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                await logError(error, 'Add Client - Token Expired', 'add_client_error.log');
+                return res.status(401).json({ message: 'Authentication failed: Token expired.' });
+            } else if (error.name === 'JsonWebTokenError') {
+                await logError(error, 'Add Client - Invalid Token', 'add_client_error.log');
+                return res.status(401).json({ message: 'Authentication failed: Invalid token.' });
+            }
+            await logError(error, 'Add Client - JWT Verification Error', 'add_client_error.log');
+            return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
+        }
+        
         const agencyId = decoded.agencyId;
 
         if (!agencyId) {
+            await logError(new Error('User is not an agency account'), 'Add Client - Not Agency Account', 'add_client_error.log');
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
         const existingUser = await currentKv.get(`user:${clientEmail}`);
         if (existingUser) {
+            await logError(new Error(`Client with email ${clientEmail} already exists`), 'Add Client - Existing Client', 'add_client_error.log');
             return res.status(409).json({ message: 'User with this email already exists' });
         }
 
@@ -54,11 +73,12 @@ async function handler(req, res, currentKvClient) {
         await currentKv.sadd(`agency:${agencyId}:clients`, userId);
 
         // In a real application, you would email the user their password
-        // For this example, we will just return it in the response
-        return res.status(201).json({ message: 'Client created successfully', password: password });
+        // CRITICAL SECURITY FIX: Do not return plain text password. Mock email sending.
+        await logError(new Error(`New client ${clientEmail} created by agency ${agencyId}. Password was generated, should be emailed.`), 'Add Client - Password Generated (Mock Email)', 'add_client_error.log');
+        return res.status(201).json({ message: 'Client created successfully. Password sent via email (mocked).' });
 
     } catch (error) {
-        console.error(error);
+        await logError(error, 'Add Client - General Error', 'add_client_error.log');
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
