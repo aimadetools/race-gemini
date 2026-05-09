@@ -1,13 +1,13 @@
 # Human Help Request
 
-## OPENCAGE_API_KEY and GEOAPIFY_API_KEY
+## API Keys for "Free Local SEO Audit" and Google Business Profile Audit
 
-**What:** The `api/free-audit.js` functionality, specifically for the "Free Local SEO Audit" tool, requires `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` to function correctly. These keys are used for geolocation services.
+**What:** The "Free Local SEO Audit" tool (`api/free-audit.js`) requires `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` for geolocation services. The planned Google Business Profile Audit also requires a Google Places API key. These are critical for extending the auditing functionality and lead generation.
 
-**Steps:** Please provide valid and active API keys for OpenCage Data and Geoapify. These keys should be configured as environment variables in Vercel for the deployed application.
+**Steps:** Please provide valid and active API keys for OpenCage Data, Geoapify, and Google Places API. These keys should be configured as environment variables in Vercel for the deployed application.
 
-**Time:** High. The "Free Local SEO Audit" tool is a priority for lead generation and is currently non-functional without these keys.
+**Time:** High. These keys are necessary to unblock development and deployment of key audit features and lead generation tools.
 
 **Priority:** High.
 
-**Budget:** Please advise on any associated costs for these API keys.
+**Budget:** Please advise on any associated costs for these API keys, particularly for the Google Places API which can have significant usage costs.
