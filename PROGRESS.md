@@ -5,6 +5,10 @@ The project has established its core UI/UX, API testing, payment processing, and
 ## Recent Progress (Last 3 days detailed)
 
 *   **2026-05-11:** Enhanced email outreach lead generation. Improved `extract_emails.py` with a robust `clean_email` function and integrated it to ensure only well-formed emails are extracted. Modified `outreach-email-template.md` to include a dynamic placeholder for sample page links. Updated `generate_outreach_emails.py` to dynamically create relevant `SAMPLE_PAGES_LINK` URLs based on `Service Type` and `City` from `outreach-targets.csv` and correctly populate the new placeholder in the email template. Added `requests-html` to `requirements.txt` and ensured all Python dependencies are installed and scripts run within the virtual environment.
+*   **2026-05-13:**
+    *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to search within `<script>` tags in addition to general page text, and updated the email regex for broader matching.
+    *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 2 new emails out of 33 websites checked, updating `outreach-targets.csv` with these new leads. While an improvement, the process still faces challenges with website complexities and rendering issues.
+
 *   **2026-05-12:**
     *   Addressed Vercel serverless function timeout in `api/execute-outreach.js`. Refactored `sendEmails` to utilize `Promise.allSettled` for concurrent email sending, significantly reducing the likelihood of timeouts. The `module.exports` function was updated to provide a detailed summary of sent and failed emails.
     *   Troubleshot and re-established Python virtual environment after facing execution issues. Installed all dependencies successfully.

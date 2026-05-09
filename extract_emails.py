@@ -78,12 +78,22 @@ def extract_email_from_url(url):
                             session.close() # Close the session before returning
                             return cleaned
 
-            # 2. Look for email patterns in the page text
-            email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
-            emails = re.findall(email_pattern, soup.get_text())
+            # 2. Look for email patterns in the page text and script tags
+            email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
             
+            # Search in general page text
+            emails_in_text = re.findall(email_pattern, soup.get_text())
+
+            # Search in script tags
+            emails_in_scripts = []
+            for script in soup.find_all('script'):
+                if script.string:
+                    emails_in_scripts.extend(re.findall(email_pattern, script.string))
+            
+            all_found_emails = emails_in_text + emails_in_scripts
+
             # Filter out common false positives (e.g., placeholder emails, image names)
-            valid_emails = [clean_email(email) for email in emails if not email.endswith(('.png', '.jpg', '.gif', '.svg')) and 'example.com' not in email]
+            valid_emails = [clean_email(email) for email in all_found_emails if not email.endswith(('.png', '.jpg', '.gif', '.svg')) and 'example.com' not in email.lower()]
             valid_emails = [email for email in valid_emails if email] # Remove None values after cleaning
             if valid_emails:
                 session.close() # Close the session before returning
