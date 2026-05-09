@@ -1,6 +1,6 @@
 # Key Milestones
 
-The project has established its core UI/UX, API testing, payment processing, and lead generation infrastructure. Comprehensive audit tools, including a Python audit suite integrated into CI/CD, location-based audit refinements, and image handling improvements, have been implemented. Key audit functionalities such as H1, H2/H3, and Alt attribute audits with automated fixes are complete, alongside blog post SEO auditing and internal linking enhancements. The audit scripts have been refactored into a modular CLI tool, and the deprecated `auditor.py` was removed. The `parseAddress` function in `api/free-audit.js` was improved to prioritize structured address extraction. Initial work on user tracking, outreach, video tutorials, Product Hunt prep, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits was completed. Recent improvements to `auditor_cli.py` included handling `ValueError` and input validation.
+The project has established its core UI/UX, API testing, payment processing, and lead generation infrastructure. Comprehensive audit tools, including a Python audit suite integrated into CI/CD, location-based audit refinements, and image handling improvements, have been implemented. Key audit functionalities such as H1, H2/H3, and Alt attribute audits with automated fixes are complete, alongside blog post SEO auditing and internal linking enhancements. The audit scripts have been refactored into a modular CLI tool, and the deprecated `auditor.py` was removed. The `parseAddress` function in `api/free-audit.js` was improved to prioritize structured address extraction. Initial work on user tracking, outreach, video tutorials, Product Hunt prep, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits was completed. Recent improvements to `auditor_cli.py` included handling `ValueError` and input validation. Outreach lead generation has been significantly enhanced with improved email extraction and dynamic sample page linking.
 
 ## Recent Progress (Last 3 days detailed)
 
@@ -19,11 +19,12 @@ The project has established its core UI/UX, API testing, payment processing, and
 ## Backlog Summary
 
 **P1: User Acquisition Campaigns:**
-- **Email Outreach:** BLOCKED due to invalid SendGrid API key. (Generation improved, sending blocked)
+- **Email Outreach:** Generation process improved. Sending is BLOCKED due to invalid SendGrid API key.
 - **Product Hunt Launch:** Programmatic setup complete, awaiting human input for creative assets and submission.
 
 **P2: Grow the Funnel:**
 - "Free Local SEO Audit" tool built.
+- **Google Business Profile Audit:** BLOCKED awaiting Google Places API key.
 
 **P3: Agency & Referral Program:**
 - Referral program implemented.
