@@ -20,7 +20,8 @@
     *   Generated `generated_outreach_emails.txt` with 10 emails from existing addresses in `outreach-targets.csv`, skipping 90 due to missing email addresses.
 *   **2026-05-09 (Current Session):**
     *   Investigated SendGrid API key issue in `api/execute-outreach.js`. Confirmed `HELP-STATUS.md` indicates `SENDGRID_API_KEY` and `FROM_EMAIL` are configured in Vercel. Unable to debug further without direct access to Vercel logs or environment variables. The issue likely requires human verification of the SendGrid key's validity/status.
-    *   Prepared to create `HELP-REQUEST.md` for `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` as instructed by `HELP-STATUS.md` to unblock the "Free Local SEO Audit" tool.
+    *   Created `HELP-REQUEST.md` to formally request `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` for the "Free Local SEO Audit" tool.
+    *   Updated `PROGRESS.md` to reflect current statuses and actions.
 
 ## Current Status
 
