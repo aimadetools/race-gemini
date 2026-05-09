@@ -38,6 +38,7 @@ def generate_blog_index():
                 </div>
                 <ul id="nav-menu" class="nav-links">
                     <li><a href="/generate.html">Generate Pages</a></li>
+                    <li><a href="/demo/evergreen-plumbing-seattle-plumbing-services.html">Live Demo</a></li>
                     <li><a href="/pricing.html">Pricing</a></li>
                     <li><a href="/blog.html">Blog</a></li>
                     <li><a href="/about.html">About</a></li>
@@ -178,10 +179,11 @@ def generate_blog_index():
     # Generate HTML for the blog post list
     blog_list_html = []
     for post in blog_posts_data:
+        description_html = f'<p>{post["description"]}</p>' if post["description"] != "No description available." else ""
         blog_list_html.append(f"""
         <article class="blog-preview">
             <h2><a href="{post["link"]}">{post["title"]}</a></h2>
-            <p>{post["description"]}</p>
+            {description_html}
             <a href="{post["link"]}" class="read-more">Read More &rarr;</a>
         </article>
         """)
@@ -197,3 +199,4 @@ def generate_blog_index():
 
 if __name__ == "__main__":
     generate_blog_index()
+)

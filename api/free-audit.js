@@ -1,5 +1,6 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const cheerio = require('cheerio');
+const { logError } = require('../../lib/logger');
 
 function parseAddress(html) {
     const $ = cheerio.load(html);
@@ -45,22 +46,24 @@ module.exports = async (req, res) => {
     const geoapifyApiKey = process.env.GEOAPIFY_API_KEY;
 
     if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
-        console.error('OpenCage API key is not set.');
+        await logError(new Error('OpenCage API key is not set or is a placeholder.'), 'Free Audit - Missing OpenCage API Key', 'free_audit_error.log');
         return res.status(503).json({ message: 'Geocoding service is unavailable: OPENCAGE_API_KEY is not configured.' });
     }
 
     if (!geoapifyApiKey || geoapifyApiKey === 'your_geoapify_api_key') {
-        console.error('Geoapify API key is not set.');
+        await logError(new Error('Geoapify API key is not set or is a placeholder.'), 'Free Audit - Missing Geoapify API Key', 'free_audit_error.log');
         return res.status(503).json({ message: 'Nearby places service is unavailable: GEOAPIFY_API_KEY is not configured.' });
     }
 
     if (!url) {
+        await logError(new Error('URL is required.'), 'Free Audit - Missing URL', 'free_audit_error.log');
         return res.status(400).json({ message: 'URL is required.' });
     }
 
     try {
         new URL(url);
     } catch (error) {
+        await logError(new Error(`Invalid URL format: ${url}`), 'Free Audit - Invalid URL Format', 'free_audit_error.log');
         return res.status(400).json({ message: 'Invalid URL format.' });
     }
 
@@ -71,6 +74,7 @@ module.exports = async (req, res) => {
         const address = parseAddress(html);
 
         if (!address) {
+            await logError(new Error(`Could not find an address on the page for URL: ${url}`), 'Free Audit - Address Not Found', 'free_audit_error.log');
             return res.status(404).json({ message: 'Could not find an address on the page.' });
         }
 
@@ -98,11 +102,12 @@ module.exports = async (req, res) => {
                 missedOpportunities,
             });
         } else {
+            await logError(new Error(`Could not geocode the address for: ${address}`), 'Free Audit - Geocoding Failed', 'free_audit_error.log');
             res.status(404).json({ message: 'Could not geocode the address.' });
         }
 
     } catch (error) {
-        console.error('An unexpected error occurred during the free audit:', error);
+        await logError(error, 'Free Audit - General Error', 'free_audit_error.log');
         return res.status(500).json({
             message: 'An unexpected error occurred during the audit process.',
             error: error.message
