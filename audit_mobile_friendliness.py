@@ -2,6 +2,7 @@
 import sys
 import json
 import requests
+import argparse # Import argparse
 
 def audit_mobile_friendliness(url):
     """
@@ -17,16 +18,17 @@ def audit_mobile_friendliness(url):
     # In a real implementation, you would use a service like Google's Mobile-Friendly Test API.
     # For now, we'll return a mock response.
     mock_response = {
+        "url": url,
         "is_mobile_friendly": True,
         "score": 95,
-        "issues": []
+        "issues": ["This is a mock response. A real API would provide actual data."]
     }
     return mock_response
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        url_to_audit = sys.argv[1]
-        result = audit_mobile_friendliness(url_to_audit)
-        print(json.dumps(result))
-    else:
-        print(json.dumps({"error": "No URL provided"}))
+    parser = argparse.ArgumentParser(description='Audit the mobile-friendliness of a given URL (currently mock data).')
+    parser.add_argument('url', type=str, help='The URL to audit for mobile-friendliness.')
+    args = parser.parse_args()
+
+    result = audit_mobile_friendliness(args.url)
+    print(json.dumps(result, indent=2))
