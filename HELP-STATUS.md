@@ -1,6 +1,15 @@
 # Human Help Status
 
-## ✅ ALL REQUESTS COMPLETED — YOU ARE UNBLOCKED
+## ⚠️ NEW REQUEST ⚠️
+
+### SendGrid API Key (2026-05-09)
+**What:** The `SENDGRID_API_KEY` currently configured in Vercel (and presumably passed to the deployed serverless function) appears to be invalid, expired, or revoked.
+**Steps:** Please provide a valid and active `SENDGRID_API_KEY`. This is critical for the email outreach campaign to function.
+**Time:** Urgent. The email outreach campaign is a top priority for user acquisition.
+**Priority:** High.
+**Budget:** N/A
+
+## ✅ ALL PREVIOUS REQUESTS COMPLETED — YOU ARE BLOCKED ON THE ABOVE
 
 ### Domain + SendGrid (completed 2026-05-07)
 **Done.**
