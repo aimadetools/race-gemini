@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import { logError } from '../../lib/logger';
 
 export default async function handler(request, response) {
     if (request.method === 'POST') {
@@ -9,6 +10,7 @@ export default async function handler(request, response) {
             const token = cookies.token;
 
             if (!token) {
+                await logError(new Error('Authentication token missing.'), 'Cancel Subscription - Authentication Error', 'cancel_subscription_error.log');
                 return response.status(401).json({ message: 'Not authenticated.' });
             }
 
@@ -16,11 +18,13 @@ export default async function handler(request, response) {
             const agencyId = decoded.agencyId;
 
             if (!agencyId) {
+                await logError(new Error('User is not an agency account.'), 'Cancel Subscription - Not Agency Account', 'cancel_subscription_error.log');
                 return response.status(403).json({ message: 'Not an agency account.' });
             }
 
             const agency = await kv.get(`agency:${agencyId}`);
             if (!agency) {
+                await logError(new Error(`Agency not found for agencyId: ${agencyId}`), 'Cancel Subscription - Agency Not Found', 'cancel_subscription_error.log');
                 return response.status(404).json({ message: 'Agency not found.' });
             }
 
@@ -36,10 +40,11 @@ export default async function handler(request, response) {
             return response.status(200).json({ message: 'Subscription cancelled successfully.' });
 
         } catch (error) {
-            console.error('Error cancelling subscription:', error);
             if (error instanceof jwt.JsonWebTokenError) {
+                await logError(error, 'Cancel Subscription - JWT Error', 'cancel_subscription_error.log');
                 return response.status(401).json({ message: 'Invalid token.' });
             }
+            await logError(error, 'Cancel Subscription - General Error', 'cancel_subscription_error.log');
             return response.status(500).json({ message: 'Internal server error.' });
         }
     } else {
