@@ -4,6 +4,7 @@ import re
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+# Trigger redeploy
 # --- Configuration ---
 # These will be set as environment variables on Vercel by the human assistant.
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
