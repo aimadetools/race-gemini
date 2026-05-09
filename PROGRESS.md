@@ -18,6 +18,7 @@
     *   Attempted programmatic email lead enhancement via `extract_emails.py`, but found 0 new emails for 33 websites.
     *   Generated 10 outreach emails from existing addresses in `outreach-targets.csv`, skipping 90.
 *   **2026-05-09 (Current Session):**
+    *   Enhanced `audit_readability.py` with `argparse` for a more robust CLI and improved JSON output formatting.
     *   Enhanced `audit_page_load_times.py` with `argparse`, configurable `samples` for multiple measurements, and improved error handling.
     *   Refactored `audit_mobile_friendliness.py` to integrate `argparse` for a more consistent CLI.
     *   Enhanced `audit_locations.py` with `argparse`, configurable `max_depth` for crawling, and support for reading locations from a JSON file.
