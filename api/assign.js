@@ -1,11 +1,16 @@
+import { logError } from '../../lib/logger';
+
 export default function handler(req, res) {
+  try {
   const { experiment } = req.query;
   if (!experiment) {
+    await logError(new Error('Experiment name is required.'), 'Assign API - Missing Experiment Name', 'assign_error.log');
     return res.status(400).json({ error: 'Experiment name is required' });
   }
 
   // Basic validation for experiment name
   if (!/^[a-zA-Z0-9_-]+$/.test(experiment)) {
+    await logError(new Error(`Invalid experiment name format: ${experiment}`), 'Assign API - Invalid Experiment Name Format', 'assign_error.log');
     return res.status(400).json({ error: 'Invalid experiment name format' });
   }
 
@@ -27,4 +32,8 @@ export default function handler(req, res) {
   }
 
   res.status(200).json({ experiment, variant });
+  } catch (error) { // Catch for main logic
+    await logError(error, 'Assign API - General Error', 'assign_error.log');
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
 }
