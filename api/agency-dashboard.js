@@ -2,6 +2,7 @@ const cookie = require('cookie');
 const jwt = require('jsonwebtoken');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Import Stripe
+const { logError } = require('../../lib/logger');
 
 async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -12,14 +13,30 @@ async function handler(req, res) {
     const token = cookies.authToken; // Use authToken as defined in checkout.js
 
     if (!token) {
+        await logError(new Error('Authentication token missing.'), 'Agency Dashboard - Authentication Error', 'agency_dashboard_error.log');
         return res.status(401).json({ message: 'Not authenticated' });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                await logError(error, 'Agency Dashboard - Token Expired', 'agency_dashboard_error.log');
+                return res.status(401).json({ message: 'Authentication failed: Token expired.' });
+            } else if (error.name === 'JsonWebTokenError') {
+                await logError(error, 'Agency Dashboard - Invalid Token', 'agency_dashboard_error.log');
+                return res.status(401).json({ message: 'Authentication failed: Invalid token.' });
+            }
+            await logError(error, 'Agency Dashboard - JWT Verification Error', 'agency_dashboard_error.log');
+            return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
+        }
+        
         const userId = decoded.userId; // agencyId is the userId
 
-        if (!userId) {
+        if (!userId) { // This check might be redundant if decoded.userId is guaranteed, but harmless.
+            await logError(new Error('User ID missing after token decode.'), 'Agency Dashboard - User ID Missing', 'agency_dashboard_error.log');
             return res.status(403).json({ message: 'Not an authenticated user' });
         }
 
@@ -30,6 +47,7 @@ async function handler(req, res) {
         );
 
         if (userResult.rows.length === 0) {
+            await logError(new Error(`Agency user not found for userId: ${userId}`), 'Agency Dashboard - User Not Found', 'agency_dashboard_error.log');
             return res.status(404).json({ message: 'Agency user not found' });
         }
 
@@ -53,7 +71,7 @@ async function handler(req, res) {
                 }
                 renewalDate = new Date(subscription.current_period_end * 1000).toISOString();
             } catch (stripeError) {
-                console.error('Error fetching Stripe subscription details:', stripeError);
+                await logError(stripeError, 'Agency Dashboard - Stripe Fetch Error', 'agency_dashboard_error.log');
                 // Continue without subscription details if Stripe call fails
             }
         }
@@ -90,7 +108,7 @@ async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error(error);
+        await logError(error, 'Agency Dashboard - General Error', 'agency_dashboard_error.log');
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
