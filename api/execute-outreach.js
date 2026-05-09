@@ -37,17 +37,21 @@ module.exports = async (req, res) => {
         ...email,
         from: process.env.FROM_EMAIL,
       };
-      console.log(`Sending email to ${email.to}`);
-      const response = await sgMail.send(msg);
-      console.log(`Email sent to ${email.to}`, response[0].statusCode, response[0].headers);
+      try {
+        console.log(`Sending email to ${email.to}`);
+        const response = await sgMail.send(msg);
+        console.log(`Email sent to ${email.to}`, response[0].statusCode, response[0].headers);
+      } catch (error) {
+        console.error(`Error sending email to ${email.to}`, error);
+        if (error.response) {
+          console.error(error.response.body)
+        }
+      }
     }
 
     res.status(200).json({ message: 'Emails sent successfully.' });
   } catch (error) {
-    console.error(error);
-    if (error.response) {
-      console.error(error.response.body)
-    }
+    console.error('An error occurred in the main try block.', error);
     res.status(500).json({ message: 'Error sending emails.', error: error.toString() });
   }
 };
