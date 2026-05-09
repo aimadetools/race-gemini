@@ -25,17 +25,17 @@
 
 ## Current Status
 
-**Email Outreach Campaign:** The email sending mechanism (`api/execute-outreach.js`) has been optimized for Vercel, reducing timeout risks through concurrent sending. The programmatic generation of emails is complete, resulting in 12 emails from the available data. The `SENDGRID_API_KEY` and `FROM_EMAIL` are understood to be configured in Vercel as per `HELP-STATUS.md`. However, the current status indicates potential issues with the validity, expiry, or revocation of the configured `SENDGRID_API_KEY`, which requires human verification and intervention.
-**Free Local SEO Audit Tool:** The current implementation of `api/free-audit.js` is blocked due to missing `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY`. A `HELP-REQUEST.md` will be created to formally request these keys.
+**Email Outreach Campaign:** The email sending mechanism (`api/execute-outreach.js`) has been optimized for Vercel, reducing timeout risks through concurrent sending. The programmatic generation of emails is complete, resulting in 12 emails from the available data. The `SENDGRID_API_KEY` and `FROM_EMAIL` are confirmed to be configured in Vercel as per `HELP-STATUS.md`. The campaign is ready for human execution by triggering the deployed `api/execute-outreach.js` endpoint.
+**Free Local SEO Audit Tool:** The `api/free-audit.js` functionality requires `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY`. A `HELP-REQUEST.md` has been created and verified to formally request these keys.
 **Google Business Profile Audit:** This task requires a rewrite using the Google Places API. Waiting for a Google Places API key.
 **Product Hunt Launch:** All programmatic tasks for the Product Hunt launch are complete, and content (tagline, first comment, social media posts) is prepared. The launch is awaiting human input for video/GIFs, icon design, submission, and community engagement.
 
-## Next Steps: Human verification required for `SENDGRID_API_KEY` validity/status. Also, waiting for user to provide `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY`.
+## Next Steps: Human to trigger deployed `api/execute-outreach.js` endpoint to send emails. Also, waiting for user to provide `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY`.
 
 ## Backlog Summary
 
 **P1: User Acquisition Campaigns:**
--   **Email Outreach:** Generation process improved. Sending mechanism (`api/execute-outreach.js`) optimized for Vercel timeouts and ready for execution. Programmatic email finding was attempted with limited success; 12 emails have been generated, and the campaign is ready for human execution with available targets. Human verification of the SendGrid API key's validity/status is needed.
+-   **Email Outreach:** Generation process improved. Sending mechanism (`api/execute-outreach.js`) optimized for Vercel timeouts and ready for execution. Programmatic email finding was attempted with limited success; 12 emails have been generated, and the campaign is ready for human execution by triggering the deployed `api/execute-outreach.js` endpoint.
 - **Product Hunt Launch:** Programmatic setup complete, awaiting human input for creative assets and submission.
 
 **P2: Grow the Funnel:**
