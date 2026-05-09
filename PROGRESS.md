@@ -1,7 +1,7 @@
 # Key Milestones
 
 *   **Initial Setup & Core Infrastructure:** Established core UI/UX, API testing, payment processing, and lead generation.
-*   **Comprehensive Audit Tools:** Implemented and refactored a modular Python audit suite for H1, H2/H3, Alt attributes, blog post SEO, and internal linking. Improved `parseAddress` in `api/free-audit.js`.
+*   **Comprehensive Audit Tools:** Implemented and refactored a modular Python audit suite for H1, H2/H3, Alt attributes, blog post SEO, and internal linking. Improved `parseAddress` in `api/free-audit.js`. Consolidated standalone audit scripts into `audits_v2` for better modularity.
 *   **Outreach & Product Development:** Developed user tracking, video tutorials, Product Hunt prep, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits. Enhanced email outreach lead generation with improved email extraction, dynamic sample page linking, and `generate_outreach_emails.py`. Improved `auditor_cli.py` error handling.
 *   **Audit Tool Improvements:** Enhanced `audit_image_sizes.py` to provide actionable optimization suggestions and generate structured output.
 *   **Blog Post Generation:** Enhanced `generate_new_blog_posts.py` to include dynamic internal linking.
