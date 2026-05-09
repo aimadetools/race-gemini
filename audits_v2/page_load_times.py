@@ -1,17 +1,15 @@
-
-import sys
 import json
 import time
 import requests
-import argparse # Import argparse
-import statistics # Import statistics for average/stdev
+import statistics
 
-def audit_page_load_time(url, timeout=10, samples=1):
+def _run_page_load_time_audit(url, source_identifier="N/A", timeout=10, samples=1):
     """
     Audits the page load time of a given URL.
 
     Args:
         url (str): The URL to audit.
+        source_identifier (str): Identifier for the source.
         timeout (int): Timeout for the HTTP request in seconds.
         samples (int): Number of times to measure the load time.
 
@@ -20,9 +18,9 @@ def audit_page_load_time(url, timeout=10, samples=1):
     """
     load_times = []
     status_code = None
-    errors = []
+    issues = []
 
-    for _ in range(samples):
+    for i in range(samples):
         try:
             start_time = time.time()
             response = requests.get(url, timeout=timeout)
@@ -32,53 +30,106 @@ def audit_page_load_time(url, timeout=10, samples=1):
             status_code = response.status_code
             response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
         except requests.exceptions.Timeout:
-            errors.append(f"Request timed out after {timeout} seconds.")
-            break # No need to try further samples if it times out
+            issues.append({
+                "type": "ERROR",
+                "message": f"Sample {i+1}: Request timed out after {timeout} seconds.",
+                "source": source_identifier
+            })
+            break # No need to try further samples if it times out consistently
         except requests.exceptions.ConnectionError:
-            errors.append("Failed to connect to the server.")
+            issues.append({
+                "type": "ERROR",
+                "message": f"Sample {i+1}: Failed to connect to the server.",
+                "source": source_identifier
+            })
             break
         except requests.exceptions.HTTPError as e:
-            errors.append(f"HTTP error occurred: {e.response.status_code} - {e.response.reason}")
+            issues.append({
+                "type": "ERROR",
+                "message": f"Sample {i+1}: HTTP error occurred: {e.response.status_code} - {e.response.reason}",
+                "source": source_identifier
+            })
             break
         except requests.exceptions.RequestException as e:
-            errors.append(f"A general request error occurred: {e}")
+            issues.append({
+                "type": "ERROR",
+                "message": f"Sample {i+1}: A general request error occurred: {e}",
+                "source": source_identifier
+            })
             break
         except Exception as e:
-            errors.append(f"An unexpected error occurred: {e}")
+            issues.append({
+                "type": "ERROR",
+                "message": f"Sample {i+1}: An unexpected error occurred: {e}",
+                "source": source_identifier
+            })
             break
     
-    if errors:
+    results = {}
+    if issues:
+        # If there are errors, report them and whatever status code was last seen
         return {
-            "url": url,
-            "error": errors[0],
-            "status_code": status_code # Will be None if no successful request
+            "audit_type": "page_load_times",
+            "results": {
+                "url_audited": url,
+                "status_code": status_code,
+            },
+            "issues": issues
         }
-    elif not load_times: # Should not happen if no errors and samples > 0
+    elif not load_times: # Should not happen if no issues and samples > 0, but for safety
+        issues.append({
+            "type": "ERROR",
+            "message": "No load times recorded despite no explicit errors.",
+            "source": source_identifier
+        })
         return {
-            "url": url,
-            "error": "No load times recorded despite no explicit errors.",
-            "status_code": status_code
+            "audit_type": "page_load_times",
+            "results": {
+                "url_audited": url,
+                "status_code": status_code,
+            },
+            "issues": issues
         }
     else:
         avg_load_time = statistics.mean(load_times)
         stdev_load_time = statistics.stdev(load_times) if len(load_times) > 1 else 0.0
-        return {
-            "url": url,
-            "samples": samples,
-            "load_times_raw": [f"{t:.2f}" for t in load_times],
-            "average_load_time": f"{avg_load_time:.2f}",
-            "stdev_load_time": f"{stdev_load_time:.2f}",
+        results = {
+            "url_audited": url,
+            "samples": len(load_times),
+            "load_times_raw": [f"{t:.2f}s" for t in load_times],
+            "average_load_time": f"{avg_load_time:.2f}s",
+            "stdev_load_time": f"{stdev_load_time:.2f}s",
             "status_code": status_code
         }
+        return {"audit_type": "page_load_times", "results": results, "issues": issues}
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Audit the page load time of a given URL.')
-    parser.add_argument('url', type=str, help='The URL to audit.')
-    parser.add_argument('--timeout', type=int, default=10,
-                        help='Timeout for the HTTP request in seconds (default: 10).')
-    parser.add_argument('--samples', type=int, default=1,
-                        help='Number of times to measure the load time (default: 1).')
-    args = parser.parse_args()
+def audit(target_content, target_type='html_content', **kwargs):
+    """
+    Performs page load time audit on the given target content (URL).
 
-    result = audit_page_load_time(args.url, args.timeout, args.samples)
-    print(json.dumps(result, indent=2))
+    Args:
+        target_content: The URL to audit (required for this audit type).
+        target_type (str): Specifies the type of target_content ('url' is expected).
+        **kwargs: Additional options.
+                  'timeout' (int): Timeout for the HTTP request in seconds (default: 10).
+                  'samples' (int): Number of times to measure the load time (default: 1).
+
+    Returns:
+        dict: Standardized audit results including 'audit_type', 'results', and 'issues'.
+    """
+    issues = []
+    url = target_content
+    source_identifier = kwargs.get('source_identifier', url)
+
+    if target_type != 'url':
+        issues.append({
+            "type": "ERROR",
+            "message": f"Unsupported target_type '{target_type}' for page load time audit. Only 'url' is supported.",
+            "source": source_identifier
+        })
+        return {"audit_type": "page_load_times", "results": {}, "issues": issues}
+    
+    timeout = kwargs.get('timeout', 10)
+    samples = kwargs.get('samples', 1)
+
+    return _run_page_load_time_audit(url, source_identifier, timeout, samples)
