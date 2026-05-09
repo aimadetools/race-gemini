@@ -5,3 +5,4 @@ Pillow
 lxml
 sendgrid
 requests-html
+textstat
