@@ -44,8 +44,13 @@ async function sendEmails(emails) {
   }
 }
 
-module.exports = (req, res) => {
-  const emails = parseGeneratedEmails(path.resolve(process.cwd(), 'generated_outreach_emails.txt'));
-  sendEmails(emails);
-  res.status(202).json({ message: 'Email sending process started.' });
+module.exports = async (req, res) => {
+  try {
+    const emails = parseGeneratedEmails(path.resolve(process.cwd(), 'generated_outreach_emails.txt'));
+    await sendEmails(emails);
+    res.status(200).json({ message: 'Email sending process completed successfully.' });
+  } catch (error) {
+    console.error('Error in execute-outreach.js handler:', error);
+    res.status(500).json({ message: 'Failed to send emails.', error: error.message });
+  }
 };
