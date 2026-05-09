@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { logError } = require('../../lib/logger');
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -15,6 +16,7 @@ module.exports = async (req, res) => {
     const { email, url } = req.body;
 
     if (!email || !url) {
+        await logError(new Error('Email and URL are required.'), 'Capture Email - Validation Error', 'capture_email_error.log');
         return res.status(400).json({ message: 'Email and URL are required.' });
     }
 
@@ -27,7 +29,7 @@ module.exports = async (req, res) => {
         client.release();
         res.status(201).json({ message: 'Email captured successfully.', data: result.rows[0] });
     } catch (error) {
-        console.error('Error saving lead to the database:', error);
+        await logError(error, 'Capture Email - Database Error', 'capture_email_error.log');
         res.status(500).json({ message: 'An error occurred while capturing the email.' });
     }
 };
