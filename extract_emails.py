@@ -79,16 +79,34 @@ def extract_email_from_url(url):
                             return cleaned
 
             # 2. Look for email patterns in the page text and script tags
-            email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+            # Enhanced email pattern to catch common obfuscation methods
+            # This pattern looks for standard emails and also attempts to de-obfuscate common patterns
+            email_pattern_enhanced = re.compile(
+                r'\b'
+                r'(?P<user>[a-zA-Z0-9._%+-]+)' # User part
+                r'\s*(?:(?:at)|@)\s*'           # 'at' or '@'
+                r'(?P<domain>[a-zA-Z0-9.-]+)'  # Domain part
+                r'\s*(?:(?:dot)|\.)\s*'         # 'dot' or '.'
+                r'(?P<tld>[a-zA-Z]{2,})'        # TLD part
+                r'\b',
+                re.IGNORECASE
+            )
+            email_pattern_standard = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
             
             # Search in general page text
-            emails_in_text = re.findall(email_pattern, soup.get_text())
+            emails_in_text = re.findall(email_pattern_standard, soup.get_text())
+            for match in email_pattern_enhanced.finditer(soup.get_text()):
+                deobfuscated_email = f"{match.group('user')}@{match.group('domain')}.{match.group('tld')}"
+                emails_in_text.append(deobfuscated_email)
 
             # Search in script tags
             emails_in_scripts = []
             for script in soup.find_all('script'):
                 if script.string:
-                    emails_in_scripts.extend(re.findall(email_pattern, script.string))
+                    emails_in_scripts.extend(re.findall(email_pattern_standard, script.string))
+                    for match in email_pattern_enhanced.finditer(script.string):
+                        deobfuscated_email = f"{match.group('user')}@{match.group('domain')}.{match.group('tld')}"
+                        emails_in_scripts.append(deobfuscated_email)
             
             all_found_emails = emails_in_text + emails_in_scripts
 
@@ -104,8 +122,7 @@ def extract_email_from_url(url):
         except requests.exceptions.TooManyRedirects:
             print(f"    Too many redirects for {current_url}")
         except requests.exceptions.RequestException as e:
-            # print(f"    Error accessing {current_url}: {e}")
-            pass # Suppress specific errors for alternative URLs, as we're trying multiple
+            print(f"    Request error accessing {current_url}: {e}")
         except Exception as e:
             print(f"    An unexpected error occurred for {current_url}: {e}")
         

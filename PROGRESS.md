@@ -6,6 +6,9 @@
 
 ## Recent Progress (Last 3 days detailed)
 
+*   **2026-05-09:**
+    *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to include more robust regex patterns for common email obfuscation methods (e.g., `[at]`, `[dot]`) and improved error logging for `RequestException` for better diagnostics.
+    *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 5 new emails for 31 websites checked. However, some found emails appear to be false positives (e.g., `hesit@ion.Page`), and persistent issues like `Execution context was destroyed`, `Name or service not known`, and `403 Forbidden` errors continue to limit extraction for certain websites.
 *   **2026-05-11:** Enhanced email outreach lead generation. Improved `extract_emails.py` with a robust `clean_email` function and integrated it to ensure only well-formed emails are extracted. Modified `outreach-email-template.md` to include a dynamic placeholder for sample page links. Updated `generate_outreach_emails.py` to dynamically create relevant `SAMPLE_PAGES_LINK` URLs based on `Service Type` and `City` from `outreach-targets.csv` and correctly populate the new placeholder in the email template. Added `requests-html` to `requirements.txt` and ensured all Python dependencies are installed and scripts run within the virtual environment.
 *   **2026-05-13:**
     *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to search within `<script>` tags in addition to general page text, and updated the email regex for broader matching.
