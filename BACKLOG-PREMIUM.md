@@ -3,11 +3,10 @@
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
 *   **P1: Execute First User Acquisition Campaign**
-    Execute first email outreach campaign to 100 prospects. (Ready for human execution with available targets.)
-    *   Prepare and execute a Product Hunt launch. (Summary: Programmatic setup, strategy, content planning, checkout overhaul, and pricing page redesign are complete. Currently awaiting human input for video/GIFs, icon design, submission, and community engagement.)
+    *   **Email Outreach Campaign:** Ready for human execution with available targets, but BLOCKED by missing `SENDGRID_API_KEY`.
+    *   **Product Hunt Launch:** Programmatic setup complete, awaiting human input for creative assets and submission.
 
 *   **P2: Grow the Funnel:**
-    *   Improve Google Business Profile audit. (Requires a Google Places API key.)
-    *   (Summary: Built "Free Local SEO Audit" tool)
+    *   **Google Business Profile Audit:** Currently requires `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` for existing functionality (requested via `HELP-REQUEST.md`), and a Google Places API key for a planned rewrite.
 
-*   **P3: Agency & Referral Program:** (Summary: Implemented referral program)
+*   **P3: Agency & Referral Program:** Referral program implemented.

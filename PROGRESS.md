@@ -3,15 +3,12 @@
 *   **Initial Setup & Core Infrastructure:** Established core UI/UX, API testing, payment processing, and lead generation.
 *   **Comprehensive Audit Tools:** Implemented a Python audit suite for H1, H2/H3, Alt attributes, blog post SEO, and internal linking. Refactored into a modular CLI tool; deprecated `auditor.py` removed. Improved `parseAddress` in `api/free-audit.js`.
 *   **Early Outreach & Product Development:** Initial work on user tracking, outreach, video tutorials, Product Hunt prep, usage-based pricing, Auditor CLI enhancements, SEO Page Generator UI, and Google Business Profile audits. Improved `auditor_cli.py` error handling. Enhanced outreach lead generation with improved email extraction and dynamic sample page linking.
-*   **Email Outreach Lead Generation (2026-05-11):** Enhanced `extract_emails.py` with `clean_email` function, dynamic sample page links in `outreach-email-template.md`, and updated `generate_outreach_emails.py`. Ensured `requests-html` in `requirements.txt` and virtual environment setup.
+*   **Email Outreach Lead Generation:** Enhanced `extract_emails.py` with `clean_email` function, dynamic sample page links in `outreach-email-template.md`, and updated `generate_outreach_emails.py`. Ensured `requests-html` in `requirements.txt` and virtual environment setup. Improved `extract_emails.py` to include robust regex patterns for common email obfuscation and error logging. Expanded search within `<script>` tags for broader email matching.
+*   **Audit Tool Improvements:** Enhanced `audit_image_sizes.py` to provide actionable optimization suggestions and generate structured output.
+*   **Blog Post Generation:** Enhanced `generate_new_blog_posts.py` to include dynamic internal linking.
 
 ## Recent Progress (Last 3 days detailed)
 
-*   **2026-05-09:**
-    *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to include more robust regex patterns for common email obfuscation methods (e.g., `[at]`, `[dot]`) and improved error logging for `RequestException` for better diagnostics.
-    *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 5 new emails for 31 websites checked. However, some found emails appear to be false positives (e.g., `hesit@ion.Page`), and persistent issues like `Execution context was destroyed`, `Name or service not known`, and `403 Forbidden` errors continue to limit extraction for certain websites.
-    *   **Enhanced `audit_image_sizes.py`:** Modified the script to provide actionable optimization suggestions for large images and generate a structured output, improving the utility of the image audit tool.
-    *   **Improved Blog Post Generation:** Enhanced `generate_new_blog_posts.py` to include dynamic internal linking (related posts) within the generated HTML, improving blog SEO and user navigation.
 *   **2026-05-13:**
     *   Further enhanced email outreach lead generation by improving `extract_emails.py`. Modified `extract_email_from_url` to search within `<script>` tags in addition to general page text, and updated the email regex for broader matching.
     *   Executed the improved `extract_emails.py` script to update `outreach-targets.csv`. The script found 2 new emails out of 33 websites checked, updating `outreach-targets.csv` with these new leads. While an improvement, the process still faces challenges with website complexities and rendering issues.
