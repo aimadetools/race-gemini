@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const { logError } = require('../../lib/logger');
 
 const runPythonScript = (scriptName, args, pythonExecutable) => {
     return new Promise((resolve, reject) => {
@@ -19,8 +20,7 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
 
         pythonProcess.on('close', (code) => {
             if (code !== 0) {
-                console.error(`Python script ${scriptName} exited with code ${code}`);
-                console.error(`stderr: ${stderr}`);
+                await logError(new Error(`Python script ${scriptName} exited with code ${code}. Stderr: ${stderr}`), `Audit API - Python Script Exit Code ${code}`, 'audit_error.log');
                 return reject({
                     script: scriptName,
                     message: `Error executing script: ${scriptName}`,
@@ -32,8 +32,7 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
                 const results = JSON.parse(stdout);
                 resolve(results);
             } catch (error) {
-                console.error(`Error parsing JSON from ${scriptName}:`, error);
-                console.error(`stdout: ${stdout}`);
+                await logError(new Error(`Error parsing JSON from ${scriptName}. Stdout: ${stdout}. Error: ${error.message}`), `Audit API - Python JSON Parse Error`, 'audit_error.log');
                 reject({
                     script: scriptName,
                     message: `Error parsing results from ${scriptName}`,
@@ -42,8 +41,8 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
             }
         });
 
-        pythonProcess.on('error', (err) => {
-            console.error(`Failed to start python process for ${scriptName}.`, err);
+        pythonProcess.on('error', async (err) => {
+            await logError(err, `Audit API - Python Process Start Failed for ${scriptName}`, 'audit_error.log');
             reject({
                 script: scriptName,
                 message: `Failed to start process for ${scriptName}`,
@@ -63,12 +62,14 @@ module.exports = async (req, res) => {
     const { url, locations } = req.body;
 
     if (!url || !locations || !Array.isArray(locations) || locations.length === 0) {
+        await logError(new Error('URL and a list of locations are required.'), 'Audit API - Validation Error', 'audit_error.log');
         return res.status(400).json({ message: 'URL and a list of locations are required.' });
     }
 
     try {
         new URL(url);
     } catch (error) {
+        await logError(new Error(`Invalid URL format: ${url}`), 'Audit API - Invalid URL Format', 'audit_error.log');
         return res.status(400).json({ message: 'Invalid URL format.' });
     }
 
@@ -91,7 +92,7 @@ module.exports = async (req, res) => {
         res.status(200).json(auditResults);
 
     } catch (error) {
-        console.error('An unexpected error occurred during audit orchestration:', error);
+        await logError(error, 'Audit API - General Error', 'audit_error.log');
         return res.status(500).json({
             message: 'An unexpected error occurred during the audit process.',
             error: error.message
