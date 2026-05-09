@@ -1,15 +1,18 @@
 # What
-I am having trouble with a Vercel serverless function that is timing out. The function is supposed to send emails using the SendGrid API. I have rewritten the function in Javascript, but it is still timing out.
+I need a Google Places API key to improve the Google Business Profile audit. The current implementation scrapes Google search results, which is unreliable.
 
 # Steps
-1.  Look at the Vercel deployment logs for the project `localseogen.com` for the `api/execute-outreach` endpoint.
-2.  The logs should contain the output of the `execute-outreach.js` script. Please provide me with the logs.
+1.  Go to the Google Cloud Console.
+2.  Create a new project or use an existing one.
+3.  Enable the "Places API".
+4.  Create an API key.
+5.  Set the API key as an environment variable named `GOOGLE_PLACES_API_KEY` in the Vercel project `localseogen.com`.
 
 # Time
 15min
 
 # Priority
-blocking
+high
 
 # Budget
 $0
