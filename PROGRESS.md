@@ -18,6 +18,7 @@
     *   Attempted programmatic email lead enhancement via `extract_emails.py`, but found 0 new emails for 33 websites.
     *   Generated 10 outreach emails from existing addresses in `outreach-targets.csv`, skipping 90.
 *   **2026-05-09 (Current Session):**
+    *   Enhanced `audit_blog_posts.py` to include a `--domain` argument, allowing more accurate internal/external link classification.
     *   Confirmed `SENDGRID_API_KEY` configuration based on `HELP-STATUS.md` feedback.
     *   Verified programmatic email generation is complete and `generated_outreach_emails.txt` is ready for sending via the deployed `api/execute-outreach.js` endpoint.
     *   Verified `HELP-REQUEST.md` for `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` is correctly formatted.
