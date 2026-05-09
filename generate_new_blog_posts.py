@@ -46,7 +46,7 @@ def call_gemini_api(prompt, api_key):
         print(f"Error calling Gemini API: {e}")
         return None
 
-def generate_blog_post_html(title, description, keywords, image_url, canonical_url, content):
+def generate_blog_post_html(title, description, keywords, image_url, canonical_url, content, related_posts_html=""):
     current_date = datetime.now().isoformat()
     html_template = f"""<!DOCTYPE html>
 
@@ -138,6 +138,7 @@ def generate_blog_post_html(title, description, keywords, image_url, canonical_u
      {content}
     </p>
 </section>
+{related_posts_html}
 <div class="social-share" id="social-share-container">
 </div>
 <div class="social-share" id="social-share-container">
@@ -237,12 +238,14 @@ def create_new_blog_posts(start_num, count):
     gemini_api_key = os.getenv("GEMINI_API_KEY")
 
     if not gemini_api_key:
-        print("\n" + "="*80)
+        print("
+" + "="*80)
         print("WARNING: GEMINI_API_KEY environment variable is NOT set.")
         print("LLM content generation for blog posts will be skipped.")
         print("Placeholder content will be used instead.")
         print("To generate real content, please set the GEMINI_API_KEY environment variable.")
-        print("="*80 + "\n")
+        print("="*80 + "
+")
 
     for i in range(count):
         post_number = start_num + i
@@ -253,6 +256,31 @@ def create_new_blog_posts(start_num, count):
             print(f"Skipping existing file: {file_name}")
             continue
 
+        # --- Dynamic Internal Linking Logic ---
+        existing_blog_files = [f for f in os.listdir(blog_dir) if f.startswith("post") and f.endswith(".html") and f != f"post{post_number}.html"]
+        # Limit to a few related posts, e.g., 3 random ones
+        import random
+        random.shuffle(existing_blog_files)
+        related_posts_html_list = []
+        for j, related_file in enumerate(existing_blog_files[:3]): # Take top 3
+            related_post_title = f"Post {related_file.replace('post', '').replace('.html', '')}" # Simple title for now
+            # In a real scenario, we might parse the title from the related file's HTML
+            related_post_url = f"../blog/{related_file}"
+            related_posts_html_list.append(f'<li><a href="{related_post_url}">{related_post_title}</a></li>')
+        
+        related_posts_html = ""
+        if related_posts_html_list:
+            related_posts_html = f"""
+<div class="related-posts">
+    <h2>Related Posts</h2>
+    <ul>
+        {''.join(related_posts_html_list)}
+    </ul>
+</div>
+"""
+        # --- End Dynamic Internal Linking Logic ---
+
+
         # Define a base topic for the blog post
         base_topic = "Local SEO for small businesses"
 
@@ -261,19 +289,19 @@ def create_new_blog_posts(start_num, count):
         llm_title = call_gemini_api(title_prompt, gemini_api_key)
         title = llm_title if llm_title else f"Local SEO Strategy for {post_number}"
         # Clean up title: remove quotes if LLM adds them
-        title = title.strip('\'"')
+        title = title.strip(''"')
 
         # Generate Description
         description_prompt = f"Write a concise, engaging, and SEO-optimized meta description (under 160 characters) for a blog post titled '{title}'. Focus on how small businesses can attract local customers with effective SEO."
         llm_description = call_gemini_api(description_prompt, gemini_api_key)
         description = llm_description if llm_description else f"Discover effective local SEO strategies to help small businesses attract customers and rank higher in local search. This is a concise overview for post {post_number}."
-        description = description.strip('\'"') # Clean up description
+        description = description.strip(''"') # Clean up description
 
         # Generate Keywords
         keywords_prompt = f"List 5-10 relevant and high-traffic keywords for a blog post titled '{title}' focusing on local SEO for small businesses. Separate with commas."
         llm_keywords = call_gemini_api(keywords_prompt, gemini_api_key)
         keywords = llm_keywords if llm_keywords else f"local seo, small business seo, local marketing, {post_number}"
-        keywords = keywords.strip('\'"') # Clean up keywords
+        keywords = keywords.strip(''"') # Clean up keywords
         
         # Generate Content
         content_prompt = f"Write a detailed and informative blog post (approximately 500-800 words) about '{title}'. Include sections on why local SEO is important, key strategies (e.g., Google My Business, local citations, reviews), and actionable advice for small businesses. Ensure the tone is helpful and professional. Incorporate 2-3 relevant external links (e.g., to Google's official guides, reputable SEO blogs) naturally within the text. Format the content with paragraphs and headings (using Markdown #, ##, ### for structure)."
@@ -284,7 +312,8 @@ def create_new_blog_posts(start_num, count):
             # Simple conversion from Markdown-like headings to HTML h-tags and paragraphs
             # This is a basic conversion, a proper Markdown parser would be better for complex Markdown
             html_content_body = []
-            for line in llm_content.split('\n'):
+            for line in llm_content.split('
+'):
                 line = line.strip()
                 if line.startswith('### '):
                     html_content_body.append(f"<h3>{line[4:].strip()}</h3>")
@@ -294,7 +323,8 @@ def create_new_blog_posts(start_num, count):
                     html_content_body.append(f"<h1>{line[2:].strip()}</h1>")
                 elif line: # Any non-empty line becomes a paragraph
                     html_content_body.append(f"<p>{line}</p>")
-            content = "\n".join(html_content_body)
+            content = "
+".join(html_content_body)
         else:
             content = f"This blog post provides an in-depth look into optimizing your business for local search, focusing on techniques that drive organic traffic and convert local customers. Key areas include Google My Business optimization, local citation building, and reputation management. This is the main content for post {post_number}."
 
@@ -302,7 +332,7 @@ def create_new_blog_posts(start_num, count):
         image_url = f"https://www.localleads.pro/images/og_webp/post{post_number}.webp" # Placeholder for now, could be LLM generated
         canonical_url = f"https://www.localleads.pro/blog/post{post_number}.html"
         
-        html_content = generate_blog_post_html(title, description, keywords, image_url, canonical_url, content)
+        html_content = generate_blog_post_html(title, description, keywords, image_url, canonical_url, content, related_posts_html)
         
         with open(file_name, 'w', encoding='utf-8') as f:
             f.write(html_content)
@@ -330,4 +360,3 @@ if __name__ == "__main__":
     
     print(f"Generating {num_posts_to_generate} new blog posts starting from post{start_post_number}.html...")
     create_new_blog_posts(start_post_number, num_posts_to_generate)
-
