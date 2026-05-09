@@ -41,6 +41,7 @@ def main():
     # Broken Links Audit
     broken_links_parser = html_subparsers.add_parser('broken-links', help='Checks for broken external links')
     broken_links_parser.add_argument('target', help='Path to the HTML file or URL to audit')
+    broken_links_parser.add_argument('--timeout', type=int, default=10, help='Timeout for link checking in seconds')
     broken_links_parser.set_defaults(func=run_broken_links_audit)
 
     # H2/H3 Tags Audit
@@ -87,7 +88,7 @@ def run_h1_tags_audit(args):
 def run_broken_links_audit(args):
     try:
         target_type = _determine_target_type(args.target)
-        results = broken_links_audit(args.target, target_type=target_type)
+        results = broken_links_audit(args.target, target_type=target_type, timeout=args.timeout)
         print(json.dumps(results, indent=2))
     except Exception as e:
         print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))

@@ -3,13 +3,14 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import os
 
-def audit(target_content, target_type='html_content', **kwargs):
+def audit(target_content, target_type='html_content', timeout=10, **kwargs):
     """
     Performs broken link audit on the given target content.
 
     Args:
         target_content: The content to audit. Can be an HTML string, a file path, or a URL.
         target_type (str): Specifies the type of target_content ('html_content', 'file_path', or 'url').
+        timeout (int): The timeout for the link checking in seconds.
         **kwargs: Additional options. 'file_path' can be passed for context if target_type is 'html_content'.
 
     Returns:
@@ -29,7 +30,7 @@ def audit(target_content, target_type='html_content', **kwargs):
                 html_content = f.read()
         elif target_type == 'url':
             source_identifier = target_content
-            response = requests.get(target_content, timeout=10)
+            response = requests.get(target_content, timeout=timeout)
             response.raise_for_status()
             html_content = response.text
         else:
@@ -64,7 +65,7 @@ def audit(target_content, target_type='html_content', **kwargs):
         
         for link in links_to_check:
             try:
-                check = session.get(link, allow_redirects=True, timeout=10, stream=True)
+                check = session.head(link, allow_redirects=True, timeout=timeout)
                 if 400 <= check.status_code < 600:
                     issues.append({
                         "type": "Broken Link",
@@ -73,7 +74,6 @@ def audit(target_content, target_type='html_content', **kwargs):
                         "link": link,
                         "status_code": check.status_code
                     })
-                check.close()
             except requests.exceptions.RequestException as e:
                 issues.append({
                     "type": "Broken Link - Network Error",
