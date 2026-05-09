@@ -3,7 +3,7 @@
   "rewrites": [
     { "source": "/es/:path*", "destination": "/es/:path*" },
     { "source": "/api/contact", "destination": "/api/contact.js" },
-    { "source": "/:path((?!static$).*)", "destination": "/404.html" },
+    { "source": "/((?!api/|static/).*)", "destination": "/404.html" },
     { "source": "/sample-pages/:path*", "destination": "/sample-pages/:path*" }
   ]
 }
