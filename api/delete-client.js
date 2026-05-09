@@ -1,4 +1,5 @@
 import { kv } from '@vercel/kv';
+const { logError } = require('../../lib/logger');
 
 export default async function handler(request, response, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -6,23 +7,27 @@ export default async function handler(request, response, currentKvClient) {
         const { clientId } = request.body;
 
         if (!clientId) {
+            await logError(new Error('Client ID is required.'), 'Delete Client - Validation Error', 'delete_client_error.log');
             return response.status(400).json({ message: 'Client ID is required.' });
         }
 
         try {
             const sessionToken = request.cookies.session;
             if (!sessionToken) {
+                await logError(new Error('Session token missing.'), 'Delete Client - Authentication Error', 'delete_client_error.log');
                 return response.status(401).json({ message: 'Not authenticated.' });
             }
 
             const agency = await currentKv.hgetall(`agency_sessions:${sessionToken}`);
             if (!agency || !agency.id) {
+                await logError(new Error(`Invalid agency session for token: ${sessionToken}`), 'Delete Client - Invalid Agency Session', 'delete_client_error.log');
                 return response.status(401).json({ message: 'Agency session invalid.' });
             }
 
             // Verify client belongs to this agency
             const agencyClients = await currentKv.hgetall(`agency:${agency.id}:clients`);
             if (!agencyClients || !agencyClients[clientId]) {
+                await logError(new Error(`Client ID ${clientId} not found or does not belong to agency ${agency.id}.`), 'Delete Client - Client Not Found/Unauthorized', 'delete_client_error.log');
                 return response.status(404).json({ message: 'Client not found or does not belong to this agency.' });
             }
 
@@ -52,7 +57,7 @@ export default async function handler(request, response, currentKvClient) {
             return response.status(200).json({ message: 'Client and associated data deleted successfully.' });
 
         } catch (error) {
-            console.error('Error deleting client:', error);
+            await logError(error, 'Delete Client - General Error', 'delete_client_error.log');
             return response.status(500).json({ message: 'Internal server error.' });
         }
     } else {
