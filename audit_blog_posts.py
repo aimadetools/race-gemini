@@ -39,7 +39,7 @@ def increase_word_count_if_needed(file_path, min_word_count=300, append_text=GEN
             return False
     return False
 
-def analyze_post(file_path):
+def analyze_post(file_path, base_domain=None):
     """
     Analyzes a single blog post for SEO and readability metrics.
     """
@@ -109,13 +109,11 @@ def analyze_post(file_path):
     external_links_found = False
     for link in soup.find_all('a', href=True):
         href = link.get('href')
-        # For simplicity, assume any full URL not containing 'localhost' is external
-        # In a real scenario, this would involve comparing against the site's domain
         if href.startswith('http://') or href.startswith('https://'):
-            if 'localhost' not in href: # Placeholder for actual domain check
-                external_links_found = True
-            else: # Consider local absolute URLs as internal for now
+            if base_domain and base_domain in href:
                 internal_links_found = True
+            else:
+                external_links_found = True
         else: # Relative URLs are internal
             internal_links_found = True
 
@@ -139,6 +137,7 @@ def main():
     parser = argparse.ArgumentParser(description='Audit blog posts for SEO and readability.')
     parser.add_argument('directory', nargs='?', default='blog', help='The directory containing the blog posts.')
     parser.add_argument('--fix-word-count', action='store_true', help='Automatically increase word count for posts below 300 words.')
+    parser.add_argument('--domain', type=str, help='The domain of the website (e.g., example.com) for accurate internal/external link checking.')
     args = parser.parse_args()
 
     blog_dir = args.directory
@@ -152,7 +151,7 @@ def main():
             file_path = os.path.join(blog_dir, filename)
             if args.fix_word_count:
                 increase_word_count_if_needed(file_path)
-            all_results.append(analyze_post(file_path))
+            all_results.append(analyze_post(file_path, args.domain))
 
     # Print a summary report
     print("--- Blog Post Audit Report ---")
