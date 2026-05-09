@@ -1,19 +1,9 @@
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
-const fs = require('fs');
-const path = require('path');
 const { parse } = require('cookie'); // Use parse from 'cookie' directly
 const jwt = require('jsonwebtoken');
+const { logError } = require('../../lib/logger');
 
-async function logError(error, context) {
-    const logDir = path.join(process.cwd(), 'logs');
-    if (!fs.existsSync(logDir)) {
-        fs.mkdirSync(logDir, { recursive: true });
-    }
-    const logFilePath = path.join(logDir, 'paypal_error.log'); // Log to paypal_error.log
-    const timestamp = new Date().toISOString();
-    const errorMessage = `[${timestamp}] Context: ${context}\nError: ${error.message}\nStack: ${error.stack}\n\n`;
-    fs.appendFileSync(logFilePath, errorMessage);
-}
+
 
 // Creating an environment
 let clientId = process.env.PAYPAL_CLIENT_ID;
@@ -36,7 +26,7 @@ module.exports = async (req, res, currentKvClient) => {
             const token = cookies.authToken; // Correct cookie name
 
             if (!token) {
-                await logError(new Error('Auth token missing.'), 'PayPal Capture - Authentication');
+                await logError(new Error('Auth token missing.'), 'PayPal Capture - Authentication', 'paypal_error.log');
                 return res.status(401).json({ message: 'Authentication required.' });
             }
 
@@ -44,7 +34,7 @@ module.exports = async (req, res, currentKvClient) => {
             try {
                 decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey'); // Add fallback
             } catch (error) {
-                await logError(error, 'PayPal Capture - JWT Verification Error');
+                await logError(error, 'PayPal Capture - JWT Verification Error', 'paypal_error.log');
                 return res.status(401).json({ message: 'Invalid or expired token.' });
             }
 
@@ -57,7 +47,7 @@ module.exports = async (req, res, currentKvClient) => {
                 // Update user credits in PostgreSQL
                 const parsedCredits = parseInt(credits, 10);
                 if (isNaN(parsedCredits)) {
-                    await logError(new Error(`Invalid credits value received from PayPal: ${credits}`), 'PayPal Capture - Invalid Credits');
+                    await logError(new Error(`Invalid credits value received from PayPal: ${credits}`), 'PayPal Capture - Invalid Credits', 'paypal_error.log');
                     return res.status(400).json({ message: 'Invalid credits value received.' });
                 }
 
@@ -67,7 +57,7 @@ module.exports = async (req, res, currentKvClient) => {
                 );
 
                 if (result.rows.length === 0) {
-                    await logError(new Error(`User not found for userId: ${userId}`), 'PayPal Capture - User Not Found in DB');
+                    await logError(new Error(`User not found for userId: ${userId}`), 'PayPal Capture - User Not Found in DB', 'paypal_error.log');
                     return res.status(404).json({ message: 'User not found in database.' });
                 }
 
@@ -75,11 +65,11 @@ module.exports = async (req, res, currentKvClient) => {
 
                 return res.status(200).json({ success: true, message: 'Payment captured and credits updated.' });
             } else {
-                await logError(new Error(`PayPal capture status: ${capture.result.status}`), 'PayPal Capture - Status Not Completed');
+                await logError(new Error(`PayPal capture status: ${capture.result.status}`), 'PayPal Capture - Status Not Completed', 'paypal_error.log');
                 return res.status(400).json({ success: false, message: 'Payment not completed.' });
             }
         } catch (err) {
-            await logError(err, 'PayPal Capture - General Error');
+            await logError(err, 'PayPal Capture - General Error', 'paypal_error.log');
             return res.status(500).send({ message: 'Error capturing PayPal payment.' });
         }
     } else {

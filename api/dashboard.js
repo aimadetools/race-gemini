@@ -3,21 +3,9 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs';
 import path from 'path';
+const { logError } = require('../../lib/logger');
 
-async function logError(error, context) {
-  const logDir = path.join(process.cwd(), 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-  const logFilePath = path.join(logDir, 'dashboard_error.log'); // Separate log file for dashboard errors
-  const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] Context: ${context}
-Error: ${error.message}
-Stack: ${error.stack}
 
-`;
-  fs.appendFileSync(logFilePath, errorMessage);
-}
 
 export default async function handler(req, res, currentKvClient) {
   const currentKv = currentKvClient || kv;
@@ -34,7 +22,7 @@ export default async function handler(req, res, currentKvClient) {
       try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
       } catch (error) {
-        await logError(error, 'JWT Verification Error');
+        await logError(error, 'JWT Verification Error', 'dashboard_error.log');
         return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
       }
 
@@ -79,7 +67,7 @@ export default async function handler(req, res, currentKvClient) {
       });
 
     } catch (error) {
-      await logError(error, 'Dashboard Data Fetch Error');
+      await logError(error, 'Dashboard Data Fetch Error', 'dashboard_error.log');
       return res.status(500).json({ message: 'Internal server error.' });
     }
   } else {

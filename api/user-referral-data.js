@@ -4,21 +4,9 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs'; // For error logging
 import path from 'path'; // For error logging
+import { logError } from '../../../lib/logger';
 
-async function logError(error, context) {
-    const logDir = path.join(process.cwd(), 'logs');
-    if (!fs.existsSync(logDir)) {
-        fs.mkdirSync(logDir, { recursive: true });
-    }
-    const logFilePath = path.join(logDir, 'user_referral_data_error.log');
-    const timestamp = new Date().toISOString();
-    const errorMessage = `[${timestamp}] Context: ${context}
-Error: ${error.message}
-Stack: ${error.stack}
 
-`;
-    fs.appendFileSync(logFilePath, errorMessage);
-}
 
 export default async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -39,7 +27,7 @@ export default async function handler(req, res, currentKvClient) {
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
         } catch (error) {
-            await logError(error, 'JWT Verification Error');
+            await logError(error, 'JWT Verification Error', 'user_referral_data_error.log');
             return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
         }
 
@@ -73,7 +61,7 @@ export default async function handler(req, res, currentKvClient) {
 
         return res.status(200).json(referralData);
     } catch (error) {
-        await logError(error, 'User Referral Data Fetch Error');
+        await logError(error, 'User Referral Data Fetch Error', 'user_referral_data_error.log');
         return res.status(500).json({ message: 'Failed to fetch referral data.', error: error.message });
     }
 }

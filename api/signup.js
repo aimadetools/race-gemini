@@ -1,26 +1,16 @@
 import bcrypt from 'bcrypt';
-import fs from 'fs';
-import path from 'path';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
+import { logError } from '../../lib/logger'; // Import centralized logger
 
-async function logError(error, context) {
-  const logDir = path.join(process.cwd(), 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-  const logFilePath = path.join(logDir, 'signup_error.log');
-  const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] Context: ${context}\nError: ${error.message}\nStack: ${error.stack}\n\n`;
-  fs.appendFileSync(logFilePath, errorMessage);
-}
+
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      await logError(new Error('Email and password are required.'), 'Validation Error');
+      await logError(new Error('Email and password are required.'), 'Validation Error', 'signup_error.log');
       return res.status(400).json({ message: 'Email and password are required.' });
     }
 
@@ -57,7 +47,7 @@ export default async function handler(req, res) {
 
       return res.status(201).json({ message: 'User registered successfully!', userId });
     } catch (error) {
-      await logError(error, 'Signup Processing Error');
+      await logError(error, 'Signup Processing Error', 'signup_error.log');
       return res.status(500).json({ message: 'Internal server error.' });
     }
   } else {

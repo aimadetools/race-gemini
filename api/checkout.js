@@ -3,17 +3,9 @@ const { parse } = require('cookie');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const { logError } = require('../../lib/logger'); // Import centralized logger
 
-async function logError(error, context) {
-  const logDir = path.join(process.cwd(), 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-  const logFilePath = path.join(logDir, 'checkout_error.log'); // Separate log for checkout errors
-  const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] Context: ${context}\nError: ${error.message}\nStack: ${error.stack}\n\n`;
-  fs.appendFileSync(logFilePath, errorMessage);
-}
+
 
 module.exports = async (req, res) => {
     const cookies = parse(req.headers.cookie || '');
@@ -26,13 +18,13 @@ module.exports = async (req, res) => {
             userId = decoded.userId;
         } catch (error) {
             console.error('Error verifying token:', error);
-            await logError(error, 'Token Verification');
+            await logError(error, 'Token Verification', 'checkout_error.log');
             return res.status(401).json({ message: 'Invalid or expired token.' });
         }
     }
 
     if (!userId) {
-        await logError(new Error('User not authenticated.'), 'Authentication Check');
+        await logError(new Error('User not authenticated.'), 'Authentication Check', 'checkout_error.log');
         return res.status(401).json({ message: 'User not authenticated.' });
     }
 
@@ -51,7 +43,7 @@ module.exports = async (req, res) => {
             const selectedPack = creditPackDetails[creditPackId];
 
             if (!selectedPack) {
-                await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection');
+                await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection', 'checkout_error.log');
                 return res.status(404).json({ message: 'Credit pack details not found for the selected ID.' });
             }
 
@@ -89,13 +81,13 @@ module.exports = async (req, res) => {
             const selectedPlan = agencyPlanDetails[agencyPlanId];
 
             if (!selectedPlan) {
-                await logError(new Error(`Agency plan details not found for ${agencyPlanId}.`), 'Checkout Agency Plan Selection');
+                await logError(new Error(`Agency plan details not found for ${agencyPlanId}.`), 'Checkout Agency Plan Selection', 'checkout_error.log');
                 return res.status(404).json({ message: 'Agency plan details not found for the selected ID.' });
             }
 
             // Ensure the priceId is available in environment variables
             if (!selectedPlan.priceId) {
-                await logError(new Error(`Stripe Price ID not configured for agency plan ${agencyPlanId}.`), 'Checkout Agency Plan Price ID Missing');
+                await logError(new Error(`Stripe Price ID not configured for agency plan ${agencyPlanId}.`), 'Checkout Agency Plan Price ID Missing', 'checkout_error.log');
                 return res.status(500).json({ message: `Stripe Price ID not configured for agency plan ${agencyPlanId}.` });
             }
 
@@ -119,7 +111,7 @@ module.exports = async (req, res) => {
                 },
             };
         } else {
-            await logError(new Error('Neither creditPackId nor agencyPlanId provided in request body.'), 'Checkout Validation');
+            await logError(new Error('Neither creditPackId nor agencyPlanId provided in request body.'), 'Checkout Validation', 'checkout_error.log');
             return res.status(400).json({ message: 'Missing creditPackId or agencyPlanId in request body.' });
         }
 
@@ -127,7 +119,7 @@ module.exports = async (req, res) => {
             const session = await stripe.checkout.sessions.create(sessionConfig);
             res.status(200).json({ sessionId: session.id });
         } catch (error) {
-            await logError(error, 'Stripe Session Creation');
+            await logError(error, 'Stripe Session Creation', 'checkout_error.log');
             res.status(500).json({ message: 'Failed to create Stripe checkout session.' });
         }
     } else {

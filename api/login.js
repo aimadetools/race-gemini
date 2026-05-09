@@ -2,24 +2,10 @@ import { kv } from '@vercel/kv'; // Keep for session management
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
-import fs from 'fs';
-import path from 'path';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
+import { logError } from '../../lib/logger'; // Import centralized logger
 
-async function logError(error, context) {
-  const logDir = path.join(process.cwd(), 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-  const logFilePath = path.join(logDir, 'login_error.log'); // Separate log file for login errors
-  const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] Context: ${context}
-Error: ${error.message}
-Stack: ${error.stack}
 
-`;
-  fs.appendFileSync(logFilePath, errorMessage);
-}
 
 export default async function handler(req, res) { // Removed currentKvClient parameter
   const currentKv = kv; // Use kv directly for session management
@@ -27,7 +13,7 @@ export default async function handler(req, res) { // Removed currentKvClient par
     const { email, password } = req.body;
 
     if (!email || !password) {
-      await logError(new Error('Email and password are required.'), 'Validation Error');
+      await logError(new Error('Email and password are required.'), 'Validation Error', 'login_error.log');
       return res.status(400).json({ message: 'Email and password are required.' });
     }
 
@@ -64,7 +50,7 @@ export default async function handler(req, res) { // Removed currentKvClient par
 
       return res.status(200).json({ message: 'Logged in successfully!', userId: user.id });
     } catch (error) {
-      await logError(error, 'Login Processing Error');
+      await logError(error, 'Login Processing Error', 'login_error.log');
       return res.status(500).json({ message: 'Internal server error.' });
     }
   } else {

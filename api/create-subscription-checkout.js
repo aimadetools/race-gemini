@@ -3,28 +3,16 @@ const { parse } = require('cookie');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const { logError } = require('../../lib/logger'); // Import centralized logger
 
-async function logError(error, context) {
-  const logDir = path.join(process.cwd(), 'logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-  }
-  const logFilePath = path.join(logDir, 'subscription_checkout_error.log');
-  const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] Context: ${context}
-Error: ${error.message}
-Stack: ${error.stack}
 
-`;
-  fs.appendFileSync(logFilePath, errorMessage);
-}
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const { priceId } = req.body;
 
         if (!priceId) {
-            await logError(new Error('Missing priceId in request body.'), 'Subscription Checkout Validation');
+            await logError(new Error('Missing priceId in request body.'), 'Subscription Checkout Validation', 'subscription_checkout_error.log');
             return res.status(400).json({ message: 'Missing priceId in request body.' });
         }
 
@@ -32,7 +20,7 @@ module.exports = async (req, res) => {
         const token = cookies.token;
 
         if (!token) {
-            await logError(new Error('Auth token missing.'), 'Subscription Checkout - Authentication');
+            await logError(new Error('Auth token missing.'), 'Subscription Checkout - Authentication', 'subscription_checkout_error.log');
             return res.status(401).json({ message: 'Authentication required. Please log in.' });
         }
 
@@ -40,7 +28,7 @@ module.exports = async (req, res) => {
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
         } catch (error) {
-            await logError(error, 'Subscription Checkout - JWT Verification Error');
+            await logError(error, 'Subscription Checkout - JWT Verification Error', 'subscription_checkout_error.log');
             return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
         }
 
@@ -70,7 +58,7 @@ module.exports = async (req, res) => {
             res.writeHead(303, { Location: session.url });
             res.end();
         } catch (error) {
-            await logError(error, 'Stripe subscription session creation failed');
+            await logError(error, 'Stripe subscription session creation failed', 'subscription_checkout_error.log');
             res.status(500).send('Failed to create subscription session.');
         }
     } else {
