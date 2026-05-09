@@ -12,6 +12,8 @@ The project has established its core UI/UX, API testing, payment processing, and
 
 **Email Outreach Campaign:** This task is blocked. All programmatic work for email generation and placeholder population is complete. However, the email sending infrastructure on Vercel is not working as expected. Multiple attempts to send emails via a serverless function have resulted in timeouts, even after rewriting the sending logic in Javascript. Further investigation is needed to resolve this issue.
 
+**Google Business Profile Audit:** This task is blocked. The current implementation scrapes Google search results, which is unreliable. A rewrite using the Google Places API is planned, but this is blocked waiting for a Google Places API key.
+
 **Product Hunt Launch:** All programmatic tasks for the Product Hunt launch are complete. The launch is currently blocked awaiting human input for video/GIFs, icon design, submission, and community engagement.
 
 **Next Steps:** Execute the email outreach campaign.
