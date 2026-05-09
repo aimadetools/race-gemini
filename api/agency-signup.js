@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid';
 import trackEventHandler from './track.js'; // Import the event tracking handler
+const { logError } = require('../../lib/logger');
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
@@ -9,18 +10,21 @@ module.exports = async (req, res, kv) => {
 
         // Basic validation
         if (!agencyName || !website || !contactPerson || !contactEmail) {
+            await logError(new Error('Missing required fields.'), 'Agency Signup - Validation Error', 'agency_signup_error.log');
             return res.status(400).json({ message: 'Agency Name, Website, Contact Person, and Contact Email are required.' });
         }
 
         // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(contactEmail)) {
+            await logError(new Error(`Invalid contact email address: ${contactEmail}`), 'Agency Signup - Invalid Email', 'agency_signup_error.log');
             return res.status(400).json({ message: 'Please enter a valid contact email address.' });
         }
 
         // Basic URL validation
         const urlRegex = /^(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|[a-zA-Z0-9]+\.[^\s]{2,})$/i;
         if (!urlRegex.test(website)) {
+            await logError(new Error(`Invalid website URL: ${website}`), 'Agency Signup - Invalid URL', 'agency_signup_error.log');
             return res.status(400).json({ message: 'Please enter a valid website URL.' });
         }
 
@@ -60,7 +64,7 @@ module.exports = async (req, res, kv) => {
 
             res.status(200).json({ message: 'Inquiry submitted successfully. We will get back to you shortly.', inquiryId });
         } catch (error) {
-            console.error('Failed to store agency inquiry in Vercel KV:', error);
+            await logError(error, 'Agency Signup - KV Store Error', 'agency_signup_error.log');
             res.status(500).json({ message: 'Failed to submit inquiry due to a server error. Please try again later.' });
         }
 
