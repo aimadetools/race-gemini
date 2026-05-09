@@ -6,6 +6,7 @@ const archiver = require('archiver');
 const fs = require('fs');
 const path = require('path');
 const slugify = require('slugify');
+const { logError } = require('../../lib/logger'); // Import centralized logger
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -26,6 +27,7 @@ module.exports = async (req, res) => {
         const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle } = req.body;
 
         if (!businessName || !services || !towns || !zipCode) {
+            await logError(new Error('Missing required fields'), 'Generate API - Missing Fields', 'generate_error.log');
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
@@ -38,13 +40,17 @@ module.exports = async (req, res) => {
                 userId = decoded.userId;
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
+                    await logError(error, 'Generate API - Token Expired', 'generate_error.log');
                     return res.status(401).json({ message: 'Authorization failed: Token expired.' });
                 } else if (error.name === 'JsonWebTokenError') {
+                    await logError(error, 'Generate API - Invalid Token', 'generate_error.log');
                     return res.status(401).json({ message: 'Authorization failed: Invalid token.' });
                 }
+                await logError(error, 'Generate API - Token Verification Failed', 'generate_error.log');
                 return res.status(401).json({ message: 'Authorization failed: Please log in again.' });
             }
         } else {
+            await logError(new Error('Authorization token not provided'), 'Generate API - No Token', 'generate_error.log');
             return res.status(401).json({ message: 'Authorization required: No token provided.' });
         }
 
@@ -77,7 +83,8 @@ module.exports = async (req, res) => {
             try {
                 template = fs.readFileSync(templatePath, 'utf8');
             } catch (error) {
-                console.error('Error reading page template:', error);
+                console.error('Error reading page template:', error); // Keep console.error here for template loading
+                await logError(error, 'Generate API - Template Read Error', 'generate_error.log'); // Add centralized logging
                 return res.status(500).json({ message: 'Error loading page template.' });
             }
 
@@ -92,6 +99,24 @@ module.exports = async (req, res) => {
 
             archive.pipe(res);
 
+            // XSS mitigation for user-supplied data
+            const escapeHtml = (str) => {
+                if (typeof str !== 'string') return str;
+                return str.replace(/[&<>"']/g, function(match) {
+                    return {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#039;'
+                    }[match];
+                });
+            };
+
+            const escapedBusinessName = escapeHtml(businessName);
+            const escapedService = escapeHtml(service);
+            const escapedTown = escapeHtml(town);
+
             for (const town of townsArray) {
                 for (const service of servicesArray) {
                     const pageId = `page:${Date.now()}${Math.random()}`; // Unique ID for each page
@@ -102,27 +127,28 @@ module.exports = async (req, res) => {
                     let aiContent = '';
                     if (enableAICopy && geminiModel) {
                         try {
-                            const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${businessName}" that provides "${service}" in "${town}". Focus on why a customer should choose them.`;
+                            const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
                             const result = await geminiModel.generateContent(prompt);
                             const response = await result.response;
-                            aiContent = response.text();
+                            aiContent = escapeHtml(response.text()); // Escape AI generated content
                         } catch (aiError) {
                             console.error('Error generating AI content:', aiError);
-                            aiContent = '<p>AI copy generation failed. Please try again later or contact support.</p>';
+                            await logError(aiError, 'Generate API - AI Content Generation Error', 'generate_error.log'); // Add centralized logging
+                            aiContent = escapeHtml('<p>AI copy generation failed. Please try again later or contact support.</p>'); // Escape fallback
                         }
                     } else if (enableAICopy && !geminiModel) {
-                        aiContent = '<p>AI copy is unavailable due to missing API key. Contact support.</p>';
+                        aiContent = escapeHtml('<p>AI copy is unavailable due to missing API key. Contact support.</p>'); // Escape fallback
                     } else {
-                        aiContent = '<p>Contact us today for a free estimate!</p>';
+                        aiContent = escapeHtml('<p>Contact us today for a free estimate!</p>'); // Escape fallback
                     }
 
-                    const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${agency.logoUrl}" alt="${agency.agencyName} Logo" style="max-height: 50px;">` : businessName;
-                    const primaryColorValue = (agency && agency.primaryColor) ? agency.primaryColor : '#007bff';
+                    const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;">` : escapedBusinessName; // Escape agency data
+                    const primaryColorValue = (agency && agency.primaryColor) ? escapeHtml(agency.primaryColor) : '#007bff'; // Escape color if it can be user controlled
 
                     let pageContent = template
-                        .replace(/{{businessName}}/g, businessName)
-                        .replace(/{{service}}/g, service)
-                        .replace(/{{town}}/g, town)
+                        .replace(/{{businessName}}/g, escapedBusinessName)
+                        .replace(/{{service}}/g, escapedService)
+                        .replace(/{{town}}/g, escapedTown)
                         .replace(/{{agencyLogo}}/g, agencyLogoHtml)
                         .replace(/{{primaryColor}}/g, primaryColorValue)
                         .replace(/{{ai_content}}/g, aiContent)
@@ -137,14 +163,14 @@ module.exports = async (req, res) => {
 
                     // Store page metadata
                     await currentKv.set(pageId, JSON.stringify({
-                        businessName,
-                        service,
-                        town,
-                        zipCode,
+                        businessName: escapedBusinessName, // Store escaped values
+                        service: escapedService,
+                        town: escapedTown,
+                        zipCode, // Zip code is numeric, no escaping needed here
                         createdAt: new Date().toISOString(),
                         enableAICopy: enableAICopy || false,
                         aiStyle: aiStyle || null,
-                        userId: user.id // Link page to user
+                        userId: user.id
                     }));
                     await currentKv.sadd(`user:${userId}:pages`, pageId);
                 }
@@ -156,17 +182,8 @@ module.exports = async (req, res) => {
             archive.finalize();
 
         } catch (error) {
-            console.error('Error generating pages:', error);
-            // Log error to file for better debugging
-            const logDir = path.join(process.cwd(), 'logs');
-            if (!fs.existsSync(logDir)) {
-                fs.mkdirSync(logDir, { recursive: true });
-            }
-            const logFilePath = path.join(logDir, 'generate_error.log');
-            const timestamp = new Date().toISOString();
-            const errorMessage = `[${timestamp}] Error generating pages: ${error.message}\nStack: ${error.stack}\n\n`;
-            fs.appendFileSync(logFilePath, errorMessage);
-
+            console.error('Error generating pages:', error); // Keep console.error for general unexpected error
+            await logError(error, 'Generate API - General Error', 'generate_error.log'); // Add centralized logging
             return res.status(500).json({ message: 'Error generating pages' });
         }
 
