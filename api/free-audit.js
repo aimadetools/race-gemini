@@ -50,11 +50,6 @@ module.exports = async (req, res) => {
         return res.status(503).json({ message: 'Geocoding service is unavailable: OPENCAGE_API_KEY is not configured.' });
     }
 
-    if (!geoapifyApiKey || geoapifyApiKey === 'your_geoapify_api_key') {
-        await logError(new Error('Geoapify API key is not set or is a placeholder.'), 'Free Audit - Missing Geoapify API Key', 'free_audit_error.log');
-        return res.status(503).json({ message: 'Nearby places service is unavailable: GEOAPIFY_API_KEY is not configured.' });
-    }
-
     if (!url) {
         await logError(new Error('URL is required.'), 'Free Audit - Missing URL', 'free_audit_error.log');
         return res.status(400).json({ message: 'URL is required.' });
@@ -86,11 +81,13 @@ module.exports = async (req, res) => {
             const { lat, lng } = geocodingData.results[0].geometry;
             const city = geocodingData.results[0].components.city || geocodingData.results[0].components.town || geocodingData.results[0].components.village;
 
-            const nearbyPlacesUrl = `https://api.geoapify.com/v2/places?categories=populated_place&filter=circle:${lng},${lat},50000&limit=5&apiKey=${geoapifyApiKey}`;
-            const nearbyPlacesResponse = await fetch(nearbyPlacesUrl);
-            const nearbyPlacesData = await nearbyPlacesResponse.json();
-            
-            const missedOpportunities = nearbyPlacesData.features.map(place => place.properties.name);
+            let missedOpportunities = [];
+            if (geoapifyApiKey && geoapifyApiKey !== 'your_geoapify_api_key') {
+                const nearbyPlacesUrl = `https://api.geoapify.com/v2/places?categories=populated_place&filter=circle:${lng},${lat},50000&limit=5&apiKey=${geoapifyApiKey}`;
+                const nearbyPlacesResponse = await fetch(nearbyPlacesUrl);
+                const nearbyPlacesData = await nearbyPlacesResponse.json();
+                missedOpportunities = nearbyPlacesData.features.map(place => place.properties.name);
+            }
             
             const foundPages = city ? [`plumbers-in-${city.toLowerCase().replace(/ /g, '-')}`] : [];
 
