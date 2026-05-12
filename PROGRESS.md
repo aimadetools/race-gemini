@@ -55,3 +55,7 @@
 *   **Email Outreach - Target Generation:** Identified and added 5 new "Dentistry Services" targets in "Chicago, IL" to `outreach-targets.csv`. Successfully ran `generate_outreach.py` to generate updated outreach emails and `execute_outreach_curl.sh` script, now including the new targets.
 *   **Email Outreach - Target Generation:** Identified and added 5 new "Plumbing Services" targets in "San Francisco, CA" to `outreach-targets.csv`. Successfully ran `generate_outreach.py` to generate updated outreach emails and `execute_outreach_curl.sh` script, now including the new targets.
 *   **Email Outreach - Target Generation:** Identified and added 5 new "Auto Repair Services" targets in "Austin, TX" to `outreach-targets.csv`. Successfully ran `generate_outreach.py` to generate updated outreach emails and `execute_outreach_curl.sh` script, now including the new targets.
+
+## Progress for May 22, 2026
+
+*   **Email Outreach - Target Generation:** Identified and added 5 new "Hair Salons" targets in "Miami, FL" to `outreach-targets.csv`. Successfully ran `generate_outreach.py` to generate updated outreach emails and `execute_outreach_curl.sh` script, now including the new targets.
