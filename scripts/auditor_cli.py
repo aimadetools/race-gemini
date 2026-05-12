@@ -86,9 +86,8 @@ def main():
     page_load_times_parser.set_defaults(func=run_page_load_times_audit)
 
     # Google Business Profile Audit
-    gmb_parser = subparsers.add_parser('gmb', help='Checks for the presence of a Google Business Profile for a given URL')
+    gmb_parser = subparsers.add_parser('gmb', help='Attempts to check for the presence of a Google Business Profile for a given URL via scraping. This method is not fully reliable.')
     gmb_parser.add_argument('target', help='The URL of the business website to audit')
-    gmb_parser.add_argument('--google-api-key', help='Google Places API key to use for the audit')
     gmb_parser.set_defaults(func=run_google_business_profile_audit)
 
     # Locations Audit
@@ -150,8 +149,7 @@ def run_h2_h3_tags_audit(args):
 def run_google_business_profile_audit(args):
     try:
         target_type = _determine_target_type(args.target)
-        kwargs = {'google_api_key': args.google_api_key} if args.google_api_key else {}
-        results = google_business_profile_audit(args.target, target_type=target_type, **kwargs)
+        results = google_business_profile_audit(args.target, target_type=target_type)
         print(json.dumps(results, indent=2))
     except Exception as e:
         print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))

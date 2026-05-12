@@ -43,7 +43,6 @@ function parseAddress(html) {
 module.exports = async (req, res) => {
     const { url } = req.query;
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
-    const geoapifyApiKey = process.env.GEOAPIFY_API_KEY;
 
     if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
         await logError(new Error('OpenCage API key is not set or is a placeholder.'), 'Free Audit - Missing OpenCage API Key', 'free_audit_error.log');
@@ -81,13 +80,7 @@ module.exports = async (req, res) => {
             const { lat, lng } = geocodingData.results[0].geometry;
             const city = geocodingData.results[0].components.city || geocodingData.results[0].components.town || geocodingData.results[0].components.village;
 
-            let missedOpportunities = [];
-            if (geoapifyApiKey && geoapifyApiKey !== 'your_geoapify_api_key') {
-                const nearbyPlacesUrl = `https://api.geoapify.com/v2/places?categories=populated_place&filter=circle:${lng},${lat},50000&limit=5&apiKey=${geoapifyApiKey}`;
-                const nearbyPlacesResponse = await fetch(nearbyPlacesUrl);
-                const nearbyPlacesData = await nearbyPlacesResponse.json();
-                missedOpportunities = nearbyPlacesData.features.map(place => place.properties.name);
-            }
+            const missedOpportunities = [];
             
             const foundPages = city ? [`plumbers-in-${city.toLowerCase().replace(/ /g, '-')}`] : [];
 

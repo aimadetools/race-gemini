@@ -97,16 +97,9 @@ def check_google_business_profile(business_name):
         }
 
 # Main audit function for integration with auditor_cli.py
-def audit(target, target_type, google_api_key=None):
+def audit(target, target_type):
     issues = []
     business_name = get_business_name(target)
-
-    if google_api_key:
-        issues.append({
-            "type": "API_KEY_IGNORED",
-            "message": "GOOGLE_PLACES_API_KEY was provided but the Google Places API functionality is not implemented. Falling back to scraping.",
-            "source": target
-        })
 
     result = check_google_business_profile(business_name)
     if 'issues' not in result:
