@@ -49,12 +49,16 @@ def audit(target_content, target_type='html_content', **kwargs):
         soup = BeautifulSoup(html_content, 'html.parser')
         h1_tags = soup.find_all('h1')
 
+        H1_MIN_LENGTH = 10
+        H1_MAX_LENGTH = 70
+
         if len(h1_tags) > 1:
             issues.append({
                 "type": "Multiple H1 Tags",
                 "description": f"Found {len(h1_tags)} H1 tags. It is generally recommended to have only one H1 tag per page for SEO.",
                 "source": source_identifier,
-                "h1_content": [h1.get_text(strip=True) for h1 in h1_tags]
+                "h1_content": [h1.get_text(strip=True) for h1 in h1_tags],
+                "h1_html": [str(h1) for h1 in h1_tags]
             })
         elif len(h1_tags) == 0:
             issues.append({
@@ -62,6 +66,27 @@ def audit(target_content, target_type='html_content', **kwargs):
                 "description": "No H1 tag found. An H1 tag is crucial for SEO to signal the main heading of the page.",
                 "source": source_identifier
             })
+        else: # Exactly one H1 tag found
+            h1_tag = h1_tags[0]
+            h1_text = h1_tag.get_text(strip=True)
+            h1_length = len(h1_text)
+
+            if h1_length < H1_MIN_LENGTH:
+                issues.append({
+                    "type": "H1 Tag Too Short",
+                    "description": f"H1 tag is too short ({h1_length} characters). It should be between {H1_MIN_LENGTH} and {H1_MAX_LENGTH} characters for optimal SEO.",
+                    "source": source_identifier,
+                    "h1_content": h1_text,
+                    "h1_html": str(h1_tag)
+                })
+            elif h1_length > H1_MAX_LENGTH:
+                issues.append({
+                    "type": "H1 Tag Too Long",
+                    "description": f"H1 tag is too long ({h1_length} characters). It should be between {H1_MIN_LENGTH} and {H1_MAX_LENGTH} characters for optimal SEO.",
+                    "source": source_identifier,
+                    "h1_content": h1_text,
+                    "h1_html": str(h1_tag)
+                })
         
     except requests.exceptions.RequestException as e:
         issues.append({

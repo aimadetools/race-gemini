@@ -1,61 +1,32 @@
-// api/track-email-open.js
-import { connectToDatabase } from '../lib/db';
+const { logInfo, logError } = require('../../lib/logger');
 
-export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).send('Method Not Allowed');
-  }
+// 1x1 transparent GIF (base64 encoded)
+const GIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 
-  const { emailId } = req.query;
-
-  if (!emailId) {
-    // Return a 1x1 transparent GIF even if emailId is missing,
-    // to avoid broken image icons in emails.
-    const transparentGif = Buffer.from(
-      'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-      'base64'
-    );
-    res.setHeader('Content-Type', 'image/gif');
-    res.setHeader('Content-Length', transparentGif.length);
-    return res.send(transparentGif);
-  }
-
-  let client;
+module.exports = async (req, res) => {
   try {
-    const pool = await connectToDatabase();
-    client = await pool.connect();
+    const { id } = req.query;
 
-    const query = `
-      INSERT INTO user_events(event_name, event_data)
-      VALUES($1, $2)
-      RETURNING *;
-    `;
-    const values = ['email_open', { emailId }];
+    if (id) {
+      await logInfo(`Email opened: ${id}`, 'track-email-open');
+      // In a real application, you would store this `id` in a database
+      // along with a timestamp and possibly IP address, user agent, etc.
+    } else {
+      await logInfo('Tracking pixel hit without an ID.', 'track-email-open');
+    }
 
-    await client.query(query, values);
-
-    // Send back a 1x1 transparent GIF
-    const transparentGif = Buffer.from(
-      'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-      'base64'
-    );
+    // Set headers to prevent caching
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.setHeader('Content-Type', 'image/gif');
-    res.setHeader('Content-Length', transparentGif.length);
-    return res.send(transparentGif);
+
+    // Send the transparent GIF
+    res.status(200).send(Buffer.from(GIF, 'base64'));
 
   } catch (error) {
-    console.error('Error tracking email open:', error);
-    // Even on error, send a transparent GIF to avoid broken image display
-    const transparentGif = Buffer.from(
-      'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-      'base64'
-    );
+    await logError(error, 'Error in track-email-open.js');
     res.setHeader('Content-Type', 'image/gif');
-    res.setHeader('Content-Length', transparentGif.length);
-    return res.send(transparentGif);
-  } finally {
-    if (client) {
-      client.release();
-    }
+    res.status(500).send(Buffer.from(GIF, 'base64')); // Still send a GIF even on error
   }
-}
+};

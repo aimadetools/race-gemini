@@ -20,13 +20,8 @@
    <nav>
     <div class="container">
      <a class="logo" href="/">
-      <div class="pin">
-      </div>
-      <span>
-       LocalLeads
-      </span>
-     </a>
-     <div aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+         <img src="images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+     </a>     <div aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
       <div class="bar">
       </div>
       <div class="bar">
@@ -102,6 +97,12 @@
       <input id="business-type" name="business-type" placeholder="e.g., Plumber, Electrician" required="" type="text"/>
      </div>
      <div class="form-group">
+      <label for="service-list">
+       Services (comma-separated):
+      </label>
+      <textarea id="service-list" name="service-list" placeholder="e.g., Drain Cleaning, Water Heater Repair, Leak Detection" rows="3"></textarea>
+     </div>
+     <div class="form-group">
       <label for="city-list">
        Cities (comma-separated):
       </label>
@@ -125,9 +126,39 @@
       </label>
       <input id="primary-color" name="primary-color" type="color" value="#007bff"/>
      </div>
-     <button type="submit">
+
+     <!-- New fields for LocalBusiness Schema -->
+     <div class="form-group">
+      <label for="telephone">
+       Telephone Number:
+      </label>
+      <input id="telephone" name="telephone" placeholder="e.g., +1-555-123-4567" type="tel"/>
+     </div>
+     <div class="form-group">
+      <label for="price-range">
+       Price Range:
+      </label>
+      <input id="price-range" name="price-range" placeholder="e.g., $, $$, $$$" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="opening-hours">
+       Opening Hours (e.g., Mo-Fr 09:00-17:00):
+      </label>
+      <input id="opening-hours" name="opening-hours" placeholder="e.g., Mo-Fr 09:00-17:00" type="text"/>
+     </div>
+     <!-- End new fields -->
+
+     <button id="generate-pages-button" type="submit">
       Generate Pages
      </button>
+     <button class="button button-secondary" id="reset-form-button" type="reset">
+      Reset Form
+     </button>
+     <div id="loading-spinner" style="display:none; margin-top: 10px;">
+      <i class="fas fa-spinner fa-spin">
+      </i>
+      Generating pages...
+     </div>
     </form>
    </section>
    <section id="generated-pages-output" style="display: none;">

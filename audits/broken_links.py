@@ -1,13 +1,14 @@
 
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import os
 
-def audit(file_paths):
+def audit(file_paths, base_url, project_root):
     """
-    Finds all unique external links in a list of HTML files and checks their status.
-    Returns a dictionary with 'broken_links' and 'file_processing_errors'.
+    Finds all unique external and internal links in a list of HTML files and checks their status.
+    `base_url` is the base URL of the deployed site (e.g., "https://www.localseogen.com").
+    `project_root` is the absolute path to the project's root directory (e.g., "/home/race/race-gemini").
     """
     links_to_check = set()
     file_processing_errors = []
@@ -17,15 +18,31 @@ def audit(file_paths):
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             soup = BeautifulSoup(content, 'html.parser')
+
+            # Calculate the relative URL path for the current local file
+            # This allows resolving relative links correctly against the file's deployed URL
+            relative_file_path = os.path.relpath(file_path, project_root)
+            # Ensure URL path uses forward slashes, especially on Windows
+            relative_file_path = relative_file_path.replace(os.sep, '/')
+            current_page_url = urljoin(base_url, relative_file_path)
+
             for a_tag in soup.find_all('a', href=True):
                 link = a_tag['href']
                 parsed_link = urlparse(link)
-                # Check for external links (with scheme and netloc, or just netloc assuming https)
-                if parsed_link.scheme and parsed_link.netloc:
-                    links_to_check.add(link)
-                elif not parsed_link.scheme and parsed_link.netloc: # e.g., //example.com/path
-                    links_to_check.add(f"https:{link}")
-                # TODO: Implement internal link checking for relative paths
+
+                if parsed_link.scheme or parsed_link.netloc: # Absolute or protocol-relative external link
+                    if not parsed_link.scheme and parsed_link.netloc: # e.g., //example.com/path
+                        links_to_check.add(f"https:{link}")
+                    else:
+                        links_to_check.add(link)
+                elif link.startswith('#'): # Anchor link on the same page, ignore
+                    continue
+                else: # Internal relative link (root-relative or path-relative)
+                    full_internal_url = urljoin(current_page_url, link)
+                    # Ensure it's still within the same domain
+                    if urlparse(full_internal_url).netloc == urlparse(base_url).netloc:
+                        links_to_check.add(full_internal_url)
+
         except Exception as e:
             file_processing_errors.append({
                 "file": file_path,

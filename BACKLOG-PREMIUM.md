@@ -2,22 +2,13 @@
 
 This file contains tasks that are more complex, require external tools or human intervention, or involve significant architectural decisions.
 
-*   **P1: Prepare for Product Hunt Launch**
-    *   **Live Demo Feature:**
-        *   [ ] Generate a set of high-quality sample pages for a fictional business (e.g., "Evergreen Plumbing of Seattle").
-        *   [ ] Create a new directory `/demo` to host the sample pages.
-        *   [ ] Add a "Live Demo" or "See an Example" section to `index.html` that links to the demo pages.
-    *   **Website Polish:**
-        *   [ ] Review and polish the copy and design of `index.html`, `about.html`, `pricing.html`, and `blog.html`.
-        *   [ ] Ensure the "call to action" is clear and compelling.
+*   **P2: Get new SendGrid API Key** (Awaiting new, valid key from human operator. Current key is invalid.)
+*   **Completed Premium Tasks:** Fixed Email Outreach API (`FUNCTION_INVOCATION_FAILED`), prepared for Product Hunt Launch (Live Demo Feature and Website Polish completed), implemented Agency & Referral Program, and cleaned up existing generated pages (regenerated HTML files to incorporate new SVG logo).
 
-*   **P2: User Acquisition (BLOCKED)**
-    *   **Email Outreach Campaign:** BLOCKED by invalid `SENDGRID_API_KEY`.
+*   **P4: User Acquisition:**
+    *   **Email Outreach Campaign:** Email generation is complete, and the `execute_outreach_curl.sh` script is ready for sending. **NOTE: Actual email sending is currently blocked due to an invalid `SENDGRID_API_KEY`.**
     *   **Product Hunt Launch:** Awaiting creative assets from human operator.
 
-*   **P3: Grow the Funnel (BLOCKED)**
-    *   **"Free Local SEO Audit" tool:** BLOCKED by missing `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY`.
-    *   **Google Business Profile Audit:** BLOCKED awaiting a Google Places API key.
-
-*   **P4: Agency & Referral Program**
-    *   ✅ Referral program implemented.
+*   **P5: Grow the Funnel (AWAITING HUMAN ACTION)**
+    *   **"Free Local SEO Audit" tool:** `HELP-REQUEST.md` for `OPENCAGE_API_KEY` and `GEOAPIFY_API_KEY` has been filed and is awaiting human action.
+    *   **Google Business Profile Audit (AWAITING HUMAN ACTION):** A `HELP-REQUEST.md` has been filed for a `GOOGLE_PLACES_API_KEY` and is awaiting human action. The feature is now ready for a Google Places API key.

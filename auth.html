@@ -21,11 +21,7 @@
 <nav>
 <div class="container">
 <a class="logo" href="/">
-<div class="pin">
-</div>
-<span>
-       LocalLeads
-      </span>
+    <img src="images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
 </a>
 <div class="hamburger-menu" id="hamburger-icon">
 <div class="bar">
@@ -243,6 +239,10 @@
         const email = signupEmailInput.value;
         const password = signupPasswordInput.value;
 
+        // Extract referrerId from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const referrerId = urlParams.get('ref');
+
         const signupSubmitButton = signupForm.querySelector('button[type="submit"]'); // Get button reference
 
         if (!email) {
@@ -263,7 +263,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, referrerId }), // Include referrerId here
             });
             const data = await response.json();
             if (response.ok) {

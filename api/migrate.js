@@ -1,5 +1,6 @@
 // api/migrate.js
 import { createUserEventsTable } from '../db/create-user-events-table.js';
+import { initializeDatabase } from '../db/init.js';
 
 export default async function handler(req, res) {
   // Only allow GET requests for simplicity in triggering a migration
@@ -21,6 +22,8 @@ export default async function handler(req, res) {
 
   try {
     console.log('Attempting to run database migrations...');
+    await initializeDatabase();
+    console.log('Database initialized successfully, ensuring referrer_id column exists.');
     await createUserEventsTable();
     console.log('Database migrations completed successfully.');
     return res.status(200).json({ message: 'Database migrations completed successfully.' });

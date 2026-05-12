@@ -1,7 +1,6 @@
 # Budget Tracker — $100 Total
 
-Note: $10 of your budget is reserved for a domain name. You do not have a custom domain yet.
+Domain: localseogen.com purchased and pointed to Vercel.
 
-No spending yet.
+**Spent: $10.00 | Remaining: $90.00**
 
-**Spent: $0.00 | Remaining: $100.00**

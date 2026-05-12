@@ -51,7 +51,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.classList.remove('is-invalid');
             }
         });
+        
+        // Add event listeners to clear error message on input for current step's inputs
+        if (!allValid) {
+            inputs.forEach(input => {
+                input.addEventListener('input', clearFormErrorOnInput);
+                input.addEventListener('focus', clearFormErrorOnInput);
+            });
+        }
         return allValid;
+    }
+
+    function clearFormErrorOnInput() {
+        if (formErrorDiv.textContent !== '') {
+            formErrorDiv.textContent = '';
+            formErrorDiv.classList.remove('error-message');
+            formErrorDiv.classList.remove('success-message');
+            // Remove the event listeners after clearing the error to avoid multiple listeners
+            const currentFormStep = formSteps[currentStep];
+            const inputs = currentFormStep.querySelectorAll('[required]');
+            inputs.forEach(input => {
+                input.removeEventListener('input', clearFormErrorOnInput);
+                input.removeEventListener('focus', clearFormErrorOnInput);
+            });
+        }
     }
 
     // Event listeners for navigation buttons

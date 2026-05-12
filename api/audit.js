@@ -2,10 +2,14 @@ const { spawn } = require('child_process');
 const path = require('path');
 const { logError } = require('../../lib/logger');
 
-const runPythonScript = (scriptName, args, pythonExecutable) => {
+const runAudit = (auditCommand, args) => {
     return new Promise((resolve, reject) => {
-        const scriptPath = path.resolve(process.cwd(), scriptName);
-        const pythonProcess = spawn(pythonExecutable, [scriptPath, ...args]);
+        const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
+        const auditorCliPath = path.resolve(process.cwd(), 'scripts', 'auditor_cli.py');
+        
+        const processArgs = [auditorCliPath, ...auditCommand.split(' '), ...args];
+
+        const pythonProcess = spawn(pythonExecutable, processArgs);
 
         let stdout = '';
         let stderr = '';
@@ -20,10 +24,10 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
 
         pythonProcess.on('close', (code) => {
             if (code !== 0) {
-                await logError(new Error(`Python script ${scriptName} exited with code ${code}. Stderr: ${stderr}`), `Audit API - Python Script Exit Code ${code}`, 'audit_error.log');
+                logError(new Error(`Auditor CLI exited with code ${code} for command '${auditCommand}'. Stderr: ${stderr}`), `Audit API - Auditor CLI Exit Code ${code}`, 'audit_error.log');
                 return reject({
-                    script: scriptName,
-                    message: `Error executing script: ${scriptName}`,
+                    audit: auditCommand,
+                    message: `Error executing audit: ${auditCommand}`,
                     error: stderr
                 });
             }
@@ -32,27 +36,25 @@ const runPythonScript = (scriptName, args, pythonExecutable) => {
                 const results = JSON.parse(stdout);
                 resolve(results);
             } catch (error) {
-                await logError(new Error(`Error parsing JSON from ${scriptName}. Stdout: ${stdout}. Error: ${error.message}`), `Audit API - Python JSON Parse Error`, 'audit_error.log');
+                logError(new Error(`Error parsing JSON from auditor_cli.py for command '${auditCommand}'. Stdout: ${stdout}. Error: ${error.message}`), `Audit API - Auditor CLI JSON Parse Error`, 'audit_error.log');
                 reject({
-                    script: scriptName,
-                    message: `Error parsing results from ${scriptName}`,
+                    audit: auditCommand,
+                    message: `Error parsing results from audit: ${auditCommand}`,
                     error: stdout
                 });
             }
         });
 
-        pythonProcess.on('error', async (err) => {
-            await logError(err, `Audit API - Python Process Start Failed for ${scriptName}`, 'audit_error.log');
+        pythonProcess.on('error', (err) => {
+            logError(err, `Audit API - Auditor CLI Process Start Failed for ${auditCommand}`, 'audit_error.log');
             reject({
-                script: scriptName,
-                message: `Failed to start process for ${scriptName}`,
+                audit: auditCommand,
+                message: `Failed to start process for audit: ${auditCommand}`,
                 error: err.message
             });
         });
     });
 };
-
-const audits = require('../lib/audits');
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
@@ -61,38 +63,51 @@ module.exports = async (req, res) => {
 
     const { url, locations } = req.body;
 
-    if (!url || !locations || !Array.isArray(locations) || locations.length === 0) {
-        await logError(new Error('URL and a list of locations are required.'), 'Audit API - Validation Error', 'audit_error.log');
-        return res.status(400).json({ message: 'URL and a list of locations are required.' });
+    if (!url) {
+        return res.status(400).json({ message: 'URL is required.' });
     }
 
     try {
         new URL(url);
     } catch (error) {
-        await logError(new Error(`Invalid URL format: ${url}`), 'Audit API - Invalid URL Format', 'audit_error.log');
         return res.status(400).json({ message: 'Invalid URL format.' });
     }
 
-    const pythonExecutable = path.resolve(process.cwd(), 'venv', 'bin', 'python');
+    const auditsToRun = [
+        { name: 'alt-attributes', command: 'html alt-attributes', args: [url] },
+        { name: 'h1-tags', command: 'html h1-tags', args: [url] },
+        { name: 'broken-links', command: 'html broken-links', args: [url] },
+        { name: 'h2-h3-tags', command: 'html h2-h3-tags', args: [url] },
+        { name: 'mobile-friendliness', command: 'html mobile-friendliness', args: [url] },
+        { name: 'structured-data', command: 'html structured-data', args: [url] },
+        { name: 'readability', command: 'html readability', args: [url] },
+        { name: 'page-load-times', command: 'html page-load-times', args: [url] },
+        { name: 'gmb', command: 'gmb', args: [url] },
+    ];
+    
+    if (locations && Array.isArray(locations) && locations.length > 0) {
+        auditsToRun.push({ name: 'locations', command: 'locations', args: [url, '--locations-db', locations.join(',')] });
+    }
 
     try {
-        const auditPromises = audits.map(audit => {
-            const args = audit.args(url, locations);
-            return runPythonScript(audit.script, args, pythonExecutable);
-        });
-
+        const auditPromises = auditsToRun.map(audit => runAudit(audit.command, audit.args));
         const results = await Promise.allSettled(auditPromises);
 
         const auditResults = results.reduce((acc, result, index) => {
-            const auditName = audits[index].name;
-            acc[auditName] = result.status === 'fulfilled' ? result.value : { error: result.reason };
+            const auditName = auditsToRun[index].name;
+            if (result.status === 'fulfilled') {
+                acc[auditName] = result.value;
+            } else {
+                acc[auditName] = { error: result.reason };
+                logError(new Error(`Audit '${auditName}' failed. Reason: ${JSON.stringify(result.reason)}`), `Audit API - Audit Failure`, 'audit_error.log');
+            }
             return acc;
         }, {});
 
         res.status(200).json(auditResults);
 
     } catch (error) {
-        await logError(error, 'Audit API - General Error', 'audit_error.log');
+        logError(error, 'Audit API - General Error', 'audit_error.log');
         return res.status(500).json({
             message: 'An unexpected error occurred during the audit process.',
             error: error.message

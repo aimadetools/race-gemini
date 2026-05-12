@@ -7,9 +7,9 @@ from bs4 import BeautifulSoup
 import textstat
 import argparse
 
-def audit_readability(html_content, target="N/A"):
+def _audit_readability(html_content, source_identifier="N/A"):
     results = {
-        "target": target,
+        "target": source_identifier,
         "flesch_reading_ease": None,
         "flesch_kincaid_grade": None,
         "issues": []
@@ -35,50 +35,95 @@ def audit_readability(html_content, target="N/A"):
                 results["flesch_kincaid_grade"] = textstat.flesch_kincaid_grade(text)
             else:
                 results["issues"].append({
-                    "type": "No Readable Text Found",
-                    "description": f"Could not extract sufficient readable text from {target} for readability audit."
+                    "type": "WARNING",
+                    "message": f"Could not extract sufficient readable text from {source_identifier} for readability audit."
                 })
         else:
             results["issues"].append({
-                "type": "No Main Content Container Found",
-                "description": f"Could not find a main content container (e.g., <div class='blog-content'> or <article>) in {target} to audit readability."
+                "type": "WARNING",
+                "message": f"Could not find a main content container (e.g., <div class='blog-content'> or <article>) in {source_identifier} to audit readability."
             })
         
     except Exception as e:
         results["issues"].append({
-            "type": "Processing Error",
-            "description": f"An unexpected error occurred while processing {target}: {e}"
+            "type": "ERROR",
+            "message": f"An unexpected error occurred while processing {source_identifier}: {e}"
         })
     
-    return results
+    return {"audit_type": "readability", "results": results, "issues": results["issues"]}
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Audit readability (Flesch-Kincaid) of an HTML file or URL.')
-    parser.add_argument('target', type=str, help='Path to an HTML file or a URL to audit.')
-    args = parser.parse_args()
-    
+
+def audit(target_content, target_type='html_content', **kwargs):
+    """
+    Performs readability audit on the given target content.
+
+    Args:
+        target_content: The content to audit. Can be an HTML string, a file path, or a URL.
+        target_type (str): Specifies the type of target_content ('html_content', 'file_path', or 'url').
+        **kwargs: Additional options.
+
+    Returns:
+        dict: Standardized audit results including 'audit_type', 'results', and 'issues'.
+    """
     html_content = ""
-    
-    # Check if the target is a URL
-    if args.target.startswith('http://') or args.target.startswith('https://'):
-        try:
-            response = requests.get(args.target, timeout=10)
+    source_identifier = kwargs.get('source_identifier', target_content)
+
+    try:
+        if target_type == 'html_content':
+            html_content = target_content
+        elif target_type == 'file_path':
+            with open(target_content, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+        elif target_type == 'url':
+            response = requests.get(target_content, timeout=10)
             response.raise_for_status()
             html_content = response.text
-        except requests.exceptions.RequestException as e:
-            print(json.dumps({"error": f"Failed to fetch URL: {e}"}, indent=2))
-            sys.exit(1)
-    else:
-        # Assume it's a local file path
-        try:
-            with open(args.target, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-        except FileNotFoundError:
-            print(json.dumps({"error": f"File not found: {args.target}"}, indent=2))
-            sys.exit(1)
-        except Exception as e:
-            print(json.dumps({"error": f"An unexpected error occurred while reading {args.target}: {e}"}, indent=2))
-            sys.exit(1)
+        else:
+            return {
+                "audit_type": "readability",
+                "issues": [{
+                    "type": "ERROR",
+                    "message": f"Unsupported target_type: {target_type}",
+                    "source": source_identifier
+                }]
+            }
 
-    result = audit_readability(html_content, args.target)
-    print(json.dumps(result, indent=2))
+        if not html_content:
+            return {
+                "audit_type": "readability",
+                "issues": [{
+                    "type": "ERROR",
+                    "message": "No HTML content provided or fetched for audit.",
+                    "source": source_identifier
+                }]
+            }
+            
+        return _audit_readability(html_content, source_identifier)
+
+    except requests.exceptions.RequestException as e:
+        return {
+            "audit_type": "readability",
+            "issues": [{
+                "type": "ERROR",
+                "message": f"Failed to fetch URL {source_identifier}: {e}",
+                "source": source_identifier
+            }]
+        }
+    except IOError as e:
+        return {
+            "audit_type": "readability",
+            "issues": [{
+                "type": "ERROR",
+                "message": f"Failed to read file {source_identifier}: {e}",
+                "source": source_identifier
+            }]
+        }
+    except Exception as e:
+        return {
+            "audit_type": "readability",
+            "issues": [{
+                "type": "ERROR",
+                "message": f"An unexpected error occurred during content acquisition: {e}",
+                "source": source_identifier
+            }]
+        }

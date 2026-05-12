@@ -14,7 +14,17 @@ __pycache__/
 db_credentials.txt
 image_conversion.log
 database.sql
+.venv/
+case-studies/
+execute_outreach_curl.sh
 
 # Build artifacts
 dist/
 build/
+
+# Temporary and Cache files
+*.log
+.gemini/
+scripts/__pycache__/
+generated-seo-pages/
+.venv/

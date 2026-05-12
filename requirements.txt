@@ -6,3 +6,5 @@ lxml
 sendgrid
 requests-html
 textstat
+playwright
+markdown

@@ -7,7 +7,7 @@ import { logError } from '../../lib/logger'; // Import centralized logger
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password } = req.body;
+    const { email, password, referrerId } = req.body;
 
     if (!email || !password) {
       await logError(new Error('Email and password are required.'), 'Validation Error', 'signup_error.log');
@@ -26,8 +26,8 @@ export default async function handler(req, res) {
 
       // Store user in PostgreSQL
       const result = await query(
-        'INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id',
-        [email, hashedPassword, 50] // Initial credits set to 50
+        'INSERT INTO users (email, hashed_password, credits, referrer_id) VALUES ($1, $2, $3, $4) RETURNING id',
+        [email, hashedPassword, 50, referrerId] // Initial credits set to 50
       );
       const userId = result.rows[0].id;
 

@@ -42,13 +42,13 @@ def audit(target, target_type):
             if not h2.get_text(strip=True):
                 results["issues"].append({
                     "type": "Empty H2 Tag",
-                    "description": f"Found an empty H2 tag in {filepath_or_url}. H2 tags should contain descriptive content."
+                    "description": f"Found an empty H2 tag in {filepath_or_url}. H2 tags should contain descriptive content. Tag HTML: {str(h2)}"
                 })
         for h3 in h3_tags:
             if not h3.get_text(strip=True):
                 results["issues"].append({
                     "type": "Empty H3 Tag",
-                    "description": f"Found an empty H3 tag in {filepath_or_url}. H3 tags should contain descriptive content."
+                    "description": f"Found an empty H3 tag in {filepath_or_url}. H3 tags should contain descriptive content. Tag HTML: {str(h3)}"
                 })
 
         # Check for H3 before H2 (improper hierarchy)
@@ -59,9 +59,26 @@ def audit(target, target_type):
             elif tag.name == 'h3' and not found_h2:
                 results["issues"].append({
                     "type": "H3 Before H2",
-                    "description": f"Found an H3 tag before any H2 tag in {filepath_or_url}. Headings should follow a proper hierarchical structure (H1 -> H2 -> H3)."
+                    "description": f"Found an H3 tag before any H2 tag in {filepath_or_url}. Headings should follow a proper hierarchical structure (H1 -> H2 -> H3). Problematic H3: {str(tag)}"
                 })
                 break # Only report once per file
+
+        # Check for absence of H2 or H3 tags
+        if not h2_tags and not h3_tags:
+            results["issues"].append({
+                "type": "No H2 or H3 Tags Found",
+                "description": f"No H2 or H3 heading tags were found in {filepath_or_url}. Consider adding H2 and H3 tags to improve content structure and readability."
+            })
+        elif not h2_tags:
+            results["issues"].append({
+                "type": "No H2 Tags Found",
+                "description": f"No H2 heading tags were found in {filepath_or_url}. Consider adding H2 tags to improve content structure and readability."
+            })
+        elif not h3_tags:
+            results["issues"].append({
+                "type": "No H3 Tags Found",
+                "description": f"No H3 heading tags were found in {filepath_or_url}. Consider adding H3 tags to improve content structure and readability."
+            })
 
     except requests.exceptions.RequestException as e:
         results["issues"].append({

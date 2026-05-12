@@ -18,9 +18,87 @@ if (geminiApiKey) {
     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
 }
 
+// Helper function to generate LocalBusiness schema
+function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
+    const schema = {
+        "@context": "http://schema.org",
+        "@type": "LocalBusiness",
+        "name": businessName,
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": town,
+            // You might want to add more specific address details here if available
+        },
+        "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ' ' + town)}`,
+        "url": `https://www.localleads.pro/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
+        "telephone": telephone || "", // Use provided telephone or default to empty string
+        "priceRange": priceRange || "", // Use provided priceRange or default to empty string
+        "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [ // Use provided openingHours if available, otherwise default
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "17:00"
+            }
+        ],
+        "servesCuisine": service, // Using service as servesCuisine for now, can be more specific
+        "description": `Expert ${service} services in ${town} by ${businessName}.`,
+        "image": "https://www.localleads.pro/images/logo.svg", // Placeholder: use actual business logo
+        "areaServed": {
+            "@type": "State", // Could be more specific like City, if needed
+            "name": town
+        }
+    };
+    return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
+}
+
+// Helper function to parse opening hours string (e.g., "Mo-Fr 09:00-17:00")
+function parseOpeningHours(openingHoursString) {
+    const defaultHours = { opens: "09:00", closes: "17:00" };
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    
+    // Basic regex to match common patterns like "Mo-Fr 09:00-17:00", "09:00-17:00", "Mon-Fri 9AM-5PM"
+    const timeMatch = openingHoursString.match(/(\d{1,2}:\d{2})-(\d{1,2}:\d{2})/);
+    let opens = timeMatch ? timeMatch[1] : defaultHours.opens;
+    let closes = timeMatch ? timeMatch[2] : defaultHours.closes;
+
+    // Further refinement could involve parsing specific day ranges like "Mo-We", "Th-Fr"
+    // For simplicity, for now, we'll assume it applies to all standard days if provided.
+    // If more complex parsing is needed, a dedicated library or more extensive regex would be required.
+    
+    // Convert 12-hour format (e.g., 9AM) to 24-hour if present (basic attempt)
+    const ampmMatchOpens = opens.match(/(\d+)(AM|PM)/i);
+    if (ampmMatchOpens) {
+        let hour = parseInt(ampmMatchOpens[1]);
+        if (ampmMatchOpens[2].toLowerCase() === 'pm' && hour < 12) hour += 12;
+        if (ampmMatchOpens[2].toLowerCase() === 'am' && hour === 12) hour = 0; // Midnight
+        opens = `${String(hour).padStart(2, '0')}:00`; // Assuming :00 for simplicity
+    }
+    const ampmMatchCloses = closes.match(/(\d+)(AM|PM)/i);
+    if (ampmMatchCloses) {
+        let hour = parseInt(ampmMatchCloses[1]);
+        if (ampmMatchCloses[2].toLowerCase() === 'pm' && hour < 12) hour += 12;
+        if (ampmMatchCloses[2].toLowerCase() === 'am' && hour === 12) hour = 0; // Midnight
+        closes = `${String(hour).padStart(2, '0')}:00`;
+    }
+
+    return [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": daysOfWeek.map(day => `http://schema.org/${day}`),
+        opens,
+        closes
+    }];
+}
+
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
-        const { businessName, services, towns, enableAICopy = false, aiStyle, primaryColor } = req.body;
+        const { businessName, services, towns, enableAICopy = false, aiStyle, primaryColor, telephone, priceRange, openingHours } = req.body;
 
         if (!businessName || !services || !towns) {
             return res.status(400).json({ message: 'Missing required fields: businessName, services, and towns.' });
@@ -72,18 +150,20 @@ module.exports = async (req, res) => {
                     }
 
                     // Default values are used for now.
-                    const agencyLogoHtml = businessName; // Placeholder
+
                     const resolvedPrimaryColor = primaryColor || '#007bff'; // Use provided color or default
+                    const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours);
 
                     let pageContent = template
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
                         .replace(/{{town}}/g, town)
-                        .replace(/{{agencyLogo}}/g, agencyLogoHtml)
+
                         .replace(/{{primaryColor}}/g, resolvedPrimaryColor)
                         .replace(/{{ai_content}}/g, aiContent)
                         .replace(/{{service_slug}}/g, serviceSlug)
-                        .replace(/{{town_slug}}/g, townSlug);
+                        .replace(/{{town_slug}}/g, townSlug)
+                        .replace(/{{localBusinessSchema}}/g, localBusinessSchema);
                     
                     // The page-template.html uses {{pageId}} for tracking.
                     // This endpoint is for generating static files, so a unique ID is not
