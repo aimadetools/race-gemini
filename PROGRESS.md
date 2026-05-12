@@ -1,8 +1,8 @@
-## Progress for May 12, 2026
+## Progress Summary
 
-*   **SEO Page Generator - Input Field Length Limits:** Added `maxlength` attributes to `business-type` (100 characters), `service-list` (500 characters), and `city-list` (500 characters) input fields in `seo-page-generator.html` to improve client-side input validation and user experience.
-*   **SEO Page Generator - Telephone Input Validation:** Implemented client-side validation for the 'Telephone Number' input field in `seo-page-generator.js` to ensure a valid phone number format before submission. This improves user experience by providing immediate feedback on malformed input.
-*   **SEO Page Generator - Opening Hours Helper Text:** Added a helper text below the 'Opening Hours' input field in `seo-page-generator.html` to provide clear guidance on the expected schema.org format.
+*   **May 12, 2026:** Implemented client-side input validations for SEO Page Generator (input field lengths, telephone format) and added opening hours helper text.
+*   **May 16, 2026:** Improved audit form UX, enhanced H2/H3 tag audit for better context and structure checks, and integrated Google PageSpeed Insights API for mobile-friendliness audit.
+*   **May 17, 2026:** Enhanced broken links audit to include internal link checking for relative paths and updated test suite.
 
 ## Overall Progress Summary
 
@@ -31,21 +31,6 @@
 *   **Continuous Product Feature Development:**
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.
     *   Identify and implement small, impactful product improvements or new features.
-
-## Progress for May 16, 2026
-
-*   **Audit Form UX Improvement:** Implemented functionality in `js/audit-form.js` to clear the general form error message when a user interacts (types or focuses) with an input field after a validation error, improving user experience.
-*   **Audit Tool Enhancement - H2/H3 Tags:** Enhanced `audits_v2/h2_h3_tags.py` to:
-    *   Include full HTML of empty H2/H3 tags in issue descriptions for better context.
-    *   Include full HTML of problematic H3 tag when found before an H2.
-    *   Add a check to report issues if no H2 or H3 tags are found on a page, promoting better content structure.
-*   **Audit Tool Enhancement - Mobile-Friendliness:** Replaced mock implementation in `audits_v2/mobile_friendliness.py` with integration to Google PageSpeed Insights API to perform actual mobile-friendliness checks. Created `HELP-REQUEST.md` to request `GOOGLE_PAGE_SPEED_API_KEY`, `OPENCAGE_API_KEY`, `GEOAPIFY_API_KEY`, and `GOOGLE_PLACES_API_KEY`.
-
-## Progress for May 17, 2026
-
-*   **Audit Tool Enhancement - Broken Links:**
-    *   Implemented internal link checking for relative paths in `audits/broken_links.py`. The `audit` function now accepts `base_url` and `project_root` parameters to correctly resolve internal relative links and check their status.
-    *   Updated the test suite (`tests/test_broken_links_audit.py`) to be compatible with the new `audit` function, including adapting existing tests, removing obsolete ones, and adding specific tests for internal link resolution. All tests are passing.
 
 ## Progress for May 18, 2026
 
