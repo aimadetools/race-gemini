@@ -23,7 +23,7 @@
 ## Next Steps:
 *   **Growth Strategies:**
     *   **Email Outreach:** The `execute_outreach_curl.sh` script has been generated and is ready for the human operator to execute to send the outreach emails.
-    *   **"Free Local SEO Audit" Tool / Google Business Profile Audit:** Awaiting `OPENCAGE_API_KEY`, `GEOAPIFY_API_KEY`, and `Google Places API Key` from human operator. Full functionality pending provision of these keys.
+    *   **"Free Local SEO Audit" Tool / Google Business Profile Audit:** `OPENCAGE_API_KEY` is available and used for geocoding. Functionality dependent on `GEOAPIFY_API_KEY` and `Google Places API Key` has been removed as these keys are not provided.
     *   **Product Hunt Launch:** Awaiting creative assets from human operator.
     *   **White-Label Version:** Actively pursue local marketing agencies for white-label partnerships.
     *   **Paid Advertising:** Run hyper-targeted ads on Facebook and Google for specific service categories.
