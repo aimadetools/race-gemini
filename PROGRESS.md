@@ -54,3 +54,4 @@
 *   **API Key Management - Google Places API Deprecation:**
     *   **`scripts/auditor_cli.py` Update:** Removed the `--google-api-key` argument from the `gmb` subparser. The help text for the `gmb` subparser was updated to clarify that the Google Business Profile audit now relies solely on scraping Google search results and is not fully reliable, as the Google Places API is not provided.
     *   **`audits_v2/google_business_profile.py` Update:** Removed the `google_api_key` parameter from the `audit` function definition and eliminated the `API_KEY_IGNORED` warning message, as the API key is no longer expected or used.
+*   **Email Outreach - Target Generation:** Identified and added 5 new "Dentistry Services" targets in "Chicago, IL" to `outreach-targets.csv`. Successfully ran `generate_outreach.py` to generate updated outreach emails and `execute_outreach_curl.sh` script, now including the new targets.
