@@ -22,6 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const telephoneRegex = /^\\+?[0-9\\s\\-\\(\\)\\_]{7,20}$/; // Added '_' to regex to allow for more flexibility
+        if (telephone && !telephoneRegex.test(telephone)) {
+            alert('Please enter a valid telephone number.');
+            return;
+        }
+
         const cities = cityList.split(',').map(city => city.trim()).filter(city => city.length > 0);
         const services = serviceList.split(',').map(service => service.trim()).filter(service => service.length > 0);
 

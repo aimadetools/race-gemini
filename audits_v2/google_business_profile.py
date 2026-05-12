@@ -1,4 +1,3 @@
-
 import sys
 import json
 import requests
@@ -97,24 +96,21 @@ def check_google_business_profile(business_name):
             'reason': f"An error occurred while searching Google: {e}"
         }
 
-def check_google_business_profile_api(business_name, api_key):
-    # This is a placeholder function.
-    # When an API key is provided, this function will use the Google Places API
-    # to search for the business and return a more reliable result.
-    return {
-        'has_google_business_profile': False,
-        'profile_url': None,
-        'reason': 'Google Places API key provided, but the functionality is not yet implemented.'
-    }
-
 # Main audit function for integration with auditor_cli.py
 def audit(target, target_type, google_api_key=None):
+    issues = []
     business_name = get_business_name(target)
 
     if google_api_key:
-        result = check_google_business_profile_api(business_name, google_api_key)
-    else:
-        result = check_google_business_profile(business_name)
+        issues.append({
+            "type": "API_KEY_IGNORED",
+            "message": "GOOGLE_PLACES_API_KEY was provided but the Google Places API functionality is not implemented. Falling back to scraping.",
+            "source": target
+        })
+
+    result = check_google_business_profile(business_name)
+    if 'issues' not in result:
+        result['issues'] = []
+    result['issues'].extend(issues)
     
     return result
-
