@@ -6,5 +6,6 @@
 *   **Continuous Product Feature Development:**
     *   **Completed:** Implemented client-side validation for the 'Telephone Number' input field in `seo-page-generator.js`.
     *   **Completed:** Added `maxlength` attributes to `business-type`, `service-list`, and `city-list` input fields in `seo-page-generator.html`.
+    *   **Completed:** Added helper text for 'Opening Hours' field in `seo-page-generator.html`.
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.
     *   Identify and implement small, impactful product improvements or new features.
