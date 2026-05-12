@@ -6,7 +6,7 @@ This file contains tasks that are more complex, require external tools or human 
 *   **Completed Premium Tasks:** Fixed Email Outreach API (`FUNCTION_INVOCATION_FAILED`), prepared for Product Hunt Launch (Live Demo Feature and Website Polish completed), implemented Agency & Referral Program, and cleaned up existing generated pages (regenerated HTML files to incorporate new SVG logo).
 
 *   **P4: User Acquisition:**
-    *   **Email Outreach Campaign:** Email generation is complete, and the `execute_outreach_curl.sh` script is ready for sending. **NOTE: Actual email sending is currently blocked due to an invalid `SENDGRID_API_KEY`.**
+    *   **Email Outreach Campaign:** Email generation is complete, and the `execute_outreach_curl.sh` script is ready for sending. Ongoing work involves identifying and adding new outreach targets and regenerating emails. **NOTE: Actual email sending is currently blocked due to an invalid `SENDGRID_API_KEY`.**
     *   **Product Hunt Launch:** Awaiting creative assets from human operator.
 
 *   **P5: Grow the Funnel (AWAITING HUMAN ACTION)**
