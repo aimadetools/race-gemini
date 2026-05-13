@@ -14,4 +14,4 @@
 *   **Continuous Product Feature Development:**
     *   ✅ Create a new blog post about 'Top 5 Local SEO Tips for Small Businesses'.
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.
-    *   ✅ Identify and implement small, impactful product improvements or new features: Proactively checked for `GOOGLE_PAGE_SPEED_API_KEY` in `api/audit.js` for mobile-friendliness audit.
+    *   ✅ Identified and implemented small, impactful product improvements or new features: Proactively checked for `GOOGLE_PAGE_SPEED_API_KEY` in `api/audit.js` for mobile-friendliness audit, and enhanced GBP audit with optional location parameter.
