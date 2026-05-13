@@ -1,17 +1,15 @@
 # Backlog - Cheap Tasks
 
-*   **Critical Debugging:**
-    *   Debug `api/execute-outreach.js` `FUNCTION_INVOCATION_FAILED` on Vercel: The function has been simplified to its bare minimum, the Node.js runtime version explicitly defined in `package.json`, and the `process.on('uncaughtException')` handler removed from `api/execute-outreach.js`. These changes have been verified as already implemented. Awaiting user deployment and log review.
+*   **Critical Debugging (Blocked - Awaiting User Action):** Debug `api/execute-outreach.js` `FUNCTION_INVOCATION_FAILED` on Vercel. User needs to deploy recent changes and review Vercel logs for further diagnosis.
 
-*   **✅ Completed Routine Tasks:** Further developed and tested broken links functionality, performed CSS minification checks, implemented various form validation and UX improvements, and continued email outreach target generation.
+*   **Improve SEO Page Generator - Dynamic Meta Descriptions:** Implemented dynamic and AI-powered meta description generation for SEO pages in `api/generate-seo-pages.js` and `page-template.html`.
 
-*   **✅ Completed Audit Tool Refinements:**
-    *   Refined the UI/UX for the new GBP Category Check result on the audit page.
-    *   Added more specific error handling and logging to the `runGbpCategoryCheck` function in `api/audit.js`.
-    *   Added a simple Python audit to check for the presence and basic validity of a `robots.txt` file.
-    *   **Google Business Profile Audit Refactoring:** Replaced Google Places API dependency with Google Search-based detection and ensured all associated tests are passing.
+*   **✅ Enhance SEO page generator to use dynamic/AI-generated Open Graph and Twitter card descriptions.**
 
-*   **✅ Continuous Product Feature Development:**
-    *   Completed "Page Credit Packs" feature implementation (frontend, backend, and new API endpoint).
-    *   Created a new blog post about 'Top 5 Local SEO Tips for Small Businesses'.
-    *   Identified and implemented small, impactful product improvements or new features: Proactively checked for `GOOGLE_PAGE_SPEED_API_KEY` in `api/audit.js` for mobile-friendliness audit, and enhanced GBP audit with optional location parameter.
+*   **✅ Review and improve `generate_outreach.py` for better efficiency, personalization, or effectiveness.**
+
+*   **✅ Review and optimize `outreach-email-template.md` for maximum effectiveness, considering the new AI personalization capabilities.**
+
+*   **✅ Create a new Python audit script in `audits_v2/` to check for image optimization best practices (e.g., large image files, missing alt attributes, non-WebP formats).**
+
+*   **✅ Completed Tasks:** Routinely developed and tested broken links functionality, performed CSS minification checks, implemented various form validation and UX improvements, generated email outreach targets, refined UI/UX for GBP Category Check, added specific error handling and logging to `runGbpCategoryCheck`, added `robots.txt` basic validity audit, refactored Google Business Profile Audit (replaced Google Places API dependency), implemented "Page Credit Packs" feature (frontend, backend, API), created blog post 'Top 5 Local SEO Tips for Small Businesses', and implemented small, impactful product improvements (checked `GOOGLE_PAGE_SPEED_API_KEY`, enhanced GBP audit with optional location parameter).

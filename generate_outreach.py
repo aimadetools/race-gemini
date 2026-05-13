@@ -2,12 +2,31 @@ import json
 import uuid
 import re
 import csv
-import markdown # Add this line
+import markdown
+import os
+from google.generativeai import GenerativeModel
+from google.generativeai.types import GenerationConfig
 
 # Define file paths
 OUTREACH_TARGETS_CSV = 'outreach-targets.csv'
 OUTREACH_EMAIL_TEMPLATE_MD = 'outreach-email-template.md'
-GENERATED_OUTREACH_EMAILS_TXT = 'generated_outreach_emails.txt'
+
+# Initialize Gemini API
+gemini_api_key = os.environ.get("GEMINI_API_KEY")
+gemini_model = None
+
+if gemini_api_key:
+    genai = GenerativeModel(gemini_api_key)
+    # Configure generation to be more creative and flexible
+    gemini_config = GenerationConfig(
+        temperature=0.7,
+        top_p=0.9,
+        top_k=40,
+        candidate_count=1
+    )
+    gemini_model = genai.get_model('gemini-pro') # Assuming 'gemini-pro' is the desired model
+else:
+    print("GEMINI_API_KEY is not set. AI personalization will be skipped.")
 
 def slugify(text):
     """Converts text to a URL-friendly slug."""
@@ -18,7 +37,8 @@ def slugify(text):
     text = ''.join(e for e in text if e.isalnum() or e == '-')
     return text
 
-def generate_emails_txt_file():
+
+def generate_outreach_emails():
     emails_to_send = []
 
     # Read email template
@@ -55,63 +75,41 @@ def generate_emails_txt_file():
                 body_content = body_content.replace('[Link to sample pages]', sample_page_link)
                 body_content = body_content.replace('[Service Type]', service_type)
 
-                full_email_block = f"""--- EMAIL FOR: {business_name}
-To: {recipient_email}
-Subject: {subject_line}
-
-{body_content}
-"""
-                emails_to_send.append(full_email_block)
-
-    # Write generated emails to file
-    with open(GENERATED_OUTREACH_EMAILS_TXT, 'w') as f:
-        for email_block in emails_to_send:
-            f.write(email_block)
-
-    print(f"Generated {len(emails_to_send)} emails in {GENERATED_OUTREACH_EMAILS_TXT}")
-
-def parse_emails_to_json(file_path):
-    parsed_emails = []
-    try:
-        with open(file_path, 'r') as f:
-            content = f.read()
-            email_blocks = re.split(r'--- EMAIL FOR:.*?\n', content)[1:] # Split by '--- EMAIL FOR:' and skip the first empty part
-
-            for block in email_blocks:
-                to_match = re.search(r'To: (.*)\n', block)
-                subject_match = re.search(r'Subject: (.*)\n', block)
+                ai_personalization_content = ''
+                if gemini_model:
+                    try:
+                        personalization_prompt = (
+                            f"Write a very short, engaging, and personalized opening sentence or two "
+                            f"for an outreach email to '{business_name}', a '{service_type}' business in '{city}'. "
+                            f"Mention their business and location directly, and subtly hint at growth potential. "
+                            f"Keep it under 2 sentences."
+                        )
+                        response = gemini_model.generate_content(personalization_prompt, generation_config=gemini_config)
+                        ai_personalization_content = response.text.strip() + '\n\n' # Add newlines for formatting
+                    except Exception as e:
+                        print(f"Error generating AI personalization for {business_name}: {e}")
+                        ai_personalization_content = '' # Fallback to empty if AI fails
                 
-                if to_match and subject_match:
-                    to_email = to_match.group(1).strip()
-                    subject = subject_match.group(1).strip()
-                    
-                    # Extract body: everything after the subject line and a newline
-                    body_start = block.find(subject_match.group(0)) + len(subject_match.group(0))
-                    body = block[body_start:].strip()
+                body_content = body_content.replace('{{ai_personalization}}', ai_personalization_content)
 
-                    # Convert markdown body to HTML
-                    html_body = markdown.markdown(body)
+                # Convert markdown body to HTML
+                html_body = markdown.markdown(body_content)
 
-                    message_id = str(uuid.uuid4()) # Generate a unique ID for the email
-                    tracking_pixel = f'<img src="https://www.localseogen.com/api/track-email-open?id={message_id}" width="1" height="1" border="0" style="display:none;" />'
-                    body_with_tracking = html_body + tracking_pixel # Append the pixel to the HTML body
+                message_id = str(uuid.uuid4()) # Generate a unique ID for the email
+                tracking_pixel = f'<img src="https://www.localseogen.com/api/track-email-open?id={message_id}" width="1" height="1" border="0" style="display:none;" />'
+                body_with_tracking = html_body + tracking_pixel # Append the pixel to the HTML body
 
-                    parsed_emails.append({
-                        "to": to_email,
-                        "subject": subject,
-                        "html": body_with_tracking,
-                        "message_id": message_id # Include message_id in the JSON for logging/tracking purposes
-                    })
-    except FileNotFoundError:
-        print(f"Error: {file_path} not found.")
-    except Exception as e:
-        print(f"Error parsing emails: {e}")
-    return parsed_emails
+                emails_to_send.append({
+                    "to": recipient_email,
+                    "subject": subject_line,
+                    "html": body_with_tracking,
+                    "message_id": message_id
+                })
+    return emails_to_send
+
 
 if __name__ == "__main__":
-    generate_emails_txt_file() # Ensure the .txt file is up to date
-
-    emails_json = parse_emails_to_json(GENERATED_OUTREACH_EMAILS_TXT)
+    emails_json = generate_outreach_emails()
 
     if emails_json:
         # The URL for the serverless function

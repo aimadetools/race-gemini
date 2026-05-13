@@ -132,24 +132,67 @@ module.exports = async (req, res) => {
                     const fileName = `${serviceSlug}-in-${townSlug}-${businessSlug}.html`;
                     const filePath = path.join(outputDir, fileName);
 
+
                     let aiContent = '';
+                    let metaDescription = '';
+
                     if (enableAICopy && geminiModel) {
                         try {
+                            // Generate main AI content
                             const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${businessName}" that provides "${service}" in "${town}". Focus on why a customer should choose them.`;
                             const result = await geminiModel.generateContent(prompt);
                             const response = await result.response;
                             aiContent = response.text();
+
+                            // Generate AI-powered meta description
+                            const metaPrompt = `Write a concise and compelling meta description (around 150-160 characters) for a business called "${businessName}" that offers "${service}" in "${town}". Highlight key benefits and encourage clicks.`;
+                            const metaResult = await geminiModel.generateContent(metaPrompt);
+                            const metaResponse = await metaResult.response;
+                            metaDescription = metaResponse.text().trim();
+                            // Ensure meta description is within typical limits
+                            if (metaDescription.length > 160) {
+                                metaDescription = metaDescription.substring(0, 157) + '...';
+                            } else if (metaDescription.length < 50) { // Add a fallback if AI generates something too short
+                                metaDescription = `Get expert ${service} services in ${town} from ${businessName}. Contact us today for a free quote!`;
+                            }
+
+                            // Generate AI-powered Open Graph Description
+                            const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${businessName}'s ${service} services in ${town}". Focus on attracting clicks on social media.`;
+                            const ogResult = await geminiModel.generateContent(ogPrompt);
+                            const ogResponse = await ogResult.response;
+                            ogDescription = ogResponse.text().trim();
+                            if (ogDescription.length > 200) {
+                                ogDescription = ogDescription.substring(0, 197) + '...';
+                            }
+
+                            // Generate AI-powered Twitter Description
+                            const twitterPrompt = `Write a compelling Twitter card description (up to 200 characters) for a tweet promoting "${businessName}'s ${service} services in ${town}". Encourage retweets and engagement.`;
+                            const twitterResult = await geminiModel.generateContent(twitterPrompt);
+                            const twitterResponse = await twitterResult.response;
+                            twitterDescription = twitterResponse.text().trim();
+                            if (twitterDescription.length > 200) {
+                                twitterDescription = twitterDescription.substring(0, 197) + '...';
+                            }
+
+
                         } catch (aiError) {
-                            console.error('Error generating AI content:', aiError);
+                            console.error('Error generating AI content or meta descriptions:', aiError);
                             aiContent = '<p>AI copy generation failed. Please try again later or contact support.</p>';
+                            metaDescription = `Find the best ${service} services in ${town} with ${businessName}. Quality service guaranteed.`;
+                            ogDescription = `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`;
+                            twitterDescription = `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`;
                         }
                     } else if (enableAICopy && !geminiModel) {
                         aiContent = '<p>AI copy is unavailable due to missing API key. Contact support.</p>';
+                        metaDescription = `Discover reliable ${service} services in ${town} from ${businessName}. Book your consultation today!`;
+                        ogDescription = `Discover ${businessName}'s reliable ${service} services in ${town}. Learn how we can help you today!`;
+                        twitterDescription = `Looking for ${service} in ${town}? Check out ${businessName} for quality and trusted service!`;
                     } else {
                         aiContent = '<p>Contact us today for a free estimate!</p>';
+                        metaDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
+                        ogDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
+                        twitterDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
                     }
-
-                    // Default values are used for now.
 
                     const resolvedPrimaryColor = primaryColor || '#007bff'; // Use provided color or default
                     const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours);
@@ -158,9 +201,11 @@ module.exports = async (req, res) => {
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
                         .replace(/{{town}}/g, town)
-
                         .replace(/{{primaryColor}}/g, resolvedPrimaryColor)
                         .replace(/{{ai_content}}/g, aiContent)
+                        .replace(/{{metaDescription}}/g, metaDescription) // New replacement
+                        .replace(/{{ogDescription}}/g, ogDescription) // New replacement for OG
+                        .replace(/{{twitterDescription}}/g, twitterDescription) // New replacement for Twitter
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema);
