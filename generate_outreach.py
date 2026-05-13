@@ -47,11 +47,13 @@ def generate_emails_txt_file():
                 subject_line = email_template.split('\n')[0].replace('Subject: ', '')
                 subject_line = subject_line.replace('[Business Name]', business_name)
                 subject_line = subject_line.replace('[City/Town Name]', city)
+                subject_line = subject_line.replace('[Service Type]', service_type)
                 
                 body_content = email_template.replace(email_template.split('\n')[0] + '\n\n', '') # Remove subject line
                 body_content = body_content.replace('[Business Name]', business_name)
                 body_content = body_content.replace('[City/Town Name]', city)
                 body_content = body_content.replace('[Link to sample pages]', sample_page_link)
+                body_content = body_content.replace('[Service Type]', service_type)
 
                 full_email_block = f"""--- EMAIL FOR: {business_name}
 To: {recipient_email}
@@ -112,20 +114,29 @@ if __name__ == "__main__":
     emails_json = parse_emails_to_json(GENERATED_OUTREACH_EMAILS_TXT)
 
     if emails_json:
-        payload = json.dumps({"emails": emails_json})
-        
-        # Escape single quotes in the payload for shell execution
-        escaped_payload = payload.replace("'", "'\\''")
-        
         # The URL for the serverless function
         api_url = "https://www.localseogen.com/api/execute-outreach"
         
-        # Construct the curl command
-        curl_command = f"curl -X POST -H 'Content-Type: application/json' -d '{escaped_payload}' {api_url}"
-        
+        # Clear the shell script file
         with open("execute_outreach_curl.sh", "w") as f:
             f.write("#!/bin/bash\n")
-            f.write(curl_command + "\n")
+
+        # Process emails in chunks of 10
+        chunk_size = 10
+        for i in range(0, len(emails_json), chunk_size):
+            chunk = emails_json[i:i + chunk_size]
+            payload = json.dumps({"emails": chunk})
+            
+            # Escape single quotes in the payload for shell execution
+            escaped_payload = payload.replace("'", "'\\''")
+            
+            # Construct the curl command
+            curl_command = f"curl -X POST -H 'Content-Type: application/json' -d '{escaped_payload}' {api_url}"
+            
+            # Append the curl command to the shell script
+            with open("execute_outreach_curl.sh", "a") as f:
+                f.write(curl_command + "\n")
+        
         print(f"Generated {len(emails_json)} curl commands in execute_outreach_curl.sh")
     else:
         print("No emails were parsed to send.")

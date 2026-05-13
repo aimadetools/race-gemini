@@ -36,7 +36,7 @@ async function sendEmails(emails) {
         console.error(`Failed to send email to ${email.to}: Invalid SendGrid API Key.`);
       } else {
         await logError(error, `Error sending email to ${email.to}. Response: ${error.response ? JSON.stringify(error.response.body) : 'N/A'}`);
-        console.error(`Failed to send email to ${email.to}:`, error.message);
+        console.error(`Failed to send email to ${email.to}:`, error);
       }
       return { status: 'rejected', reason: error.message, to: email.to };
     }

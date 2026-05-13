@@ -1,8 +1,8 @@
-Subject: [Business Name]: Unleash Your Local Plumbing Potential in [City/Town Name] & Beyond!
+Subject: [Business Name]: Unleash Your Local [Service Type] Potential in [City/Town Name] & Beyond!
 
 Hi [Business Name] team,
 
-Are you ready to exponentially grow your plumbing business by reaching more local customers in [City/Town Name] and surrounding areas like Round Rock, Cedar Park, and Leander?
+Are you ready to exponentially grow your [Service Type] business by reaching more local customers in [City/Town Name] and surrounding areas like Round Rock, Cedar Park, and Leander?
 
 We've developed a powerful strategy to help businesses like yours dominate local search, and we'd love to show you, not just tell you.
 
