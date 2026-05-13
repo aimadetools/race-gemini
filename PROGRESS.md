@@ -19,3 +19,4 @@
     *   **Completed:** Enhanced `audits_v2/image_optimization.py` to include a check for large image file sizes (over 100KB).
     *   **Completed:** Created and implemented `audits_v2/local_business_schema.py` to audit for `LocalBusiness` schema and its essential properties.
     *   **Completed:** Created and integrated two video tutorial blog posts (`blog/video_plumbers.html` and `blog/video_small_businesses.html`) into `blog.html`.
+    *   **Refined:** Added comprehensive docstrings to `audits_v2/local_business_schema.py` and improved its example usage for clarity and maintainability.
