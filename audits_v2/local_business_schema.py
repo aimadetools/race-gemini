@@ -4,6 +4,10 @@ import json
 from urllib.parse import urljoin
 
 class LocalBusinessSchemaAudit:
+    """
+    Audits a given URL for the presence and correctness of Schema.org LocalBusiness markup (JSON-LD).
+    It checks for essential properties and common subtypes to ensure comprehensive validation.
+    """
     def __init__(self, url):
         self.url = url
         self.findings = []
@@ -16,6 +20,13 @@ class LocalBusinessSchemaAudit:
         ]
 
     def run_audit(self):
+        """
+        Executes the Local Business Schema audit by fetching the URL content,
+        parsing JSON-LD scripts, and validating the schema.
+        
+        Returns:
+            list: A list of findings, including errors, schema presence, and validation results.
+        """
         print(f"Running Local Business Schema Audit for: {self.url}")
         try:
             response = requests.get(self.url, timeout=10)
@@ -30,6 +41,12 @@ class LocalBusinessSchemaAudit:
         return self.findings
 
     def _check_local_business_schema(self, soup):
+        """
+        Checks the parsed HTML (soup) for JSON-LD scripts containing LocalBusiness schema.
+
+        Args:
+            soup (BeautifulSoup): The BeautifulSoup object of the parsed HTML.
+        """
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
         
         if not json_ld_scripts:
@@ -63,6 +80,16 @@ class LocalBusinessSchemaAudit:
             self.findings.append("No schema of '@type': 'LocalBusiness' or its subtypes found on the page.")
 
     def _is_sub_type_of_local_business(self, schema_type):
+        """
+        Checks if a given schema_type is a known subtype of LocalBusiness.
+        This is a simplified check and does not traverse the full schema.org hierarchy.
+
+        Args:
+            schema_type (str or list): The '@type' field from the schema.
+
+        Returns:
+            bool: True if the schema_type is a recognized LocalBusiness subtype, False otherwise.
+        """
         # A simple check for common subtypes. A more robust solution would involve a schema graph.
         # For now, manually list some common ones that directly inherit.
         # This is a simplification; a real check would involve recursive lookup in schema.org.
@@ -82,6 +109,12 @@ class LocalBusinessSchemaAudit:
 
 
     def _validate_local_business_properties(self, schema):
+        """
+        Validates the essential properties within a LocalBusiness schema.
+
+        Args:
+            schema (dict): The parsed LocalBusiness schema object.
+        """
         for prop in self.essential_properties:
             if prop not in schema or not schema[prop]:
                 self.findings.append(f"Missing or empty essential LocalBusiness property: '{prop}'")
@@ -103,7 +136,7 @@ class LocalBusinessSchemaAudit:
 if __name__ == "__main__":
     # Example usage:
     # Test with a URL that has LocalBusiness schema
-    test_url_good = "https://www.google.com/search?q=local+business+schema+example"
+    test_url_good = "https://www.example.com/local-business-with-schema" # Placeholder for a URL with LocalBusiness schema
     # test_url_good = "https://schema.org/LocalBusiness" # This one describes schema.org but doesn't have an example.
     # A real example would be a local business website with proper JSON-LD
     test_url_no_schema = "https://www.example.com" # Should not have schema
