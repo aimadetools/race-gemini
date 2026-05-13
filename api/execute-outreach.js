@@ -4,7 +4,7 @@ const path = require('path');
 process.on('uncaughtException', (err) => {
   console.error('--- DEBUG: Uncaught Exception ---');
   console.error(err);
-  fs.writeFileSync(path.join('/home/race/.gemini/tmp/race-gemini', 'outreach-error.log'), err.toString());
+  fs.writeFileSync('/home/race/.gemini/tmp/race-gemini/outreach-error.log', 'Uncaught exception in outreach script');
   console.error('--- DEBUG: Uncaught Exception ---');
   // In a serverless environment, re-throwing or exiting might lead to quicker restarts
   // or better error reporting by the platform.
@@ -35,7 +35,7 @@ async function sendEmails(emails) {
       await logInfo(`Email sent successfully to ${email.to}`);
       return { status: 'fulfilled', value: email.to };
     } catch (error) {
-      fs.writeFileSync(path.join('/home/race/.gemini/tmp/race-gemini', 'outreach-error.log'), JSON.stringify(error, null, 2));
+      fs.writeFileSync('/home/race/.gemini/tmp/race-gemini/outreach-error.log', 'Error in outreach script');
       if (error.code === 401) {
         await logError(error, `Error sending email to ${email.to}: Invalid SendGrid API Key. Please verify the SENDGRID_API_KEY environment variable.`);
         console.error(`Failed to send email to ${email.to}: Invalid SendGrid API Key.`);
