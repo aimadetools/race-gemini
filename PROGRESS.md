@@ -21,3 +21,19 @@
     *   **Current Status & Next Steps:** The `api/execute-outreach.js` function is now extremely minimal and the environment configuration (Node.js version) has been specified for consistency. The next crucial step is for the user to deploy these changes to Vercel and *thoroughly examine the Vercel deployment and runtime logs*. The `FUNCTION_INVOCATION_FAILED` error, even with such a simple function, strongly indicates an environmental or Vercel platform-specific issue that can only be diagnosed through detailed log analysis.
 
 *   **Audit Tool Enhancements (Summarized):** Implemented and integrated several Python audits including `robots.txt`, `canonical_tags`, `sitemap.xml`, `schema_markup`, `meta_tags`, and `header_response_codes`. Improved GBP category check logging and UI/UX.
+
+*   **Google Business Profile Audit - Robustness Improvement:**
+    *   **Old Method:** Previously relied on unreliable Google search scraping to detect Google Business Profiles.
+    *   **New Method:** Implemented integration with the **Google Places API (Text Search)** to robustly detect the presence of Google Business Profiles and retrieve their `googleMapsUri`.
+        *   **Changes to `audits_v2/google_business_profile.py`:**
+            *   Added `import os`.
+            *   Modified `check_google_business_profile` to use `os.environ.get("GOOGLE_PLACES_API_KEY")` for API key retrieval.
+            *   Replaced Google search scraping logic with a POST request to `https://places.googleapis.com/v1/places:searchText` with `FieldMask` for cost efficiency (`places.displayName,places.googleMapsUri`).
+            *   Implemented robust error handling for API calls (network issues, JSON decode errors, missing API key).
+        *   **Changes to `tests/test_audit_google_business_profile.py`:**
+            *   Added `import os`.
+            *   Corrected module import path from `audit_google_business_profile` to `audits_v2.google_business_profile`.
+            *   Updated and added new test cases using `@patch('requests.post')` and `@patch.dict(os.environ, {'GOOGLE_PLACES_API_KEY': 'mock_api_key'})` to simulate Google Places API responses and environment variables. Covered scenarios for found/not found profiles, missing Maps URI, API errors, and missing API key.
+        *   **New File:** Created `tests/__init__.py` to enable proper Python module resolution for tests.
+    *   **Status:** **Completed**. The audit now uses a more reliable, API-driven approach.
+
