@@ -241,18 +241,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Display GBP Category Check results
-        const gbpCategoryAuditList = document.getElementById('gbp-category-audit-list');
-        if (results.gbp_category_check) {
-            const { businessCategory, error } = results.gbp_category_check;
-            if (error) {
-                const errorLi = document.createElement('li');
-                errorLi.textContent = `Error: ${error}`;
-                gbpCategoryAuditList.appendChild(errorLi);
+        // Display Robots.txt audit results
+        const robotsTxtAuditList = document.getElementById('robots-txt-audit-list');
+        robotsTxtAuditList.innerHTML = ''; // Clear previous results
+        if (results.robots_txt_audit) {
+            const { issues } = results.robots_txt_audit;
+            if (issues && issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    li.classList.add(issue.type); // 'error' or 'warning'
+                    robotsTxtAuditList.appendChild(li);
+                });
             } else {
                 const li = document.createElement('li');
-                li.textContent = `OpenCage identifies this business as category: ${businessCategory}`;
-                gbpCategoryAuditList.appendChild(li);
+                li.textContent = 'No issues found with robots.txt.';
+                li.classList.add('success');
+                robotsTxtAuditList.appendChild(li);
+            }
+        }
+
+        // Display GBP Category Check results
+        const gbpCategoryContainer = document.getElementById('gbp-category-container');
+        gbpCategoryContainer.innerHTML = ''; // Clear previous results
+        if (results.gbp_category_check) {
+            const { businessCategory, confidence, error } = results.gbp_category_check;
+            if (error) {
+                const errorEl = document.createElement('p');
+                errorEl.textContent = `Error: ${error}`;
+                errorEl.classList.add('error-message');
+                gbpCategoryContainer.appendChild(errorEl);
+            } else {
+                const categoryBadge = document.createElement('span');
+                categoryBadge.textContent = businessCategory;
+                categoryBadge.classList.add('category-badge');
+                gbpCategoryContainer.appendChild(categoryBadge);
+
+                if(confidence) {
+                    const confidenceEl = document.createElement('p');
+                    confidenceEl.textContent = `Confidence: ${confidence}`;
+                    gbpCategoryContainer.appendChild(confidenceEl);
+                }
             }
         }
     }

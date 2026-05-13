@@ -7,11 +7,18 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 async function runGbpCategoryCheck(url) {
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
     if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
-        return { error: 'OpenCage API key is not configured.' };
+        const errorMsg = 'OpenCage API key is not configured.';
+        logError(new Error(errorMsg), 'runGbpCategoryCheck - API Key Error', 'audit_error.log');
+        return { error: errorMsg };
     }
 
     try {
         const response = await fetch(url);
+        if (!response.ok) {
+            const errorMsg = `Failed to fetch URL: ${url}. Status: ${response.status}`;
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Fetch URL Error', 'audit_error.log');
+            return { error: errorMsg };
+        }
         const html = await response.text();
         const address = parseAddress(html);
 
@@ -21,6 +28,11 @@ async function runGbpCategoryCheck(url) {
 
         const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
         const geocodingResponse = await fetch(geocodingUrl);
+        if (!geocodingResponse.ok) {
+            const errorMsg = `Geocoding request failed. Status: ${geocodingResponse.status}`;
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding Error', 'audit_error.log');
+            return { error: errorMsg };
+        }
         const geocodingData = await geocodingResponse.json();
 
         if (geocodingData.results && geocodingData.results.length > 0) {
@@ -28,16 +40,25 @@ async function runGbpCategoryCheck(url) {
 
             const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
             const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
+            if (!reverseGeocodingResponse.ok) {
+                const errorMsg = `Reverse geocoding request failed. Status: ${reverseGeocodingResponse.status}`;
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding Error', 'audit_error.log');
+                return { error: errorMsg };
+            }
             const reverseGeocodingData = await reverseGeocodingResponse.json();
             
             if (reverseGeocodingData.results && reverseGeocodingData.results.length > 0) {
                 const components = reverseGeocodingData.results[0].components;
                 const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
-                return { businessCategory };
+                const confidence = geocodingData.results[0].confidence;
+                return { businessCategory, confidence };
             }
         }
-        return { businessCategory: 'Could not determine category.' };
+        const errorMsg = 'Could not determine category from address.';
+        logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
+        return { error: errorMsg };
     } catch (error) {
+        logError(error, 'runGbpCategoryCheck - General Error', 'audit_error.log');
         return { error: error.message };
     }
 }
@@ -122,7 +143,7 @@ module.exports = async (req, res) => {
         { name: 'structured-data', command: 'html structured-data', args: [url] },
         { name: 'readability', command: 'html readability', args: [url] },
         { name: 'page-load-times', command: 'html page-load-times', args: [url] },
-        { name: 'gmb', command: 'gmb', args: [url] },
+        { name: 'robots-txt', command: 'robots', args: [url] },
     ];
     
     if (locations && Array.isArray(locations) && locations.length > 0) {
@@ -131,9 +152,11 @@ module.exports = async (req, res) => {
 
     try {
         const auditPromises = auditsToRun.map(audit => runAudit(audit.command, audit.args));
-        const results = await Promise.allSettled(auditPromises);
+        const gbpPromise = runGbpCategoryCheck(url);
+        
+        const results = await Promise.allSettled([...auditPromises, gbpPromise]);
 
-        const auditResults = results.reduce((acc, result, index) => {
+        const auditResults = results.slice(0, -1).reduce((acc, result, index) => {
             const auditName = auditsToRun[index].name;
             if (result.status === 'fulfilled') {
                 acc[auditName] = result.value;
@@ -143,6 +166,14 @@ module.exports = async (req, res) => {
             }
             return acc;
         }, {});
+
+        const gbpResult = results[results.length - 1];
+        if (gbpResult.status === 'fulfilled') {
+            auditResults['gbp_category_check'] = gbpResult.value;
+        } else {
+            auditResults['gbp_category_check'] = { error: gbpResult.reason };
+            logError(new Error(`Audit 'gbp_category_check' failed. Reason: ${JSON.stringify(gbpResult.reason)}`), `Audit API - Audit Failure`, 'audit_error.log');
+        }
 
         res.status(200).json(auditResults);
 
