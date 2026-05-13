@@ -35,3 +35,9 @@
     *   Created `audits_v2/robots_txt.py` with an `audit` function that fetches `robots.txt` from a given URL and checks for emptiness, missing 'User-agent' directives, and conflicting Disallow/Allow rules.
     *   Integrated the new `robots_txt_audit` into `scripts/auditor_cli.py` by updating the import statement and ensuring the `run_robots_txt_audit` function correctly calls the new audit.
     *   This audit will help identify basic misconfigurations in `robots.txt` files that could impact SEO.
+
+*   **Audit Tool Enhancement - GBP Category Check Logging:**
+    *   Improved error handling and logging for the `runGbpCategoryCheck` function in `api/audit.js`.
+    *   Added explicit `logError` calls when an address is not found on the page.
+    *   Added explicit `logError` calls when OpenCage Geocoding or Reverse Geocoding APIs return no results.
+    *   Enhanced `logError` calls for failed `fetch` requests (initial URL, geocoding, and reverse geocoding) to include `response.statusText` and a snippet of the response body for better debugging context.

@@ -15,7 +15,8 @@ async function runGbpCategoryCheck(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            const errorMsg = `Failed to fetch URL: ${url}. Status: ${response.status}`;
+            const responseBody = await response.text().catch(() => 'N/A'); // Attempt to read body, catch if not readable
+            const errorMsg = `Failed to fetch URL: ${url}. Status: ${response.status} ${response.statusText}. Body: ${responseBody.substring(0, 200)}...`; // Limit body to 200 chars
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Fetch URL Error', 'audit_error.log');
             return { error: errorMsg };
         }
@@ -23,32 +24,46 @@ async function runGbpCategoryCheck(url) {
         const address = parseAddress(html);
 
         if (!address) {
-            return { businessCategory: 'Address not found on page.' };
+            const errorMsg = 'Address not found on page for GBP category check.';
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Address Not Found', 'audit_error.log');
+            return { businessCategory: errorMsg };
         }
 
         const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
         const geocodingResponse = await fetch(geocodingUrl);
         if (!geocodingResponse.ok) {
-            const errorMsg = `Geocoding request failed. Status: ${geocodingResponse.status}`;
+            const responseBody = await geocodingResponse.text().catch(() => 'N/A');
+            const errorMsg = `Geocoding request failed for ${address}. Status: ${geocodingResponse.status} ${geocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding Error', 'audit_error.log');
             return { error: errorMsg };
         }
         const geocodingData = await geocodingResponse.json();
 
-        if (geocodingData.results && geocodingData.results.length > 0) {
-            const { lat, lng } = geocodingData.results[0].geometry;
+        if (!geocodingData.results || geocodingData.results.length === 0) {
+            const errorMsg = `Geocoding API returned no results for address: ${address}.`;
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding No Results', 'audit_error.log');
+            return { error: errorMsg };
+        }
+
+        const { lat, lng } = geocodingData.results[0].geometry;
 
             const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
             const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
             if (!reverseGeocodingResponse.ok) {
-                const errorMsg = `Reverse geocoding request failed. Status: ${reverseGeocodingResponse.status}`;
+                const responseBody = await reverseGeocodingResponse.text().catch(() => 'N/A');
+                const errorMsg = `Reverse geocoding request failed for coordinates ${lat}, ${lng}. Status: ${reverseGeocodingResponse.status} ${reverseGeocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
                 logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding Error', 'audit_error.log');
                 return { error: errorMsg };
             }
             const reverseGeocodingData = await reverseGeocodingResponse.json();
             
-            if (reverseGeocodingData.results && reverseGeocodingData.results.length > 0) {
-                const components = reverseGeocodingData.results[0].components;
+            if (!reverseGeocodingData.results || reverseGeocodingData.results.length === 0) {
+                const errorMsg = `Reverse geocoding API returned no results for coordinates: ${lat}, ${lng}.`;
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding No Results', 'audit_error.log');
+                return { error: errorMsg };
+            }
+
+            const components = reverseGeocodingData.results[0].components;
                 const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
                 const confidence = geocodingData.results[0].confidence;
                 return { businessCategory, confidence };
