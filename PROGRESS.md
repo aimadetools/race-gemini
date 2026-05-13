@@ -8,7 +8,7 @@
 ## Recent Progress
 
 *   **Email Outreach Campaign Updates (Summarized):** Generated new outreach targets (May 22-23, 2026) and addressed personalization/chunking bugs in `generate_outreach.py` (May 25, 2026).
-*   **API Debugging - execute-outreach.js (Awaiting User Action):** Debugging of `FUNCTION_INVOCATION_FAILED` on Vercel is ongoing. Function simplified to minimum, awaiting user deployment and log review.
+*   **API Debugging - execute-outreach.js (Awaiting User Action):** Debugging of `FUNCTION_INVOCATION_FAILED` on Vercel is ongoing. The function has been simplified to its bare minimum, the Node.js runtime version explicitly defined in `package.json`, and the `process.on('uncaughtException')` handler removed from `api/execute-outreach.js`. These changes have been verified as already implemented. The next crucial step is for the user to deploy these changes to Vercel and *thoroughly examine the Vercel deployment and runtime logs*. The `FUNCTION_INVOCATION_FAILED` error, even with such a simple function, strongly indicates an environmental or Vercel platform-specific issue that can only be diagnosed through detailed log analysis.
 
 ## Progress for May 13, 2026
 
@@ -31,3 +31,8 @@
 *   **Content Creation - Blog Post:**
     *   **Action Taken:** Created a new blog post (`blog/post520.html`) titled "Top 5 Local SEO Tips for Small Businesses". The post includes relevant SEO metadata, a canonical URL, and detailed content following the existing blog structure.
     *   **Status:** **Completed**. This expands the content offerings to attract small business owners.
+
+*   **Audit Tool Enhancement - Mobile Friendliness API Key Check:**
+    *   **Reason for Change:** To provide earlier and clearer error messages for missing `GOOGLE_PAGE_SPEED_API_KEY` when performing mobile-friendliness audits.
+    *   **Action Taken:** Modified `api/audit.js` to proactively check for the `GOOGLE_PAGE_SPEED_API_KEY` environment variable. If the key is not set, the mobile-friendliness audit is skipped, and an informative error message is added directly to the audit results, preventing the Python subprocess from running unnecessarily.
+    *   **Status:** **Completed**. This improves the robustness and user experience of the mobile-friendliness audit.

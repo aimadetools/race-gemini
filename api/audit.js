@@ -149,12 +149,25 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Invalid URL format.' });
     }
 
-    const auditsToRun = [
+    const auditsToRun = [];
+    const auditResults = {};
+
+    // Check for GOOGLE_PAGE_SPEED_API_KEY before running mobile-friendliness audit
+    const googlePageSpeedApiKey = process.env.GOOGLE_PAGE_SPEED_API_KEY;
+    if (!googlePageSpeedApiKey || googlePageSpeedApiKey === 'your_google_page_speed_api_key') {
+        auditResults['mobile-friendliness'] = { 
+            error: 'GOOGLE_PAGE_SPEED_API_KEY environment variable is not set. Cannot perform mobile-friendliness audit.' 
+        };
+        logError(new Error('GOOGLE_PAGE_SPEED_API_KEY is missing.'), 'Audit API - Missing Google Page Speed API Key', 'audit_error.log');
+    } else {
+        auditsToRun.push({ name: 'mobile-friendliness', command: 'html mobile-friendliness', args: [url] });
+    }
+
+    auditsToRun.push(
         { name: 'alt-attributes', command: 'html alt-attributes', args: [url] },
         { name: 'h1-tags', command: 'html h1-tags', args: [url] },
         { name: 'broken-links', command: 'html broken-links', args: [url] },
         { name: 'h2-h3-tags', command: 'html h2-h3-tags', args: [url] },
-        { name: 'mobile-friendliness', command: 'html mobile-friendliness', args: [url] },
         { name: 'structured-data', command: 'html structured-data', args: [url] },
         { name: 'readability', command: 'html readability', args: [url] },
         { name: 'page-load-times', command: 'html page-load-times', args: [url] },
@@ -164,7 +177,7 @@ module.exports = async (req, res) => {
         { name: 'schema-markup', command: 'html schema-markup', args: [url] },
         { name: 'meta-tags', command: 'html meta-tags', args: [url] },
         { name: 'header-response-codes', command: 'http header-response-codes', args: [url] },
-    ];
+    );
     
     if (locations && Array.isArray(locations) && locations.length > 0) {
         auditsToRun.push({ name: 'locations', command: 'locations', args: [url, '--locations-db', locations.join(',')] });
@@ -176,16 +189,17 @@ module.exports = async (req, res) => {
         
         const results = await Promise.allSettled([...auditPromises, gbpPromise]);
 
-        const auditResults = results.slice(0, -1).reduce((acc, result, index) => {
-            const auditName = auditsToRun[index].name;
+        let promiseIndex = 0;
+        auditsToRun.forEach(audit => {
+            const result = results[promiseIndex];
             if (result.status === 'fulfilled') {
-                acc[auditName] = result.value;
+                auditResults[audit.name] = result.value;
             } else {
-                acc[auditName] = { error: result.reason };
-                logError(new Error(`Audit '${auditName}' failed. Reason: ${JSON.stringify(result.reason)}`), `Audit API - Audit Failure`, 'audit_error.log');
+                auditResults[audit.name] = { error: result.reason };
+                logError(new Error(`Audit '${audit.name}' failed. Reason: ${JSON.stringify(result.reason)}`), `Audit API - Audit Failure`, 'audit_error.log');
             }
-            return acc;
-        }, {});
+            promiseIndex++;
+        });
 
         const gbpResult = results[results.length - 1];
         if (gbpResult.status === 'fulfilled') {
