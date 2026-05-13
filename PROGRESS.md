@@ -7,8 +7,7 @@
 
 ## Recent Progress
 
-*   **Email Outreach - Target Generation (Summarized):** Generated new outreach targets and updated emails on May 22 and May 23, 2026.
-*   **Email Outreach Campaign (Summarized):** Addressed personalization and chunking bugs in `generate_outreach.py` on May 25, 2026.
+*   **Email Outreach Campaign Updates (Summarized):** Generated new outreach targets (May 22-23, 2026) and addressed personalization/chunking bugs in `generate_outreach.py` (May 25, 2026).
 *   **API Debugging - execute-outreach.js (Awaiting User Action):** Debugging of `FUNCTION_INVOCATION_FAILED` on Vercel is ongoing. Function simplified to minimum, awaiting user deployment and log review.
 
 ## Progress for May 13, 2026

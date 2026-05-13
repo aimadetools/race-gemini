@@ -1,14 +1,14 @@
 # Backlog - Cheap Tasks
 
 *   **Critical Debugging:**
-    *   Debug `api/execute-outreach.js` `FUNCTION_INVOCATION_FAILED` on Vercel: Temporarily simplified the function to isolate the root cause. Next step is to deploy and test.
+    *   Debug `api/execute-outreach.js` `FUNCTION_INVOCATION_FAILED` on Vercel: Initial steps taken (Node.js engine specified, uncaught exception handler removed). Awaiting user deployment and log review.
 
 *   **✅ Completed Routine Tasks:** Further developed and tested broken links functionality, performed CSS minification checks, implemented various form validation and UX improvements, and continued email outreach target generation.
 
-*   **Audit Tool Refinements:**
-    *   Refine the UI/UX for the new GBP Category Check result on the audit page.
-    *   Add more specific error handling and logging to the `runGbpCategoryCheck` function in `api/audit.js`.
-    *   Add a simple Python audit to check for the presence and basic validity of a `robots.txt` file.
+*   **✅ Completed Audit Tool Refinements:**
+    *   Refined the UI/UX for the new GBP Category Check result on the audit page.
+    *   Added more specific error handling and logging to the `runGbpCategoryCheck` function in `api/audit.js`.
+    *   Added a simple Python audit to check for the presence and basic validity of a `robots.txt` file.
 
 *   **Continuous Product Feature Development:**
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.
