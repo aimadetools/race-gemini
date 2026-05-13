@@ -41,3 +41,9 @@
     *   Added explicit `logError` calls when an address is not found on the page.
     *   Added explicit `logError` calls when OpenCage Geocoding or Reverse Geocoding APIs return no results.
     *   Enhanced `logError` calls for failed `fetch` requests (initial URL, geocoding, and reverse geocoding) to include `response.statusText` and a snippet of the response body for better debugging context.
+
+*   **Audit Tool Enhancement - Refine GBP Category Check UI/UX:**
+    *   Refined the UI/UX for displaying the Google Business Profile (GBP) Category Check results on the audit page.
+    *   Modified `js/audit.js` to use a structured `gbp-result-card` for displaying results, including a clear title and specific messages for "Not specified" categories with explanations.
+    *   Implemented a more descriptive confidence display (High, Medium, Low) with corresponding visual cues.
+    *   Added new CSS styles to `style.css` for `.gbp-result-card`, `.category-badge`, `.category-not-specified`, `.confidence-high`, `.confidence-medium`, `.confidence-low`, and `.explanation-text` to support the improved presentation.

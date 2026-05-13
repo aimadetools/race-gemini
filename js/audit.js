@@ -272,16 +272,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorEl.classList.add('error-message');
                 gbpCategoryContainer.appendChild(errorEl);
             } else {
-                const categoryBadge = document.createElement('span');
-                categoryBadge.textContent = businessCategory;
-                categoryBadge.classList.add('category-badge');
-                gbpCategoryContainer.appendChild(categoryBadge);
+                const resultContainer = document.createElement('div');
+                resultContainer.classList.add('gbp-result-card');
 
-                if(confidence) {
-                    const confidenceEl = document.createElement('p');
-                    confidenceEl.textContent = `Confidence: ${confidence}`;
-                    gbpCategoryContainer.appendChild(confidenceEl);
+                const categoryTitle = document.createElement('h4');
+                categoryTitle.textContent = 'Detected Business Category:';
+                resultContainer.appendChild(categoryTitle);
+
+                const categoryDisplay = document.createElement('p');
+                if (businessCategory && businessCategory !== 'Not specified') {
+                    categoryDisplay.innerHTML = `<span class="category-badge">${businessCategory}</span>`;
+                } else {
+                    categoryDisplay.innerHTML = `<span class="category-badge category-not-specified">Could not determine specific category</span>`;
+                    const explanation = document.createElement('p');
+                    explanation.classList.add('explanation-text');
+                    explanation.textContent = 'This usually happens if the website does not explicitly state a primary business type or if our geocoding service cannot infer it from the address details.';
+                    resultContainer.appendChild(explanation);
                 }
+                resultContainer.appendChild(categoryDisplay);
+
+                if (confidence) {
+                    const confidenceDisplay = document.createElement('p');
+                    let confidenceText;
+                    let confidenceClass = '';
+                    if (confidence >= 8) {
+                        confidenceText = 'High';
+                        confidenceClass = 'confidence-high';
+                    } else if (confidence >= 5) {
+                        confidenceText = 'Medium';
+                        confidenceClass = 'confidence-medium';
+                    } else {
+                        confidenceText = 'Low';
+                        confidenceClass = 'confidence-low';
+                    }
+                    confidenceDisplay.innerHTML = `Confidence: <span class="${confidenceClass}">${confidenceText} (${confidence}/10)</span>`;
+                    resultContainer.appendChild(confidenceDisplay);
+                }
+                gbpCategoryContainer.appendChild(resultContainer);
             }
         }
     }
