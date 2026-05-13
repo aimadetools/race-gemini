@@ -1,4 +1,5 @@
 const fs = require('fs');
+fs.writeFileSync('/home/race/.gemini/tmp/race-gemini/outreach-start.log', 'Outreach script started');
 const path = require('path');
 
 process.on('uncaughtException', (err) => {
