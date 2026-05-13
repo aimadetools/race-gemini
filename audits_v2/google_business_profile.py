@@ -66,20 +66,22 @@ def perform_google_search(query):
         
         for a_tag in soup.find_all('a', href=True):
             href = a_tag['href']
+
+            # Prioritize direct Google Maps or Business Profile links
+            if "google.com/maps" in href or "business.google.com" in href:
+                return href, None
             
-            # First, extract the potential URL from the redirect, or use href directly
-            potential_url = href
+            # Then check for /url?q= redirects
             match = re.search(r"url\?q=(.*?)(?:&sa=U|$)", href)
             if match:
                 potential_url = requests.utils.unquote(match.group(1))
-
-            if "google.com/maps" in potential_url or "business.google.com" in potential_url:
-                return potential_url, None
+                if "google.com/maps" in potential_url or "business.google.com" in potential_url:
+                    return potential_url, None
         return None, None # No URL found, no error
     except (RequestException, HTTPError) as e:
         return None, f"An error occurred while performing Google search: {e}" # No URL found, error message
 
-def check_google_business_profile(business_name):
+def check_google_business_profile(business_name, get_business_name_func=get_business_name, perform_google_search_func=perform_google_search):
     if not business_name:
         return {
             'has_google_business_profile': False,
@@ -88,7 +90,7 @@ def check_google_business_profile(business_name):
         }
     
     search_query = f"{business_name} Google Business Profile"
-    profile_url, error_message = perform_google_search(search_query)
+    profile_url, error_message = perform_google_search_func(search_query)
 
     if error_message:
         return {
@@ -113,7 +115,7 @@ def audit(target, target_type):
     issues = []
     business_name = get_business_name(target)
 
-    result = check_google_business_profile(business_name)
+    result = check_google_business_profile(business_name, get_business_name_func=get_business_name, perform_google_search_func=perform_google_search)
     if 'issues' not in result:
         result['issues'] = []
     result['issues'].extend(issues)

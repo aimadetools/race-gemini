@@ -9,7 +9,9 @@
     *   Refined the UI/UX for the new GBP Category Check result on the audit page.
     *   Added more specific error handling and logging to the `runGbpCategoryCheck` function in `api/audit.js`.
     *   Added a simple Python audit to check for the presence and basic validity of a `robots.txt` file.
+    *   **Google Business Profile Audit Refactoring:** Replaced Google Places API dependency with Google Search-based detection and ensured all associated tests are passing.
 
 *   **Continuous Product Feature Development:**
+    *   ✅ Create a new blog post about 'Top 5 Local SEO Tips for Small Businesses'.
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.
     *   Identify and implement small, impactful product improvements or new features.
