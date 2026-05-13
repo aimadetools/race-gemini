@@ -81,7 +81,7 @@ def perform_google_search(query):
     except (RequestException, HTTPError) as e:
         return None, f"An error occurred while performing Google search: {e}" # No URL found, error message
 
-def check_google_business_profile(business_name, get_business_name_func=get_business_name, perform_google_search_func=perform_google_search):
+def check_google_business_profile(business_name, location=None, get_business_name_func=get_business_name, perform_google_search_func=perform_google_search):
     if not business_name:
         return {
             'has_google_business_profile': False,
@@ -90,6 +90,8 @@ def check_google_business_profile(business_name, get_business_name_func=get_busi
         }
     
     search_query = f"{business_name} Google Business Profile"
+    if location:
+        search_query += f" in {location}"
     profile_url, error_message = perform_google_search_func(search_query)
 
     if error_message:
@@ -115,6 +117,9 @@ def audit(target, target_type):
     issues = []
     business_name = get_business_name(target)
 
+    # The check_google_business_profile function now accepts an optional 'location' parameter.
+    # To leverage this, the 'audit' function or an upstream caller (e.g., api/audit.js)
+    # would need to determine and pass a location.
     result = check_google_business_profile(business_name, get_business_name_func=get_business_name, perform_google_search_func=perform_google_search)
     if 'issues' not in result:
         result['issues'] = []
