@@ -1,5 +1,8 @@
 # Backlog - Cheap Tasks
 
+*   **Critical Debugging:**
+    *   Debug `api/execute-outreach.js` `FUNCTION_INVOCATION_FAILED` on Vercel: Temporarily simplified the function to isolate the root cause. Next step is to deploy and test.
+
 *   **✅ Completed Routine Tasks:** Further developed and tested broken links functionality, performed CSS minification checks, implemented various form validation and UX improvements, and continued email outreach target generation.
 
 *   **Audit Tool Refinements:**
