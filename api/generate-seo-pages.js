@@ -60,9 +60,6 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
 
 // Helper function to parse opening hours string (e.g., "Mo-Fr 09:00-17:00; Sa 10:00-14:00")
 function parseOpeningHours(openingHoursString) {
-    if (!openingHoursString) {
-        return [];
-    }
 
     const defaultOpens = "09:00";
     const defaultCloses = "17:00";
@@ -78,76 +75,66 @@ function parseOpeningHours(openingHoursString) {
     };
 
     const openingHoursSpecifications = [];
-    const specs = openingHoursString.split(';').map(s => s.trim()).filter(s => s);
+    const specs = (openingHoursString || '').split(';').map(s => s.trim()).filter(s => s);
+
+    // If no specs are found, directly use the fallback
+    if (specs.length === 0) {
+        openingHoursSpecifications.push({
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": schemaDays.map(day => `http://schema.org/${day}`),
+            "opens": defaultOpens,
+            "closes": defaultCloses
+        });
+        return openingHoursSpecifications;
+    }
+
 
     for (const spec of specs) {
         let days = [];
         let opens = defaultOpens;
-        let closes = defaultCloses;
+        let closes = defaultCloses; // Typo here - should be closes
+        let dayPart = spec;
 
-        // Try to find time in format HH:MM-HH:MM or H(AM/PM)-H(AM/PM)
         const timeRegex = /(\d{1,2}(:\d{2})?\s*(AM|PM)?)\s*-\s*(\d{1,2}(:\d{2})?\s*(AM|PM)?)/i;
         const timeMatch = spec.match(timeRegex);
 
         if (timeMatch) {
             opens = convertTo24Hour(timeMatch[1]);
             closes = convertTo24Hour(timeMatch[4]);
+            dayPart = spec.substring(0, spec.indexOf(timeMatch[0])).trim();
+        }
 
-            // Extract day part (everything before the time)
-            const dayPart = spec.substring(0, spec.indexOf(timeMatch[0])).trim();
-            if (dayPart) {
-                // Handle ranges like "Mo-Fr", "Mon-Sun"
-                const rangeMatch = dayPart.match(/([a-z]{2,3})\s*-\s*([a-z]{2,3})/i);
-                if (rangeMatch) {
-                    const startDay = dayMap[rangeMatch[1].toLowerCase()];
-                    const endDay = dayMap[rangeMatch[2].toLowerCase()];
-                    if (startDay && endDay) {
-                        const startIndex = schemaDays.indexOf(startDay);
-                        const endIndex = schemaDays.indexOf(endDay);
-                        if (startIndex !== -1 && endIndex !== -1) {
-                            if (startIndex <= endIndex) {
-                                days = schemaDays.slice(startIndex, endIndex + 1);
-                            } else { // Wrap around, e.g., Friday-Monday
-                                days = schemaDays.slice(startIndex).concat(schemaDays.slice(0, endIndex + 1));
-                            }
-                        }
+        // Parse days from dayPart (either full spec or narrowed)
+        const rangeMatch = dayPart.match(/([a-z]{2,3})\s*-\s*([a-z]{2,3})/i);
+        if (rangeMatch) {
+            const startDay = dayMap[rangeMatch[1].toLowerCase()];
+            const endDay = dayMap[rangeMatch[2].toLowerCase()];
+            if (startDay && endDay) {
+                const startIndex = schemaDays.indexOf(startDay);
+                const endIndex = schemaDays.indexOf(endDay);
+                if (startIndex !== -1 && endIndex !== -1) {
+                    if (startIndex <= endIndex) {
+                        days = schemaDays.slice(startIndex, endIndex + 1);
+                    } else {
+                        days = schemaDays.slice(startIndex).concat(schemaDays.slice(0, endIndex + 1));
                     }
-                } else {
-                    // Handle individual days or comma-separated days
-                    const individualDays = dayPart.split(',').map(d => dayMap[d.trim().toLowerCase()]).filter(d => d);
-                    days = individualDays;
                 }
-            } else {
-                // If no day part is found, apply to all days by default
-                days = schemaDays;
             }
         } else {
-            // If no time is matched, consider the whole string as days and use default times
-            const potentialDays = spec.split(',').map(d => dayMap[d.trim().toLowerCase()]).filter(d => d);
-            if (potentialDays.length > 0) {
-                days = potentialDays;
-            } else {
-                days = schemaDays; // Default to all days if no specific days or times are found
-            }
+            const individualDays = dayPart.split(',').map(d => dayMap[d.trim().toLowerCase()]).filter(d => d);
+            days = individualDays;
         }
 
-        if (days.length > 0) {
-            openingHoursSpecifications.push({
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": days.map(day => `http://schema.org/${day}`),
-                opens,
-                closes
-            });
+        // If no specific days were found from dayPart, default to all days
+        if (days.length === 0) {
+            days = schemaDays;
         }
-    }
-
-    // Fallback if no specifications could be parsed
-    if (openingHoursSpecifications.length === 0) {
+        
         openingHoursSpecifications.push({
             "@type": "OpeningHoursSpecification",
-            "dayOfWeek": schemaDays.map(day => `http://schema.org/${day}`),
-            "opens": defaultOpens,
-            "closes": defaultCloses
+            "dayOfWeek": days.map(day => `http://schema.org/${day}`),
+            opens,
+            closes
         });
     }
 

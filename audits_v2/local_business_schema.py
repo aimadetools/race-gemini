@@ -51,11 +51,15 @@ class LocalBusinessSchemaAudit:
         
         if not json_ld_scripts:
             self.findings.append("No JSON-LD schema.org markup found on the page.")
-            return
+        
 
-        found_local_business_schema = False
+        found_local_business_schema_in_scripts = False
         for script in json_ld_scripts:
             try:
+                if not script.string or not script.string.strip():
+                    self.findings.append(f"Invalid JSON-LD found: Script tag content is empty or contains only whitespace. Script element: {script.prettify().strip()[:200]}...")
+                    continue
+
                 data = json.loads(script.string)
                 # Handle single object or array of objects
                 schemas = [data] if not isinstance(data, list) else data
@@ -67,7 +71,7 @@ class LocalBusinessSchemaAudit:
                                         (isinstance(schema_type, list) and "LocalBusiness" in schema_type) or
                                         self._is_sub_type_of_local_business(schema_type)):
                         
-                        found_local_business_schema = True
+                        found_local_business_schema_in_scripts = True
                         self.findings.append(f"Found LocalBusiness schema of type: {schema_type}")
                         self._validate_local_business_properties(schema)
 
@@ -76,7 +80,9 @@ class LocalBusinessSchemaAudit:
             except Exception as e:
                 self.findings.append(f"Error processing JSON-LD script: {e}. Script content: {script.string[:100]}...")
         
-        if not found_local_business_schema:
+        # After checking all scripts, if no LocalBusiness schema was found in any scripts,
+        # add the general finding.
+        if not found_local_business_schema_in_scripts:
             self.findings.append("No schema of '@type': 'LocalBusiness' or its subtypes found on the page.")
 
     def _is_sub_type_of_local_business(self, schema_type):
@@ -141,16 +147,16 @@ if __name__ == "__main__":
     # A real example would be a local business website with proper JSON-LD
     test_url_no_schema = "https://www.example.com" # Should not have schema
 
-    print("
---- Auditing a URL expected to have LocalBusiness schema ---")
-    audit_good = LocalBusinessSchemaAudit(test_url_good)
-    results_good = audit_good.run_audit()
-    for finding in results_good:
-        print(f"- {finding}")
+    # print("
+    # --- Auditing a URL expected to have LocalBusiness schema ---")
+    # audit_good = LocalBusinessSchemaAudit(test_url_good)
+    # results_good = audit_good.run_audit()
+    # for finding in results_good:
+    #     print(f"- {finding}")
 
-    print("
---- Auditing a URL expected to have NO LocalBusiness schema ---")
-    audit_no_schema = LocalBusinessSchemaAudit(test_url_no_schema)
-    results_no_schema = audit_no_schema.run_audit()
-    for finding in results_no_schema:
-        print(f"- {finding}")
+    # print("
+    # --- Auditing a URL expected to have NO LocalBusiness schema ---")
+    # audit_no_schema = LocalBusinessSchemaAudit(test_url_no_schema)
+    # results_no_schema = audit_no_schema.run_audit()
+    # for finding in results_no_schema:
+    #     print(f"- {finding}")
