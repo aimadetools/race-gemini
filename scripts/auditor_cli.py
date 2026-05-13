@@ -16,6 +16,7 @@ from audits_v2.readability import audit as readability_audit
 from audits_v2.page_load_times import audit as page_load_times_audit
 from audits_v2.locations import audit as locations_audit
 from audits_v2.robots_txt import audit as robots_txt_audit
+from audits_v2.canonical_tags import audit as canonical_tags_audit
 
 def _determine_target_type(target):
     if target.startswith('http://') or target.startswith('https://'):
@@ -137,6 +138,14 @@ def run_page_load_times_audit(args):
 def run_robots_txt_audit(args):
     try:
         results = robots_txt_audit(args.target)
+        print(json.dumps(results, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
+        sys.exit(1)
+
+def run_canonical_tags_audit(args):
+    try:
+        results = canonical_tags_audit(args.target)
         print(json.dumps(results, indent=2))
     except Exception as e:
         print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))

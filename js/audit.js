@@ -261,6 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Display Canonical Tags audit results
+        const canonicalTagsAuditList = document.getElementById('canonical-tags-audit-list');
+        canonicalTagsAuditList.innerHTML = ''; // Clear previous results
+        if (results.canonical_tags_audit) {
+            const { issues } = results.canonical_tags_audit;
+            if (issues && issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    li.classList.add(issue.type); // 'error' or 'warning'
+                    canonicalTagsAuditList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No issues found with canonical tags.';
+                li.classList.add('success');
+                canonicalTagsAuditList.appendChild(li);
+            }
+        }
+
         // Display GBP Category Check results
         const gbpCategoryContainer = document.getElementById('gbp-category-container');
         gbpCategoryContainer.innerHTML = ''; // Clear previous results

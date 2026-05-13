@@ -47,3 +47,12 @@
     *   Modified `js/audit.js` to use a structured `gbp-result-card` for displaying results, including a clear title and specific messages for "Not specified" categories with explanations.
     *   Implemented a more descriptive confidence display (High, Medium, Low) with corresponding visual cues.
     *   Added new CSS styles to `style.css` for `.gbp-result-card`, `.category-badge`, `.category-not-specified`, `.confidence-high`, `.confidence-medium`, `.confidence-low`, and `.explanation-text` to support the improved presentation.
+
+*   **Audit Tool Enhancement - Canonical Tags Audit:**
+    *   Implemented a new Python audit for canonical tags presence and correctness.
+    *   Created `audits_v2/canonical_tags.py` with an `audit` function that fetches a URL and checks for missing canonical tags, empty or relative `href` attributes, and mismatches between the canonical URL and the page URL.
+    *   Integrated the new `canonical_tags_audit` into `scripts/auditor_cli.py` by updating import statements and adding a `run_canonical_tags_audit` function.
+    *   Added the 'canonical-tags' audit to the `auditsToRun` array in `api/audit.js`.
+    *   Updated `audit.html` to include a dedicated section (`id="canonical-tags-audit"`) for displaying the results.
+    *   Modified `js/audit.js` to parse and render the results of the canonical tags audit in the UI, displaying issues or a success message.
+    *   This audit helps identify potential duplicate content issues and ensure proper SEO signaling.
