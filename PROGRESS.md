@@ -29,3 +29,9 @@
     *   **Next Steps:** Investigate general Vercel serverless function invocation failures. This may require reviewing Vercel deployment logs more thoroughly or examining Vercel configuration files (if any exist in the project).
     *   **Further Simplification:** Removed the `lib/logger.js` dependency from `api/execute-outreach.js`, replacing `logInfo` calls with direct `console.log` statements. This makes the function entirely self-contained, ruling out any potential issues originating from the custom logger module.
     *   **Action Required (User):** The `api/execute-outreach.js` function is now as minimal as possible. Please deploy the latest changes to Vercel and thoroughly check the Vercel deployment and runtime logs for `api/execute-outreach.js` to identify the root cause of the `FUNCTION_INVOCATION_FAILED` error. This is crucial to unblock the outreach campaign. If the error persists, please share detailed Vercel logs.
+
+*   **Audit Tool Enhancement - Robots.txt Audit:**
+    *   Implemented a new Python audit for `robots.txt` file presence and basic validity.
+    *   Created `audits_v2/robots_txt.py` with an `audit` function that fetches `robots.txt` from a given URL and checks for emptiness, missing 'User-agent' directives, and conflicting Disallow/Allow rules.
+    *   Integrated the new `robots_txt_audit` into `scripts/auditor_cli.py` by updating the import statement and ensuring the `run_robots_txt_audit` function correctly calls the new audit.
+    *   This audit will help identify basic misconfigurations in `robots.txt` files that could impact SEO.
