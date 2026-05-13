@@ -48,6 +48,23 @@ class ImageOptimizationAudit:
 
             # Future improvement: Check image file size (requires fetching image headers or content)
             # For this CHEAP task, we'll keep it simple for now.
+            self._check_image_size(absolute_src)
+
+    def _check_image_size(self, image_url, threshold_kb=100):
+        try:
+            head_response = requests.head(image_url, timeout=5)
+            head_response.raise_for_status()
+            content_length = head_response.headers.get('Content-Length')
+            if content_length:
+                size_bytes = int(content_length)
+                size_kb = size_bytes / 1024
+                if size_kb > threshold_kb:
+                    self.findings.append(f"Image is large ({size_kb:.2f} KB > {threshold_kb} KB): {image_url}")
+            else:
+                self.findings.append(f"Could not determine size for image (no Content-Length header): {image_url}")
+        except requests.exceptions.RequestException as e:
+            # Handle cases where HEAD request fails (e.g., resource not found, connection error)
+            self.findings.append(f"Could not check size for image {image_url}: {e}")
 
 if __name__ == "__main__":
     # Example usage:

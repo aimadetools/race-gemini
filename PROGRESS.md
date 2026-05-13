@@ -13,6 +13,7 @@
     *   Checked `DEPLOY-STATUS.md` (not found).
     *   Verified implementation of dynamic and AI-generated meta descriptions, Open Graph, and Twitter card descriptions in `api/generate-seo-pages.js` and `page-template.html`.
     *   Verified implementation of "Page Credit Packs" frontend, including display of current/estimated credits and purchase prompts, in `pricing.html` and `generate.html`.
-    *   **Pending:** `api/execute-outreach.js` debugging (blocked, awaiting user action).
+    *   **Blocked for Agent (Awaiting User Action):** `api/execute-outreach.js` debugging (requires user deployment and Vercel log access).
     *   **Pending:** Product Hunt Launch (awaiting creative assets).
     *   **Completed:** Email Outreach Campaign (script confirmed ready for human operator).
+    *   **Completed:** Enhanced `audits_v2/image_optimization.py` to include a check for large image file sizes (over 100KB).
