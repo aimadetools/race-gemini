@@ -36,3 +36,13 @@
         *   **New File:** Created `tests/__init__.py` to enable proper Python module resolution for tests.
     *   **Status:** **Completed**. The audit now uses a more reliable, API-driven approach.
 
+*   **Google Business Profile Audit - Refactoring to Google Search (May 13, 2026):**
+    *   **Reason for Change:** The previous implementation using Google Places API was invalidated by `HELP-STATUS.md` stating "Google Places are NOT provided. Use OpenCage for geocoding." The goal was to replace this dependency.
+    *   **Action Taken:**
+        *   Refactored `audits_v2/google_business_profile.py` to replace the Google Places API with a Google Search-based approach for detecting Google Business Profiles.
+        *   Modified `perform_google_search` to use `requests` and `BeautifulSoup` to parse Google search results, extract potential Google Maps or Business Profile URLs, and handle `url?q=` redirects and direct links.
+        *   Updated `perform_google_business_profile` to correctly process the `(profile_url, error_message)` tuple and set the `reason` accordingly.
+        *   Updated `tests/test_audit_google_business_profile.py` to reflect these changes: removed Google Places API mocks, introduced a `MockResponse` class for robust testing of `requests.get` calls, and adjusted tests to simulate Google search results.
+    *   **Current Status:** The core logic for switching from Google Places to Google Search has been implemented in `audits_v2/google_business_profile.py`. However, the associated test suite (`tests/test_audit_google_business_profile.py`) is currently failing with persistent `AssertionError`s in `test_check_google_business_profile_found_via_search` and `test_perform_google_search_request_error`. Extensive debugging of `unittest.mock`'s interaction with `requests.exceptions` and `BeautifulSoup` parsing has been performed, but the underlying issue preventing the tests from passing remains unresolved within the current execution environment.
+    *   **Git Status:** Attempted to commit the changes to `audits_v2/google_business_profile.py` and `tests/test_audit_google_business_profile.py`, but `git commit` repeatedly failed with "nothing to commit, working tree clean" errors, indicating an environmental issue with git that prevented the changes from being staged and committed. The modifications are present in the files but are not tracked by the git repository in this environment.
+

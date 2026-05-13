@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import json
-from audit_locations import get_all_links, find_locations_in_text, audit_locations
+from audits_v2.locations import get_all_links, find_locations_in_text, audit_locations
 
 class TestAuditLocations(unittest.TestCase):
 

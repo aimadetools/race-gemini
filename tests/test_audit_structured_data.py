@@ -2,7 +2,7 @@
 import unittest
 import json
 from unittest.mock import patch
-from audit_structured_data import audit_structured_data
+from audits_v2.structured_data import audit_structured_data
 
 class TestAuditStructuredData(unittest.TestCase):
 

@@ -1,12 +1,8 @@
 import unittest
 import json
 import os
-import subprocess
 import sys
-
-# Add the directory containing the audit script to the Python path
-sys.path.insert(0, os.path.abspath('.'))
-from audit_h2_h3_tags import audit_h2_h3_tags
+from audits_v2.h2_h3_tags import audit
 
 class TestAuditH2H3Tags(unittest.TestCase):
 
@@ -28,17 +24,8 @@ class TestAuditH2H3Tags(unittest.TestCase):
         return filepath
 
     def _run_audit_script(self, filepath):
-        # Run the script as a subprocess to get JSON output
-        result = subprocess.run(
-            [sys.executable, 'audit_h2_h3_tags.py', filepath],
-            capture_output=True,
-            text=True,
-            check=False # Don't raise an exception for non-zero exit codes
-        )
-        try:
-            return json.loads(result.stdout)
-        except json.JSONDecodeError:
-            self.fail(f"Script returned invalid JSON: {result.stdout}")
+        # Directly call the audit function
+        return audit(filepath, 'file_path')
 
     def test_correct_h2_h3_structure(self):
         html_content = """

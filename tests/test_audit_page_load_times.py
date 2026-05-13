@@ -2,7 +2,7 @@
 import unittest
 import json
 from unittest.mock import patch
-from audit_page_load_times import audit_page_load_time
+from audits_v2.page_load_times import audit_page_load_time
 
 class TestAuditPageLoadTimes(unittest.TestCase):
 

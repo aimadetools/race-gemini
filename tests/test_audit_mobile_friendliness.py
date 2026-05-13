@@ -1,7 +1,7 @@
 
 import unittest
 import json
-from audit_mobile_friendliness import audit_mobile_friendliness
+from audits_v2.mobile_friendliness import audit_mobile_friendliness
 
 class TestAuditMobileFriendliness(unittest.TestCase):
 
