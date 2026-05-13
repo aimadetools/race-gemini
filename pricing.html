@@ -233,6 +233,26 @@
                 </button>
             </form>
         </div>
+        <div class="card" id="custom-credits-card">
+            <h2>Custom Credits</h2>
+            <p>Choose your own amount of credits.</p>
+            <div class="form-group">
+                <label for="customCredits">Credits:</label>
+                <input type="number" id="customCredits" class="form-input" value="1" min="1" max="100000">
+            </div>
+            <p class="price">
+                $<span id="calculatedPrice">1.00</span>
+            </p>
+            <p data-i18n-key="pricing_one_time_fee">
+                One-Time Fee
+            </p>
+            <form action="/api/checkout" method="POST" id="custom-credits-form">
+                <input name="creditPackId" type="hidden" id="customCreditPackId" value="pack_custom"/>
+                <input name="customAmount" type="hidden" id="customAmountInput"/>
+                <input name="customCredits" type="hidden" id="customCreditsInput"/>
+                <button class="button" type="submit">Buy Custom Credits</button>
+            </form>
+        </div>
     </div>
 </div>
 <div id="subscription-plans" style="display: none;">
@@ -471,6 +491,54 @@
 </div>
 </footer>
 <script src="/js/app.min.js">
+</script>
+<script>
+    document.getElementById('showCredits').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'block';
+        document.getElementById('subscription-plans').style.display = 'none';
+    });
+
+    document.getElementById('showSubscriptions').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'none';
+        document.getElementById('subscription-plans').style.display = 'block';
+    });
+
+    const customCreditsInput = document.getElementById('customCredits');
+    const calculatedPriceSpan = document.getElementById('calculatedPrice');
+    const customAmountInput = document.getElementById('customAmountInput');
+    const customCreditsFormInput = document.getElementById('customCreditsInput');
+
+    function calculateCustomPrice() {
+        let credits = parseInt(customCreditsInput.value, 10);
+        if (isNaN(credits) || credits < 1) {
+            credits = 1;
+            customCreditsInput.value = 1;
+        }
+        if (credits > 100000) { // Set a reasonable upper limit to prevent abuse
+            credits = 100000;
+            customCreditsInput.value = 100000;
+        }
+
+        let pricePerCredit;
+        if (credits < 200) {
+            pricePerCredit = 1.00; // $1.00/credit
+        } else if (credits >= 200 && credits < 1000) {
+            pricePerCredit = 0.90; // $0.90/credit
+        } else { // credits >= 1000
+            pricePerCredit = 0.80; // $0.80/credit
+        }
+
+        const totalPrice = (credits * pricePerCredit).toFixed(2);
+        calculatedPriceSpan.textContent = totalPrice;
+        customAmountInput.value = (parseFloat(totalPrice) * 100).toFixed(0); // Price in cents
+        customCreditsFormInput.value = credits; // Actual number of credits
+    }
+
+    // Initial calculation
+    calculateCustomPrice();
+
+    // Recalculate on input change
+    customCreditsInput.addEventListener('input', calculateCustomPrice);
 </script>
 <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 </body>

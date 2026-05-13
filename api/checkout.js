@@ -40,7 +40,26 @@ module.exports = async (req, res) => {
                 'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 80000 }, // $800.00
             };
 
-            const selectedPack = creditPackDetails[creditPackId];
+            let selectedPack;
+
+            if (creditPackId === 'pack_custom') {
+                const { customAmount, customCredits } = req.body;
+                const parsedCustomAmount = parseInt(customAmount, 10);
+                const parsedCustomCredits = parseInt(customCredits, 10);
+
+                if (isNaN(parsedCustomAmount) || parsedCustomAmount <= 0 || isNaN(parsedCustomCredits) || parsedCustomCredits <= 0) {
+                    await logError(new Error(`Invalid custom amount or credits provided: amount=${customAmount}, credits=${customCredits}`), 'Checkout Product Selection - Custom Pack Validation', 'checkout_error.log');
+                    return res.status(400).json({ message: 'Invalid custom amount or credits for custom pack.' });
+                }
+
+                selectedPack = {
+                    name: `Custom Credit Pack (${parsedCustomCredits} Credits)`,
+                    credits: parsedCustomCredits,
+                    amount: parsedCustomAmount,
+                };
+            } else {
+                selectedPack = creditPackDetails[creditPackId];
+            }
 
             if (!selectedPack) {
                 await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection', 'checkout_error.log');
