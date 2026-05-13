@@ -1,6 +1,7 @@
 import sys
 import json
 import requests
+from requests.exceptions import RequestException, HTTPError
 from bs4 import BeautifulSoup
 import re
 import os
@@ -53,6 +54,31 @@ def get_business_name(url):
         # Log error or handle more gracefully if needed
         return None
 
+def perform_google_search(query):
+    search_url = f"https://www.google.com/search?q={requests.utils.quote(query)}"
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+        response = requests.get(search_url, headers=headers, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        for a_tag in soup.find_all('a', href=True):
+            href = a_tag['href']
+            
+            # First, extract the potential URL from the redirect, or use href directly
+            potential_url = href
+            match = re.search(r"url\?q=(.*?)(?:&sa=U|$)", href)
+            if match:
+                potential_url = requests.utils.unquote(match.group(1))
+
+            if "google.com/maps" in potential_url or "business.google.com" in potential_url:
+                return potential_url, None
+        return None, None # No URL found, no error
+    except (RequestException, HTTPError) as e:
+        return None, f"An error occurred while performing Google search: {e}" # No URL found, error message
+
 def check_google_business_profile(business_name):
     if not business_name:
         return {
@@ -61,64 +87,27 @@ def check_google_business_profile(business_name):
             'reason': 'Could not determine business name from website.'
         }
     
-    google_places_api_key = os.environ.get("GOOGLE_PLACES_API_KEY")
-    if not google_places_api_key:
+    search_query = f"{business_name} Google Business Profile"
+    profile_url, error_message = perform_google_search(search_query)
+
+    if error_message:
         return {
             'has_google_business_profile': False,
             'profile_url': None,
-            'reason': 'GOOGLE_PLACES_API_KEY is not set. Cannot use Google Places API.'
+            'reason': error_message
         }
-
-    places_api_url = "https://places.googleapis.com/v1/places:searchText"
-    headers = {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": google_places_api_key,
-        "X-Goog-FieldMask": "places.displayName,places.googleMapsUri" # Request only necessary fields
-    }
-    payload = {
-        "textQuery": business_name,
-        "languageCode": "en" # Optional: specify language
-    }
-
-    try:
-        response = requests.post(places_api_url, headers=headers, json=payload, timeout=10)
-        response.raise_for_status() # Raise an exception for HTTP errors
-        response_data = response.json()
-
-        if response_data and 'places' in response_data and len(response_data['places']) > 0:
-            for place in response_data['places']:
-                if 'googleMapsUri' in place:
-                    return {
-                        'has_google_business_profile': True,
-                        'profile_url': place['googleMapsUri'],
-                        'reason': f"Found Google Business Profile for '{place.get('displayName', business_name)}' via Google Places API."
-                    }
-            
-            return {
-                'has_google_business_profile': False,
-                'profile_url': None,
-                'reason': f"Found places for '{business_name}' but no Google Maps URL was available."
-            }
-        else:
-            return {
-                'has_google_business_profile': False,
-                'profile_url': None,
-                'reason': f"No relevant Google Business Profile found for '{business_name}' via Google Places API."
-            }
-
-    except requests.exceptions.RequestException as e:
+    elif profile_url:
+        return {
+            'has_google_business_profile': True,
+            'profile_url': profile_url,
+            'reason': f"Found Google Business Profile for '{business_name}' via Google search."
+        }
+    else:
         return {
             'has_google_business_profile': False,
             'profile_url': None,
-            'reason': f"An error occurred while querying Google Places API: {e}"
+            'reason': f"No clear Google Business Profile link found for '{business_name}' via Google search."
         }
-    except json.JSONDecodeError:
-        return {
-            'has_google_business_profile': False,
-            'profile_url': None,
-            'reason': "Failed to decode JSON response from Google Places API."
-        }
-
 # Main audit function for integration with auditor_cli.py
 def audit(target, target_type):
     issues = []
