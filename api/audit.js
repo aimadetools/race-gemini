@@ -160,6 +160,7 @@ module.exports = async (req, res) => {
         { name: 'page-load-times', command: 'html page-load-times', args: [url] },
         { name: 'robots-txt', command: 'robots', args: [url] },
         { name: 'canonical-tags', command: 'html canonical-tags', args: [url] },
+        { name: 'sitemap-xml', command: 'xml sitemap-xml', args: [url] },
     ];
     
     if (locations && Array.isArray(locations) && locations.length > 0) {

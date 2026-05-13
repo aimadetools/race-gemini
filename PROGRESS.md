@@ -56,3 +56,12 @@
     *   Updated `audit.html` to include a dedicated section (`id="canonical-tags-audit"`) for displaying the results.
     *   Modified `js/audit.js` to parse and render the results of the canonical tags audit in the UI, displaying issues or a success message.
     *   This audit helps identify potential duplicate content issues and ensure proper SEO signaling.
+
+*   **Audit Tool Enhancement - Sitemap.xml Audit:**
+    *   Implemented a new Python audit for sitemap.xml file presence and basic validity.
+    *   Created `audits_v2/sitemap_xml.py` with an `audit` function that fetches the sitemap.xml from a given URL and checks for emptiness, well-formedness of XML, and expected root elements ('urlset' or 'sitemapindex').
+    *   Integrated the new `sitemap_xml_audit` into `scripts/auditor_cli.py` by updating import statements and adding a `run_sitemap_xml_audit` function.
+    *   Added the 'sitemap-xml' audit to the `auditsToRun` array in `api/audit.js`.
+    *   Updated `audit.html` to include a dedicated section (`id="sitemap-xml-audit"`) for displaying the results.
+    *   Modified `js/audit.js` to parse and render the results of the sitemap XML audit in the UI, displaying issues or a success message.
+    *   This audit helps ensure search engines can effectively discover and crawl the site's content.

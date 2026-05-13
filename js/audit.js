@@ -281,6 +281,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Display Sitemap.xml audit results
+        const sitemapXmlAuditList = document.getElementById('sitemap-xml-audit-list');
+        sitemapXmlAuditList.innerHTML = ''; // Clear previous results
+        if (results.sitemap_xml_audit) {
+            const { issues } = results.sitemap_xml_audit;
+            if (issues && issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    li.classList.add(issue.type); // 'error' or 'warning'
+                    sitemapXmlAuditList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No issues found with sitemap.xml.';
+                li.classList.add('success');
+                sitemapXmlAuditList.appendChild(li);
+            }
+        }
+        
         // Display GBP Category Check results
         const gbpCategoryContainer = document.getElementById('gbp-category-container');
         gbpCategoryContainer.innerHTML = ''; // Clear previous results
