@@ -1,7 +1,11 @@
 # Backlog - Cheap Tasks
 
-*   **Email Outreach Setup:** Email generation is complete, and the `execute_outreach_curl.sh` script is ready for sending. Ongoing work involves identifying and adding new outreach targets and regenerating emails.
-*   **Completed Product Feature Development:** Further developed and tested broken links functionality, performed CSS minification check, implemented "Clear form error messages on input focus/change," added H1 tag length validation, implemented client-side validation for 'Telephone Number' input, added `maxlength` attributes to `business-type`, `service-list`, and `city-list` input fields, and added helper text for 'Opening Hours' field.
+*   **✅ Completed Routine Tasks:** Further developed and tested broken links functionality, performed CSS minification checks, implemented various form validation and UX improvements, and continued email outreach target generation.
+
+*   **Audit Tool Refinements:**
+    *   Refine the UI/UX for the new GBP Category Check result on the audit page.
+    *   Add more specific error handling and logging to the `runGbpCategoryCheck` function in `api/audit.js`.
+    *   Add a simple Python audit to check for the presence and basic validity of a `robots.txt` file.
 
 *   **Continuous Product Feature Development:**
     *   Review `BACKLOG-PREMIUM.md` for suitable tasks that can be broken down into cheaper, simpler subtasks.

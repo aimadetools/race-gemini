@@ -240,6 +240,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 structuredDataAuditList.innerHTML = '<li>No structured data found.</li>';
             }
         }
+
+        // Display GBP Category Check results
+        const gbpCategoryAuditList = document.getElementById('gbp-category-audit-list');
+        if (results.gbp_category_check) {
+            const { businessCategory, error } = results.gbp_category_check;
+            if (error) {
+                const errorLi = document.createElement('li');
+                errorLi.textContent = `Error: ${error}`;
+                gbpCategoryAuditList.appendChild(errorLi);
+            } else {
+                const li = document.createElement('li');
+                li.textContent = `OpenCage identifies this business as category: ${businessCategory}`;
+                gbpCategoryAuditList.appendChild(li);
+            }
+        }
     }
 
     function escapeHtml(str) {

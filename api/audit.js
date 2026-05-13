@@ -1,6 +1,46 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const { logError } = require('../../lib/logger');
+const { parseAddress } = require('../../lib/html-parser');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+async function runGbpCategoryCheck(url) {
+    const openCageApiKey = process.env.OPENCAGE_API_KEY;
+    if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
+        return { error: 'OpenCage API key is not configured.' };
+    }
+
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const address = parseAddress(html);
+
+        if (!address) {
+            return { businessCategory: 'Address not found on page.' };
+        }
+
+        const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
+        const geocodingResponse = await fetch(geocodingUrl);
+        const geocodingData = await geocodingResponse.json();
+
+        if (geocodingData.results && geocodingData.results.length > 0) {
+            const { lat, lng } = geocodingData.results[0].geometry;
+
+            const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
+            const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
+            const reverseGeocodingData = await reverseGeocodingResponse.json();
+            
+            if (reverseGeocodingData.results && reverseGeocodingData.results.length > 0) {
+                const components = reverseGeocodingData.results[0].components;
+                const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
+                return { businessCategory };
+            }
+        }
+        return { businessCategory: 'Could not determine category.' };
+    } catch (error) {
+        return { error: error.message };
+    }
+}
 
 const runAudit = (auditCommand, args) => {
     return new Promise((resolve, reject) => {
