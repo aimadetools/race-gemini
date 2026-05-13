@@ -161,6 +161,7 @@ module.exports = async (req, res) => {
         { name: 'robots-txt', command: 'robots', args: [url] },
         { name: 'canonical-tags', command: 'html canonical-tags', args: [url] },
         { name: 'sitemap-xml', command: 'xml sitemap-xml', args: [url] },
+        { name: 'schema-markup', command: 'html schema-markup', args: [url] },
     ];
     
     if (locations && Array.isArray(locations) && locations.length > 0) {

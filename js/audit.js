@@ -300,6 +300,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 sitemapXmlAuditList.appendChild(li);
             }
         }
+
+        // Display Schema Markup audit results
+        const schemaMarkupAuditList = document.getElementById('schema-markup-audit-list');
+        schemaMarkupAuditList.innerHTML = ''; // Clear previous results
+        if (results.schema_markup_audit) {
+            const { issues } = results.schema_markup_audit;
+            if (issues && issues.length > 0) {
+                // Filter out success messages if you only want to show actual problems
+                const actualIssues = issues.filter(issue => issue.type !== "JSON-LD Schema Found" && issue.type !== "Microdata Schema Found" && issue.type !== "RDFa Schema Found");
+
+                if (actualIssues.length > 0) {
+                    actualIssues.forEach(issue => {
+                        const li = document.createElement('li');
+                        li.textContent = issue.description;
+                        li.classList.add(issue.type); // 'error' or 'warning'
+                        schemaMarkupAuditList.appendChild(li);
+                    });
+                } else {
+                    const foundTypes = issues.map(issue => issue.type.replace(' Schema Found', '')).filter(type => type !== 'No Schema Markup Found');
+                    if (foundTypes.length > 0) {
+                        const li = document.createElement('li');
+                        li.textContent = `Schema markup found (Types: ${foundTypes.join(', ')}).`;
+                        li.classList.add('success');
+                        schemaMarkupAuditList.appendChild(li);
+                    } else {
+                        const li = document.createElement('li');
+                        li.textContent = 'No schema markup found.';
+                        li.classList.add('warning'); // Or 'error' depending on how critical this is
+                        schemaMarkupAuditList.appendChild(li);
+                    }
+                }
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No schema markup found.';
+                li.classList.add('warning');
+                schemaMarkupAuditList.appendChild(li);
+            }
+        }
         
         // Display GBP Category Check results
         const gbpCategoryContainer = document.getElementById('gbp-category-container');

@@ -65,3 +65,12 @@
     *   Updated `audit.html` to include a dedicated section (`id="sitemap-xml-audit"`) for displaying the results.
     *   Modified `js/audit.js` to parse and render the results of the sitemap XML audit in the UI, displaying issues or a success message.
     *   This audit helps ensure search engines can effectively discover and crawl the site's content.
+
+*   **Audit Tool Enhancement - Schema Markup Audit:**
+    *   Implemented a new Python audit for `schema.org` markup presence.
+    *   Created `audits_v2/schema_markup.py` with an `audit` function that fetches a URL and checks for the presence of JSON-LD scripts, Microdata (itemtype attribute), and RDFa (vocab attribute).
+    *   Integrated the new `schema_markup_audit` into `scripts/auditor_cli.py` by updating import statements and adding a `run_schema_markup_audit` function.
+    *   Added the 'schema-markup' audit to the `auditsToRun` array in `api/audit.js`.
+    *   Updated `audit.html` to include a dedicated section (`id="schema-markup-audit"`) for displaying the results.
+    *   Modified `js/audit.js` to parse and render the results of the schema markup audit in the UI, displaying issues or a success message, and differentiating between various schema types found.
+    *   This audit helps ensure that a website provides structured data that search engines can use to understand its content better, potentially improving rich snippet displays.
