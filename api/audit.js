@@ -162,6 +162,7 @@ module.exports = async (req, res) => {
         { name: 'canonical-tags', command: 'html canonical-tags', args: [url] },
         { name: 'sitemap-xml', command: 'xml sitemap-xml', args: [url] },
         { name: 'schema-markup', command: 'html schema-markup', args: [url] },
+        { name: 'meta-tags', command: 'html meta-tags', args: [url] },
     ];
     
     if (locations && Array.isArray(locations) && locations.length > 0) {

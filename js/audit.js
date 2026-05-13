@@ -338,6 +338,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 schemaMarkupAuditList.appendChild(li);
             }
         }
+
+        // Display Meta Tags audit results
+        const metaTagsAuditList = document.getElementById('meta-tags-audit-list');
+        metaTagsAuditList.innerHTML = ''; // Clear previous results
+        if (results.meta_tags_audit) {
+            const { issues } = results.meta_tags_audit;
+            if (issues && issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    li.classList.add(issue.type); // 'Missing', 'Short', 'Long'
+                    metaTagsAuditList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Page titles and meta descriptions are optimal.';
+                li.classList.add('success');
+                metaTagsAuditList.appendChild(li);
+            }
+        }
         
         // Display GBP Category Check results
         const gbpCategoryContainer = document.getElementById('gbp-category-container');

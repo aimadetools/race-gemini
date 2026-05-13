@@ -19,6 +19,7 @@ from audits_v2.robots_txt import audit as robots_txt_audit
 from audits_v2.canonical_tags import audit as canonical_tags_audit
 from audits_v2.sitemap_xml import audit as sitemap_xml_audit
 from audits_v2.schema_markup import audit as schema_markup_audit
+from audits_v2.meta_tags import audit as meta_tags_audit
 
 def _determine_target_type(target):
     if target.startswith('http://') or target.startswith('https://'):
@@ -164,6 +165,14 @@ def run_sitemap_xml_audit(args):
 def run_schema_markup_audit(args):
     try:
         results = schema_markup_audit(args.target)
+        print(json.dumps(results, indent=2))
+    except Exception as e:
+        print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))
+        sys.exit(1)
+
+def run_meta_tags_audit(args):
+    try:
+        results = meta_tags_audit(args.target)
         print(json.dumps(results, indent=2))
     except Exception as e:
         print(json.dumps({"error": f"An unexpected error occurred: {str(e)}"}, indent=2))

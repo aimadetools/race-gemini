@@ -74,3 +74,12 @@
     *   Updated `audit.html` to include a dedicated section (`id="schema-markup-audit"`) for displaying the results.
     *   Modified `js/audit.js` to parse and render the results of the schema markup audit in the UI, displaying issues or a success message, and differentiating between various schema types found.
     *   This audit helps ensure that a website provides structured data that search engines can use to understand its content better, potentially improving rich snippet displays.
+
+*   **Audit Tool Enhancement - Meta Tags Audit:**
+    *   Implemented a new Python audit for page titles and meta descriptions.
+    *   Created `audits_v2/meta_tags.py` with an `audit` function that fetches a URL and checks for missing title/meta description tags, and their optimal length (too short or too long).
+    *   Integrated the new `meta_tags_audit` into `scripts/auditor_cli.py` by updating import statements and adding a `run_meta_tags_audit` function.
+    *   Added the 'meta-tags' audit to the `auditsToRun` array in `api/audit.js`.
+    *   Updated `audit.html` to include a dedicated section (`id="meta-tags-audit"`) for displaying the results.
+    *   Modified `js/audit.js` to parse and render the results of the meta tags audit in the UI, displaying specific issues or a success message.
+    *   This audit helps optimize a website's appearance in search results and improve click-through rates.
