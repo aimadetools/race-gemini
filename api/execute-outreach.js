@@ -4,15 +4,11 @@ process.on('uncaughtException', (err) => {
   console.error(err);
 
   console.error('--- DEBUG: Uncaught Exception ---');
-  // In a serverless environment, re-throwing or exiting might lead to quicker restarts
-  // or better error reporting by the platform.
   process.exit(1);
 });
 
-const { logError, logInfo } = require('../../lib/logger');
-
 module.exports = async (req, res) => {
-  await logInfo('execute-outreach.js received simplified request', 'Handler');
+  console.log('execute-outreach.js received simplified request');
   res.status(200).json({ message: 'Simplified outreach function executed successfully.' });
-  await logInfo('execute-outreach.js ending simplified', 'Handler');
+  console.log('execute-outreach.js ending simplified');
 };
