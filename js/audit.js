@@ -358,6 +358,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 metaTagsAuditList.appendChild(li);
             }
         }
+
+        // Display Header Response Codes audit results
+        const headerResponseCodesAuditList = document.getElementById('header-response-codes-audit-list');
+        headerResponseCodesAuditList.innerHTML = ''; // Clear previous results
+        if (results.header_response_codes_audit) {
+            const { issues } = results.header_response_codes_audit;
+            if (issues && issues.length > 0) {
+                issues.forEach(issue => {
+                    const li = document.createElement('li');
+                    li.textContent = issue.description;
+                    li.classList.add(issue.type.toLowerCase().replace(/\s/g, '-')); // 'success', 'redirect', '404-not-found', etc.
+                    headerResponseCodesAuditList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Page returns a 200 OK status code.';
+                li.classList.add('success');
+                headerResponseCodesAuditList.appendChild(li);
+            }
+        }
         
         // Display GBP Category Check results
         const gbpCategoryContainer = document.getElementById('gbp-category-container');

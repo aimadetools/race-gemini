@@ -83,3 +83,12 @@
     *   Updated `audit.html` to include a dedicated section (`id="meta-tags-audit"`) for displaying the results.
     *   Modified `js/audit.js` to parse and render the results of the meta tags audit in the UI, displaying specific issues or a success message.
     *   This audit helps optimize a website's appearance in search results and improve click-through rates.
+
+*   **Audit Tool Enhancement - Header Response Codes Audit:**
+    *   Implemented a new Python audit for HTTP header response codes.
+    *   Created `audits_v2/header_response_codes.py` with an `audit` function that fetches a URL and checks its HTTP status code, categorizing it as Success (200), Redirect (3xx), Client Error (4xx), or Server Error (5xx).
+    *   Integrated the new `header_response_codes_audit` into `scripts/auditor_cli.py` by updating import statements and adding a `run_header_response_codes_audit` function.
+    *   Added the 'header-response-codes' audit to the `auditsToRun` array in `api/audit.js`.
+    *   Updated `audit.html` to include a dedicated section (`id="header-response-codes-audit"`) for displaying the results.
+    *   Modified `js/audit.js` to parse and render the results of the header response codes audit in the UI, displaying specific issues or a success message based on the status code.
+    *   This audit helps identify broken pages, incorrect redirects, and server-side issues affecting user experience and SEO.

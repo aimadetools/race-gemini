@@ -163,6 +163,7 @@ module.exports = async (req, res) => {
         { name: 'sitemap-xml', command: 'xml sitemap-xml', args: [url] },
         { name: 'schema-markup', command: 'html schema-markup', args: [url] },
         { name: 'meta-tags', command: 'html meta-tags', args: [url] },
+        { name: 'header-response-codes', command: 'http header-response-codes', args: [url] },
     ];
     
     if (locations && Array.isArray(locations) && locations.length > 0) {
