@@ -3,11 +3,24 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 class ImageOptimizationAudit:
+    """
+    Audits a given URL for image optimization best practices, including:
+    - Presence of 'alt' attributes for accessibility.
+    - Suggestion to use modern image formats (e.g., WebP).
+    - Identification of large image file sizes.
+    """
     def __init__(self, url):
         self.url = url
         self.findings = []
 
     def run_audit(self):
+        """
+        Executes the image optimization audit by fetching the URL content
+        and checking all image tags for optimization issues.
+
+        Returns:
+            list: A list of findings, including errors and optimization recommendations.
+        """
         print(f"Running Image Optimization Audit for: {self.url}")
         try:
             response = requests.get(self.url, timeout=10)
@@ -22,6 +35,12 @@ class ImageOptimizationAudit:
         return self.findings
 
     def _check_images(self, soup):
+        """
+        Finds all image tags in the parsed HTML and checks them for optimization issues.
+
+        Args:
+            soup (BeautifulSoup): The BeautifulSoup object of the parsed HTML.
+        """
         images = soup.find_all('img')
         if not images:
             self.findings.append("No <img> tags found on the page.")
@@ -51,6 +70,13 @@ class ImageOptimizationAudit:
             self._check_image_size(absolute_src)
 
     def _check_image_size(self, image_url, threshold_kb=100):
+        """
+        Checks the file size of an image at the given URL against a specified threshold.
+
+        Args:
+            image_url (str): The absolute URL of the image.
+            threshold_kb (int): The maximum allowed image size in kilobytes.
+        """
         try:
             head_response = requests.head(image_url, timeout=5)
             head_response.raise_for_status()
