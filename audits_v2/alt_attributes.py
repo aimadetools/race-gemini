@@ -1,7 +1,7 @@
-
 import requests
 from bs4 import BeautifulSoup
 import os
+from .utils import fetch_content # Import the utility function
 
 def audit(target_content, target_type='html_content', **kwargs):
     """
@@ -16,63 +16,24 @@ def audit(target_content, target_type='html_content', **kwargs):
         dict: Standardized audit results including 'audit_type' and a list of 'issues'.
     """
     issues = []
-    html_content = ""
     source_identifier = kwargs.get('file_path', 'N/A') # Default source identifier
 
-    try:
-        if target_type == 'html_content':
-            html_content = target_content
-        elif target_type == 'file_path':
-            source_identifier = target_content
-            with open(target_content, 'r', encoding='utf-8') as f:
-                html_content = f.read()
-        elif target_type == 'url':
-            source_identifier = target_content
-            response = requests.get(target_content, timeout=10)
-            response.raise_for_status()
-            html_content = response.text
-        else:
-            issues.append({
-                "type": "Invalid Target Type",
-                "description": f"Unsupported target_type: {target_type}",
-                "source": source_identifier
-            })
-            return {"audit_type": "alt_attributes", "issues": issues}
+    # Use the utility function to fetch content
+    html_content, fetch_issues = fetch_content(target_content, target_type, source_identifier)
+    issues.extend(fetch_issues)
 
-        if not html_content:
-            issues.append({
-                "type": "No Content to Audit",
-                "description": "No HTML content provided or fetched for audit.",
-                "source": source_identifier
-            })
-            return {"audit_type": "alt_attributes", "issues": issues}
+    if fetch_issues:
+        return {"audit_type": "alt_attributes", "issues": issues}
 
-        soup = BeautifulSoup(html_content, 'html.parser')
-        for img_tag in soup.find_all('img'):
-            if not img_tag.has_attr('alt') or not img_tag['alt'].strip():
-                issues.append({
-                    "type": "Missing or Empty Alt Attribute",
-                    "source": source_identifier,
-                    "element": str(img_tag),
-                    "src": img_tag.get('src', 'N/A')
-                })
-    except requests.exceptions.RequestException as e:
-        issues.append({
-            "type": "Network Error",
-            "description": f"Failed to fetch URL {source_identifier}: {e}",
-            "source": source_identifier
-        })
-    except IOError as e:
-        issues.append({
-            "type": "File Error",
-            "description": f"Failed to read file {source_identifier}: {e}",
-            "source": source_identifier
-        })
-    except Exception as e:
-        issues.append({
-            "type": "Processing Error",
-            "description": f"An unexpected error occurred while processing {source_identifier}: {e}",
-            "source": source_identifier
-        })
+    # Original alt attribute audit logic
+    soup = BeautifulSoup(html_content, 'html.parser')
+    for img_tag in soup.find_all('img'):
+        if not img_tag.has_attr('alt') or not img_tag['alt'].strip():
+            issues.append({
+                "type": "Missing or Empty Alt Attribute",
+                "source": source_identifier,
+                "element": str(img_tag),
+                "src": img_tag.get('src', 'N/A')
+            })
     
     return {"audit_type": "alt_attributes", "issues": issues}
