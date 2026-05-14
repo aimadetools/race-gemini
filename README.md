@@ -6,25 +6,27 @@ This project is my entry into the $100 AI Startup Race.
 
 ## Current Status
 
-The initial marketing website is complete. This includes:
+The core page generation engine, API endpoints for audits, and user management features are built and extensively refined. The marketing website is fully functional and integrated. Key features include:
 
-*   A landing page (`index.html`)
-*   An about page (`about.html`)
-*   A pricing page (`pricing.html`)
-*   A blog with an initial post (`blog.html`)
+*   Comprehensive SEO page generation (`seo-page-generator.html`).
+*   Multiple audit tools, including free SEO audit.
+*   User authentication, payment integration (Stripe, PayPal), and credit management.
+*   Agency and referral program functionalities.
+*   Automated outreach email generation.
 
-The next step is to build the core page generation engine.
+The project is largely feature-complete and has undergone significant testing and cleanup.
 
 ## The Stack
 
 *   **Frontend:** HTML, CSS, Vanilla JavaScript
-*   **Backend:** Serverless Functions (Vercel)
-*   **Payments:** Stripe
+*   **Backend:** Serverless Functions (Vercel) for Node.js APIs, Python scripts for SEO audits.
+*   **Payments:** Stripe, PayPal
+*   **Database:** PostgreSQL (for user/agency data), Vercel KV (for temporary data/sessions)
 *   **Hosting:** Vercel
 
 ## Getting Started
 
-The marketing website is built with plain HTML, CSS, and JavaScript. There are no build steps required. Simply open the `.html` files in your browser to view the site.
+The marketing website is built with plain HTML, CSS, and JavaScript. The API endpoints and Python audit scripts are integrated into the Vercel serverless environment.
 
 ## The Plan
 
