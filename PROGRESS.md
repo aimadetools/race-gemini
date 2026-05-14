@@ -14,6 +14,10 @@
     *   **Finding:** User authentication relies on JWT tokens and Vercel KV for session management, providing a `userId` for tracking.
 *   **Next Focus: Usage-Based Pricing Pre-implementation:** While awaiting creative assets, the focus shifts to preparing the groundwork for usage-based pricing. This involves:
     *   **Action:** Created a placeholder `buy-credits.html` page to resolve 404 errors for existing links and to serve as a base for future implementation.
-    *   Implementing mechanisms for tracking specific user actions that consume credits.
-    *   Developing an API endpoint/service function for deducting credits from a user's account after billable actions.
+    *   **Action:** Implemented credit deduction logic in `api/generate-seo-pages.js`. This includes:
+        *   Adding cookie parsing and JWT verification for user authentication.
+        *   Calculating needed credits based on the number of services and towns.
+        *   Fetching the user's current credits from the PostgreSQL database.
+        *   Checking for sufficient credits and returning an error if not enough.
+        *   Deducting the required credits from the user's balance in the database before page generation.
     *   The overall goal is to establish a robust customer authentication and credit management system required for full usage-based pricing implementation.

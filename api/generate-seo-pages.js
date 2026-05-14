@@ -2,6 +2,10 @@ const fs = require('fs').promises;
 const path = require('path');
 const slugify = require('slugify');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { parse } = require('cookie'); // Import parse from cookie
+const jwt = require('jsonwebtoken'); // Import jwt
+const { query } = require('../db/index.js'); // Import PostgreSQL query utility
+const { logError } = require('../../lib/logger'); // Import centralized logger
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -171,6 +175,24 @@ function convertTo24Hour(time12h) {
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
+        const cookies = parse(req.headers.cookie || '');
+        const token = cookies.authToken; // Changed from 'auth' to 'authToken'
+        let userId = null;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                userId = decoded.userId;
+            } catch (error) {
+                await logError(error, 'Token Verification Failed', 'generate_seo_pages_error.log');
+                return res.status(401).json({ message: 'Invalid or expired token.' });
+            }
+        }
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Authentication required to generate pages.' });
+        }
+
         const { businessName, services, towns, enableAICopy = false, aiStyle, primaryColor, telephone, priceRange, openingHours } = req.body;
 
         if (!businessName || !services || !towns) {
@@ -183,6 +205,37 @@ module.exports = async (req, res) => {
         if (servicesArray.length === 0 || townsArray.length === 0) {
             return res.status(400).json({ message: 'Services and towns cannot be empty.' });
         }
+
+        const neededCredits = servicesArray.length * townsArray.length;
+
+        try {
+            // Fetch user's current credits
+            const userCreditsResult = await query('SELECT credits FROM users WHERE id = $1', [userId]);
+
+            if (userCreditsResult.rows.length === 0) {
+                await logError(new Error(`User not found for userId: ${userId} during credit check.`), 'Credit Check - User Not Found', 'generate_seo_pages_error.log');
+                return res.status(404).json({ message: 'User not found.' });
+            }
+
+            const currentCredits = userCreditsResult.rows[0].credits;
+
+            if (currentCredits < neededCredits) {
+                return res.status(403).json({ message: `Insufficient credits. You need ${neededCredits} credits but have ${currentCredits}. Please purchase more.` });
+            }
+
+            // Deduct credits before generating pages
+            const updateCreditsResult = await query(
+                'UPDATE users SET credits = credits - $1 WHERE id = $2 RETURNING credits',
+                [neededCredits, userId]
+            );
+
+            if (updateCreditsResult.rows.length === 0) {
+                await logError(new Error(`Failed to deduct credits for userId: ${userId}.`), 'Credit Deduction - Failed Update', 'generate_seo_pages_error.log');
+                return res.status(500).json({ message: 'Failed to deduct credits. Please try again.' });
+            }
+
+            console.log(`User ${userId} deducted ${neededCredits} credits. Remaining credits: ${updateCreditsResult.rows[0].credits}`);
+
 
         try {
             await fs.mkdir(outputDir, { recursive: true });
