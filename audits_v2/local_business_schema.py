@@ -2,12 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from urllib.parse import urljoin
+import os
 
 class LocalBusinessSchemaAudit:
     """
     Audits a given URL for the presence and correctness of Schema.org LocalBusiness markup (JSON-LD).
     It checks for essential properties and common subtypes to ensure comprehensive validation.
     """
+    OPENCAGE_API_URL = "https://api.opencagedata.com/geocode/v1/json"
+
     def __init__(self, url):
         self.url = url
         self.findings = []
@@ -18,6 +21,47 @@ class LocalBusinessSchemaAudit:
         self.address_sub_properties = [
             "streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"
         ]
+        self.opencage_api_key = os.getenv("OPENCAGE_API_KEY")
+        if not self.opencage_api_key:
+            self.findings.append("Warning: OPENCAGE_API_KEY environment variable not set. Geocoding validation will be skipped.")
+
+    def _geocode_address(self, address_str):
+        """
+        Geocodes an address string using the OpenCage Geocoding API.
+
+        Args:
+            address_str (str): The address to geocode.
+
+        Returns:
+            tuple: (latitude, longitude) if successful, otherwise (None, None).
+        """
+        if not self.opencage_api_key:
+            return None, None
+
+        params = {
+            'q': address_str,
+            'key': self.opencage_api_key,
+            'language': 'en',
+            'pretty': 1,
+            'no_annotations': 1
+        }
+        try:
+            response = requests.get(self.OPENCAGE_API_URL, params=params, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data and data['results']:
+                geometry = data['results'][0]['geometry']
+                return geometry['lat'], geometry['lng']
+            else:
+                self.findings.append(f"Geocoding failed for address '{address_str}': No results found.")
+                return None, None
+        except requests.exceptions.RequestException as e:
+            self.findings.append(f"OpenCage API request failed for '{address_str}': {e}")
+            return None, None
+        except Exception as e:
+            self.findings.append(f"Error parsing OpenCage API response for '{address_str}': {e}")
+            return None, None
 
     def run_audit(self):
         """
@@ -117,26 +161,81 @@ class LocalBusinessSchemaAudit:
     def _validate_local_business_properties(self, schema):
         """
         Validates the essential properties within a LocalBusiness schema.
+        Also, geocodes the address and compares it with the 'geo' coordinates if present.
 
         Args:
             schema (dict): The parsed LocalBusiness schema object.
         """
+        address_obj = None
+        address_str_parts = []
+        
+        # First, validate all essential properties and extract address for geocoding later
         for prop in self.essential_properties:
             if prop not in schema or not schema[prop]:
                 self.findings.append(f"Missing or empty essential LocalBusiness property: '{prop}'")
-            elif prop == "address":
-                # Validate address sub-properties
-                address = schema[prop]
-                if isinstance(address, dict):
+                continue # Continue to check other properties
+            
+            if prop == "address":
+                address_obj = schema[prop]
+                if isinstance(address_obj, dict):
+                    # Build address string for geocoding
                     for sub_prop in self.address_sub_properties:
-                        if sub_prop not in address or not address[sub_prop]:
+                        if sub_prop not in address_obj or not address_obj[sub_prop]:
                             self.findings.append(f"Missing or empty essential address sub-property: 'address.{sub_prop}'")
+                        else:
+                            address_str_parts.append(str(address_obj[sub_prop]))
+                    
                 else:
-                    self.findings.append(f"Address property is not a structured object: '{address}'")
+                    self.findings.append(f"Address property is not a structured object: '{address_obj}'")
+            
             elif prop == "geo":
-                geo = schema[prop]
-                if not isinstance(geo, dict) or "latitude" not in geo or "longitude" not in geo:
-                    self.findings.append(f"Missing or malformed 'geo' property (requires 'latitude' and 'longitude').")
+                # Geo property validation will happen after potential geocoding
+                pass
+            
+            # General check for other properties
+            elif not isinstance(schema[prop], (str, dict, list)) or (isinstance(schema[prop], str) and not schema[prop].strip()):
+                if prop not in ["geo", "address"]: # Already handled
+                    self.findings.append(f"Essential property '{prop}' is present but empty or invalid: '{schema[prop]}'")
+
+        # Geocode the address if available and API key is set
+        geocoded_lat, geocoded_lon = None, None
+        if address_obj and address_str_parts and self.opencage_api_key:
+            address_str = ", ".join(address_str_parts)
+            self.findings.append(f"Attempting to geocode address: {address_str}")
+            geocoded_lat, geocoded_lon = self._geocode_address(address_str)
+            if geocoded_lat is not None and geocoded_lon is not None:
+                self.findings.append(f"Address geocoded by OpenCage: Lat={geocoded_lat}, Lon={geocoded_lon}")
+        elif address_obj and not address_str_parts:
+             self.findings.append(f"Could not construct a full address string for geocoding from schema address: {address_obj}")
+        
+        # Now validate the geo property and compare if geocoding was successful
+        if "geo" in schema and schema["geo"]:
+            geo = schema["geo"]
+            if not isinstance(geo, dict) or "latitude" not in geo or "longitude" not in geo:
+                self.findings.append(f"Missing or malformed 'geo' property (requires 'latitude' and 'longitude').")
+            else:
+                try:
+                    schema_lat = float(geo["latitude"])
+                    schema_lon = float(geo["longitude"])
+                    self.findings.append(f"Schema geo coordinates: Lat={schema_lat}, Lon={schema_lon}")
+
+                    # Compare with geocoded coordinates if available
+                    if geocoded_lat is not None and geocoded_lon is not None:
+                        # Use a small tolerance for floating point comparison
+                        tolerance = 0.001 
+                        if abs(schema_lat - geocoded_lat) > tolerance or abs(schema_lon - geocoded_lon) > tolerance:
+                            self.findings.append(f"Geo coordinates mismatch! "
+                                                 f"Schema: ({schema_lat}, {schema_lon}), "
+                                                 f"Geocoded: ({geocoded_lat}, {geocoded_lon}). "
+                                                 f"This may indicate inaccurate schema data.")
+                        else:
+                            self.findings.append(f"Schema geo coordinates match geocoded coordinates within tolerance.")
+
+                except ValueError:
+                    self.findings.append(f"Invalid 'latitude' or 'longitude' format in 'geo' property (must be numeric).")
+        else:
+            self.findings.append(f"Missing or empty essential LocalBusiness property: 'geo'")
+
 
 
 if __name__ == "__main__":

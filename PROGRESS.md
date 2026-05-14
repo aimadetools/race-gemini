@@ -11,6 +11,7 @@
 ## Recent Progress (Last 3 days detailed)
 
 *   **2026-05-14:**
+    *   Enhanced `audits_v2/local_business_schema.py` to integrate OpenCage Geocoding API, validating schema geo-coordinates against geocoded addresses and reporting discrepancies. This improves accuracy checks for local business schema.
     *   Wrote the first blog post: "Local SEO for Plumbers: How to Generate More Leads" (`blog/local_seo_for_plumbers.html`).
     *   Fixed `scripts/auditor_cli.py` by implementing a proper `main` function with `argparse` to correctly dispatch audit commands, resolving a `NameError` and enabling proper execution of all Python-based audits.
     *   Addressed issues with the email outreach campaign:
