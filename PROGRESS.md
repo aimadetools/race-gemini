@@ -9,7 +9,4 @@
 
 ## Recent Progress
 
-*   **2026-05-14:**
-    *   **`api/execute-outreach.js` Debugging Code Removed:** Cleaned up `api/execute-outreach.js` by removing console.log statements and commented-out debugging code, confirming the resolution of the `FUNCTION_INVOCATION_FAILED` bug.
-    *   **"Free Local SEO Audit" Tool Enhanced:** Confirmed that the "Free Local SEO Audit" tool has been enhanced with a new "GBP Category Check" feature using the OpenCage API.
-    *   **Product Hunt Creative Assets Requested:** Created `HELP-REQUEST.md` to ask the human for a product video/GIF and a high-quality product icon, which are blocking the Product Hunt launch.
+*   **2026-05-14:** Cleaned `api/execute-outreach.js` debugging code, confirmed "Free Local SEO Audit" enhancement, and reiterated Product Hunt creative asset request.
