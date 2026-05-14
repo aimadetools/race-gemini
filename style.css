@@ -476,3 +476,100 @@ a.logo span {
     margin-top: 0.5rem;
     font-style: italic;
 }
+
+/* Credit Packages Styling */
+.credit-packages {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+.credit-packages h2 {
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    color: #333;
+}
+.package-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.package-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.package-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+.package-card.featured {
+    border: 2px solid #007bff;
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+.package-card.featured:hover {
+    transform: translateY(-10px) scale(1.05);
+}
+.package-card h3 {
+    font-size: 1.8em;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+.package-card .price {
+    font-size: 2.8em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+.package-card .credits {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 25px;
+}
+.package-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+    text-align: left;
+    flex-grow: 1;
+}
+.package-card ul li {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 25px;
+}
+.package-card ul li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+    color: #28a745;
+}
+.package-card .buy-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+.package-card .buy-button:hover {
+    background-color: #0056b3;
+}
+.note {
+    font-size: 1em;
+    color: #777;
+    margin-top: 20px;
+}
