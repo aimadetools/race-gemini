@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { kv } from '@vercel/kv'; // Import kv for referrer data management
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
 import { logError } from '../../lib/logger'; // Import centralized logger
