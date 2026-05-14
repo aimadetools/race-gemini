@@ -1,14 +1,14 @@
-const sgMail = require('@sendgrid/mail');
-const { logError, logInfo } = require('../../lib/logger');
+const { logError, logInfo } = require('../lib/logger');
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+async function sendEmails(emails, sendgridApiKey, fromEmail) {
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(sendgridApiKey);
 
-async function sendEmails(emails) {
   await logInfo(`Preparing to send ${emails.length} emails.`, 'sendEmails');
   const emailPromises = emails.map(async (email) => {
     const msg = {
       ...email,
-      from: process.env.FROM_EMAIL,
+      from: fromEmail,
     };
     try {
       await logInfo(`Attempting to send email to ${email.to}`);
@@ -39,6 +39,13 @@ async function sendEmails(emails) {
 
 module.exports = async (req, res) => {
   try {
+    // Log environment variables for debugging
+    console.log('DEBUG (Handler): SENDGRID_API_KEY present:', !!process.env.SENDGRID_API_KEY);
+    if (process.env.SENDGRID_API_KEY) {
+      console.log('DEBUG (Handler): SENDGRID_API_KEY (partial):', process.env.SENDGRID_API_KEY.substring(0, 5) + '...');
+    }
+    console.log('DEBUG (Handler): FROM_EMAIL:', process.env.FROM_EMAIL);
+
     const emails = req.body.emails; // Expect emails in the request body
 
     await logInfo('execute-outreach.js received request', 'Handler');
@@ -56,7 +63,7 @@ module.exports = async (req, res) => {
 
     await logInfo(`Received ${emails.length} emails in request body.`, 'Handler');
     
-    const emailResults = await sendEmails(emails);
+    const emailResults = await sendEmails(emails, process.env.SENDGRID_API_KEY, process.env.FROM_EMAIL);
     res.status(200).json({
       message: 'Email sending process completed.',
       sent: emailResults.sentCount,
