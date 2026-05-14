@@ -13,7 +13,7 @@
     *   **Finding:** The `users` table already includes a `credits` column, initialized to 50 upon signup, which is a good foundation for usage-based pricing.
     *   **Finding:** User authentication relies on JWT tokens and Vercel KV for session management, providing a `userId` for tracking.
 *   **Next Focus: Usage-Based Pricing Pre-implementation:** While awaiting creative assets, the focus shifts to preparing the groundwork for usage-based pricing. This involves:
+    *   **Action:** Created a placeholder `buy-credits.html` page to resolve 404 errors for existing links and to serve as a base for future implementation.
     *   Implementing mechanisms for tracking specific user actions that consume credits.
     *   Developing an API endpoint/service function for deducting credits from a user's account after billable actions.
-    *   Investigating the existing `/buy-credits.html` flow to integrate it fully into the usage-based model.
     *   The overall goal is to establish a robust customer authentication and credit management system required for full usage-based pricing implementation.
