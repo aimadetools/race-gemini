@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
             const creditPackDetails = {
                 'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 5000 },    // $50.00
                 'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 18000 },  // $180.00
-                'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 80000 }, // $800.00
+                'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 24900 }, // $800.00
             };
 
             let selectedPack;
