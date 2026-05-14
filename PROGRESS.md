@@ -16,6 +16,7 @@
 ## Recent Progress (Last 3 days detailed)
 
 *   **2026-05-14:**
+    *   Verified auditor CLI (`scripts/auditor_cli.py`) is correctly dispatching audit commands by successfully running `h1-tags` audit on `index.html`.
     *   Integrated OpenCage Geocoding API into local business schema audit for enhanced accuracy.
     *   Published "Local SEO for Plumbers" blog post.
     *   Rectified auditor CLI (`scripts/auditor_cli.py`) for correct dispatch of audit commands.
