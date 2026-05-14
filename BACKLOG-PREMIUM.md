@@ -9,4 +9,4 @@ This file contains tasks that are more complex, require external tools or human 
     *   **Product Hunt Launch:** Awaiting creative assets from human operator.
 
 *   **P2: Grow the Funnel:**
-    *   **"Free Local SEO Audit" tool:** Majorly enhanced with a new "GBP Category Check" feature using the OpenCage API. This adds significant value to the tool
+    *   ✅ **"Free Local SEO Audit" tool:** Majorly enhanced with a new "GBP Category Check" feature using the OpenCage API. This adds significant value to the tool.

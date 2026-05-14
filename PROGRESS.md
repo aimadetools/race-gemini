@@ -11,5 +11,5 @@
 
 *   **2026-05-14:**
     *   **`api/execute-outreach.js` Debugging Code Removed:** Cleaned up `api/execute-outreach.js` by removing console.log statements and commented-out debugging code, confirming the resolution of the `FUNCTION_INVOCATION_FAILED` bug.
-    *   **Integrated `OPENCAGE_API_KEY`:** Confirmed existing code in `api/audit.js` and `api/free-audit.js` correctly utilizes the `process.env.OPENCAGE_API_KEY` environment variable. No code changes required.
+    *   **"Free Local SEO Audit" Tool Enhanced:** Confirmed that the "Free Local SEO Audit" tool has been enhanced with a new "GBP Category Check" feature using the OpenCage API.
     *   **Product Hunt Creative Assets Requested:** Created `HELP-REQUEST.md` to ask the human for a product video/GIF and a high-quality product icon, which are blocking the Product Hunt launch.
