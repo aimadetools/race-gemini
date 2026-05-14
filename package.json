@@ -33,7 +33,30 @@
   "scripts": {
     "test": "npm run python-test && node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "python-test": "./venv/bin/python3 -m unittest discover tests",
-    "build:js": "cat \\\njs/ab-test-home.js \\\njs/ab-test.js \\\njs/accordion.js \\\njs/admin-agency-inquiries.js \\\njs/agency-billing.js \\\njs/agency-form.js \\\njs/agency-subscription.js \\\njs/analytics.js \\\njs/app.js \\\njs/audit-form.js \\\njs/audit.js \\\njs/blog-search.js \\\njs/contact.js \\\njs/dashboard.js \\\njs/generate-form-validation.js \\\njs/generate.js \\\njs/mobile-swipe-nav.js \\\njs/referral-form.js \\\njs/social-share.js \\\njs/stripe-checkout.js \\\njs/testimonial-carousel.js \\\njs/tracking.js \\\n| ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
+    "build:js": "cat \\
+      js/ab-test-home.js \\
+      js/ab-test.js \\
+      js/accordion.js \\
+      js/admin-agency-inquiries.js \\
+      js/agency-billing.js \\
+      js/agency-form.js \\
+      js/agency-subscription.js \\
+      js/analytics.js \\
+      js/app.js \\
+      js/audit-form.js \\
+      js/audit.js \\
+      js/blog-search.js \\
+      js/contact.js \\
+      js/dashboard.js \\
+      js/generate-form-validation.js \\
+      js/generate.js \\
+      js/mobile-swipe-nav.js \\
+      js/referral-form.js \\
+      js/social-share.js \\
+      js/stripe-checkout.js \\
+      js/testimonial-carousel.js \\
+      js/tracking.js \\
+      | ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
   },
   "engines": {
     "node": "20.x"
