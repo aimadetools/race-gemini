@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const { logError } = require('../../lib/logger');
 const { parseAddress } = require('../../lib/html-parser');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = global.fetch;
 
 async function runGbpCategoryCheck(url) {
     const openCageApiKey = process.env.OPENCAGE_API_KEY;

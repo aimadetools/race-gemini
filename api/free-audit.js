@@ -1,4 +1,4 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = global.fetch;
 const { logError } = require('../../lib/logger');
 const { parseAddress } = require('../../lib/html-parser');
 
