@@ -102,5 +102,5 @@ module.exports = async (req, res) => {
     await logError(error, 'Execute Outreach - General Handler Error');
     res.status(500).json({ message: 'Failed to send emails.', error: error.message });
   }
-  await logInfo('execute-outreach.js ending', 'Handler');
+
 };
