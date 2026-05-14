@@ -18,4 +18,7 @@
 *   **2026-05-14:** Performed code quality improvements:
     *   Refactored `build:js` script in `package.json` for better readability.
     *   Updated `api/audit.js` and `api/free-audit.js` to use native `fetch` API, removing reliance on dynamic `node-fetch` imports.
+*   **2026-05-14:** Refactored Python audit scripts (`audits_v2` directory):
+    *   Created `audits_v2/utils.py` with a `fetch_content` utility function to centralize content fetching and error handling logic.
+    *   Updated `alt_attributes.py`, `h1_tags.py`, and `broken_links.py` to use `fetch_content`, significantly reducing code duplication.
 
