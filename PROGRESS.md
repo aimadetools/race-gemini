@@ -1,8 +1,6 @@
 ## Progress Summary
 
-*   **Initial Setup & Core Features:** Core page generation, Stripe payments, free Local SEO Audit, blog publishing, and referral program implemented.
-*   **AI Outreach & Content Drafts:** AI-personalized email outreach generation functional; Product Hunt Launch and Video Tutorial non-visual content drafted.
-*   **Auditor CLI & Database Enhancements:** Auditor CLI fixed and integrated with OpenCage Geocoding API; Database migration scripts refactored, and `users.credits` column updated with `NOT NULL` and `DEFAULT 0`.
+*   **Older Progress (summarized):** Core features, AI outreach, Auditor CLI, and database enhancements implemented.
 *   **Credit System Pre-implementation (2026-05-14):**
     *   Fixed missing Vercel KV import in `api/signup.js` for referrer data handling.
     *   Created placeholder `buy-credits.html` page to resolve 404 errors.
