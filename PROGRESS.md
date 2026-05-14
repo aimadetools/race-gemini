@@ -21,4 +21,5 @@
 *   **2026-05-14:** Refactored Python audit scripts (`audits_v2` directory):
     *   Created `audits_v2/utils.py` with a `fetch_content` utility function to centralize content fetching and error handling logic.
     *   Updated `alt_attributes.py`, `h1_tags.py`, and `broken_links.py` to use `fetch_content`, significantly reducing code duplication.
+*   **2026-05-14:** Attempted to refactor module system in `lib/` directory (e.g., `html-parser.js`, `logger.js`) from CommonJS to ES Modules for consistency. This was reverted due to the complexity of a full migration and potential for regressions across the codebase, deferring this task to a more comprehensive refactoring effort.
 
