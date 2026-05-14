@@ -1,9 +1,11 @@
 import { pool, query } from './index.js';
 
-async function initializeDatabase() {
+export async function initializeDatabase() {
+  let client;
   try {
+    client = await pool.connect();
     // Create the users table if it doesn't exist
-    await query(`
+    await client.query(`
       CREATE TABLE IF NOT EXISTS users (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           email VARCHAR(255) UNIQUE NOT NULL,
@@ -16,7 +18,7 @@ async function initializeDatabase() {
     console.log('Users table created or already exists.');
 
     // Check if referrer_id column exists, if not, add it
-    await query(`
+    await client.query(`
       DO $$
       BEGIN
           IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='referrer_id') THEN
@@ -28,17 +30,18 @@ async function initializeDatabase() {
     console.log('Referrer ID column added to users table if it did not exist.');
 
     // Add index to email for faster lookups
-    await query(`
+    await client.query(`
       CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
     `);
     console.log('Index on users.email created or already exists.');
 
   } catch (error) {
     console.error('Error initializing database:', error);
-    process.exit(1);
+    throw error; // Re-throw to be caught by the caller
   } finally {
-    await pool.end(); // Close the pool after initialization
+    if (client) {
+      client.release();
+    }
   }
 }
 
-initializeDatabase();

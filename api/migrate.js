@@ -1,6 +1,7 @@
-// api/migrate.js
-import { createUserEventsTable } from '../db/create-user-events-table.js';
 import { initializeDatabase } from '../db/init.js';
+import { createUserEventsTable } from '../db/create-user-events-table.js';
+import { alterUsersAddCreditsConstraint } from '../db/alter-users-add-credits-constraint.js'; 
+import { pool } from '../db/index.js'; // Corrected import path for pool
 
 export default async function handler(req, res) {
   // Only allow GET requests for simplicity in triggering a migration
@@ -19,16 +20,24 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: 'Unauthorized: MIGRATION_SECRET not configured' });
   }
 
-
   try {
     console.log('Attempting to run database migrations...');
-    await initializeDatabase();
+    await initializeDatabase(); 
     console.log('Database initialized successfully, ensuring referrer_id column exists.');
     await createUserEventsTable();
-    console.log('Database migrations completed successfully.');
+    console.log('Table "user_events" created or already exists.');
+    await alterUsersAddCreditsConstraint(); 
+    console.log('Ensured "credits" column in "users" table has NOT NULL constraint and DEFAULT 0.');
     return res.status(200).json({ message: 'Database migrations completed successfully.' });
   } catch (error) {
     console.error('Error running database migrations:', error);
     return res.status(500).json({ message: 'Error running database migrations', error: error.message });
+  } finally {
+    // For Vercel serverless functions, the function will die after execution.
+    // The pool connections are managed by individual migration functions which release their clients.
+    // Explicitly ending the pool here is generally not needed for serverless functions,
+    // as the environment cleans up. For long-running processes, pool.end() would be called on shutdown.
   }
 }
+
+

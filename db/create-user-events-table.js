@@ -1,7 +1,6 @@
-// db/create-user-events-table.js
 import { connectToDatabase } from '../lib/db.js';
 
-async function createUserEventsTable() {
+export async function createUserEventsTable() {
   let client;
   try {
     const pool = await connectToDatabase();
@@ -28,4 +27,3 @@ async function createUserEventsTable() {
   }
 }
 
-createUserEventsTable();
