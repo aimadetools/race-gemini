@@ -87,11 +87,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let formIsValid = true;
         const allInputs = generateForm.querySelectorAll('input, textarea');
-        allInputs.forEach(input => {
+        for (const input of allInputs) {
             if (!validateInput(input)) {
                 formIsValid = false;
+                // Potentially break here for efficiency, if we want to stop at the first error
+                // However, to display all errors, we continue.
+                // For now, keeping original behavior of showing all errors.
             }
-        });
+        }
 
         if (formIsValid) {
             formErrorDisplay.textContent = '';
