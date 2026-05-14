@@ -49,7 +49,7 @@ def generate_outreach_emails():
     with open(OUTREACH_TARGETS_CSV, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if row.get('Email') and row['Email'].strip():
+            if row.get('Email') and re.match(r"[^@]+@[^@]+\.[^@]+", row['Email'].strip()):
                 business_name = row['Business Name'].strip()
                 city = row['City'].strip()
                 service_type = row['Service Type'].strip()

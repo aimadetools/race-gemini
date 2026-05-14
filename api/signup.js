@@ -31,6 +31,48 @@ export default async function handler(req, res) {
       );
       const userId = result.rows[0].id;
 
+      // If a referrerId is present, update the referrer's data in Vercel KV
+      if (referrerId) {
+        try {
+          const referrerDataKey = `user:${referrerId}:referral_data`;
+          let referrerData = await currentKv.get(referrerDataKey);
+
+          if (!referrerData) {
+            // Initialize referrer data if it doesn't exist
+            referrerData = {
+              referralLink: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/referral-signup?ref=${referrerId}`,
+              totalReferrals: 0,
+              convertedReferrals: 0,
+              earnedRewards: 0.00,
+              recentReferrals: [],
+            };
+          } else {
+            // Parse existing JSON string if it exists
+            referrerData = JSON.parse(referrerData);
+          }
+
+          // Update referrer's statistics
+          referrerData.totalReferrals = (referrerData.totalReferrals || 0) + 1;
+          
+          // Add the newly signed-up user to recentReferrals
+          const newReferralEntry = {
+            id: userId, // ID of the newly signed-up user
+            userEmail: email, // Email of the newly signed-up user
+            status: 'Signed Up', // Initial status
+            date: new Date().toISOString(),
+            reward: 0.00, // No reward yet, will be updated on conversion
+          };
+          referrerData.recentReferrals.push(newReferralEntry);
+
+          // Save updated referrer data back to Vercel KV
+          await currentKv.set(referrerDataKey, JSON.stringify(referrerData));
+          console.log(`Referrer ${referrerId} data updated in Vercel KV.`);
+        } catch (kvError) {
+          await logError(kvError, 'Vercel KV Update Error for Referrer', 'signup_kv_error.log');
+          // Do not block user signup if KV update fails
+        }
+      }
+
       // Track the signup event
       // We need to mock res object for trackEventHandler as it expects a res object.
       // The actual response for signup is handled by the signup handler itself.
@@ -39,7 +81,7 @@ export default async function handler(req, res) {
         body: {
           eventName: 'user_signup',
           userId: userId,
-          eventData: { email: email }
+          eventData: { email: email, referrerId: referrerId } // Include referrerId in tracking
         }
       }, {
         status: () => ({ json: () => {} }) // Mock response for tracking

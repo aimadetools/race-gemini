@@ -27,11 +27,91 @@ module.exports = async (req, res, currentKvClient) => {
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
             const userId = session.client_reference_id;
-            
+            const amountTotal = session.amount_total; // Amount in cents
+
             if (!userId) {
                 await logError(new Error('Missing userId (from client_reference_id) in session.'), 'Stripe Webhook - Missing Data (userId)', 'webhook_error.log');
                 return res.status(400).json({ message: 'Missing user identifier in session.' });
             }
+
+            // --- Referral Logic Start ---
+            // Fetch the purchasing user's referrerId from PostgreSQL
+            const userResult = await query('SELECT referrer_id FROM users WHERE id = $1', [userId]);
+            const referrerId = userResult.rows.length > 0 ? userResult.rows[0].referrer_id : null;
+
+            // If the user was referred, update the referrer's data
+            if (referrerId) {
+                try {
+                    const referrerDataKey = `user:${referrerId}:referral_data`;
+                    let referrerData = await currentKv.get(referrerDataKey);
+
+                    // Initialize referrer data if it doesn't exist (should ideally exist from signup)
+                    if (!referrerData) {
+                        referrerData = {
+                            referralLink: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/referral-signup?ref=${referrerId}`,
+                            totalReferrals: 0,
+                            convertedReferrals: 0,
+                            earnedRewards: 0.00,
+                            recentReferrals: [],
+                        };
+                    } else {
+                        referrerData = JSON.parse(referrerData);
+                    }
+
+                    // Update convertedReferrals
+                    referrerData.convertedReferrals = (referrerData.convertedReferrals || 0) + 1;
+
+                    // Calculate earned rewards (20% commission)
+                    const commissionRate = 0.20;
+                    const earnedAmount = (amountTotal / 100) * commissionRate; // Convert cents to dollars and apply commission
+                    referrerData.earnedRewards = (referrerData.earnedRewards || 0.00) + earnedAmount;
+
+                    // Update status and reward for the referred user in recentReferrals
+                    const referredUserIndex = referrerData.recentReferrals.findIndex(
+                        (ref) => ref.id === userId
+                    );
+                    if (referredUserIndex !== -1) {
+                        referrerData.recentReferrals[referredUserIndex].status = 'Converted';
+                        referrerData.recentReferrals[referredUserIndex].reward = earnedAmount;
+                    } else {
+                        // If for some reason the referred user wasn't in recentReferrals (e.g., direct purchase without prior signup tracking), add them
+                        // This case should be rare if signup tracking is working correctly.
+                        referrerData.recentReferrals.push({
+                            id: userId,
+                            userEmail: `user_${userId}@unknown.com`, // Placeholder email if not tracked during signup
+                            status: 'Converted',
+                            date: new Date().toISOString(),
+                            reward: earnedAmount,
+                        });
+                    }
+
+                    // Save updated referrer data back to Vercel KV
+                    await currentKv.set(referrerDataKey, JSON.stringify(referrerData));
+                    console.log(`Referrer ${referrerId} data updated in Vercel KV with conversion.`);
+                    
+                    // Track referral conversion event
+                    await trackEventHandler({
+                        method: 'POST',
+                        body: {
+                            eventName: 'referral_conversion',
+                            userId: userId, // The converted user's ID
+                            eventData: {
+                                referrerId: referrerId,
+                                convertedAmount: amountTotal,
+                                earnedReward: earnedAmount,
+                                checkoutMode: session.mode
+                            }
+                        }
+                    }, {
+                        status: () => ({ json: () => {} }) // Mock response for tracking
+                    });
+
+                } catch (kvError) {
+                    await logError(kvError, 'Vercel KV Update Error for Referrer Conversion', 'webhook_kv_error.log');
+                    // Do not block webhook processing if KV update fails
+                }
+            }
+            // --- Referral Logic End ---
 
             try {
                 if (session.mode === 'subscription') {
@@ -69,7 +149,7 @@ module.exports = async (req, res, currentKvClient) => {
                                     creditsAdded: creditsToAdd,
                                     stripePriceId: priceId,
                                     stripeSubscriptionId: session.subscription,
-                                    amountTotal: session.amount_total // Use amount_total from session if available
+                                    amountTotal: amountTotal // Use amount_total from session if available
                                 }
                             }
                         }, {
@@ -113,7 +193,7 @@ module.exports = async (req, res, currentKvClient) => {
                             eventData: {
                                 type: 'credit_pack',
                                 creditsPurchased: parsedCredits,
-                                amountTotal: session.amount_total // Use amount_total from session if available
+                                amountTotal: amountTotal // Use amount_total from session if available
                             }
                         }
                     }, {
