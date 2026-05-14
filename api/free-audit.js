@@ -1,6 +1,7 @@
 const fetch = global.fetch;
 const { logError } = require('../../lib/logger');
 const { parseAddress } = require('../../lib/html-parser');
+const { exec } = require('child_process');
 
 module.exports = async (req, res) => {
     const { url } = req.query;
@@ -42,9 +43,50 @@ module.exports = async (req, res) => {
             const { lat, lng } = geocodingData.results[0].geometry;
             const city = geocodingData.results[0].components.city || geocodingData.results[0].components.town || geocodingData.results[0].components.village;
 
-            const missedOpportunities = [];
-            
-            const foundPages = city ? [`plumbers-in-${city.toLowerCase().replace(/ /g, '-')}`] : [];
+            const service = 'plumbers'; // For now, assume 'plumbers'. This could be dynamic later.
+            const baseCity = city ? city.toLowerCase().replace(/ /g, '-') : '';
+
+            const nearbyTowns = [
+                'New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix',
+                'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose',
+                'Austin', 'Jacksonville', 'Fort Worth', 'Columbus', 'Charlotte',
+                'Indianapolis', 'San Francisco', 'Seattle', 'Denver', 'Washington'
+            ];
+            const locationsDb = nearbyTowns.join(',');
+
+            let foundPages = [];
+            let missedOpportunities = [];
+
+            try {
+                const pythonCommand = `python scripts/auditor_cli.py locations "${url}" --locations-db "${locationsDb}"`;
+                const { stdout, stderr } = await new Promise((resolve, reject) => {
+                    exec(pythonCommand, { cwd: process.cwd() }, (error, stdout, stderr) => { // Added cwd
+                        if (error) {
+                            return reject(error);
+                        }
+                        resolve({ stdout, stderr });
+                    });
+                });
+
+                if (stderr) {
+                    console.error(`Python script stderr: ${stderr}`);
+                }
+
+                const auditOutput = JSON.parse(stdout);
+
+                if (auditOutput && auditOutput.results) {
+                    foundPages = auditOutput.results.locations_found.map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
+                    missedOpportunities = auditOutput.results.locations_not_found.map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
+                } else {
+                    await logError(new Error(`Python audit did not return expected results for URL: ${url}`), 'Free Audit - Python Output Error', 'free_audit_error.log');
+                }
+
+            } catch (pythonError) {
+                await logError(pythonError, 'Free Audit - Python Audit Execution Error', 'free_audit_error.log');
+                // Fallback to simpler logic or return an error to the client
+                foundPages = city ? [`${service}-in-${baseCity}`] : [];
+                missedOpportunities = nearbyTowns.filter(town => town.toLowerCase().replace(/ /g, '-') !== baseCity).map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
+            }
 
             res.status(200).json({
                 address,
@@ -65,4 +107,4 @@ module.exports = async (req, res) => {
             error: error.message
         });
     }
-};};
+};
