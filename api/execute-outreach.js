@@ -1,19 +1,19 @@
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-// Vercel allows writing to the /tmp directory.
-const logDir = '/tmp';
-const startLogPath = path.join(logDir, 'outreach-start.log');
-const errorLogPath = path.join(logDir, 'outreach-error.log');
+// // Vercel allows writing to the /tmp directory.
+// const logDir = '/tmp';
+// const startLogPath = path.join(logDir, 'outreach-start.log');
+// const errorLogPath = path.join(logDir, 'outreach-error.log');
 
-// Create a log entry to confirm the script is starting
-fs.writeFileSync(startLogPath, 'Outreach script started');
+// // Create a log entry to confirm the script is starting
+// fs.writeFileSync(startLogPath, 'Outreach script started');
 
 process.on('uncaughtException', (err) => {
   console.error('--- DEBUG: Uncaught Exception ---');
   console.error(err);
   // Log the error to the /tmp directory for debugging on Vercel
-  fs.writeFileSync(errorLogPath, `Uncaught exception in outreach script: ${err.stack}`);
+  // fs.writeFileSync(errorLogPath, `Uncaught exception in outreach script: ${err.stack}`);
   console.error('--- DEBUG: Uncaught Exception Logged ---');
   // Do not call process.exit() in a serverless function; let the platform handle termination.
 });
@@ -25,6 +25,15 @@ console.log('--- DEBUG: Starting execute-outreach.js ---');
 console.log('SENDGRID_API_KEY present:', !!process.env.SENDGRID_API_KEY);
 console.log('SENDGRID_API_KEY length:', process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.length : 0);
 console.log('FROM_EMAIL:', process.env.FROM_EMAIL);
+
+console.log('--- DEBUG: Starting execute-outreach.js ---');
+console.log('--- DEBUG: Environment Variables ---');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('VERCEL_ENV:', process.env.VERCEL_ENV);
+console.log('SENDGRID_API_KEY present:', !!process.env.SENDGRID_API_KEY);
+console.log('SENDGRID_API_KEY length:', process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.length : 0);
+console.log('FROM_EMAIL:', process.env.FROM_EMAIL);
+console.log('------------------------------------');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -43,7 +52,7 @@ async function sendEmails(emails) {
       return { status: 'fulfilled', value: email.to };
     } catch (error) {
       // Log errors to the /tmp directory for Vercel debugging
-      fs.writeFileSync(errorLogPath, `Error in outreach script: ${error.stack}`);
+      // fs.writeFileSync(errorLogPath, `Error in outreach script: ${error.stack}`);
       if (error.code === 401) {
         await logError(error, `Error sending email to ${email.to}: Invalid SendGrid API Key. Please verify the SENDGRID_API_KEY environment variable.`);
         console.error(`Failed to send email to ${email.to}: Invalid SendGrid API Key.`);
