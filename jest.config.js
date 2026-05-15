@@ -1,8 +1,11 @@
 // jest.config.js
 module.exports = {
   transform: {
-    '^.+\.js$': 'babel-jest',
+    '^.+\\.js$': 'babel-jest',
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!@google/generative-ai).+\\.js$',
+  ],
   testEnvironment: 'node',
   moduleNameMapper: {
     "../../lib/logger": "<rootDir>/tests/mocks/logger.js",
