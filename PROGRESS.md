@@ -69,4 +69,5 @@
     *   **Enhanced SendGrid API Key Error Handling:** Added a `try/catch` block around `sgMail.setApiKey(sendgridApiKey);` to catch synchronous errors during API key initialization. The `FUNCTION_INVOCATION_FAILED` persisted.
     *   **Complete SendGrid Bypass:** As a final diagnostic step, temporarily commented out all SendGrid integration (import, API key setup, and send calls) in `api/execute-outreach.js`, making the function return a simulated success. The `FUNCTION_INVOCATION_FAILED` still persisted.
     *   **Conclusion:** The persistent `FUNCTION_INVOCATION_FAILED` indicates a low-level runtime crash in the Vercel environment that cannot be resolved through application-level code changes.
+    *   **Action:** Bypassed `lib/logger.js` in `api/execute-outreach.js` by replacing `logError` and `logInfo` calls with `console.error` and `console.log` respectively. This is a further diagnostic step to rule out the custom logger module as the cause of the `FUNCTION_INVOCATION_FAILED`.
     *   **Action:** Created `HELP-REQUEST.md` to request full Vercel runtime logs for `/api/execute-outreach` from the user for further diagnosis.
