@@ -43,8 +43,7 @@ async function runGbpCategoryCheck(url) {
             const errorMsg = `Geocoding API returned no results for address: ${address}.`;
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding No Results', 'audit_error.log');
             return { error: errorMsg };
-        }
-const { lat, lng } = geocodingData.results[0].geometry;
+        const { lat, lng } = geocodingData.results[0].geometry;
             const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
             const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
             if (!reverseGeocodingResponse.ok) {
@@ -64,9 +63,7 @@ const { lat, lng } = geocodingData.results[0].geometry;
             const components = reverseGeocodingData.results[0].components;
                 const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
                 const confidence = geocodingData.results[0].confidence;
-                return { businessCategory, confidence };
-        }
-        const errorMsg = 'Could not determine category from address.';
+                return { businessCategory, confidence };        const errorMsg = 'Could not determine category from address.';
         logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
         return { error: errorMsg };
     } catch (error) {
