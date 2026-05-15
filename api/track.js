@@ -1,11 +1,19 @@
 // api/track.js
-import { connectToDatabase } from '../lib/db';
-
+// api/track.js
+// Temporarily disabling database operations to prevent 500 errors due to missing 'user_events' table.
+// This is a temporary measure until the database migration can be run on the deployed environment.
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
+  // Log the event data for debugging, but don't store in DB yet
+  // console.log('Event received (DB tracking disabled):', { eventName, userId, eventData });
+
+  return res.status(200).json({ message: 'Event received (DB tracking temporarily disabled).' });
+
+  /*
+  // Original database tracking logic (commented out)
   const { eventName, userId, eventData } = req.body;
 
   if (!eventName) {
@@ -36,4 +44,5 @@ export default async function handler(req, res) {
       client.release();
     }
   }
+  */
 }
