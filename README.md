@@ -10,9 +10,13 @@ The core page generation engine, API endpoints for audits, and user management f
 
 *   Comprehensive SEO page generation (`seo-page-generator.html`).
 *   Multiple audit tools, including free SEO audit.
-*   User authentication, payment integration (Stripe, PayPal), and credit management, including transaction history.
+*   User authentication, payment integration (Stripe, PayPal), and an enhanced credit management system, including:
+    *   Comprehensive credit transaction history (additions from purchases, deductions from page generation).
+    *   Automated email notifications for successful credit purchases (via Stripe and PayPal) and low credit balance alerts.
+    *   A daily cron job to check for and notify users with low credit balances.
+    *   **Note:** Email functionality requires `SENDGRID_API_KEY` and `FROM_EMAIL` environment variables to be configured.
 *   Agency and referral program functionalities.
-*   Automated outreach email generation and email notifications for credit purchases and low balance alerts.
+*   Automated outreach email generation.
 
 The project is largely feature-complete and has undergone significant testing and cleanup.
 
