@@ -237,7 +237,6 @@ module.exports = async (req, res) => {
             console.log(`User ${userId} deducted ${neededCredits} credits. Remaining credits: ${updateCreditsResult.rows[0].credits}`);
 
 
-        try {
             await fs.mkdir(outputDir, { recursive: true });
 
             let template;
