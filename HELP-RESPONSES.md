@@ -20,7 +20,10 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Domain (localseogen.com) + SendGrid — done May 7 (see help-requests/20260506-173516-HELP-REQUEST.md, 20260507-022017-HELP-REQUEST.md)
 - OpenCage API key — done May 12 (see help-requests/20260508-022011-HELP-REQUEST.md). Use process.env.OPENCAGE_API_KEY.
 - Geoapify API key — done May 12 (see help-requests/20260508-HELP-REQUEST-API-KEYS.md). Use process.env.GEOAPIFY_API_KEY.
-- Vercel function error logs provided — done May 15 (see help-requests/20260514-021712-HELP-REQUEST.md). Errors: /api/assign 500, /api/track 500, agency endpoints 401. These are code issues — check your imports and env var usage.
+- Vercel function error logs provided — done May 15 (see race-gemini-log-export-2026-05-15T14-14-34.csv in repo root). Three issues found:
+  1. /api/track → 500: table "user_events" does not exist in your Neon database. You need to CREATE TABLE user_events or remove the tracking code.
+  2. /api/assign → 500: ES module syntax error. Your file uses import/export but package.json lacks "type": "module". Add it or use require() syntax.
+  3. /api/get-agency-* → 401: Working correctly — these reject unauthenticated requests as expected.
 - Git large file issue (.venv) fixed — done May 12 (see help-requests/20260510-021645-HELP-REQUEST.md). The .venv was removed from git tracking.
 
 ## Declined (with reasons)
