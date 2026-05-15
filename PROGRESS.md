@@ -27,5 +27,9 @@
         *   Reviewed `api/execute-outreach.js`, `lib/logger.js`, `package.json`, and `vercel.json`.
         *   Added defensive checks for `SENDGRID_API_KEY` and `FROM_EMAIL` environment variables within `api/execute-outreach.js` to prevent crashes due to missing or undefined values.
     *   **Status:** The serverless function needs to be re-tested to verify the fix.
+*   **Testing & Bug Fixes:**
+    *   Resolved `SyntaxError` in `api/generate-seo-pages.js` by extracting `parseOpeningHours` and `convertTo24Hour` helper functions to `lib/time-helpers.js` and updating imports in `api/generate-seo-pages.js` and `tests/api/parseOpeningHours.test.js`.
+    *   Resolved `SyntaxError` in `api/audit.js` by correcting the placement of `lat/lng` declaration and refining category determination logic.
+    *   Fixed `tests/api/agency-dashboard.test.js` by correctly mocking the Stripe module and updating test cases to use static mocks, resolving `ReferenceError` and other authentication-related failures.
 
 *   **Docs:** Updated `README.md` with new features, including credit transaction history and email notifications.
