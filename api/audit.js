@@ -43,22 +43,23 @@ async function runGbpCategoryCheck(url) {
             const errorMsg = `Geocoding API returned no results for address: ${address}.`;
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding No Results', 'audit_error.log');
             return { error: errorMsg };
+        }
         const { lat, lng } = geocodingData.results[0].geometry;
-            const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
-            const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
-            if (!reverseGeocodingResponse.ok) {
-                const responseBody = await reverseGeocodingResponse.text().catch(() => 'N/A');
-                const errorMsg = `Reverse geocoding request failed for coordinates ${lat}, ${lng}. Status: ${reverseGeocodingResponse.status} ${reverseGeocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
-                logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding Error', 'audit_error.log');
-                return { error: errorMsg };
-            }
-            const reverseGeocodingData = await reverseGeocodingResponse.json();
-            
-            if (!reverseGeocodingData.results || reverseGeocodingData.results.length === 0) {
-                const errorMsg = `Reverse geocoding API returned no results for coordinates: ${lat}, ${lng}.`;
-                logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding No Results', 'audit_error.log');
-                return { error: errorMsg };
-            }
+        const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
+        const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
+        if (!reverseGeocodingResponse.ok) {
+            const responseBody = await reverseGeocodingResponse.text().catch(() => 'N/A');
+            const errorMsg = `Reverse geocoding request failed for coordinates ${lat}, ${lng}. Status: ${reverseGeocodingResponse.status} ${reverseGeocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding Error', 'audit_error.log');
+            return { error: errorMsg };
+        }
+        const reverseGeocodingData = await reverseGeocodingResponse.json();
+        
+        if (!reverseGeocodingData.results || reverseGeocodingData.results.length === 0) {
+            const errorMsg = `Reverse geocoding API returned no results for coordinates: ${lat}, ${lng}.`;
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding No Results', 'audit_error.log');
+            return { error: errorMsg };
+        }
 
             const components = reverseGeocodingData.results[0].components;
                 const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
