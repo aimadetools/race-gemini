@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/low-balance-alert",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { query } from '../db/index.js'; // Import PostgreSQL query utility
 const { parse } = require('cookie'); // Use parse from 'cookie' directly
 const jwt = require('jsonwebtoken');
 const { logError } = require('../../lib/logger');
+const { sendEmail } = require('../../lib/email');
 
 
 
@@ -71,6 +72,16 @@ module.exports = async (req, res, currentKvClient) => {
                 await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
 
                 console.log(`User ${userId} successfully purchased ${credits} credits via PayPal. New balance: ${result.rows[0].credits}`);
+
+                // Send email notification
+                const userResult = await query('SELECT email FROM users WHERE id = $1', [userId]);
+                if (userResult.rows.length > 0) {
+                    const userEmail = userResult.rows[0].email;
+                    const subject = 'Your Credit Purchase from LocalLeads was Successful!';
+                    const html = `<p>You have successfully purchased ${parsedCredits} credits via PayPal. Your new balance is ${result.rows[0].credits}.</p>`;
+                    await sendEmail(userEmail, subject, html);
+                }
+
 
 
                 return res.status(200).json({ success: true, message: 'Payment captured and credits updated.' });

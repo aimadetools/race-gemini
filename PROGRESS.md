@@ -14,3 +14,8 @@
     *   Modified backend logic to log all credit additions (Stripe, PayPal) and deductions (page generation) to a Redis list.
     *   Updated the `/api/dashboard` endpoint to fetch and return the transaction history.
     *   Enhanced the dashboard UI to display the credit transaction history in a new table, with color-coded amounts for clarity.
+    *   **Email Notifications:** Set up email alerts for credit-related events.
+    *   Created a utility function for sending emails using SendGrid.
+    *   Integrated email notifications for successful credit purchases via Stripe and PayPal.
+    *   Implemented a daily cron job to check for users with low credit balances and send them an email alert.
+    *   **NOTE:** The `CRON_SECRET` environment variable needs to be set in Vercel to secure the low-balance-alert endpoint.

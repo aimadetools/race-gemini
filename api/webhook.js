@@ -6,6 +6,7 @@ const path = require('path');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
 const { logError } = require('../../lib/logger');
+const { sendEmail } = require('../../lib/email');
 
 
 
@@ -146,6 +147,16 @@ module.exports = async (req, res, currentKvClient) => {
 
                         console.log(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`);
 
+                        // Send email notification
+                        const userResult = await query('SELECT email FROM users WHERE id = $1', [userId]);
+                        if (userResult.rows.length > 0) {
+                            const userEmail = userResult.rows[0].email;
+                            const subject = 'Your Subscription is Active!';
+                            const html = `<p>You have successfully subscribed and received ${creditsToAdd} credits. Your new balance is ${result.rows[0].credits}.</p>`;
+                            await sendEmail(userEmail, subject, html);
+                        }
+
+
                         // Track revenue generated from subscription
                         await trackEventHandler({
                             method: 'POST',
@@ -200,6 +211,16 @@ module.exports = async (req, res, currentKvClient) => {
                     };
                     await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
                     console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
+
+                    // Send email notification
+                    const userResult = await query('SELECT email FROM users WHERE id = $1', [userId]);
+                    if (userResult.rows.length > 0) {
+                        const userEmail = userResult.rows[0].email;
+                        const subject = 'Your Credit Purchase was Successful!';
+                        const html = `<p>You have successfully purchased ${parsedCredits} credits. Your new balance is ${result.rows[0].credits}.</p>`;
+                        await sendEmail(userEmail, subject, html);
+                    }
+
 
                     // Track revenue generated from one-time credit pack purchase
                     await trackEventHandler({
@@ -256,6 +277,16 @@ module.exports = async (req, res, currentKvClient) => {
                         };
                         await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
                         console.log(`Added ${creditsToAdd} credits to agency user ${userId} on invoice payment. New balance: ${result.rows[0].credits}`);
+
+                        // Send email notification
+                        const userResult = await query('SELECT email FROM users WHERE id = $1', [userId]);
+                        if (userResult.rows.length > 0) {
+                            const userEmail = userResult.rows[0].email;
+                            const subject = 'Your Subscription has Renewed!';
+                            const html = `<p>Your subscription has renewed, and you have received ${creditsToAdd} credits. Your new balance is ${result.rows[0].credits}.</p>`;
+                            await sendEmail(userEmail, subject, html);
+                        }
+
 
                         // Track revenue generated from recurring invoice payment
                         await trackEventHandler({
