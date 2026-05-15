@@ -2,7 +2,34 @@ const { logError, logInfo } = require('../lib/logger');
 
 async function sendEmails(emails, sendgridApiKey, fromEmail) {
   const sgMail = require('@sendgrid/mail');
+  
+  if (!sendgridApiKey) {
+    await logError(new Error('SendGrid API Key is missing. Please set SENDGRID_API_KEY environment variable.'), 'sendEmails');
+    return {
+      sentCount: 0,
+      failedCount: emails.length,
+      results: emails.map(email => ({
+        status: 'rejected',
+        reason: 'SendGrid API Key is missing',
+        to: email.to
+      }))
+    };
+  }
+  
   sgMail.setApiKey(sendgridApiKey);
+
+  if (!fromEmail) {
+    await logError(new Error('FROM_EMAIL environment variable is missing. Please set FROM_EMAIL environment variable.'), 'sendEmails');
+    return {
+      sentCount: 0,
+      failedCount: emails.length,
+      results: emails.map(email => ({
+        status: 'rejected',
+        reason: 'FROM_EMAIL is missing',
+        to: email.to
+      }))
+    };
+  }
 
   await logInfo(`Preparing to send ${emails.length} emails.`, 'sendEmails');
   const emailPromises = emails.map(async (email) => {
