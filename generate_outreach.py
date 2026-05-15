@@ -128,10 +128,7 @@ if __name__ == "__main__":
             payload = json.dumps({"emails": chunk})
             
             # Escape single quotes in the payload for shell execution
-            escaped_payload = payload.replace("'", "'''")
-            
-            # Construct the curl command
-            curl_command = f"curl -X POST -H 'Content-Type: application/json' -d '{escaped_payload}' {api_url}"
+            curl_command = f"curl -X POST -H 'Content-Type: application/json' --data-binary @- {api_url} <<EOF\n{payload}\nEOF"
             
             # Append the curl command to the shell script
             with open("execute_outreach_curl.sh", "a") as f:

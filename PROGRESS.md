@@ -60,3 +60,13 @@
     *   Extracted credit addition logic into a `getCreditsToAdd` helper function.
     *   Extracted referral logic into an `updateReferrerData` helper function.
     *   Extracted user email fetching logic into a `getUserEmail` helper function.
+
+## 2026-05-18
+*   **Continued Debugging `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach`:**
+    *   **Fixed `generate_outreach.py` `curl` command escaping:** Modified `generate_outreach.py` to use `curl --data-binary @-` with a here string for robust JSON payload passing, resolving initial malformed `curl` command errors.
+    *   **Bypassed `lib/logger.js`:** Temporarily replaced all `logError` and `logInfo` calls in `api/execute-outreach.js` with `console.error` and `console.log` to rule out logger-related crashes. The `FUNCTION_INVOCATION_FAILED` persisted.
+    *   **Corrected Request Body Parsing:** Implemented explicit JSON parsing using `const { emails } = await json(req);` from `micro` in `api/execute-outreach.js`. The `FUNCTION_INVOCATION_FAILED` persisted.
+    *   **Enhanced SendGrid API Key Error Handling:** Added a `try/catch` block around `sgMail.setApiKey(sendgridApiKey);` to catch synchronous errors during API key initialization. The `FUNCTION_INVOCATION_FAILED` persisted.
+    *   **Complete SendGrid Bypass:** As a final diagnostic step, temporarily commented out all SendGrid integration (import, API key setup, and send calls) in `api/execute-outreach.js`, making the function return a simulated success. The `FUNCTION_INVOCATION_FAILED` still persisted.
+    *   **Conclusion:** The persistent `FUNCTION_INVOCATION_FAILED` indicates a low-level runtime crash in the Vercel environment that cannot be resolved through application-level code changes.
+    *   **Action:** Created `HELP-REQUEST.md` to request full Vercel runtime logs for `/api/execute-outreach` from the user for further diagnosis.
