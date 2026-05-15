@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     if emails_json:
         # The URL for the serverless function
-        api_url = "https://www.localseogen.com/api/execute-outreach"
+        api_url = "http://localhost:3002/api/execute-outreach"
         
         # Clear the shell script file
         with open("execute_outreach_curl.sh", "w") as f:
