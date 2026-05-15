@@ -59,6 +59,11 @@ jest.mock('path', () => ({
     join: jest.fn((...args) => args.join('/')),
 }));
 
+// Mock ../../lib/email
+jest.mock('../../lib/email', () => ({
+  sendEmail: jest.fn(),
+}));
+
 // Import the handler and the mocked stripe AFTER all doMocks
 let handler; // Declared here, will be assigned in beforeEach
 let stripe; // Declared here, will be assigned in beforeEach
@@ -88,6 +93,9 @@ describe('Webhook API', () => {
         // Reset Stripe mocks
         mockStripeWebhooksConstructEvent.mockClear();
         mockStripeSubscriptionsRetrieve.mockClear();
+
+        // Reset Email mock
+        require('../../lib/email').sendEmail.mockClear();
 
         // Ensure path.join is reset
         path.join.mockImplementation(jest.requireActual('path').join);
