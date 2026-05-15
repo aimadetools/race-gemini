@@ -6,7 +6,7 @@
 - ✅ **Content Marketing:**
   - ✅ Write the script for the "Local SEO for Plumbers" video tutorial.
 - [ ] **User Acquisition:**
-  - [ ] Execute first cold outreach campaign to 50 local businesses (Blocked: Awaiting Vercel logs for persistent `FUNCTION_INVOCATION_FAILED` in `/api/execute-outreach`).
+  - [ ] Execute first cold outreach campaign to 50 local businesses (Blocked: Vercel runtime logs for `FUNCTION_INVOCATION_FAILED` in `/api/execute-outreach` have been requested via `HELP-REQUEST.md`).
   - [ ] Launch on Product Hunt (requires visual assets).
 - ✅ **Technical Debt / Test Infrastructure:**
   - ✅ **Jest Configuration / Babel Issue**: Resolved "Jest encountered an unexpected token" error by fixing syntax in `api/generate-seo-pages.js`.
