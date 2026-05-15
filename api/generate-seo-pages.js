@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const slugify = require('slugify');
-// const { GoogleGenerativeAI } = require('@google/generative-ai'); // Temporarily commented out for debugging
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { parse } = require('cookie'); // Import parse from cookie
 const jwt = require('jsonwebtoken'); // Import jwt
 const { query } = require('../db/index.js'); // Import PostgreSQL query utility
@@ -12,17 +12,16 @@ const { parseOpeningHours } = require('../../lib/time-helpers'); // Import parse
 const templatePath = path.join(process.cwd(), 'page-template.html');
 const outputDir = path.join(process.cwd(), 'generated-seo-pages');
 
-// Temporarily commented out for debugging
-// let geminiApiKey = process.env.GEMINI_API_KEY;
-// let genAI;
-// let geminiModel;
+let geminiApiKey = process.env.GEMINI_API_KEY;
+let genAI;
+let geminiModel;
 
-// if (geminiApiKey) {
-//     genAI = new GoogleGenerativeAI(geminiApiKey);
-//     geminiModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
-// } else {
-//     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
-// }
+if (geminiApiKey) {
+    genAI = new GoogleGenerativeAI(geminiApiKey);
+    geminiModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
+} else {
+    console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
+}
 
 // Helper function to generate LocalBusiness schema
 function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
