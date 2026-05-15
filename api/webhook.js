@@ -5,8 +5,8 @@ const fs = require('fs');
 const path = require('path');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
-const { logError } = require('../../lib/logger');
-const { sendEmail } = require('../../lib/email');
+import { logError } from '../../lib/logger';
+import { sendEmail } from '../../lib/email';
 
 // Helper function to determine credits based on price ID
 function getCreditsToAdd(priceId) {
