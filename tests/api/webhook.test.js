@@ -60,7 +60,7 @@ jest.mock('path', () => ({
 }));
 
 // Mock ../../lib/email
-jest.mock('../../lib/email', () => ({
+jest.doMock('../../lib/email', () => ({
   sendEmail: jest.fn(),
 }));
 
@@ -72,13 +72,11 @@ describe('Webhook API', () => {
     let mockReq;
     let mockRes;
 
-    beforeAll(() => {
+    beforeEach(() => {
         // Import handler and stripe after doMocks are set up
         handler = require('../../api/webhook');
         stripe = require('stripe');
-    });
 
-    beforeEach(() => {
         jest.clearAllMocks();
         clearMockUsers(); // Clear mock users for each test
         mockQuery.mockClear();
