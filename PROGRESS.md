@@ -35,7 +35,6 @@
         *   `SyntaxError: Jest encountered an unexpected token` errors related to Babel transformation issues in `api/generate-seo-pages.js` and `api/audit.js`.
         *   `Cannot find module` errors for `lib/email` and `lib/html-parser` during module resolution for various API test files.
         *   Various failures in `tests/api/agency-dashboard.test.js`, `tests/api/login.test.js`, `tests/api/signup.test.js`, `tests/api/client-details.test.js`, `tests/api/get-credits.test.js`, `tests/api/user-referral-data.test.js`, `tests/api/dashboard.test.js`, `tests/api/agency-signup.test.js`.
-    *   Identified several issues related to Jest's module mocking strategy (`jest.mock`, `jest.doMock`, `moduleNameMapper`) and the interaction with Babel's transpilation for external dependencies (`@google/generative-ai`) and internal utilities (`lib/time-helpers.js`, `lib/html-parser.js`, `lib/email.js`).
     *   **Decision:** Due to the deep-seated and time-consuming nature of these Jest configuration and module resolution issues, further investigation and resolution efforts for the most complex problems have been moved to `BACKLOG-PREMIUM.md`. The immediate goal of adding more unit tests for critical user flows has been paused.
 
 ## 2026-05-17
@@ -51,4 +50,13 @@
     *   Created `tests/api/execute-outreach.test.js` to unit test the `/api/execute-outreach` endpoint logic, mocking SendGrid to prevent live email sending.
     *   Fixed JSON parsing errors in the new test file to ensure accurate comparison of mock HTTP responses.
     *   All tests in `tests/api/execute-outreach.test.js` passed, verifying the internal logic of the email sending function.
-
+*   **Refactored `api/generate-seo-pages.js`:**
+    *   Removed duplicate `parseOpeningHours` and `convertTo24Hour` functions, relying on `lib/time-helpers.js`.
+    *   Standardized logging using `logError` and `logInfo` from `lib/logger.js`, removing unsupported filename arguments.
+    *   Encapsulated AI content generation into a new `generateAIContent` helper function to reduce repetition and centralize error handling.
+*   **Refactored `api/webhook.js`:**
+    *   Removed unsupported filename arguments from `logError` calls.
+    *   Replaced `console.log` statements with `logInfo` for consistent informational logging.
+    *   Extracted credit addition logic into a `getCreditsToAdd` helper function.
+    *   Extracted referral logic into an `updateReferrerData` helper function.
+    *   Extracted user email fetching logic into a `getUserEmail` helper function.

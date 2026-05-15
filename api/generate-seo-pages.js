@@ -23,6 +23,21 @@ if (geminiApiKey) {
     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
 }
 
+async function generateAIContent(prompt, defaultValue) {
+    if (!geminiModel) {
+        await logError(new Error('GEMINI_API_KEY is not set.'), 'AI Content Generation Skipped');
+        return defaultValue;
+    }
+    try {
+        const result = await geminiModel.generateContent(prompt);
+        const response = await result.response;
+        return response.text();
+    } catch (aiError) {
+        await logError(aiError, `Error generating AI content for prompt: "${prompt.substring(0, 50)}..."`);
+        return defaultValue;
+    }
+}
+
 // Helper function to generate LocalBusiness schema
 function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
     const schema = {
@@ -63,116 +78,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
     return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 }
 
-// Helper function to parse opening hours string (e.g., "Mo-Fr 09:00-17:00; Sa 10:00-14:00")
-function parseOpeningHours(openingHoursString) {
 
-    const defaultOpens = "09:00";
-    const defaultCloses = "17:00";
-    const schemaDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    const dayMap = {
-        "mo": "Monday", "mon": "Monday",
-        "tu": "Tuesday", "tue": "Tuesday",
-        "we": "Wednesday", "wed": "Wednesday",
-        "th": "Thursday", "thu": "Thursday",
-        "fr": "Friday", "fri": "Friday",
-        "sa": "Saturday", "sat": "Saturday",
-        "su": "Sunday", "sun": "Sunday"
-    };
-
-    const openingHoursSpecifications = [];
-    const specs = (openingHoursString || '').split(';').map(s => s.trim()).filter(s => s);
-
-    // If no specs are found, directly use the fallback
-    if (specs.length === 0) {
-        openingHoursSpecifications.push({
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": schemaDays.map(day => `http://schema.org/${day}`),
-            "opens": defaultOpens,
-            "closes": defaultCloses
-        });
-        return openingHoursSpecifications;
-    }
-
-
-    for (const spec of specs) {
-        let days = [];
-        let opens = defaultOpens;
-        let closes = defaultCloses; // Typo here - should be closes
-        let dayPart = spec;
-
-        const timeRegex = /(\d{1,2}(:\d{2})?\s*(AM|PM)?)\s*-\s*(\d{1,2}(:\d{2})?\s*(AM|PM)?)/i;
-        const timeMatch = spec.match(timeRegex);
-
-        if (timeMatch) {
-            opens = convertTo24Hour(timeMatch[1]);
-            closes = convertTo24Hour(timeMatch[4]);
-            dayPart = spec.substring(0, spec.indexOf(timeMatch[0])).trim();
-        }
-
-        // Parse days from dayPart (either full spec or narrowed)
-        const rangeMatch = dayPart.match(/([a-z]{2,3})\s*-\s*([a-z]{2,3})/i);
-        if (rangeMatch) {
-            const startDay = dayMap[rangeMatch[1].toLowerCase()];
-            const endDay = dayMap[rangeMatch[2].toLowerCase()];
-            if (startDay && endDay) {
-                const startIndex = schemaDays.indexOf(startDay);
-                const endIndex = schemaDays.indexOf(endDay);
-                if (startIndex !== -1 && endIndex !== -1) {
-                    if (startIndex <= endIndex) {
-                        days = schemaDays.slice(startIndex, endIndex + 1);
-                    } else {
-                        days = schemaDays.slice(startIndex).concat(schemaDays.slice(0, endIndex + 1));
-                    }
-                }
-            }
-        } else {
-            const individualDays = dayPart.split(',').map(d => dayMap[d.trim().toLowerCase()]).filter(d => d);
-            days = individualDays;
-        }
-
-        // If no specific days were found from dayPart, default to all days
-        if (days.length === 0) {
-            days = schemaDays;
-        }
-        
-        openingHoursSpecifications.push({
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": days.map(day => `http://schema.org/${day}`),
-            opens,
-            closes
-        });
-    }
-
-    return openingHoursSpecifications;
-}
-
-// Helper function to convert 12-hour time (e.g., "9 AM", "5 PM", "9:30AM") to 24-hour (HH:MM)
-function convertTo24Hour(time12h) {
-    if (!time12h) return "00:00"; // Default or handle error
-
-    // Remove any spaces around AM/PM and convert to uppercase for consistency
-    time12h = time12h.replace(/\s*(am|pm)\s*/i, (match, p1) => p1.toUpperCase()).trim();
-
-    const match = time12h.match(/(\d{1,2})(:(\d{2}))?\s*(AM|PM)?/i);
-    if (!match) {
-        return "00:00"; // Invalid format, return default
-    }
-
-    let [_, hourStr, , minuteStr, ampm] = match;
-    let hour = parseInt(hourStr, 10);
-    let minute = minuteStr ? parseInt(minuteStr, 10) : 0;
-
-    if (ampm) {
-        ampm = ampm.toUpperCase();
-        if (ampm === 'PM' && hour < 12) {
-            hour += 12;
-        } else if (ampm === 'AM' && hour === 12) { // Midnight 12 AM
-            hour = 0;
-        }
-    }
-
-    return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-}
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
@@ -185,7 +91,7 @@ module.exports = async (req, res) => {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 userId = decoded.userId;
             } catch (error) {
-                await logError(error, 'Token Verification Failed', 'generate_seo_pages_error.log');
+                await logError(error, 'Token Verification Failed');
                 return res.status(401).json({ message: 'Invalid or expired token.' });
             }
         }
@@ -214,7 +120,7 @@ module.exports = async (req, res) => {
             const userCreditsResult = await query('SELECT credits FROM users WHERE id = $1', [userId]);
 
             if (userCreditsResult.rows.length === 0) {
-                await logError(new Error(`User not found for userId: ${userId} during credit check.`), 'Credit Check - User Not Found', 'generate_seo_pages_error.log');
+                await logError(new Error(`User not found for userId: ${userId} during credit check.`), 'Credit Check - User Not Found');
                 return res.status(404).json({ message: 'User not found.' });
             }
 
@@ -231,11 +137,11 @@ module.exports = async (req, res) => {
             );
 
             if (updateCreditsResult.rows.length === 0) {
-                await logError(new Error(`Failed to deduct credits for userId: ${userId}.`), 'Credit Deduction - Failed Update', 'generate_seo_pages_error.log');
+                await logError(new Error(`Failed to deduct credits for userId: ${userId}.`), 'Credit Deduction - Failed Update');
                 return res.status(500).json({ message: 'Failed to deduct credits. Please try again.' });
             }
 
-            console.log(`User ${userId} deducted ${neededCredits} credits. Remaining credits: ${updateCreditsResult.rows[0].credits}`);
+            await logInfo(`User ${userId} deducted ${neededCredits} credits. Remaining credits: ${updateCreditsResult.rows[0].credits}`, 'Credit Deduction');
 
 
             await fs.mkdir(outputDir, { recursive: true });
@@ -244,8 +150,9 @@ module.exports = async (req, res) => {
             try {
                 template = await fs.readFile(templatePath, 'utf8');
             } catch (error) {
-                console.error('Error reading page template:', error);
+                await logError(error, 'Error reading page template.');
                 return res.status(500).json({ message: 'Error loading page template.' });
+
             }
 
             const generatedPages = [];
@@ -266,15 +173,11 @@ module.exports = async (req, res) => {
                         try {
                             // Generate main AI content
                             const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${businessName}" that provides "${service}" in "${town}". Focus on why a customer should choose them.`;
-                            const result = await geminiModel.generateContent(prompt);
-                            const response = await result.response;
-                            aiContent = response.text();
+                            aiContent = await generateAIContent(prompt, '<p>AI copy generation failed. Please try again later or contact support.</p>');
 
                             // Generate AI-powered meta description
                             const metaPrompt = `Write a concise and compelling meta description (around 150-160 characters) for a business called "${businessName}" that offers "${service}" in "${town}". Highlight key benefits and encourage clicks.`;
-                            const metaResult = await geminiModel.generateContent(metaPrompt);
-                            const metaResponse = await metaResult.response;
-                            metaDescription = metaResponse.text().trim();
+                            metaDescription = await generateAIContent(metaPrompt, `Find the best ${service} services in ${town} with ${businessName}. Quality service guaranteed.`);
                             // Ensure meta description is within typical limits
                             if (metaDescription.length > 160) {
                                 metaDescription = metaDescription.substring(0, 157) + '...';
@@ -284,30 +187,20 @@ module.exports = async (req, res) => {
 
                             // Generate AI-powered Open Graph Description
                             const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${businessName}'s ${service} services in ${town}". Focus on attracting clicks on social media.`;
-                            const ogResult = await geminiModel.generateContent(ogPrompt);
-                            const ogResponse = await ogResult.response;
-                            ogDescription = ogResponse.text().trim();
+                            let ogDescription = await generateAIContent(ogPrompt, `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`);
                             if (ogDescription.length > 200) {
                                 ogDescription = ogDescription.substring(0, 197) + '...';
                             }
 
                             // Generate AI-powered Twitter Description
                             const twitterPrompt = `Write a compelling Twitter card description (up to 200 characters) for a tweet promoting "${businessName}'s ${service} services in ${town}". Encourage retweets and engagement.`;
-                            const twitterResult = await geminiModel.generateContent(twitterPrompt);
-                            const twitterResponse = await twitterResult.response;
-                            twitterDescription = twitterResponse.text().trim();
+                            let twitterDescription = await generateAIContent(twitterPrompt, `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`);
                             if (twitterDescription.length > 200) {
                                 twitterDescription = twitterDescription.substring(0, 197) + '...';
                             }
 
 
-                        } catch (aiError) {
-                            console.error('Error generating AI content or meta descriptions:', aiError);
-                            aiContent = '<p>AI copy generation failed. Please try again later or contact support.</p>';
-                            metaDescription = `Find the best ${service} services in ${town} with ${businessName}. Quality service guaranteed.`;
-                            ogDescription = `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`;
-                            twitterDescription = `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`;
-                        }
+
                     } else if (enableAICopy && !geminiModel) {
                         aiContent = '<p>AI copy is unavailable due to missing API key. Contact support.</p>';
                         metaDescription = `Discover reliable ${service} services in ${town} from ${businessName}. Book your consultation today!`;
@@ -356,18 +249,7 @@ module.exports = async (req, res) => {
             });
 
         } catch (error) {
-            console.error('Error in generate-seo-pages API:', error);
-            const logDir = path.join(process.cwd(), 'logs');
-            if (!fs.existsSync(logDir)) { // Synchronous check for logs directory before async write
-                await fs.mkdir(logDir, { recursive: true });
-            }
-            const logFilePath = path.join(logDir, 'generate_seo_pages_error.log');
-            const timestamp = new Date().toISOString();
-            const errorMessage = `[${timestamp}] Error in generate-seo-pages API: ${error.message}
-Stack: ${error.stack}
-
-`;
-            await fs.appendFile(logFilePath, errorMessage);
+            await logError(error, 'Internal server error during page generation.');
             return res.status(500).json({ message: 'Internal server error during page generation.' });
         }
 
