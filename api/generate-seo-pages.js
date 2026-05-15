@@ -6,7 +6,7 @@ const { parse } = require('cookie'); // Import parse from cookie
 const jwt = require('jsonwebtoken'); // Import jwt
 const { query } = require('../db/index.js'); // Import PostgreSQL query utility
 const { logError } = require('../../lib/logger'); // Import centralized logger
-const { parseOpeningHours } = require('../../lib/time-helpers'); // Import parseOpeningHours
+// const { parseOpeningHours } = require('../../lib/time-helpers'); // Import parseOpeningHours
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
