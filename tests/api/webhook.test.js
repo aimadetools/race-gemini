@@ -1,5 +1,9 @@
 // tests/api/webhook.test.js
 import { jest } from '@jest/globals';
+
+jest.mock('../../lib/email', () => ({
+  sendEmail: jest.fn(),
+}));
 import { createRequest, createResponse } from 'node-mocks-http';
 import { mockQuery as originalMockQuery, clearMockUsers, addMockUser, getMockUsers } from '../../db/mockDb';
 import stripePackage from 'stripe';
