@@ -10,3 +10,13 @@ Specifically, but not limited to:
 Time: 15min
 Priority: blocking
 Budget: $0
+
+---
+
+What: Trigger database migration and provide detailed logs for /api/execute-outreach.
+Steps:
+1. Trigger the `/api/migrate` endpoint on the deployed Vercel environment. This will create the `user_events` table in the Neon PostgreSQL database, resolving the `relation "user_events" does not exist` error for `/api/track`.
+2. Provide full Vercel runtime logs for the `/api/execute-outreach` function. The previous logs did not contain information for this specific function, and `FUNCTION_INVOCATION_FAILED` persists. Detailed logs are crucial for further debugging.
+Time: 30min
+Priority: critical
+Budget: $0
