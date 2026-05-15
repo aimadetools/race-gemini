@@ -60,10 +60,15 @@ export default async function handler(req, res, currentKvClient) {
         }
       }
 
+      // Retrieve credit transaction history
+      const transactionStrings = await currentKv.lrange(`user:${userId}:credittransactions`, 0, 100);
+      const creditTransactions = transactionStrings.map(t => JSON.parse(t));
+
       return res.status(200).json({
         email: user.email,
         credits: user.credits,
         generatedPages,
+        creditTransactions,
       });
 
     } catch (error) {

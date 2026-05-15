@@ -50,6 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No pages generated yet.</td></tr>';
                 }
+
+                // Populate credit transaction history
+                const creditTransactionsTableBody = document.querySelector('#credit-transactions tbody');
+                if (data.creditTransactions && data.creditTransactions.length > 0) {
+                    data.creditTransactions.forEach(transaction => {
+                        const row = creditTransactionsTableBody.insertRow();
+                        const formattedDate = new Date(transaction.date).toLocaleDateString();
+                        const amountClass = transaction.amount > 0 ? 'credit-positive' : 'credit-negative';
+                        row.innerHTML = `
+                            <td>${formattedDate}</td>
+                            <td>${transaction.description}</td>
+                            <td class="${amountClass}">${transaction.amount}</td>
+                        `;
+                    });
+                } else {
+                    creditTransactionsTableBody.innerHTML = '<tr><td colspan="3">No transactions found.</td></tr>';
+                }
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {

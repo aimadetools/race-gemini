@@ -573,3 +573,11 @@ a.logo span {
     color: #777;
     margin-top: 20px;
 }
+
+.credit-positive {
+    color: #28a745;
+}
+
+.credit-negative {
+    color: #dc3545;
+}

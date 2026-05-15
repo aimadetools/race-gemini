@@ -136,7 +136,16 @@ module.exports = async (req, res, currentKvClient) => {
                             await logError(new Error(`User not found for userId: ${userId} during subscription checkout.`), 'Stripe Webhook - User Not Found for Subscription', 'webhook_error.log');
                             return res.status(404).json({ message: 'User not found in database for subscription.' });
                         }
+                        // Log credit transaction
+                        const transaction = {
+                            date: new Date().toISOString(),
+                            description: `Subscription renewal (${agencyPlanId})`,
+                            amount: creditsToAdd
+                        };
+                        await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
                         console.log(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`);
+
                         // Track revenue generated from subscription
                         await trackEventHandler({
                             method: 'POST',
@@ -183,7 +192,15 @@ module.exports = async (req, res, currentKvClient) => {
                         await logError(new Error(`User not found for userId: ${userId} during credit pack purchase.`), 'Stripe Webhook - User Not Found for Credit Pack', 'webhook_error.log');
                         return res.status(404).json({ message: 'User not found in database for credit pack purchase.' });
                     }
+                    // Log credit transaction
+                    const transaction = {
+                        date: new Date().toISOString(),
+                        description: `Purchased ${parsedCredits} credits`,
+                        amount: parsedCredits
+                    };
+                    await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
                     console.log(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`);
+
                     // Track revenue generated from one-time credit pack purchase
                     await trackEventHandler({
                         method: 'POST',
@@ -231,7 +248,15 @@ module.exports = async (req, res, currentKvClient) => {
                             await logError(new Error(`User not found for userId: ${userId} during invoice payment succeeded.`), 'Stripe Webhook - User Not Found for Invoice', 'webhook_error.log');
                             return res.status(404).json({ message: 'User not found in database for invoice payment.' });
                         }
+                        // Log credit transaction
+                        const transaction = {
+                            date: new Date().toISOString(),
+                            description: `Subscription renewal`,
+                            amount: creditsToAdd
+                        };
+                        await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
                         console.log(`Added ${creditsToAdd} credits to agency user ${userId} on invoice payment. New balance: ${result.rows[0].credits}`);
+
                         // Track revenue generated from recurring invoice payment
                         await trackEventHandler({
                             method: 'POST',

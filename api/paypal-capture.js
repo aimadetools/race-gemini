@@ -1,3 +1,4 @@
+import { kv } from '@vercel/kv';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 const { parse } = require('cookie'); // Use parse from 'cookie' directly
 const jwt = require('jsonwebtoken');
@@ -61,7 +62,16 @@ module.exports = async (req, res, currentKvClient) => {
                     return res.status(404).json({ message: 'User not found in database.' });
                 }
 
-                console.log(`User ${userId} successfully purchased ${credits} credits via PayPal. New balance: ${result.rows[0].credits});
+                // Log credit transaction
+                const transaction = {
+                    date: new Date().toISOString(),
+                    description: `Purchased ${parsedCredits} credits via PayPal`,
+                    amount: parsedCredits
+                };
+                await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
+                console.log(`User ${userId} successfully purchased ${credits} credits via PayPal. New balance: ${result.rows[0].credits}`);
+
 
                 return res.status(200).json({ success: true, message: 'Payment captured and credits updated.' });
             } else {

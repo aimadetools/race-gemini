@@ -179,6 +179,14 @@ module.exports = async (req, res) => {
             // Decrement user credits in PostgreSQL
             await query('UPDATE users SET credits = credits - $1 WHERE id = $2', [pagesToGenerate, userId]);
 
+            // Log credit transaction
+            const transaction = {
+                date: new Date().toISOString(),
+                description: `Generated ${pagesToGenerate} SEO pages`,
+                amount: -pagesToGenerate
+            };
+            await kv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
             archive.finalize();
 
         } catch (error) {
