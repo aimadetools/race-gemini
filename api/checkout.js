@@ -81,8 +81,8 @@ module.exports = async (req, res) => {
                     },
                 ],
                 mode: 'payment',
-                success_url: `https://${req.headers.host}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `https://${req.headers.host}/pricing.html`, // Redirect back to pricing page
+                success_url: `https://www.localseogen.com/success.html?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `https://www.localseogen.com/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
                     creditPackId: creditPackId, // Pass the pack ID
@@ -119,8 +119,8 @@ module.exports = async (req, res) => {
                     },
                 ],
                 mode: 'subscription', // Use subscription mode for recurring payments
-                success_url: `https://${req.headers.host}/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
-                cancel_url: `https://${req.headers.host}/agency-partnerships.html`, // Redirect back to agency pricing page
+                success_url: `https://www.localseogen.com/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
+                cancel_url: `https://www.localseogen.com/agency-partnerships.html`, // Redirect back to agency pricing page
                 client_reference_id: userId,
                 customer_creation: 'always', // Ensure a customer is created in Stripe
                 metadata: {
