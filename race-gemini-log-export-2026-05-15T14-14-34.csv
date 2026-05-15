@@ -1,0 +1,1281 @@
+TimeUTC,timestampInMs,requestPath,requestMethod,requestQueryString,responseStatusCode,requestId,requestUserAgent,level,environment,branch,vercelCache,type,function,host,deploymentDomain,deploymentId,durationMs,region,maxMemoryUsed,memorySize,message,projectId,traceId,sessionId,invocationId,instanceId,concurrency,workflowRunId,workflowStepId
+2026-05-15 14:00:45,1778853645772,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,h8dn8-1778853645772-760d55b5d78a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,245,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ13G01VKEDXDFJKXKZ8JK,WLCLBXp149mK,1,,
+2026-05-15 14:00:45,1778853645938,race-gemini.vercel.app/api/track,POST,,500,blw9z-1778853645772-ba6afbeafdbd,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645772,race-gemini.vercel.app/api/track,POST,,500,blw9z-1778853645772-ba6afbeafdbd,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,265,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ13FYJGZ9ZA7GEWRSAAKY,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:45,1778853645761,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,jk8b6-1778853645761-a933377dadf4,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,8,iad1,257,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ13PA1XK6PXGHVTNPVSF5,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:45,1778853645977,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mvj9g-1778853645752-419988d2dc29,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645752,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mvj9g-1778853645752-419988d2dc29,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,157,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ13FEQXZ3RHP7V1TY06JT,,-1,,
+2026-05-15 14:00:45,1778853645440,race-gemini.vercel.app/api/track,POST,,500,blw9z-1778853645277-503fe0560b5b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645277,race-gemini.vercel.app/api/track,POST,,500,blw9z-1778853645277-503fe0560b5b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,260,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ130F09V0RHV14BRHJQFK,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:45,1778853645443,race-gemini.vercel.app/api/track,POST,,500,pd7wg-1778853645262-58849f71bb7e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645262,race-gemini.vercel.app/api/track,POST,,500,pd7wg-1778853645262-58849f71bb7e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,101,iad1,266,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ130KF6Q8CE8PENQJCYTX,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:45,1778853645480,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,cqq2x-1778853645254-e3310c446aa4,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645254,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,cqq2x-1778853645254-e3310c446aa4,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,156,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12ZV9G32SCAKJ14XK013,,-1,,
+2026-05-15 14:00:45,1778853645254,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,bz27l-1778853645254-2fbd9b9c9200,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,245,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12ZZ2RRNYDF6KNBAYKCE,WLCLBXp149mK,1,,
+2026-05-15 14:00:45,1778853645254,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,6t6gd-1778853645254-c7ff50d81ac0,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,8,iad1,257,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12ZYJQ6HWMRVA422WA1P,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:45,1778853645315,race-gemini.vercel.app/api/track,POST,,500,ct4pz-1778853645148-3bcbe0049652,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645148,race-gemini.vercel.app/api/track,POST,,500,ct4pz-1778853645148-3bcbe0049652,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,101,iad1,260,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12WFCPCC9VD9B5P8B8KE,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:45,1778853645122,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,hb8kq-1778853645122-f7ebebbb35cc,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12VR4TET8PR1C4YAXMMR,WLCLBXp149mK,1,,
+2026-05-15 14:00:45,1778853645286,race-gemini.vercel.app/api/track,POST,,500,d7rfh-1778853645122-31780fbfde89,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645122,race-gemini.vercel.app/api/track,POST,,500,d7rfh-1778853645122-31780fbfde89,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12VP6E7YX0GDDQSVKF03,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:45,1778853645113,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,wwglq-1778853645113-aa8083df9491,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12VDBWAM4G6GP5ZK9DGM,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:45,1778853645344,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mbrnz-1778853645110-8449a6f173ad,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:45,1778853645110,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mbrnz-1778853645110-8449a6f173ad,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,151,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12VP13SBPYMM4VM3QHXV,,-1,,
+2026-05-15 14:00:45,1778853645102,race-gemini.vercel.app/api/track,POST,,500,qqs56-1778853644930-0baf4025fb93,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644930,race-gemini.vercel.app/api/track,POST,,500,qqs56-1778853644930-0baf4025fb93,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,102,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12NT5AQVCEA4Q0XX50QH,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:44,1778853644901,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,mw6q4-1778853644901-f953b26c3222,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12MWYHM4JEBGB99ZVYR8,WLCLBXp149mK,1,,
+2026-05-15 14:00:44,1778853644901,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,lkn2q-1778853644901-36bc0fc17bea,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12MS8KVC1VC42EYHY5J4,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:45,1778853645090,race-gemini.vercel.app/api/track,POST,,500,88lz7-1778853644901-baaae6497d3a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644901,race-gemini.vercel.app/api/track,POST,,500,88lz7-1778853644901-baaae6497d3a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,260,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12NJCWT3T9QS8BC9P6PG,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:45,1778853645117,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,gs9mq-1778853644887-95db501163dd,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644887,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,gs9mq-1778853644887-95db501163dd,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,148,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12MP5560BWW5Q55VBXBP,,-1,,
+2026-05-15 14:00:44,1778853644712,race-gemini.vercel.app/api/track,POST,,500,kqsph-1778853644549-4aacaf63da86,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644549,race-gemini.vercel.app/api/track,POST,,500,kqsph-1778853644549-4aacaf63da86,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,104,iad1,260,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ129SEC8Q8AV3HB99NA9P,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:44,1778853644530,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,95dwc-1778853644530-0b31df58f73f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1297WM2GX88MERMAXRDK,WLCLBXp149mK,1,,
+2026-05-15 14:00:44,1778853644529,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,qnqx7-1778853644529-23df66e111c5,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ12962WB5KT578ZC8R463,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:44,1778853644798,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,qmfdh-1778853644529-e98afb57ff8d,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644529,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,qmfdh-1778853644529-e98afb57ff8d,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,198,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1299EXYEZGCC391XF8HM,,-1,,
+2026-05-15 14:00:44,1778853644690,race-gemini.vercel.app/api/track,POST,,500,slgz4-1778853644518-7b6bc9857f50,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644518,race-gemini.vercel.app/api/track,POST,,500,slgz4-1778853644518-7b6bc9857f50,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ128VYWTY8GMXXPDSZR9B,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:44,1778853644539,race-gemini.vercel.app/api/track,POST,,500,2wtmw-1778853644377-d44bcd0a4074,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644377,race-gemini.vercel.app/api/track,POST,,500,2wtmw-1778853644377-d44bcd0a4074,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,101,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ124GBHMTPN3TTYR0T6N9,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:44,1778853644524,race-gemini.vercel.app/api/track,POST,,500,jv8gb-1778853644361-28aee718324c,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644361,race-gemini.vercel.app/api/track,POST,,500,jv8gb-1778853644361-28aee718324c,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ123XGF05T4FRG9V5BXRT,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:44,1778853644356,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,pwjgv-1778853644356-70a2eb6b6f11,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ123RRBFF3QR4P7E1DF3X,WLCLBXp149mK,1,,
+2026-05-15 14:00:44,1778853644356,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,fznfg-1778853644356-87e0bc60e1db,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ123TDGZ5X76P2S583QP6,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:44,1778853644571,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,pwdgk-1778853644351-625dcc799fb0,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644351,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,pwdgk-1778853644351-625dcc799fb0,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,149,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ123KTQ23X6186JNBGRFQ,,-1,,
+2026-05-15 14:00:44,1778853644197,race-gemini.vercel.app/api/track,POST,,500,9nmhb-1778853644036-366d529b4e4e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644036,race-gemini.vercel.app/api/track,POST,,500,9nmhb-1778853644036-366d529b4e4e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11SRVF1WTWRC4BWS1MV8,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:44,1778853644229,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,nlgwg-1778853644015-2db61fc3f34a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644015,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,nlgwg-1778853644015-2db61fc3f34a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,145,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11S603T06DY4DRZQMN4Z,,-1,,
+2026-05-15 14:00:44,1778853644015,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,mbrnz-1778853644015-559a3c4edbaa,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11S6ZSGCXJTXB3M7QF8Z,WLCLBXp149mK,1,,
+2026-05-15 14:00:44,1778853644178,race-gemini.vercel.app/api/track,POST,,500,m2tkt-1778853644015-2dff9f556989,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:44,1778853644015,race-gemini.vercel.app/api/track,POST,,500,m2tkt-1778853644015-2dff9f556989,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,101,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11S7VZFC31NJSTKHPHT4,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:44,1778853644015,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,4pxsh-1778853644015-26b35fa38a88,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11S2W3W37J5MZR1RWPN6,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643985,race-gemini.vercel.app/api/track,POST,,500,k9j5d-1778853643834-0623d094eecc,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643834,race-gemini.vercel.app/api/track,POST,,500,k9j5d-1778853643834-0623d094eecc,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,96,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11G966F78Y1DWMBM9ZD4,fhkQlOp4N2rJ,3,,
+2026-05-15 14:00:43,1778853643966,race-gemini.vercel.app/api/track,POST,,500,v5psz-1778853643810-ad0e6b8363a7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643810,race-gemini.vercel.app/api/track,POST,,500,v5psz-1778853643810-ad0e6b8363a7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11G966F78Y1DWMBM9ZD4,fhkQlOp4N2rJ,3,,
+2026-05-15 14:00:44,1778853644005,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,zw89p-1778853643804-54058c61aa7e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643804,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,zw89p-1778853643804-54058c61aa7e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,134,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11JG9VYQP3MBKW1QMK42,,-1,,
+2026-05-15 14:00:43,1778853643804,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,hwcd9-1778853643804-30ecec72bc41,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11JFT5Q8FZ2A8KAPFBBP,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643804,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,4pxsh-1778853643804-66bb3b5a2bcc,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,5,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11JGSWWYX6BHB2EKZM4Q,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643893,race-gemini.vercel.app/api/track,POST,,500,c429v-1778853643732-0748e80d1f94,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643732,race-gemini.vercel.app/api/track,POST,,500,c429v-1778853643732-0748e80d1f94,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,96,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11G966F78Y1DWMBM9ZD4,fhkQlOp4N2rJ,3,,
+2026-05-15 14:00:43,1778853643874,race-gemini.vercel.app/api/track,POST,,500,769pw-1778853643709-41aad0044fd0,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643709,race-gemini.vercel.app/api/track,POST,,500,769pw-1778853643709-41aad0044fd0,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,101,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11FJ0WZ7HHGBDQM8G93V,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:43,1778853643697,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,v57xp-1778853643697-eab8ff44ff70,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11F5FQPPDH941MKF3W7V,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643694,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,k8hlr-1778853643694-2ddb00fdbf8b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11F37T8ZFBS22X1RCWHB,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643927,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,7d2v6-1778853643691-2ad7e512f66f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:5) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643691,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,7d2v6-1778853643691-2ad7e512f66f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,162,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11EZ9MDJSVYXGX37W9EW,,-1,,
+2026-05-15 14:00:43,1778853643760,race-gemini.vercel.app/api/track,POST,,500,h8dn8-1778853643600-d989d780c739,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643600,race-gemini.vercel.app/api/track,POST,,500,h8dn8-1778853643600-d989d780c739,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11C5PFDSVEBQRH5HE56R,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:43,1778853643584,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,fb4gq-1778853643584-54d37ec6042e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11BP0SKJC62MTKPRJV90,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643745,race-gemini.vercel.app/api/track,POST,,500,7gjrv-1778853643583-dbfc471807a1,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643583,race-gemini.vercel.app/api/track,POST,,500,7gjrv-1778853643583-dbfc471807a1,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11BRKARYXKRXQADB9VZM,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:43,1778853643583,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,48vzs-1778853643583-0b0c8f2e2570,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,244,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11BQRW9V0G10J13WTBJ4,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643785,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,fb4gq-1778853643577-0fe6bde4f466,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643577,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,fb4gq-1778853643577-0fe6bde4f466,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,140,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ11BET2WQS75Z6TY5DTF1,,-1,,
+2026-05-15 14:00:43,1778853643573,race-gemini.vercel.app/api/track,POST,,500,hb8kq-1778853643424-111ddebae394,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643424,race-gemini.vercel.app/api/track,POST,,500,hb8kq-1778853643424-111ddebae394,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ115H1HX43CAFJWNKA38W,fhkQlOp4N2rJ,2,,
+2026-05-15 14:00:43,1778853643396,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,pqfp8-1778853643396-4f1258a993da,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ116FYSZCNVCBVF71M2QP,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643606,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mkk7t-1778853643395-9aa74e56b6f7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643395,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,mkk7t-1778853643395-9aa74e56b6f7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,140,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ115R2Z2MJT89FFG4AKCA,,-1,,
+2026-05-15 14:00:43,1778853643395,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,jmnn6-1778853643395-272fed778751,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,8,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1160FQD6S6Y712JWRCK1,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643554,race-gemini.vercel.app/api/track,POST,,500,mkk7t-1778853643390-7bca33c9480f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643390,race-gemini.vercel.app/api/track,POST,,500,mkk7t-1778853643390-7bca33c9480f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,97,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ115H1HX43CAFJWNKA38W,fhkQlOp4N2rJ,2,,
+2026-05-15 14:00:43,1778853643326,race-gemini.vercel.app/api/track,POST,,500,k5gqk-1778853643165-4d3fc10607fa,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643165,race-gemini.vercel.app/api/track,POST,,500,k5gqk-1778853643165-4d3fc10607fa,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,106,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10YHYHK3ZPP3X4KBPG98,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:43,1778853643158,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,sdf9s-1778853643158-0680cfbdc472,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,5,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10YA4965RACAW4WR3JH4,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643322,race-gemini.vercel.app/api/track,POST,,500,pwjgv-1778853643158-912e98d75d01,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643158,race-gemini.vercel.app/api/track,POST,,500,pwjgv-1778853643158-912e98d75d01,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,98,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10YC8RHAA5B6WGSH433X,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:43,1778853643158,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,m2tkt-1778853643158-e10eacbaaf34,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,30,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10YA9T0Q55RYBXCA76TX,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643371,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,hx2t8-1778853643158-d2cadddfef99,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643158,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,hx2t8-1778853643158-d2cadddfef99,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,140,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10YC7E738FZT271MKKEF,,-1,,
+2026-05-15 14:00:43,1778853643173,race-gemini.vercel.app/api/track,POST,,500,2zh86-1778853643025-3cdc4fcfac90,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:43,1778853643025,race-gemini.vercel.app/api/track,POST,,500,2zh86-1778853643025-3cdc4fcfac90,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10P9QXRVEX2DVRB1DAQZ,OQrhHHmgDUkI,3,,
+2026-05-15 14:00:43,1778853643148,race-gemini.vercel.app/api/track,POST,,500,r8bdz-1778853642995-deda163ffdf8,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642995,race-gemini.vercel.app/api/track,POST,,500,r8bdz-1778853642995-deda163ffdf8,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,96,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10P9QXRVEX2DVRB1DAQZ,OQrhHHmgDUkI,3,,
+2026-05-15 14:00:42,1778853642995,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,7qzfl-1778853642995-495c179af56f,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,5,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10S7795K34ZA1F0QXF4Q,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642989,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,w8bds-1778853642989-8fffe13d6d13,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10S1E8HNTNPW1Y25XFGD,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643269,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,rz6hb-1778853642989-2a3b0c99a030,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642989,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,rz6hb-1778853642989-2a3b0c99a030,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,209,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10S2MDSJ52K04K9HHKMG,,-1,,
+2026-05-15 14:00:42,1778853642942,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,84bqq-1778853642942-97a9245bfefe,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10QQVS1F36KEX11SQJ88,WLCLBXp149mK,1,,
+2026-05-15 14:00:43,1778853643088,race-gemini.vercel.app/api/track,POST,,500,g7jm8-1778853642919-1da3fd247959,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642919,race-gemini.vercel.app/api/track,POST,,500,g7jm8-1778853642919-1da3fd247959,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10P9QXRVEX2DVRB1DAQZ,OQrhHHmgDUkI,3,,
+2026-05-15 14:00:43,1778853643116,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,qf8rk-1778853642907-e4edd32c6aea,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642907,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,qf8rk-1778853642907-e4edd32c6aea,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,142,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10PFF3ZHV85HWCVC36V3,,-1,,
+2026-05-15 14:00:42,1778853642907,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,455jm-1778853642907-f709c2e074bf,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,8,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10PMVQ3AGFFK8PYZ0940,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643060,race-gemini.vercel.app/api/track,POST,,500,c429v-1778853642901-7bdea5d2ed67,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642901,race-gemini.vercel.app/api/track,POST,,500,c429v-1778853642901-7bdea5d2ed67,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,259,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10P9QXRVEX2DVRB1DAQZ,OQrhHHmgDUkI,3,,
+2026-05-15 14:00:42,1778853642931,race-gemini.vercel.app/api/track,POST,,500,5t45g-1778853642779-d6fc2a20946e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642779,race-gemini.vercel.app/api/track,POST,,500,5t45g-1778853642779-d6fc2a20946e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,94,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10F2HDCRBTHTHSRJYTK7,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642769,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,hxbqr-1778853642769-198c391caac2,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,11,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10J8W7A23XY616CMM635,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:43,1778853643039,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,bl2dv-1778853642769-cb51db0cf7c7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642769,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,bl2dv-1778853642769-cb51db0cf7c7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,188,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10J9Y44W1M3WX5T62B17,,-1,,
+2026-05-15 14:00:42,1778853642769,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,4z8gv-1778853642769-65669930522d,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,8,iad1,256,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10J76BN3VY7T121NRS06,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642915,race-gemini.vercel.app/api/track,POST,,500,7q7kx-1778853642767-7bb331dfc0ec,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642767,race-gemini.vercel.app/api/track,POST,,500,7q7kx-1778853642767-7bb331dfc0ec,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10F2HDCRBTHTHSRJYTK7,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642828,race-gemini.vercel.app/api/track,POST,,500,jjbm7-1778853642670-f7d33b8a3df8,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642670,race-gemini.vercel.app/api/track,POST,,500,jjbm7-1778853642670-f7d33b8a3df8,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,94,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10F2HDCRBTHTHSRJYTK7,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642654,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,vbwr2-1778853642654-48c1afe31fb7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10EN20SES1ACYZ8DYCQS,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642816,race-gemini.vercel.app/api/track,POST,,500,v5psz-1778853642654-6205fa7d9866,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642654,race-gemini.vercel.app/api/track,POST,,500,v5psz-1778853642654-6205fa7d9866,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,98,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10EHD5BZQWRC5PMHSFD4,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:42,1778853642654,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,tqhb2-1778853642654-af39c050152b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,10,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10EHD7RDS9A53NFPCA17,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:42,1778853642881,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,svqwg-1778853642648-2d2ec66ee2e1,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642648,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,svqwg-1778853642648-2d2ec66ee2e1,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,153,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10ETC3JMAVZKPK6G2CHV,,-1,,
+2026-05-15 14:00:42,1778853642703,race-gemini.vercel.app/api/track,POST,,500,m4vs9-1778853642546-209faada0570,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642546,race-gemini.vercel.app/api/track,POST,,500,m4vs9-1778853642546-209faada0570,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,98,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10B878N2DXKTXJZKDBV9,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:42,1778853642686,race-gemini.vercel.app/api/track,POST,,500,cjlc7-1778853642525-b831199588ad,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642525,race-gemini.vercel.app/api/track,POST,,500,cjlc7-1778853642525-b831199588ad,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10AJ7WEX5K3SE9V5WKVF,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:42,1778853642521,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,ttgf9-1778853642521-af7c427fb151,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10AGAMHZS2WMQCBW8AYK,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:42,1778853642521,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,f7rsx-1778853642521-c9825d6058b9,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10AQK7727ZRJTG7A21F5,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642719,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,sqjsw-1778853642513-ba5b0268904a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642513,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,sqjsw-1778853642513-ba5b0268904a,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,136,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10A85YSZ14KK40MGZT3V,,-1,,
+2026-05-15 14:00:42,1778853642554,race-gemini.vercel.app/api/track,POST,,500,nq9np-1778853642403-34d8a9be831d,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642403,race-gemini.vercel.app/api/track,POST,,500,nq9np-1778853642403-34d8a9be831d,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ102JXJY66Z4XMRQV965M,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642383,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,l74d4-1778853642383-3a3ee2784da5,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1066FH47D410WR00E4E7,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642383,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,64rd7-1778853642383-320dcbad5145,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1066KPG8MMTT4X7RDEE3,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:42,1778853642613,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,nxrxt-1778853642378-54b68dbaad70,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642378,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,nxrxt-1778853642378-54b68dbaad70,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,161,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ1062E97JQM7EYM8D0JRN,,-1,,
+2026-05-15 14:00:42,1778853642524,race-gemini.vercel.app/api/track,POST,,500,2hwfx-1778853642373-32ce46adeac7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642373,race-gemini.vercel.app/api/track,POST,,500,2hwfx-1778853642373-32ce46adeac7,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,94,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ102JXJY66Z4XMRQV965M,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642429,race-gemini.vercel.app/api/track,POST,,500,j959k-1778853642271-dd162a89ae70,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642271,race-gemini.vercel.app/api/track,POST,,500,j959k-1778853642271-dd162a89ae70,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,95,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ102JXJY66Z4XMRQV965M,OQrhHHmgDUkI,2,,
+2026-05-15 14:00:42,1778853642443,race-gemini.vercel.app/api/track,POST,,500,fb4gq-1778853642251-a1e012bd116b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642251,race-gemini.vercel.app/api/track,POST,,500,fb4gq-1778853642251-a1e012bd116b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,126,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10264YZS4DX4RFR1Z3HB,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:42,1778853642250,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,fznfg-1778853642250-9c63e222fb7b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,5,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10201TE23K2TC1YXT6D1,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642250,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,fp8lj-1778853642250-37888744983b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,10,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ10264ZCCRM7976NEK3FK,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:42,1778853642460,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,kqsph-1778853642243-fcdf99668c8c,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642243,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,kqsph-1778853642243-fcdf99668c8c,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,142,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ101ZXXGWC67P2BDPX6TP,,-1,,
+2026-05-15 14:00:42,1778853642377,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,4pxsh-1778853642141-edebe0e6b58b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"(node:4) Warning: To load an ES module, set ""type"": ""module"" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+SyntaxError: Unexpected reserved word
+    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+    at #translate (node:internal/modules/esm/loader:497:12)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642141,race-gemini.vercel.app/api/assign,GET,experiment=hero-cta-test,500,4pxsh-1778853642141-edebe0e6b58b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/assign,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,159,iad1,-1,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZYZ3CPZ9SKD411WRS8N,,-1,,
+2026-05-15 14:00:42,1778853642276,race-gemini.vercel.app/api/track,POST,,500,gtszj-1778853642119-22feda6ab97e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642119,race-gemini.vercel.app/api/track,POST,,500,gtszj-1778853642119-22feda6ab97e,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,262,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZXTC5J82WZVF0KWD55G,fhkQlOp4N2rJ,1,,
+2026-05-15 14:00:42,1778853642258,race-gemini.vercel.app/api/track,POST,,500,djl6f-1778853642096-f214fdee0650,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:42,1778853642096,race-gemini.vercel.app/api/track,POST,,500,djl6f-1778853642096-f214fdee0650,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,99,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZX52QVHFH3TW3NHRY2T,OQrhHHmgDUkI,1,,
+2026-05-15 14:00:42,1778853642092,race-gemini.vercel.app/api/get-agency-credit-history,GET,,401,qm65k-1778853642092-4be555ccc07b,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-credit-history,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,7,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZX2QPGVSZRCQ5090C0V,WLCLBXp149mK,1,,
+2026-05-15 14:00:42,1778853642091,race-gemini.vercel.app/api/get-agency-subscription,GET,,401,gxvpn-1778853642091-c027dd46bae1,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/get-agency-subscription,race-gemini.vercel.app,race-gemini-lse7d9ftt-jochenvandenbroele-5976s-projects.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,6,iad1,255,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZX09JK7K0N4GM6HNSZS,TYxA3Bq3LVAv,1,,
+2026-05-15 14:00:42,1778853642081,race-gemini.vercel.app/api/track,POST,,500,6nzvk-1778853641924-18753e907828,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",error,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,,,,,"Error tracking event: error: relation ""user_events"" does not exist
+    at /var/task/node_modules/pg/lib/client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler (/var/task/api/track.js:27:5)
+    at async r (/opt/rust/nodejs.js:2:15572)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:2:11594)
+    at async Server.<anonymous> (/opt/rust/nodejs.js:17:10685) {
+  length: 110,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}",prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,,,,,
+2026-05-15 14:00:41,1778853641924,race-gemini.vercel.app/api/track,POST,,500,6nzvk-1778853641924-18753e907828,"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/145.0.7632.6 Safari/537.36",,production,main,MISS,function,/api/track,race-gemini.vercel.app,race-gemini.vercel.app,dpl_8Um3oUuyFyozWKgqDhp2rMZadroh,100,iad1,258,2048,,prj_ZFrhNQpjPIH9DLVlgPok89xB5tbu,,,01KRNZ0ZQQQA2C9Q72429TT9AS,OQrhHHmgDUkI,1,,
