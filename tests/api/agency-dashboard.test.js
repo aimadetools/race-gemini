@@ -15,10 +15,25 @@ jest.mock('jsonwebtoken', () => ({
   verify: jest.fn(),
 }));
 
+const mockStripeCustomerRetrieve = jest.fn();
+const mockStripeSubscriptionsRetrieve = jest.fn();
+
+jest.mock('stripe', () => {
+  return jest.fn(() => ({
+    customers: {
+      retrieve: mockStripeCustomerRetrieve,
+    },
+    subscriptions: {
+      retrieve: mockStripeSubscriptionsRetrieve,
+    },
+  }));
+});
+
 import handler from '../../api/agency-dashboard';
 import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import Stripe from 'stripe'; // Import Stripe to use its mock functions
 
 describe('agency-dashboard API', () => {
   let req;
@@ -42,15 +57,15 @@ describe('agency-dashboard API', () => {
     };
 
     jest.clearAllMocks();
+    mockStripeCustomerRetrieve.mockReset();
+    mockStripeSubscriptionsRetrieve.mockReset();
 
-    // Mock process.env.JWT_SECRET for jwt.verify and STRIPE_SECRET_KEY for stripe initialization
+    // Mock process.env.JWT_SECRET for jwt.verify
     process.env.JWT_SECRET = 'test_secret';
-    process.env.STRIPE_SECRET_KEY = 'test_stripe_secret';
   });
 
   afterEach(() => {
     delete process.env.JWT_SECRET;
-    delete process.env.STRIPE_SECRET_KEY;
   });
 
   test('should return 405 for non-GET methods', async () => {
@@ -132,6 +147,26 @@ describe('agency-dashboard API', () => {
     mockKv.smembers.mockResolvedValueOnce(['page1', 'page2']); // Get client 1 pages
     mockKv.get.mockResolvedValueOnce(client2); // Get client 2
     mockKv.smembers.mockResolvedValueOnce(['page3']); // Get client 2 pages
+
+    // Mock Stripe customer and subscription data
+    mockStripeCustomerRetrieve.mockResolvedValueOnce({
+      subscriptions: {
+        data: [{
+          status: agency.subscriptionStatus,
+          current_period_end: new Date(agency.renewalDate).getTime() / 1000, // Convert date to Unix timestamp
+          items: {
+            data: [{
+              price: {
+                metadata: {
+                  credits: String(agency.monthlyCredits), // Metadata stores as string
+                  planName: agency.planName,
+                },
+              },
+            }],
+          },
+        }],
+      },
+    });
 
     await handler(req, res, mockKv);
 
