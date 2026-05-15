@@ -60,7 +60,9 @@ describe('agency-dashboard API', () => {
 
     req = {
       method: 'GET',
-      headers: {},
+      headers: {
+        cookie: 'auth=valid_token', // Default cookie for authenticated requests
+      },
     };
 
     res = {
@@ -71,6 +73,8 @@ describe('agency-dashboard API', () => {
     jest.clearAllMocks();
     Stripe.mockRetrieveCustomer.mockReset();
     Stripe.mockRetrieveSubscription.mockReset();
+    cookie.parse.mockReturnValue({ auth: 'valid_token' }); // Default mock for cookie.parse
+    jwt.verify.mockReturnValue({ agencyId: 'testAgencyId' }); // Default mock for jwt.verify
 
     // Mock process.env.JWT_SECRET for jwt.verify
     process.env.JWT_SECRET = 'test_secret';
