@@ -5,6 +5,7 @@ module.exports = {
   },
   testEnvironment: 'node',
   moduleNameMapper: {
-    "../../lib/logger": "<rootDir>/tests/mocks/logger.js"
+    "../../lib/logger": "<rootDir>/tests/mocks/logger.js",
+    "../../lib/email": "<rootDir>/tests/mocks/email.js"
   }
 };
