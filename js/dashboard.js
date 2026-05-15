@@ -5,19 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const userEmailSpan = document.getElementById('user-email');
+    const userCreditsSpan = document.getElementById('user-credits');
     const generatedPagesTableBody = document.querySelector('#generated-pages tbody');
-    const loadMoreContainer = document.getElementById('load-more-container');
-    const loadMoreButton = document.getElementById('load-more-pages');
-
     const onboardingMessage = document.getElementById('dashboard-onboarding-message');
     const dismissOnboardingButton = document.getElementById('dismiss-dashboard-onboarding');
 
-    let offset = 0;
-    const limit = 10; // Number of pages to load per request
-
-    async function fetchGeneratedPages() {
+    async function fetchDashboardData() {
         try {
-            const response = await fetch(`/api/dashboard/pages?offset=${offset}&limit=${limit}`, {
+            const response = await fetch('/api/dashboard', {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
                 }
@@ -25,8 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.pages.length > 0) {
-                    data.pages.forEach(page => {
+                
+                // Populate user info
+                if (userEmailSpan) {
+                    userEmailSpan.textContent = data.email;
+                }
+                if (userCreditsSpan) {
+                    userCreditsSpan.textContent = data.credits !== undefined ? data.credits : 'N/A';
+                }
+
+                // Populate generated pages
+                if (data.generatedPages && data.generatedPages.length > 0) {
+                    data.generatedPages.forEach(page => {
                         const row = generatedPagesTableBody.insertRow();
                         row.innerHTML = `
                             <td>${page.businessName}</td>
@@ -41,37 +47,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             </td>
                         `;
                     });
-                    offset += data.pages.length;
-                    if (data.pages.length < limit) {
-                        loadMoreContainer.style.display = 'none'; // Hide button if no more pages
-                    } else {
-                        loadMoreContainer.style.display = 'block';
-                    }
                 } else {
-                    if (offset === 0) { // No pages at all
-                        generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No pages generated yet.</td></tr>';
-                    }
-                    loadMoreContainer.style.display = 'none'; // Hide button if no more pages
+                    generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No pages generated yet.</td></tr>';
                 }
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {
-                console.error('Error fetching generated pages:', response.statusText);
-                alert('Failed to load generated pages.');
+                console.error('Error fetching dashboard data:', response.statusText);
+                alert('Failed to load dashboard data.');
             }
         } catch (error) {
-            console.error('Fetch error for generated pages:', error);
-            alert('An unexpected error occurred while loading generated pages.');
+            console.error('Fetch error for dashboard data:', error);
+            alert('An unexpected error occurred while loading dashboard data.');
         }
     }
 
     // Initial load
-    fetchGeneratedPages(); // For generated pages table
-
-    // Load More button event listener
-    if (loadMoreButton) {
-        loadMoreButton.addEventListener('click', fetchGeneratedPages);
-    }
+    fetchDashboardData();
 
     // Onboarding message logic
     if (onboardingMessage && dismissOnboardingButton) {

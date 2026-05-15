@@ -1,15 +1,10 @@
-## Progress Summary
+# Progress Log
 
-*   **Older Progress (summarized):** Core features, AI outreach, Auditor CLI, and database enhancements implemented.
-*   **Credit System Pre-implementation (2026-05-14):**
-    *   Fixed missing Vercel KV import in `api/signup.js` for referrer data handling.
-    *   Created placeholder `buy-credits.html` page to resolve 404 errors.
-    *   Implemented credit deduction logic in `api/generate-seo-pages.js`, including user authentication, credit balance checks, and credit deduction from the PostgreSQL database.
-*   **Credit Purchase Feature (2026-05-14):**
-    *   Enhanced `buy-credits.html` with credit package display and Stripe checkout integration.
-    *   Moved credit package styling from `buy-credits.html` to `style.css`.
+## Key Milestones
+*   **W1-3:** Built core product (Local SEO Page Generator), set up domain, payments (Stripe), and database. Implemented AI-powered outreach and an Auditor CLI.
+*   **2026-05-14:** Implemented initial credit system, including credit deduction logic and a "Buy Credits" page with Stripe integration.
 
-## Current Status: Awaiting Human Input (2026-05-14)
-
-*   The project continues to await human-generated creative assets (video/GIF, product icon, screenshots) for the Product Hunt launch and video tutorials.
-*   The foundational elements for the usage-based pricing credit management system are now in place. Further development on this system will continue once new tasks are identified or external dependencies are met.
+## 2026-05-15
+*   **Strategic Decision:** After careful consideration, rejected a $5,000 acquisition offer to focus on the long-term vision and potential of the startup. Authored the formal rejection in `ACQUISITION-RESPONSE-5000.md`.
+*   **Dashboard Enhancement:** Updated the user dashboard to display the current credit balance. Refactored the dashboard's frontend and backend logic to use a single, more efficient API endpoint (`/api/dashboard`) for all user data.
+*   **Content Marketing:** Created a detailed video script for a "Local SEO for Plumbers" tutorial, a key marketing asset for user acquisition.
