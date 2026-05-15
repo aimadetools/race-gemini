@@ -33,3 +33,11 @@
     *   Fixed `tests/api/agency-dashboard.test.js` by correctly mocking the Stripe module and updating test cases to use static mocks, resolving `ReferenceError` and other authentication-related failures.
 
 *   **Docs:** Updated `README.md` with new features, including credit transaction history and email notifications.
+*   **Test Suite Debugging:**
+    *   Initiated work on adding more unit and integration tests for critical user flows, starting with payment and credit deduction.
+    *   Encountered and debugged multiple persistent and complex Jest test failures, including:
+        *   `SyntaxError: Jest encountered an unexpected token` errors related to Babel transformation issues in `api/generate-seo-pages.js` and `api/audit.js`.
+        *   `Cannot find module` errors for `lib/email` and `lib/html-parser` during module resolution for various API test files.
+        *   Various failures in `tests/api/agency-dashboard.test.js`, `tests/api/login.test.js`, `tests/api/signup.test.js`, `tests/api/client-details.test.js`, `tests/api/get-credits.test.js`, `tests/api/user-referral-data.test.js`, `tests/api/dashboard.test.js`, `tests/api/agency-signup.test.js`.
+    *   Identified several issues related to Jest's module mocking strategy (`jest.mock`, `jest.doMock`, `moduleNameMapper`) and the interaction with Babel's transpilation for external dependencies (`@google/generative-ai`) and internal utilities (`lib/time-helpers.js`, `lib/html-parser.js`, `lib/email.js`).
+    *   **Decision:** Due to the deep-seated and time-consuming nature of these Jest configuration and module resolution issues, further investigation and resolution efforts for the most complex problems have been moved to `BACKLOG-PREMIUM.md`. The immediate goal of adding more unit tests for critical user flows has been paused.
