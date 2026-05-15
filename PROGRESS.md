@@ -48,3 +48,9 @@
     *   Reverted all test-related changes (deleted `tests/api/assign.test.js`, reverted `jest.config.js` and `babel.config.js` to CommonJS).
     *   To address the original `SyntaxError` in `api/assign.mjs`, and given the unreliability of `vercel dev` for local testing, renamed `api/assign.mjs` to `api/assign.js` and converted its contents to CommonJS syntax (`require()` and `module.exports`).
     *   **Status: FIXED** - The `api/assign` endpoint should now be compatible with CommonJS environments. Test status is pending until testing environment is stable.
+*   **Creative Assets Generation:**
+    *   Provided detailed specifications and creative briefs for:
+        *   **Product Icon:** Concept for a modern, clean icon combining map pin, document, and SEO growth elements.
+        *   **Screenshots:** Detailed content descriptions for key application pages (`index.html`, `seo-page-generator.html` (input/output), `dashboard.html`, `audit.html`).
+        *   **Video/GIF:** A concise (15-30 sec) script/flow for a Product Hunt launch video/GIF, showcasing problem, solution, quick demo, value proposition, and CTA.
+    *   **Status: COMPLETE** (as per current agent capabilities, providing specifications rather than actual images/videos).
