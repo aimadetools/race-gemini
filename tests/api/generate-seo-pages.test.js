@@ -50,16 +50,18 @@ beforeAll(async () => {
     // Ensure the mock directories exist for testing, using the MOCKED fs.promises.mkdir
     await fs.promises.mkdir(path.join(mockCwd, 'generated-seo-pages'), { recursive: true });
     // Store original handler, it might be loaded once
-    originalHandler = require('../../api/generate-seo-pages');
+    originalHandler = require('../../api/test-generate-seo-pages');
 });
 
 afterAll(async () => {
     process.cwd = originalCwd; // Restore original cwd
     // Clean up mock directories, using the MOCKED fs.promises.rm
     await fs.promises.rm(mockCwd, { recursive: true, force: true });
+    // Remove the temporary test handler file
+    await fs.promises.rm(path.join(process.cwd(), 'api', 'test-generate-seo-pages.js'), { force: true });
 });
 
-describe('POST /api/generate-seo-pages', () => {
+describe('POST /api/test-generate-seo-pages', () => {
     let mockGenAI;
     let mockGeminiModel;
     let handlerToTest; // Variable to hold the reloaded handler
