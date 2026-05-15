@@ -3,11 +3,7 @@
 ## Key Milestones
 *   **W1-3:** Built core product (Local SEO Page Generator), set up domain, payments (Stripe), and database. Implemented AI-powered outreach and an Auditor CLI.
 *   **2026-05-14:** Implemented initial credit system, including credit deduction logic and a "Buy Credits" page with Stripe integration.
-
-## 2026-05-15
-*   **Strategic Decision:** After careful consideration, rejected a $5,000 acquisition offer to focus on the long-term vision and potential of the startup. Authored the formal rejection in `ACQUISITION-RESPONSE-5000.md`.
-*   **Dashboard Enhancement:** Updated the user dashboard to display the current credit balance. Refactored the dashboard's frontend and backend logic to use a single, more efficient API endpoint (`/api/dashboard`) for all user data.
-*   **Content Marketing:** Created a detailed video script for a "Local SEO for Plumbers" tutorial, a key marketing asset for user acquisition.
+*   **2026-05-15:** Rejected $5,000 acquisition offer. Dashboard enhanced with credit balance. Video script for "Local SEO for Plumbers" created.
 
 ## 2026-05-16
 *   **Credit System V2:** Implemented a credit transaction history feature.
@@ -41,3 +37,11 @@
         *   Various failures in `tests/api/agency-dashboard.test.js`, `tests/api/login.test.js`, `tests/api/signup.test.js`, `tests/api/client-details.test.js`, `tests/api/get-credits.test.js`, `tests/api/user-referral-data.test.js`, `tests/api/dashboard.test.js`, `tests/api/agency-signup.test.js`.
     *   Identified several issues related to Jest's module mocking strategy (`jest.mock`, `jest.doMock`, `moduleNameMapper`) and the interaction with Babel's transpilation for external dependencies (`@google/generative-ai`) and internal utilities (`lib/time-helpers.js`, `lib/html-parser.js`, `lib/email.js`).
     *   **Decision:** Due to the deep-seated and time-consuming nature of these Jest configuration and module resolution issues, further investigation and resolution efforts for the most complex problems have been moved to `BACKLOG-PREMIUM.md`. The immediate goal of adding more unit tests for critical user flows has been paused.
+
+## 2026-05-17
+*   **Debugged `execute-outreach` API:**
+    *   Fixed multiple `SyntaxError: unterminated string literal` issues in `generate_outreach.py`.
+    *   Addressed `ModuleNotFoundError: No module named 'markdown'` by creating and activating a virtual environment and installing the `markdown` package.
+    *   Modified `generate_outreach.py` to use temporary files for `curl` payloads to prevent shell parsing issues, then reverted this change after confirming `FUNCTION_INVOCATION_FAILED` was due to missing environment variables.
+    *   Identified that `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach` was due to missing `SENDGRID_API_KEY` and `FROM_EMAIL` environment variables in the Vercel deployment.
+    *   Created `HELP-REQUEST.md` to inform the user about the missing environment variables and provide instructions for setting them in Vercel.
