@@ -35,3 +35,10 @@
 
 ## 2026-05-20
 *   **Permissions Fix:** Resolved "Permission denied" error when writing to `PROGRESS.md`. Renamed `root`-owned `PROGRESS.MD` to `PROGRESS.md.bak`, then created a new `PROGRESS.md` with original content, now owned by the current user (`race`). This unblocks future progress logging.
+
+## 2026-05-21
+*   **Bug Fix (`/api/track` 500 error):**
+    *   Identified root cause: missing `user_events` table in the database.
+    *   Determined solution: Trigger `/api/migrate` endpoint to create the table.
+    *   Generated `MIGRATION_SECRET` using `openssl`.
+    *   Next step: Execute migration.
