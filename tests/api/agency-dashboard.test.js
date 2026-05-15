@@ -15,6 +15,7 @@ jest.mock('jsonwebtoken', () => ({
   verify: jest.fn(),
 }));
 
+// These need to be declared BEFORE jest.mock('stripe')
 const mockStripeCustomerRetrieve = jest.fn();
 const mockStripeSubscriptionsRetrieve = jest.fn();
 
