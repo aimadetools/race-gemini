@@ -16,18 +16,29 @@ jest.mock('jsonwebtoken', () => ({
 }));
 
 // These need to be declared BEFORE jest.mock('stripe')
-const mockStripeCustomerRetrieve = jest.fn();
-const mockStripeSubscriptionsRetrieve = jest.fn();
+// const mockStripeCustomerRetrieve = jest.fn(); // No longer needed here
+// const mockStripeSubscriptionsRetrieve = jest.fn(); // No longer needed here
 
 jest.mock('stripe', () => {
-  return jest.fn(() => ({
+  const mockRetrieveCustomer = jest.fn();
+  const mockRetrieveSubscription = jest.fn();
+
+  // The actual mock instance
+  const StripeMock = jest.fn(() => ({
     customers: {
-      retrieve: mockStripeCustomerRetrieve,
+      retrieve: mockRetrieveCustomer,
     },
     subscriptions: {
-      retrieve: mockStripeSubscriptionsRetrieve,
+      retrieve: mockRetrieveSubscription,
     },
   }));
+
+  // Attach the mock functions as static properties so they can be accessed outside
+  // for setting mock return values and assertions.
+  StripeMock.mockRetrieveCustomer = mockRetrieveCustomer;
+  StripeMock.mockRetrieveSubscription = mockRetrieveSubscription;
+
+  return StripeMock;
 });
 
 import handler from '../../api/agency-dashboard';
@@ -58,8 +69,8 @@ describe('agency-dashboard API', () => {
     };
 
     jest.clearAllMocks();
-    mockStripeCustomerRetrieve.mockReset();
-    mockStripeSubscriptionsRetrieve.mockReset();
+    Stripe.mockRetrieveCustomer.mockReset();
+    Stripe.mockRetrieveSubscription.mockReset();
 
     // Mock process.env.JWT_SECRET for jwt.verify
     process.env.JWT_SECRET = 'test_secret';
@@ -150,7 +161,7 @@ describe('agency-dashboard API', () => {
     mockKv.smembers.mockResolvedValueOnce(['page3']); // Get client 2 pages
 
     // Mock Stripe customer and subscription data
-    mockStripeCustomerRetrieve.mockResolvedValueOnce({
+    Stripe.mockRetrieveCustomer.mockResolvedValueOnce({
       subscriptions: {
         data: [{
           status: agency.subscriptionStatus,
