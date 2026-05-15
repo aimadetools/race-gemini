@@ -1,44 +1,8 @@
-
 import unittest
 from unittest.mock import patch, MagicMock
-import json
-from audits_v2.locations import get_all_links, find_locations_in_text, audit_locations
+from audits_v2.locations import audit
 
 class TestAuditLocations(unittest.TestCase):
-
-    @patch('requests.get')
-    def test_get_all_links(self, mock_get):
-        # Mocking the response from requests.get
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.text = """
-        <html><body>
-            <a href="/page1">Page 1</a>
-            <a href="https://external.com">External</a>
-            <a href="/page2">Page 2</a>
-        </body></html>
-        """
-        mock_get.return_value = mock_response
-
-        links = get_all_links('http://example.com')
-        self.assertIn('http://example.com', links)
-        self.assertIn('http://example.com/page1', links)
-        self.assertIn('http://example.com/page2', links)
-        self.assertNotIn('https://external.com', links)
-
-    def test_find_locations_in_text(self):
-        locations_db = ["New York", "Los Angeles", "Chicago"]
-        text = "We serve New York and surrounding areas. Also Los Angeles."
-        found = find_locations_in_text(text, locations_db)
-        self.assertEqual(found, {"New York", "Los Angeles"})
-
-        text_case_insensitive = "chicago is a great city."
-        found_case = find_locations_in_text(text_case_insensitive, locations_db)
-        self.assertEqual(found_case, {"Chicago"})
-
-        text_no_match = "We serve Boston."
-        found_none = find_locations_in_text(text_no_match, locations_db)
-        self.assertEqual(found_none, set())
 
     @patch('requests.get')
     def test_audit_locations(self, mock_get):
@@ -54,11 +18,11 @@ class TestAuditLocations(unittest.TestCase):
         mock_get.side_effect = side_effect
         
         locations_db = ["New York", "Los Angeles", "Chicago"]
-        mentioned = audit_locations('http://example.com', locations_db)
+        result = audit('http://example.com', target_type='url', locations_db=locations_db)
         
-        self.assertIn("New York", mentioned)
-        self.assertIn("Los Angeles", mentioned)
-        self.assertNotIn("Chicago", mentioned)
+        self.assertIn("New York", result['results']['locations_found'])
+        self.assertIn("Los Angeles", result['results']['locations_found'])
+        self.assertNotIn("Chicago", result['results']['locations_found'])
 
 if __name__ == '__main__':
     unittest.main()

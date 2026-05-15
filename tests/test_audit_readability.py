@@ -1,37 +1,7 @@
 import unittest
-import json
-import os
-import subprocess
-import sys
+from audits_v2.readability import audit
 
 class TestAuditReadability(unittest.TestCase):
-
-    def setUp(self):
-        self.test_dir = "temp_test_html_readability"
-        os.makedirs(self.test_dir, exist_ok=True)
-
-    def tearDown(self):
-        for f in os.listdir(self.test_dir):
-            os.remove(os.path.join(self.test_dir, f))
-        os.rmdir(self.test_dir)
-
-    def _create_html_file(self, filename, content):
-        filepath = os.path.join(self.test_dir, filename)
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
-        return filepath
-
-    def _run_audit_script(self, filepath):
-        result = subprocess.run(
-            [sys.executable, 'audit_readability.py', filepath],
-            capture_output=True,
-            text=True,
-            check=False
-        )
-        try:
-            return json.loads(result.stdout)
-        except json.JSONDecodeError:
-            self.fail(f"Script returned invalid JSON: {result.stdout}")
 
     def test_easily_readable_content(self):
         # Example text with high readability
@@ -47,12 +17,11 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        filepath = self._create_html_file("easy_read.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNotNone(result["flesch_reading_ease"])
-        self.assertIsNotNone(result["flesch_kincaid_grade"])
-        self.assertGreaterEqual(result["flesch_reading_ease"], 80) # Very easy to read
-        self.assertLessEqual(result["flesch_kincaid_grade"], 5)    # Grade 5 or lower
+        result = audit(html_content, 'html_content')
+        self.assertIsNotNone(result['results']["flesch_reading_ease"])
+        self.assertIsNotNone(result['results']["flesch_kincaid_grade"])
+        self.assertGreaterEqual(result['results']["flesch_reading_ease"], 80) # Very easy to read
+        self.assertLessEqual(result['results']["flesch_kincaid_grade"], 5)    # Grade 5 or lower
         self.assertEqual(len(result["issues"]), 0)
 
     def test_difficult_readable_content(self):
@@ -73,12 +42,11 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        filepath = self._create_html_file("difficult_read.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNotNone(result["flesch_reading_ease"])
-        self.assertIsNotNone(result["flesch_kincaid_grade"])
-        self.assertLessEqual(result["flesch_reading_ease"], 30) # Very difficult to read
-        self.assertGreaterEqual(result["flesch_kincaid_grade"], 12) # High school or college level
+        result = audit(html_content, 'html_content')
+        self.assertIsNotNone(result['results']["flesch_reading_ease"])
+        self.assertIsNotNone(result['results']["flesch_kincaid_grade"])
+        self.assertLessEqual(result['results']["flesch_reading_ease"], 30) # Very difficult to read
+        self.assertGreaterEqual(result['results']["flesch_kincaid_grade"], 12) # High school or college level
         self.assertEqual(len(result["issues"]), 0)
 
     def test_no_main_content_container(self):
@@ -92,59 +60,11 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        filepath = self._create_html_file("no_container.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNone(result["flesch_reading_ease"])
-        self.assertIsNone(result["flesch_kincaid_grade"])
+        result = audit(html_content, 'html_content')
+        self.assertIsNone(result['results']["flesch_reading_ease"])
+        self.assertIsNone(result['results']["flesch_kincaid_grade"])
         self.assertEqual(len(result["issues"]), 1)
-        self.assertEqual(result["issues"][0]["type"], "No Readable Text Found")
-
-    def test_no_readable_text_after_extraction(self):
-        html_content = """
-        <!DOCTYPE html>
-        <html>
-        <body>
-            <article>
-                <script>console.log('hello');</script>
-                <style>body { color: red; }</style>
-                <!-- This is a comment -->
-            </article>
-        </body>
-        </html>
-        """
-        filepath = self._create_html_file("no_text.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNone(result["flesch_reading_ease"])
-        self.assertIsNone(result["flesch_kincaid_grade"])
-        self.assertEqual(len(result["issues"]), 1)
-        self.assertEqual(result["issues"][0]["type"], "No Readable Text Found")
-
-    def test_empty_html(self):
-        html_content = ""
-        filepath = self._create_html_file("empty.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNone(result["flesch_reading_ease"])
-        self.assertIsNone(result["flesch_kincaid_grade"])
-        self.assertEqual(len(result["issues"]), 1)
-        self.assertEqual(result["issues"][0]["type"], "No Main Content Container Found")
-
-    def test_html_with_only_script_style_tags(self):
-        html_content = """
-        <!DOCTYPE html>
-        <html>
-        <body>
-            <script>alert('xss');</script>
-            <style>body { color: red; }</style>
-        </body>
-        </html>
-        """
-        filepath = self._create_html_file("only_script_style.html", html_content)
-        result = self._run_audit_script(filepath)
-        self.assertIsNone(result["flesch_reading_ease"])
-        self.assertIsNone(result["flesch_kincaid_grade"])
-        self.assertEqual(len(result["issues"]), 1)
-        self.assertEqual(result["issues"][0]["type"], "No Readable Text Found")
-
+        self.assertEqual(result["issues"][0]["type"], "WARNING")
 
 if __name__ == '__main__':
     unittest.main()

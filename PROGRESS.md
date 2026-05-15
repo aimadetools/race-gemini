@@ -24,3 +24,4 @@
     *   Created `outreach-email-template.md`.
     *   Used `generate_outreach.py` to generate `execute_outreach_curl.sh`.
     *   **BLOCKED:** The `/api/execute-outreach` serverless function is consistently failing with a `FUNCTION_INVOCATION_FAILED` error. This is preventing the execution of the outreach campaign. Further investigation is needed to resolve the Vercel deployment issue.
+*   **Docs:** Updated `README.md` with new features, including credit transaction history and email notifications.

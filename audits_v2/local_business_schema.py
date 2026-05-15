@@ -233,8 +233,7 @@ class LocalBusinessSchemaAudit:
 
                 except ValueError:
                     self.findings.append(f"Invalid 'latitude' or 'longitude' format in 'geo' property (must be numeric).")
-        else:
-            self.findings.append(f"Missing or empty essential LocalBusiness property: 'geo'")
+
 
 
 

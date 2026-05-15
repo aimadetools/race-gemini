@@ -1,7 +1,5 @@
 import unittest
-import json
 import os
-import sys
 from audits_v2.h2_h3_tags import audit
 
 class TestAuditH2H3Tags(unittest.TestCase):
@@ -23,10 +21,6 @@ class TestAuditH2H3Tags(unittest.TestCase):
             f.write(content)
         return filepath
 
-    def _run_audit_script(self, filepath):
-        # Directly call the audit function
-        return audit(filepath, 'file_path')
-
     def test_correct_h2_h3_structure(self):
         html_content = """
         <!DOCTYPE html>
@@ -43,7 +37,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("correct.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 2)
         self.assertEqual(result["num_h3_tags"], 3)
         self.assertEqual(len(result["issues"]), 0)
@@ -62,7 +56,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("empty_h2.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -80,7 +74,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("empty_h3.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -98,7 +92,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("h3_before_h2.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -115,10 +109,11 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("no_h_tags.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 0)
         self.assertEqual(result["num_h3_tags"], 0)
-        self.assertEqual(len(result["issues"]), 0) # No issues reported for absence, just counts
+        self.assertEqual(len(result["issues"]), 1)
+        self.assertEqual(result["issues"][0]["type"], "No H2 or H3 Tags Found")
 
     def test_multiple_h3_before_h2_only_one_issue(self):
         html_content = """
@@ -133,7 +128,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("multiple_h3_before_h2.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 2)
         self.assertEqual(len(result["issues"]), 1)
@@ -150,10 +145,10 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("no_h1_correct_h2_h3.html", html_content)
-        result = self._run_audit_script(filepath)
+        result = audit(filepath, 'file_path')
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
-        self.assertEqual(len(result["issues"]), 0) # No issues for H1 absence here, that's audit_h1_tags.py job
+        self.assertEqual(len(result["issues"]), 0)
 
 if __name__ == '__main__':
     unittest.main()
