@@ -63,9 +63,13 @@ async function runGbpCategoryCheck(url) {
             const components = reverseGeocodingData.results[0].components;
                 const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
                 const confidence = geocodingData.results[0].confidence;
-                return { businessCategory, confidence };        const errorMsg = 'Could not determine category from address.';
-        logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
-        return { error: errorMsg };
+
+                if (businessCategory === 'Not specified') {
+                    const errorMsg = 'Could not determine category from address.';
+                    logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
+                    return { error: errorMsg };
+                }
+                return { businessCategory, confidence };
     } catch (error) {
         logError(error, 'runGbpCategoryCheck - General Error', 'audit_error.log');
         return { error: error.message };
