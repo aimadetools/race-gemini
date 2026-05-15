@@ -90,7 +90,7 @@ class TestLocalBusinessSchemaAudit(unittest.TestCase):
         
         findings = self.audit_instance.run_audit()
         self.assertTrue(any("Found LocalBusiness schema of type: LocalBusiness" in f for f in findings))
-        self.assertTrue(any("Missing or empty essential LocalBusiness property: 'telephone'" in f for f in findings))
+        self.assertTrue(any("Missing essential LocalBusiness property: 'telephone'" in f for f in findings))
 
     @patch('requests.get')
     def test_local_business_schema_missing_address_sub_property(self, mock_get):

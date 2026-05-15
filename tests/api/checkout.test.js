@@ -343,4 +343,56 @@ describe('Checkout API', () => {
         expect(mockRes._getJSONData()).toEqual({ message: 'Failed to create Stripe checkout session.' });
         expect(logError).toHaveBeenCalled(); // Should log the error
     });
+
+    // Test for successful agency plan subscription creation
+    test('should create a Stripe checkout session for agency plan on success', async () => {
+        process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN = 'price_123agencybasic'; // Mock this environment variable
+        mockReq.body = { agencyPlanId: 'plan_basic_agency' };
+        await handler(mockReq, mockRes);
+
+        expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledTimes(1);
+        expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(expect.objectContaining({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price: 'price_123agencybasic',
+                    quantity: 1,
+                },
+            ],
+            mode: 'subscription',
+            success_url: `https://${mockReq.headers.host}/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `https://${mockReq.headers.host}/agency-partnerships.html`,
+            client_reference_id: 'testUserId123',
+            customer_creation: 'always',
+            metadata: {
+                agencyPlanId: 'plan_basic_agency',
+                userId: 'testUserId123',
+                agencyId: 'testUserId123'
+            },
+        }));
+        expect(mockRes.statusCode).toBe(200);
+        expect(mockRes._getJSONData()).toEqual({ sessionId: 'mockSessionId' });
+        expect(logError).not.toHaveBeenCalled();
+    });
+
+    // Test for invalid agencyPlanId
+    test('should return 404 if agencyPlanId is invalid', async () => {
+        mockReq.body = { agencyPlanId: 'invalid_agency_plan' };
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(404);
+        expect(mockRes._getJSONData()).toEqual({ message: 'Agency plan details not found for the selected ID.' });
+        expect(logError).toHaveBeenCalled();
+    });
+
+    // Test for missing Stripe Price ID for agency plan
+    test('should return 500 if Stripe Price ID is not configured for agency plan', async () => {
+        delete process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN; // Unset the mock env var
+        mockReq.body = { agencyPlanId: 'plan_basic_agency' };
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(500);
+        expect(mockRes._getJSONData()).toEqual({ message: 'Stripe Price ID not configured for agency plan plan_basic_agency.' });
+        expect(logError).toHaveBeenCalled();
+    });
 });

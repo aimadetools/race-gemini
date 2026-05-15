@@ -169,18 +169,20 @@ class LocalBusinessSchemaAudit:
         address_obj = None
         address_str_parts = []
         
-        # First, validate all essential properties and extract address for geocoding later
         for prop in self.essential_properties:
-            if prop not in schema or not schema[prop]:
-                self.findings.append(f"Missing or empty essential LocalBusiness property: '{prop}'")
-                continue # Continue to check other properties
+            # Check if property is entirely missing or explicitly None
+            if prop not in schema or schema[prop] is None:
+                self.findings.append(f"Missing essential LocalBusiness property: '{prop}'")
+                continue
             
+            value = schema[prop]
+
             if prop == "address":
-                address_obj = schema[prop]
+                address_obj = value
                 if isinstance(address_obj, dict):
                     # Build address string for geocoding
                     for sub_prop in self.address_sub_properties:
-                        if sub_prop not in address_obj or not address_obj[sub_prop]:
+                        if sub_prop not in address_obj or address_obj[sub_prop] is None or (isinstance(address_obj[sub_prop], str) and not address_obj[sub_prop].strip()):
                             self.findings.append(f"Missing or empty essential address sub-property: 'address.{sub_prop}'")
                         else:
                             address_str_parts.append(str(address_obj[sub_prop]))
@@ -190,12 +192,20 @@ class LocalBusinessSchemaAudit:
             
             elif prop == "geo":
                 # Geo property validation will happen after potential geocoding
-                pass
+                pass # Already handled
             
-            # General check for other properties
-            elif not isinstance(schema[prop], (str, dict, list)) or (isinstance(schema[prop], str) and not schema[prop].strip()):
-                if prop not in ["geo", "address"]: # Already handled
-                    self.findings.append(f"Essential property '{prop}' is present but empty or invalid: '{schema[prop]}'")
+            elif prop == "openingHoursSpecification":
+                # It's valid to have an empty list for openingHoursSpecification, or a list of specific hours.
+                # Just check if it's a list.
+                if not isinstance(value, list):
+                    self.findings.append(f"Invalid type for '{prop}', expected a list.")
+            
+            elif isinstance(value, str):
+                # For strings, if present but empty after stripping whitespace, it's considered empty.
+                if not value.strip():
+                    self.findings.append(f"Empty essential LocalBusiness property: '{prop}'")
+            # For other types (like numbers, booleans, non-empty lists/dicts), if present, they are considered valid.
+
 
         # Geocode the address if available and API key is set
         geocoded_lat, geocoded_lon = None, None
