@@ -10,9 +10,9 @@ The core page generation engine, API endpoints for audits, and user management f
 
 *   Comprehensive SEO page generation (`seo-page-generator.html`).
 *   Multiple audit tools, including free SEO audit.
-*   User authentication, payment integration (Stripe, PayPal), and credit management.
+*   User authentication, payment integration (Stripe, PayPal), and credit management, including transaction history.
 *   Agency and referral program functionalities.
-*   Automated outreach email generation.
+*   Automated outreach email generation and email notifications for credit purchases and low balance alerts.
 
 The project is largely feature-complete and has undergone significant testing and cleanup.
 
