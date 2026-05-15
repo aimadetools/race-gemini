@@ -43,12 +43,14 @@ describe('agency-dashboard API', () => {
 
     jest.clearAllMocks();
 
-    // Mock process.env.JWT_SECRET for jwt.verify
+    // Mock process.env.JWT_SECRET for jwt.verify and STRIPE_SECRET_KEY for stripe initialization
     process.env.JWT_SECRET = 'test_secret';
+    process.env.STRIPE_SECRET_KEY = 'test_stripe_secret';
   });
 
   afterEach(() => {
     delete process.env.JWT_SECRET;
+    delete process.env.STRIPE_SECRET_KEY;
   });
 
   test('should return 405 for non-GET methods', async () => {
