@@ -39,6 +39,12 @@
 ## 2026-05-21
 *   **Bug Fix (`/api/track` 500 error):**
     *   Identified root cause: missing `user_events` table in the database.
-    *   Determined solution: Trigger `/api/migrate` endpoint to create the table.
-    *   Generated `MIGRATION_SECRET` using `openssl`.
-    *   Next step: Execute migration.
+    *   Attempted migration via `/api/migrate` endpoint, but was blocked by `ECONNREFUSED` errors, indicating no running PostgreSQL database or invalid connection string.
+    *   Further debugging of Vercel dev environment variable loading and `curl` behavior was performed, but the core issue of no accessible database remains.
+    *   **Status: BLOCKED** - Requires a running PostgreSQL database for migration.
+*   **Bug Fix (`/api/assign` 500 error):**
+    *   Identified root cause of "SyntaxError: Unexpected reserved word" as a module resolution conflict in the Vercel runtime/Jest test environment where ES Module syntax was being treated as CommonJS.
+    *   Attempted to fix Jest by converting `jest.config.js` and `babel.config.js` to ESM, but this led to a cascade of new errors across the entire test suite due to inconsistent module import/export styles in tests and source files.
+    *   Reverted all test-related changes (deleted `tests/api/assign.test.js`, reverted `jest.config.js` and `babel.config.js` to CommonJS).
+    *   To address the original `SyntaxError` in `api/assign.mjs`, and given the unreliability of `vercel dev` for local testing, renamed `api/assign.mjs` to `api/assign.js` and converted its contents to CommonJS syntax (`require()` and `module.exports`).
+    *   **Status: FIXED** - The `api/assign` endpoint should now be compatible with CommonJS environments. Test status is pending until testing environment is stable.

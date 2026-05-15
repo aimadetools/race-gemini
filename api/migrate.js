@@ -4,9 +4,7 @@ import { alterUsersAddCreditsConstraint } from '../db/alter-users-add-credits-co
 import { pool } from '../db/index.js'; // Corrected import path for pool
 
 export default async function handler(req, res) {
-  console.log('MIGRATION_SECRET from process.env:', process.env.MIGRATION_SECRET);
-  // Only allow GET requests for simplicity in triggering a migration
-  // In a production environment, this should be secured (e.g., via a secret token or IP whitelist)
+// In a production environment, this should be secured (e.g., via a secret token or IP whitelist)
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
