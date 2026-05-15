@@ -11,3 +11,4 @@
 - ✅ **Technical Debt / Test Infrastructure:**
   - ✅ **Jest Configuration / Babel Issue**: Resolved "Jest encountered an unexpected token" error by fixing syntax in `api/generate-seo-pages.js`.
   - ✅ **Jest Module Resolution**: Resolved "Cannot find module '../../lib/email'" error by standardizing module imports in `api/webhook.js`.
+- [ ] **Infrastructure / Permissions:** Investigate and fix "Permission denied" error when writing to `PROGRESS.md`.

@@ -581,3 +581,23 @@ a.logo span {
 .credit-negative {
     color: #dc3545;
 }
+
+/* Best Value Badge */
+.card .best-value-badge {
+    background-color: #28a745; /* Green color for "Best Value" */
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    position: absolute; /* Positioning relative to the card */
+    top: -10px; /* Adjust as needed */
+    right: -10px; /* Adjust as needed */
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure card is positioned relative for the badge to work */
+.card {
+    position: relative;
+}

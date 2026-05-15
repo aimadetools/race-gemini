@@ -2,7 +2,7 @@
 
 - [ ] **Awaiting Human Input:** Creative assets (video/GIF, product icon, screenshots) for Product Hunt launch and video tutorials.
 - ✅ **Maintenance:** Periodically review and refactor code for clarity and efficiency.
-- ✅ Completed: README update, outreach API fix, generate SEO pages fix, audit API fix, agency dashboard test fix.
-- ✅ Completed: Refactored `api/generate-seo-pages.js` and `api/webhook.js` for clarity and efficiency.
-- ✅ Completed: Fixed API errors in `/api/assign` and temporarily disabled `/api/track`.
+- ✅ Created new blog post 'Local SEO for Dentists' and added to blog.html.
+- ✅ Fixed pricing discrepancy for "Pro Pack" in pricing.html.
+- ✅ Added "Best Value" badge to Pro Pack on pricing.html with accompanying CSS.
 - ❌ Testing: Add more unit and integration tests for critical user flows (e.g., payment, credit deduction). (Cancelled - moved to BACKLOG-PREMIUM due to Jest configuration complexities)
