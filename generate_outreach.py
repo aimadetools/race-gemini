@@ -64,12 +64,16 @@ def generate_outreach_emails():
                 sample_page_link = f"{base_url}{service_slug}-in-{city_slug}-{business_slug}.html"
 
                 # Fill template placeholders
-                subject_line = email_template.split('\n')[0].replace('Subject: ', '')
+                subject_line = email_template.split('
+')[0].replace('Subject: ', '')
                 subject_line = subject_line.replace('[Business Name]', business_name)
                 subject_line = subject_line.replace('[City/Town Name]', city)
                 subject_line = subject_line.replace('[Service Type]', service_type)
                 
-                body_content = email_template.replace(email_template.split('\n')[0] + '\n\n', '') # Remove subject line
+                body_content = email_template.replace(email_template.split('
+')[0] + '
+
+', '') # Remove subject line
                 body_content = body_content.replace('[Business Name]', business_name)
                 body_content = body_content.replace('[City/Town Name]', city)
                 body_content = body_content.replace('[Link to sample pages]', sample_page_link)
@@ -85,7 +89,9 @@ def generate_outreach_emails():
                             f"Keep it under 2 sentences."
                         )
                         response = gemini_model.generate_content(personalization_prompt, generation_config=gemini_config)
-                        ai_personalization_content = response.text.strip() + '\n\n' # Add newlines for formatting
+                        ai_personalization_content = response.text.strip() + '
+
+' # Add newlines for formatting
                     except Exception as e:
                         print(f"Error generating AI personalization for {business_name}: {e}")
                         ai_personalization_content = '' # Fallback to empty if AI fails
@@ -117,7 +123,8 @@ if __name__ == "__main__":
         
         # Clear the shell script file
         with open("execute_outreach_curl.sh", "w") as f:
-            f.write("#!/bin/bash\n")
+            f.write("#!/bin/bash
+")
 
         # Process emails in chunks of 10
         chunk_size = 10
@@ -126,14 +133,15 @@ if __name__ == "__main__":
             payload = json.dumps({"emails": chunk})
             
             # Escape single quotes in the payload for shell execution
-            escaped_payload = payload.replace("'", "'\\''")
+            escaped_payload = payload.replace("'", "'''")
             
             # Construct the curl command
             curl_command = f"curl -X POST -H 'Content-Type: application/json' -d '{escaped_payload}' {api_url}"
             
             # Append the curl command to the shell script
             with open("execute_outreach_curl.sh", "a") as f:
-                f.write(curl_command + "\n")
+                f.write(curl_command + "
+")
         
         print(f"Generated {len(emails_json)} curl commands in execute_outreach_curl.sh")
     else:

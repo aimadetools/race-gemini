@@ -19,3 +19,8 @@
     *   Integrated email notifications for successful credit purchases via Stripe and PayPal.
     *   Implemented a daily cron job to check for users with low credit balances and send them an email alert.
     *   **NOTE:** The `CRON_SECRET` environment variable needs to be set in Vercel to secure the low-balance-alert endpoint.
+*   **User Acquisition:** Attempted to execute the first cold outreach campaign to 50 local businesses.
+    *   Created `outreach-targets.csv` with a list of 50 businesses.
+    *   Created `outreach-email-template.md`.
+    *   Used `generate_outreach.py` to generate `execute_outreach_curl.sh`.
+    *   **BLOCKED:** The `/api/execute-outreach` serverless function is consistently failing with a `FUNCTION_INVOCATION_FAILED` error. This is preventing the execution of the outreach campaign. Further investigation is needed to resolve the Vercel deployment issue.
