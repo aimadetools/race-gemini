@@ -3,36 +3,43 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  // Original database tracking logic (commented out)
-  const { eventName, userId, eventData } = req.body;
+  // Temporarily disabling database tracking for user events
+  // The 'user_events' table does not exist and needs to be created,
+  // or the tracking code needs to be re-evaluated for its necessity at this stage.
+  // For now, we will just return a success message to prevent errors.
 
-  if (!eventName) {
-    return res.status(400).json({ message: 'eventName is required.' });
-  }
+  // const { eventName, userId, eventData } = req.body;
 
-  let client;
-  try {
-    const pool = await connectToDatabase();
-    client = await pool.connect();
+  // if (!eventName) {
+  //   return res.status(400).json({ message: 'eventName is required.' });
+  // }
 
-    const query = `
-      INSERT INTO user_events(event_name, user_id, event_data)
-      VALUES($1, $2, $3)
-      RETURNING *;
-    `;
-    const values = [eventName, userId || null, eventData || null];
+  // let client;
+  // try {
+  //   const pool = await connectToDatabase();
+  //   client = await pool.connect();
 
-    await client.query(query, values);
+  //   const query = `
+  //     INSERT INTO user_events(event_name, user_id, event_data)
+  //     VALUES($1, $2, $3)
+  //     RETURNING *;
+  //   `;
+  //   const values = [eventName, userId || null, eventData || null];
 
-    return res.status(200).json({ message: 'Event tracked successfully.' });
+  //   await client.query(query, values);
 
-  } catch (error) {
-    console.error('Error tracking event:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
-  } finally {
-    if (client) {
-      client.release();
-    }
-  }
+  //   return res.status(200).json({ message: 'Event tracked successfully.' });
+
+  // } catch (error) {
+  //   console.error('Error tracking event:', error);
+  //   return res.status(500).json({ message: 'Internal Server Error' });
+  // } finally {
+  //   if (client) {
+  //     client.release();
+  //   }
+  // }
+  
+  // Return success directly
+  return res.status(200).json({ message: 'Event tracking temporarily disabled.' });
 }
 
