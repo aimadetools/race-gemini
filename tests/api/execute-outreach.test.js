@@ -1,4 +1,3 @@
-console.log('--- TEST FILE START ---');
 const httpMocks = require('node-mocks-http');
 const executeOutreach = require('../../api/execute-outreach.cjs');
 const sgMail = require('@sendgrid/mail');
@@ -15,6 +14,11 @@ jest.mock('../../lib/logger', () => ({
   logInfo: jest.fn(),
 }));
 
+// Mock micro.json to return req.body directly, as node-mocks-http does not provide the body as a stream
+jest.mock('micro', () => ({
+  json: jest.fn((req) => req.body),
+}));
+
 describe('api/execute-outreach', () => {
   let req;
   let res;
@@ -22,7 +26,6 @@ describe('api/execute-outreach', () => {
   let logInfo;
 
   beforeEach(() => {
-    console.log('--- beforeEach START ---');
     // Reset mocks before each test
     const logger = require('../../lib/logger');
     logError = logger.logError;
@@ -53,19 +56,15 @@ describe('api/execute-outreach', () => {
       },
     });
     res = httpMocks.createResponse();
-    console.log('--- beforeEach END ---');
   });
 
   afterEach(() => {
-    console.log('--- afterEach START ---');
     // Clean up environment variables
     delete process.env.SENDGRID_API_KEY;
     delete process.env.FROM_EMAIL;
-    console.log('--- afterEach END ---');
   });
 
   test('should send emails successfully with valid input', async () => {
-    console.log('--- TEST: should send emails successfully with valid input START ---');
     sgMail.send.mockResolvedValueOnce([{}]); // Mock successful SendGrid response
 
     await new Promise((resolve) => {
@@ -91,11 +90,9 @@ describe('api/execute-outreach', () => {
     });
     expect(logInfo).toHaveBeenCalledWith(expect.stringContaining('Email sent successfully to recipient@example.com'));
     expect(logError).not.toHaveBeenCalled();
-    console.log('--- TEST: should send emails successfully with valid input END ---');
   });
 
   test('should return 400 if no emails array is provided', async () => {
-    console.log('--- TEST: should return 400 if no emails array is provided START ---');
     req.body = {}; // No emails array
 
     await new Promise((resolve) => {
@@ -113,11 +110,9 @@ describe('api/execute-outreach', () => {
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logInfo).toHaveBeenCalledWith('No emails provided in request body, returning success.', 'Handler');
     expect(logError).not.toHaveBeenCalled();
-    console.log('--- TEST: should return 400 if no emails array is provided END ---');
   });
 
   test('should return 400 if emails array is empty', async () => {
-    console.log('--- TEST: should return 400 if emails array is empty START ---');
     req.body = { emails: [] }; // Empty emails array
 
     await new Promise((resolve) => {
@@ -135,11 +130,9 @@ describe('api/execute-outreach', () => {
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logInfo).toHaveBeenCalledWith('No emails provided in request body, returning success.', 'Handler');
     expect(logError).not.toHaveBeenCalled();
-    console.log('--- TEST: should return 400 if emails array is empty END ---');
   });
 
   test('should handle SendGrid API Key missing', async () => {
-    console.log('--- TEST: should handle SendGrid API Key missing START ---');
     delete process.env.SENDGRID_API_KEY; // Simulate missing API key
 
     await new Promise((resolve) => {
@@ -154,11 +147,9 @@ describe('api/execute-outreach', () => {
     expect(sgMail.setApiKey).not.toHaveBeenCalled();
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
-    console.log('--- TEST: should handle SendGrid API Key missing END ---');
   });
 
   test('should handle FROM_EMAIL missing', async () => {
-    console.log('--- TEST: should handle FROM_EMAIL missing START ---');
     delete process.env.FROM_EMAIL; // Simulate missing FROM_EMAIL
 
     await new Promise((resolve) => {
@@ -173,11 +164,9 @@ describe('api/execute-outreach', () => {
     expect(sgMail.setApiKey).toHaveBeenCalledWith('SG.test_api_key'); // API key is present, so setApiKey is called
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
-    console.log('--- TEST: should handle FROM_EMAIL missing END ---');
   });
 
   test('should report failed emails when SendGrid send fails', async () => {
-    console.log('--- TEST: should report failed emails when SendGrid send fails START ---');
     const errorMessage = 'SendGrid error';
     sgMail.send.mockRejectedValueOnce(new Error(errorMessage)); // Mock SendGrid failure
 
@@ -199,11 +188,9 @@ describe('api/execute-outreach', () => {
     });
     expect(sgMail.send).toHaveBeenCalledTimes(1);
     expect(logError).toHaveBeenCalledWith(expect.any(Error), expect.stringContaining('Error sending email to recipient@example.com'));
-    console.log('--- TEST: should report failed emails when SendGrid send fails END ---');
   });
 
   test('should handle multiple emails with mixed success and failure', async () => {
-    console.log('--- TEST: should handle multiple emails with mixed success and failure START ---');
     sgMail.send
       .mockResolvedValueOnce([{}]) // First email success
       .mockRejectedValueOnce(new Error('Second email failed')) // Second email failure
@@ -226,7 +213,42 @@ describe('api/execute-outreach', () => {
     expect(res._getData().details[0].to).toBe('fail1@example.com');
     expect(sgMail.send).toHaveBeenCalledTimes(3);
     expect(logError).toHaveBeenCalledTimes(1); // Only for the failed email
-    console.log('--- TEST: should handle multiple emails with mixed success and failure END ---');
+  });
+
+  test('should correctly report failed emails with invalid recipient addresses', async () => {
+    // Mock SendGrid to reject emails with specific invalid addresses, but allow valid ones
+    sgMail.send.mockImplementation((msg) => {
+      if (msg.to === 'invalid-recipient') {
+        return Promise.reject(new Error('Invalid recipient address'));
+      }
+      return Promise.resolve([{}]); // Simulate success for valid emails
+    });
+
+    req.body.emails = [
+      { to: 'valid1@example.com', subject: 'Valid Sub 1', html: 'Valid HTML 1', message_id: 'id-valid1' },
+      { to: 'invalid-recipient', subject: 'Invalid Sub', html: 'Invalid HTML', message_id: 'id-invalid' },
+      { to: 'valid2@example.com', subject: 'Valid Sub 2', html: 'Valid HTML 2', message_id: 'id-valid2' },
+    ];
+
+    await new Promise((resolve) => {
+      res.on('end', resolve);
+      executeOutreach(req, res);
+    });
+
+    expect(res._getStatusCode()).toBe(200);
+    const responseData = JSON.parse(res._getData());
+    expect(responseData.sent).toBe(2);
+    expect(responseData.failed).toBe(1);
+    expect(responseData.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          status: 'rejected',
+          reason: 'Invalid recipient address',
+          to: 'invalid-recipient',
+        }),
+      ])
+    );
+    expect(sgMail.send).toHaveBeenCalledTimes(3); // All emails attempted to send
+    expect(logError).toHaveBeenCalledWith(expect.any(Error), expect.stringContaining('Error sending email to invalid-recipient'));
   });
 });
-console.log('--- TEST FILE END ---');
