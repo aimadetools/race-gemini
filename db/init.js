@@ -1,4 +1,5 @@
 import { pool, query } from './index.js';
+import { createUserEventsTable } from './create-user-events-table.js';
 
 export async function initializeDatabase() {
   let client;
@@ -28,6 +29,9 @@ export async function initializeDatabase() {
       $$;
     `);
     console.log('Referrer ID column added to users table if it did not exist.');
+
+    // Create the user_events table
+    await createUserEventsTable();
 
     // Add index to email for faster lookups
     await client.query(`

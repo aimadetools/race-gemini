@@ -23,8 +23,7 @@ export default async function handler(req, res) {
     console.log('Attempting to run database migrations...');
     await initializeDatabase(); 
     console.log('Database initialized successfully, ensuring referrer_id column exists.');
-    await createUserEventsTable();
-    console.log('Table "user_events" created or already exists.');
+
     await alterUsersAddCreditsConstraint(); 
     console.log('Ensured "credits" column in "users" table has NOT NULL constraint and DEFAULT 0.');
     return res.status(200).json({ message: 'Database migrations completed successfully.' });

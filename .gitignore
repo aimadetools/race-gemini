@@ -27,4 +27,8 @@ build/
 .gemini/
 scripts/__pycache__/
 generated-seo-pages/
+package-lock.json
+yarn.lock
+*.csv
+*.txt
 .venv/
