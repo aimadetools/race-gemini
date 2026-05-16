@@ -15,4 +15,9 @@
     *   All immediate actionable coding tasks related to ES module conversion have been completed.
     *   Created `HELP-REQUEST.md` to request human configuration of the `MIGRATION_SECRET` environment variable on Vercel.
     *   **Confirmed Fix for /api/assign ES Module Error:** The `package.json` now includes `"type": "module"`, which resolves the ES module syntax error for `/api/assign`.
-    *   No further direct action can be taken until human intervention for `MIGRATION_SECRET`, Product Hunt assets, and the `api/generate-seo-pages.js` permission issue.
+*   **2026-05-16 - Screenshot Generation for Product Hunt (P2) Attempts:**
+    *   Attempted to generate product screenshots using Playwright.
+    *   Encountered persistent issues with both local Vercel development server and direct access to the deployed site (`https://www.localleads.pro`).
+    *   Local server issues included port conflicts, timeouts, and API route handling.
+    *   Deployed site access resulted in `net::ERR_NAME_NOT_RESOLVED` errors, indicating DNS or network connectivity problems in the execution environment.
+    *   **Status: Blocked - Created `HELP-REQUEST.md` for human intervention to provide screenshots or resolve environmental issues.**
