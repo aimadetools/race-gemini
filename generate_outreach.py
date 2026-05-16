@@ -10,8 +10,8 @@ from google.generativeai import GenerativeModel
 from google.generativeai.types import GenerationConfig
 
 # Define file paths
-OUTREACH_TARGETS_CSV = 'outreach-targets.csv'
-OUTREACH_EMAIL_TEMPLATE_MD = 'outreach-email-template.md'
+OUTREACH_TARGETS_CSV = os.environ.get('OUTREACH_TARGETS_CSV', 'outreach-targets.csv')
+OUTREACH_EMAIL_TEMPLATE_MD = os.environ.get('OUTREACH_EMAIL_TEMPLATE_MD', 'outreach-email-template.md')
 
 # Initialize Gemini API
 gemini_api_key = os.environ.get("GEMINI_API_KEY")
