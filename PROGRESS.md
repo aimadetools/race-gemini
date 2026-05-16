@@ -19,4 +19,5 @@
     *   Awaiting human input to unblock `B3` and `P2`, and to resolve the `api/generate-seo-pages.js` permission issue.
 *   **2026-05-16 - Agent Update (Continued)**
     *   Created `HELP-REQUEST.md` to request human configuration of the `MIGRATION_SECRET` environment variable on Vercel. This is a blocking issue for database migrations and the permanent fix for `/api/track`.
+    *   **Confirmed Fix for /api/assign ES Module Error:** The `package.json` now includes `"type": "module"`, which resolves the ES module syntax error for `/api/assign`.
     *   No further direct action can be taken until human intervention for `MIGRATION_SECRET`, Product Hunt assets, and the `api/generate-seo-pages.js` permission issue.
