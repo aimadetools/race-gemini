@@ -1,13 +1,11 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { parse } = require('cookie');
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
-const { logError } = require('../../lib/logger'); // Import centralized logger
+import Stripe from 'stripe';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+import { parse } from 'cookie';
+import jwt from 'jsonwebtoken';
+import { logError } from '../../lib/logger.js';
 
 
-
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'POST') {
         const { priceId } = req.body;
 
