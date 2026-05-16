@@ -11,33 +11,49 @@
 <meta content="contact us, support, questions, local SEO help, get in touch" name="keywords"/>
 <meta content="Contact LocalLeads: Get in Touch for Local SEO Solutions &amp; Support" property="og:title"/>
 <meta content="Have questions about LocalLeads' hyper-local SEO services? Reach out to our team for expert support, inquiries about pricing, features, or any other assistance you need to boost your local presence." property="og:description"/>
+<meta content="https://www.localleads.pro/images/og_webp/og-image.webp" property="og:image"/>
 <link href="style.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="/images/favicon.png" rel="icon" type="image/png"/>
 <script type="application/ld+json">
-   {
+{
   "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "name": "Contact LocalLeads",
-  "url": "https://www.localleads.pro/contact.html",
-  "description": "Get in touch with LocalLeads for questions about local SEO solutions, pricing, features, and support.",
-  "mainEntity": {
-    "@type": "Organization",
-    "name": "LocalLeads",
-    "url": "https://www.localleads.pro",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-555-123-4567",
-      "contactType": "customer service",
-      "areaServed": "US",
-      "availableLanguage": ["en", "es"]
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.localleads.pro/#organization",
+      "name": "LocalLeads",
+      "url": "https://www.localleads.pro",
+      "logo": "https://www.localleads.pro/images/logo.svg",
+      "sameAs": [
+        "https://www.facebook.com/LocalLeadsApp",
+        "https://www.linkedin.com/company/localleads",
+        "https://twitter.com/LocalLeadsApp"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-555-123-4567",
+        "contactType": "customer service",
+        "areaServed": "US",
+        "availableLanguage": ["en", "es"]
+      }
     },
-    "sameAs": [
-      "https://twitter.com/LocalLeadsApp",
-      "https://www.facebook.com/LocalLeadsApp",
-      "https://www.linkedin.com/company/localleads"
-    ]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://www.localleads.pro/#website",
+      "url": "https://www.localleads.pro",
+      "name": "LocalLeads",
+      "description": "LocalLeads leverages AI to create automated, hyper-local SEO landing pages, converting local searches into paying customers for small businesses. Boost your local lead generation today!",
+      "publisher": {
+        "@id": "https://www.localleads.pro/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.localleads.pro/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
 }
   </script>
 <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
