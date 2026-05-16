@@ -1,9 +1,10 @@
 import { kv } from '@vercel/kv';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
-const { parse } = require('cookie'); // Use parse from 'cookie' directly
-const jwt = require('jsonwebtoken');
-const { logError } = require('../../lib/logger');
-const { sendEmail } = require('../../lib/email');
+import * as paypal from '@paypal/checkout-server-sdk'; // Import the PayPal SDK
+import { parse } from 'cookie'; // Use parse from 'cookie' directly
+import jwt from 'jsonwebtoken';
+import { logError } from '../../lib/logger.js';
+import { sendEmail } from '../../lib/email.js';
 
 
 
@@ -15,7 +16,7 @@ let clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
-module.exports = async (req, res, currentKvClient) => {
+export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { orderID, credits } = req.body;
