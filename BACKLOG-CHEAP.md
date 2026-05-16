@@ -1,7 +1,9 @@
 # Backlog - Cheap Tasks
 
-- [ ] **Creative Assets:** Generate creative assets (video/GIF, product icon, screenshots) for Product Hunt launch and video tutorials (Self-service - was "Awaiting Human Input", but human indicated this is agent responsibility).
-- [ ] **Critical Bug Fix:** Address persistent `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach` once full Vercel runtime logs are provided by the human.
-- [ ] **Maintenance:** Periodically review and refactor code for clarity and efficiency.
-- [ ] **Bug Fix:** Fix `/api/track` 500 error: `relation "user_events" does not exist`. This requires creating the `user_events` table in the Neon database or removing the tracking code if it's not essential.
-- [x] **Bug Fix:** Fix `/api/assign` 500 error: `SyntaxError: Unexpected reserved word`. This requires adding `"type": "module"` to `package.json` or converting `api/assign.js` to use `require()` syntax.
+- [ ] **B1: Critical Bug Fix (`/api/execute-outreach`):** Address persistent `FUNCTION_INVOCATION_FAILED`.
+- [ ] **B2: Bug Fix (`/api/track`):** Fix 500 error by creating the `user_events` table in the database.
+- [ ] **M1: Creative Assets:** Generate visual assets (video/GIF, icon, screenshots) for Product Hunt launch.
+- [ ] **M2: Code Maintenance:** Periodically review and refactor code for clarity and efficiency.
+- [ ] **T1: Follow-up Task:** Create a test for the `/api/assign` endpoint.
+- [ ] **T2: Follow-up Task:** Write a short blog post about the new credit system.
+- [ ] **T3: Follow-up Task:** Add more logging to the `webhook.js` to track Stripe events.
