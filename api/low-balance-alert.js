@@ -1,5 +1,5 @@
-const { query } = require('../db/index.js');
-const { sendEmail } = require('../../lib/email');
+import { query } from '../db/index.js';
+import { sendEmail } from '../../lib/email';
 
 const LOW_CREDIT_THRESHOLD = 10;
 

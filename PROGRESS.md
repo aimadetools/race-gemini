@@ -24,3 +24,10 @@
 *   **2026-05-16 - SEO/Social Sharing Improvement:**
     *   Updated `index.html` to use `images/og_webp/og-image.webp` for the `og:image` meta tag.
     *   Updated `index.html` to use `images/logo.svg` for the schema.org `logo` property, replacing `images/favicon.png` for better representation.
+*   **2026-05-16 - ES Module Conversion:**
+    *   Converted `api/delete-client.js` from CommonJS to ES module syntax.
+    *   Converted `api/forgot-password-request.js` from CommonJS to ES module syntax.
+    *   Converted `api/agency-login.js` from CommonJS to ES module syntax.
+    *   Converted `api/dashboard.js` from CommonJS to ES module syntax.
+    *   Converted `api/low-balance-alert.js` from CommonJS to ES module syntax.
+    *   **Note:** `api/generate-seo-pages.js` could not be converted due to file permission issues. This requires manual intervention.

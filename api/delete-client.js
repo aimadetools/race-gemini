@@ -1,5 +1,5 @@
 import { kv } from '@vercel/kv';
-const { logError } = require('../../lib/logger');
+import { logError } from '../../lib/logger';
 
 export default async function handler(request, response, currentKvClient) {
     const currentKv = currentKvClient || kv;

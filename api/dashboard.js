@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs';
 import path from 'path';
-const { logError } = require('../../lib/logger');
+import { logError } from '../../lib/logger';
 
 
 
