@@ -1,8 +1,8 @@
-const { spawn } = require('child_process');
-const path = require('path');
-const { logError } = require('../../lib/logger');
-const { parseAddress } = require('../../lib/html-parser');
-const fetch = global.fetch;
+import { spawn } from 'child_process';
+import path from 'path';
+import { logError } from '../../lib/logger.js';
+import { parseAddress } from '../../lib/html-parser.js';
+const fetch = global.fetch; // Keep global.fetch as is
 
 async function runGbpCategoryCheck(url) {
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
@@ -58,7 +58,7 @@ async function runGbpCategoryCheck(url) {
         if (!reverseGeocodingData.results || reverseGeocodingData.results.length === 0) {
             const errorMsg = `Reverse geocoding API returned no results for coordinates: ${lat}, ${lng}.`;
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding No Results', 'audit_error.log');
-            return { error: errorMsg };
+            return { error: error.message };
         }
 
             const components = reverseGeocodingData.results[0].components;
@@ -68,7 +68,7 @@ async function runGbpCategoryCheck(url) {
                 if (businessCategory === 'Not specified') {
                     const errorMsg = 'Could not determine category from address.';
                     logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
-                    return { error: errorMsg };
+                    return { error: error.message };
                 }
                 return { businessCategory, confidence };
     } catch (error) {
@@ -131,7 +131,7 @@ const runAudit = (auditCommand, args) => {
     });
 };
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
@@ -218,3 +218,4 @@ module.exports = async (req, res) => {
         });
     }
 };
+
