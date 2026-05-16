@@ -1,4 +1,4 @@
-const paypal = require('@paypal/checkout-server-sdk');
+import * as paypal from '@paypal/checkout-server-sdk';
 
 // Creating an environment
 let clientId = process.env.PAYPAL_CLIENT_ID;
@@ -8,7 +8,7 @@ let clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'POST') {
         const { purchase_units } = req.body;
         const request = new paypal.orders.OrdersCreateRequest();
