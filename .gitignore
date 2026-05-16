@@ -16,7 +16,7 @@ image_conversion.log
 database.sql
 .venv/
 case-studies/
-execute_outreach_curl.sh
+
 
 # Build artifacts
 dist/
@@ -24,6 +24,7 @@ build/
 
 # Temporary and Cache files
 *.log
+
 .gemini/
 scripts/__pycache__/
 generated-seo-pages/
@@ -32,3 +33,4 @@ yarn.lock
 *.csv
 *.txt
 .venv/
+execute_outreach_curl.sh
