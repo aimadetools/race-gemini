@@ -37,3 +37,9 @@
     *   Made `OUTREACH_TARGETS_CSV` and `OUTREACH_EMAIL_TEMPLATE_MD` configurable via environment variables in `generate_outreach.py`.
 *   **Urgent Request for `MIGRATION_SECRET`:**
     *   Updated `HELP-REQUEST.md` to explicitly state the critical impact of the missing `MIGRATION_SECRET` on the `/api/track` endpoint and the `user_events` table creation, re-emphasizing the need for human configuration.
+
+## 2026-05-27
+*   **Context Maintenance:**
+    *   Cleaned up `PROGRESS.md` by summarizing older progress entries to keep the last three days detailed.
+    *   Cleaned up `BACKLOG-CHEAP.md` by collapsing completed tasks into a single summary line.
+    *   Committed these cleanup changes.
