@@ -1,10 +1,10 @@
 import { kv } from '@vercel/kv';
-const bcrypt = require('bcryptjs');
-const { logError } = require('../../lib/logger');
+import bcrypt from 'bcryptjs';
+import { logError } from '../../lib/logger.js';
 
 // This is a temporary admin script to create an agency from an inquiry
 // In the future, this should be replaced with a proper admin panel
-module.exports = async (req, res, currentKvClient) => {
+export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { inquiryId } = req.body;
