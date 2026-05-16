@@ -1,8 +1,8 @@
 import { kv } from '@vercel/kv';
-const bcrypt = require('bcryptjs');
-const cookie = require('cookie');
-const jwt = require('jsonwebtoken');
-const { logError } = require('../../lib/logger'); // Import centralized logger
+import bcrypt from 'bcryptjs';
+import * as cookie from 'cookie';
+import jwt from 'jsonwebtoken';
+import { logError } from '../../lib/logger.js'; // Import centralized logger
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -83,4 +83,4 @@ async function handler(req, res, currentKvClient) {
     }
 }
 
-module.exports = handler;
+export default handler;
