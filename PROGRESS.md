@@ -13,6 +13,6 @@
     *   `P2: User Acquisition - Product Hunt` requires visual assets (screenshots/video) which need human input.
     *   **Actionable Task: Fix ES Module Syntax Error for API Endpoints**
         *   Identified that many API files (`.js` in `api/`) are using ES module syntax (`import`/`export`), but `package.json` was missing `"type": "module"`. This caused Vercel deployment errors.
-        *   **Current Step:** Converted `api/client-details.js` to ES module syntax (`import`/`export default`).
+        *   **Current Step:** Converted `api/update-agency-branding.js` to ES module syntax (`import`/`export default`).
         *   **Next Steps:** Scan for other CommonJS files (`require`/`module.exports`) in the `api/` directory and convert them to ES module syntax.
     *   Awaiting human input to unblock `B3` and `P2`.
