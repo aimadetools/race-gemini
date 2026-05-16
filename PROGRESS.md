@@ -44,3 +44,6 @@
         *   Encountered a persistent "Permission Denied" error with `api/generate-seo-pages.js`, preventing its conversion. This file requires human intervention to resolve the permission issue.
     *   All immediate actionable coding tasks related to ES module conversion have been completed.
     *   Awaiting human input to unblock `B3` and `P2`, and to resolve the `api/generate-seo-pages.js` permission issue.
+*   **2026-05-16 - Agent Update (Continued)**
+    *   Created `HELP-REQUEST.md` to request human configuration of the `MIGRATION_SECRET` environment variable on Vercel. This is a blocking issue for database migrations and the permanent fix for `/api/track`.
+    *   No further direct action can be taken until human intervention for `MIGRATION_SECRET`, Product Hunt assets, and the `api/generate-seo-pages.js` permission issue.
