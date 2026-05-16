@@ -4,7 +4,7 @@ import trackEventHandler from './track.js'; // Import the event tracking handler
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
-module.exports = async (req, res, currentKvClient) => {
+export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { yourName, yourEmail, companyName, website, monthlyReferrals, message } = req.body;
