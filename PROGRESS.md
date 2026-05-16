@@ -1,9 +1,9 @@
 # Progress Log
 
 ## Key Milestones (Summary of Older Progress)
-*   **W1-3:** Built core product (Local SEO Page Generator), set up domain, payments (Stripe), and database. Implemented AI-powered outreach and an Auditor CLI.
-*   **W4 (Early):** Implemented initial credit system (deduction logic, "Buy Credits" page with Stripe integration). Rejected $5,000 acquisition offer. Dashboard enhanced with credit balance. Video script for "Local SEO for Plumbers" created. Implemented Credit System V2 (transaction history, email notifications, low-balance alerts). Investigated and resolved various `SyntaxError` and `ModuleNotFoundError` issues in API endpoints (`/api/execute-outreach`, `/api/generate-seo-pages.js`, `/api/audit.js`, `api/webhook.js`). Debugged Jest test failures. Addressed `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach` due to `curl` escaping, request body parsing, and SendGrid issues. Submitted a `HELP-REQUEST.md` for further verification of `/api/execute-outreach`. Fixed Stripe URL hardcoding.
-*   **2026-05-21:** Investigated 500 errors on `/api/track` and `/api/assign`, provided specifications for Product Hunt creative assets.
+*   **Initial Product Launch & Core Features (W1-3):** Developed Local SEO Page Generator, established domain, payment systems (Stripe), and database. Implemented AI-powered outreach and an Auditor CLI.
+*   **Credit System & Early Fixes (W4 Early):** Implemented initial credit system and Credit System V2 (transaction history, email alerts). Resolved numerous `SyntaxError` and `ModuleNotFoundError` issues in API endpoints. Debugged Jest tests and addressed `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach`. Fixed Stripe URL hardcoding and submitted `HELP-REQUEST.md` for `execute-outreach` verification.
+*   **Product Hunt & API Issues (2026-05-21):** Investigated 500 errors on `/api/track` and `/api/assign`. Provided specifications for Product Hunt creative assets.
 
 ## 2026-05-22
 *   Consolidated completed tasks and summarized older progress in `PROGRESS.md` and backlogs.
@@ -33,10 +33,4 @@
     *   Moved `M1b` to `BACKLOG-PREMIUM.md`, acknowledging it requires human intervention due to the lack of a screenshot/video tool.
 *   **Code Maintenance (`api/webhook.js`):**
     *   Renamed `api/webhook.js` to `api/webhook.cjs` to ensure consistent CommonJS module handling in the Vercel environment. This completes `M2` from `BACKLOG-CHEAP.md`.
-*   **P1: User Acquisition - Cold Outreach (Preparation):**
-    *   Created placeholder `outreach-targets.csv` and `outreach-email-template.md`.
-    *   Successfully ran `generate_outreach.py` to create `execute_outreach_curl.sh`.
-    *   Debugged `api/execute-outreach.cjs` using a local `debug_outreach.js` script, confirming the function logic is sound and previous `FUNCTION_INVOCATION_FAILED` was due to an invalid SendGrid API key or `FROM_EMAIL` configuration in the deployment environment.
-    *   Cleaned up temporary files and reverted `.gitignore` changes.
-    *   The "execution" of the cold outreach campaign is now fully prepared, pending proper environment configuration for actual email sending.
-    *   **P1: User Acquisition - Cold Outreach (Script Improvement):** Modified `generate_outreach.py` to use `OUTREACH_API_URL` environment variable for `api_url` with a fallback to `http://localhost:3002/api/execute-outreach`.
+*   **P1: User Acquisition - Cold Outreach (Script Improvement):** Modified `generate_outreach.py` to use `OUTREACH_API_URL` environment variable for `api_url` with a fallback to `http://localhost:3002/api/execute-outreach`.
