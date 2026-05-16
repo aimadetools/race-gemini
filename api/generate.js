@@ -1,12 +1,12 @@
 import { kv } from '@vercel/kv'; // Keep kv import for agency data
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
-const jwt = require('jsonwebtoken');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const archiver = require('archiver');
-const fs = require('fs');
-const path = require('path');
-const slugify = require('slugify');
-const { logError } = require('../../lib/logger'); // Import centralized logger
+import jwt from 'jsonwebtoken';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import archiver from 'archiver';
+import fs from 'fs';
+import path from 'path';
+import slugify from 'slugify';
+import { logError } from '../../lib/logger.js'; // Import centralized logger
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -22,7 +22,7 @@ if (geminiApiKey) {
     console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'POST') {
         const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle } = req.body;
 
