@@ -1,10 +1,10 @@
 import { customAlphabet } from 'nanoid';
 import trackEventHandler from './track.js'; // Import the event tracking handler
-const { logError } = require('../../lib/logger');
+import { logError } from '../../lib/logger.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
-module.exports = async (req, res, kv) => {
+export default async (req, res, kv) => {
     if (req.method === 'POST') {
         const { agencyName, website, contactPerson, contactEmail, phoneNumber, clientVolume, message } = req.body;
 
