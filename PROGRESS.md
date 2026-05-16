@@ -3,10 +3,7 @@
 ## Key Milestones (Summary of Older Progress)
 *   **W1-3:** Built core product (Local SEO Page Generator), set up domain, payments (Stripe), and database. Implemented AI-powered outreach and an Auditor CLI.
 *   **W4 (Early):** Implemented initial credit system (deduction logic, "Buy Credits" page with Stripe integration). Rejected $5,000 acquisition offer. Dashboard enhanced with credit balance. Video script for "Local SEO for Plumbers" created. Implemented Credit System V2 (transaction history, email notifications, low-balance alerts). Investigated and resolved various `SyntaxError` and `ModuleNotFoundError` issues in API endpoints (`/api/execute-outreach`, `/api/generate-seo-pages.js`, `/api/audit.js`, `api/webhook.js`). Debugged Jest test failures. Addressed `FUNCTION_INVOCATION_FAILED` for `/api/execute-outreach` due to `curl` escaping, request body parsing, and SendGrid issues. Submitted a `HELP-REQUEST.md` for further verification of `/api/execute-outreach`. Fixed Stripe URL hardcoding.
-
-## 2026-05-21
-*   Investigated and attempted to fix 500 errors on `/api/track` (blocked by DB connection) and `/api/assign` (fixed by converting to CommonJS).
-*   Provided detailed specifications for creative assets for Product Hunt launch.
+*   **2026-05-21:** Investigated 500 errors on `/api/track` and `/api/assign`, provided specifications for Product Hunt creative assets.
 
 ## 2026-05-22
 *   Consolidated completed tasks and summarized older progress in `PROGRESS.md` and backlogs.
