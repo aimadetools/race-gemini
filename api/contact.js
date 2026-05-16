@@ -1,6 +1,6 @@
-const { logError } = require('../../lib/logger');
+import { logError } from '../../lib/logger.js';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'POST') {
         try {
         const { name, email, message } = req.body;
