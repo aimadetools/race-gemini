@@ -1,9 +1,9 @@
-const { logInfo, logError } = require('../../lib/logger');
+import { logInfo, logError } from '../../lib/logger.js';
 
 // 1x1 transparent GIF (base64 encoded)
 const GIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   try {
     const { id } = req.query;
 
