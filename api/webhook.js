@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
-import { logError } from '../../lib/logger';
+import { logError, logInfo } from '../../lib/logger';
 import { sendEmail } from '../../lib/email';
 
 // Helper function to determine credits based on price ID
@@ -107,6 +107,7 @@ async function getUserEmail(userId) {
 }
 
 module.exports = async (req, res, currentKvClient) => {
+    await logInfo('Stripe webhook received.', 'Stripe Webhook');
     const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const sig = req.headers['stripe-signature'];
@@ -116,12 +117,14 @@ module.exports = async (req, res, currentKvClient) => {
 
         try {
             event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET || 'dummy_stripe_webhook_secret'); // Add fallback
+            await logInfo(`Stripe event constructed: ${event.type}`, 'Stripe Webhook');
         } catch (err) {
             await logError(err, 'Stripe Webhook Signature Verification Failed');
             return res.status(400).json({ message: 'Webhook Error: Signature verification failed.' });
         }
 
         if (event.type === 'checkout.session.completed') {
+            await logInfo('Processing checkout.session.completed event.', 'Stripe Webhook');
             const session = event.data.object;
             const userId = session.client_reference_id;
             const amountTotal = session.amount_total; // Amount in cents
@@ -265,6 +268,7 @@ module.exports = async (req, res, currentKvClient) => {
         }
 
         if (event.type === 'invoice.payment_succeeded') {
+            await logInfo('Processing invoice.payment_succeeded event.', 'Stripe Webhook');
             const invoice = event.data.object;
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
             const priceId = subscription.items.data[0].price.id;
@@ -330,6 +334,7 @@ module.exports = async (req, res, currentKvClient) => {
         }
 
         if (event.type === 'customer.subscription.deleted') {
+            await logInfo('Processing customer.subscription.deleted event.', 'Stripe Webhook');
             const subscription = event.data.object;
             const userId = subscription.metadata.agencyId; // agencyId is the userId
 
@@ -355,6 +360,7 @@ module.exports = async (req, res, currentKvClient) => {
             }
         }
 
+        await logInfo(`Stripe webhook event ${event.type} processed successfully.`, 'Stripe Webhook');
         res.status(200).send({ received: true });
     } else {
         res.status(405).send('Method Not Allowed');
