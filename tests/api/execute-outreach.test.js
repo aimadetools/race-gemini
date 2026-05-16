@@ -67,10 +67,7 @@ describe('api/execute-outreach', () => {
   test('should send emails successfully with valid input', async () => {
     sgMail.send.mockResolvedValueOnce([{}]); // Mock successful SendGrid response
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200);
     expect(JSON.parse(res._getData())).toEqual({
@@ -88,17 +85,14 @@ describe('api/execute-outreach', () => {
       html: '<p>Test HTML</p>',
       message_id: 'test-message-id',
     });
-    expect(logInfo).toHaveBeenCalledWith(expect.stringContaining('Email sent successfully to recipient@example.com'));
+    expect(logInfo).toHaveBeenCalledWith(expect.stringContaining('Email sent successfully to recipient@example.com'), 'sendEmails');
     expect(logError).not.toHaveBeenCalled();
   });
 
   test('should return 400 if no emails array is provided', async () => {
     req.body = {}; // No emails array
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(400);
     expect(JSON.parse(res._getData())).toEqual({
@@ -108,17 +102,14 @@ describe('api/execute-outreach', () => {
       details: [],
     });
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logInfo).toHaveBeenCalledWith('No emails provided in request body, returning success.', 'Handler');
+    expect(logInfo).not.toHaveBeenCalled(); // No logInfo for this client-side error
     expect(logError).not.toHaveBeenCalled();
   });
 
   test('should return 400 if emails array is empty', async () => {
     req.body = { emails: [] }; // Empty emails array
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(400);
     expect(JSON.parse(res._getData())).toEqual({
@@ -128,22 +119,19 @@ describe('api/execute-outreach', () => {
       details: [],
     });
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logInfo).toHaveBeenCalledWith('No emails provided in request body, returning success.', 'Handler');
+    expect(logInfo).not.toHaveBeenCalled(); // No logInfo for this client-side error
     expect(logError).not.toHaveBeenCalled();
   });
 
   test('should handle SendGrid API Key missing', async () => {
     delete process.env.SENDGRID_API_KEY; // Simulate missing API key
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200); // Still 200 because the error is handled internally by sendEmails
-    expect(res._getData().sent).toBe(0);
-    expect(res._getData().failed).toBe(1);
-    expect(res._getData().details[0].reason).toBe('SendGrid API Key is missing');
+    expect(JSON.parse(res._getData()).sent).toBe(0); // Added JSON.parse
+    expect(JSON.parse(res._getData()).failed).toBe(1); // Added JSON.parse
+    expect(JSON.parse(res._getData()).details[0].reason).toBe('SendGrid API Key is missing'); // Added JSON.parse
     expect(sgMail.setApiKey).not.toHaveBeenCalled();
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
@@ -152,15 +140,12 @@ describe('api/execute-outreach', () => {
   test('should handle FROM_EMAIL missing', async () => {
     delete process.env.FROM_EMAIL; // Simulate missing FROM_EMAIL
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200); // Still 200 because the error is handled internally by sendEmails
-    expect(res._getData().sent).toBe(0);
-    expect(res._getData().failed).toBe(1);
-    expect(res._getData().details[0].reason).toBe('FROM_EMAIL is missing');
+    expect(JSON.parse(res._getData()).sent).toBe(0); // Added JSON.parse
+    expect(JSON.parse(res._getData()).failed).toBe(1); // Added JSON.parse
+    expect(JSON.parse(res._getData()).details[0].reason).toBe('FROM_EMAIL is missing'); // Added JSON.parse
     expect(sgMail.setApiKey).toHaveBeenCalledWith('SG.test_api_key'); // API key is present, so setApiKey is called
     expect(sgMail.send).not.toHaveBeenCalled();
     expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
@@ -170,10 +155,7 @@ describe('api/execute-outreach', () => {
     const errorMessage = 'SendGrid error';
     sgMail.send.mockRejectedValueOnce(new Error(errorMessage)); // Mock SendGrid failure
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200);
     expect(JSON.parse(res._getData())).toEqual({
@@ -202,15 +184,12 @@ describe('api/execute-outreach', () => {
       { to: 'success2@example.com', subject: 'Sub3', html: 'HTML3', message_id: 'id3' },
     ];
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(res._getData().sent).toBe(2);
-    expect(res._getData().failed).toBe(1);
-    expect(res._getData().details[0].to).toBe('fail1@example.com');
+    expect(JSON.parse(res._getData()).sent).toBe(2); // Added JSON.parse
+    expect(JSON.parse(res._getData()).failed).toBe(1); // Added JSON.parse
+    expect(JSON.parse(res._getData()).details[0].to).toBe('fail1@example.com'); // Added JSON.parse
     expect(sgMail.send).toHaveBeenCalledTimes(3);
     expect(logError).toHaveBeenCalledTimes(1); // Only for the failed email
   });
@@ -230,10 +209,7 @@ describe('api/execute-outreach', () => {
       { to: 'valid2@example.com', subject: 'Valid Sub 2', html: 'Valid HTML 2', message_id: 'id-valid2' },
     ];
 
-    await new Promise((resolve) => {
-      res.on('end', resolve);
-      executeOutreach(req, res);
-    });
+    await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200);
     const responseData = JSON.parse(res._getData());
