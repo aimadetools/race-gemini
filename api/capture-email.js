@@ -1,5 +1,6 @@
-const { Pool } = require('pg');
-const { logError } = require('../../lib/logger');
+import pg from 'pg'; // Import the pg library correctly
+const { Pool } = pg; // Destructure Pool from the imported pg object
+import { logError } from '../../lib/logger.js'; // Note the .js extension for relative imports
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -8,7 +9,7 @@ const pool = new Pool({
     }
 });
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed.' });
     }
