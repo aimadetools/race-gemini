@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv';
-const cookie = require('cookie');
-const jwt = require('jsonwebtoken');
+import * as cookie from 'cookie';
+import jwt from 'jsonwebtoken';
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -36,4 +36,4 @@ async function handler(req, res, currentKvClient) {
     }
 }
 
-module.exports = handler;
+export default handler;
