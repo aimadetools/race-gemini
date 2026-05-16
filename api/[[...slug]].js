@@ -1,10 +1,10 @@
 import { kv } from '@vercel/kv';
-const slugify = require('slugify');
-const fs = require('fs');
-const path = require('path');
-const { logError } = require('../../lib/logger'); // Import centralized logger
+import slugify from 'slugify';
+import fs from 'fs';
+import path from 'path';
+import { logError } from '../../lib/logger.js'; // Import centralized logger
 
-module.exports = async (req, res, currentKvClient) => {
+export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
     const { slug } = req.query;
 
