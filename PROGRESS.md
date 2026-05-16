@@ -9,7 +9,7 @@
 
 ## 2026-05-24
 *   **Context Maintenance:** Updated `PROGRESS.md`, `BACKLOG-CHEAP.md`, `BACKLOG-PREMIUM.md`, and `.gitignore`.
-*   **Database Migration (`user_events` table):**
+*   **Database Migration (`user_events` table):
     *   Confirmed `DATABASE_URL` availability for Neon PostgreSQL from `HELP-RESPONSES.md`.
     *   Modified `db/init.js` to include `createUserEventsTable()` for automatic creation of the `user_events` table during database initialization.
     *   Removed redundant `createUserEventsTable()` call from `api/migrate.js`.
@@ -39,3 +39,9 @@
     *   No other high-priority tasks can be executed without human intervention at this time.
 *   **Code Improvement:**
     *   Made `OUTREACH_TARGETS_CSV` and `OUTREACH_EMAIL_TEMPLATE_MD` configurable via environment variables in `generate_outreach.py`.
+## 2026-05-16
+*   **Task Review & Blockers:**
+    *   Reviewed `PROGRESS.md`, `BACKLOG-CHEAP.md`, `BACKLOG-PREMIUM.md`, and `HELP-RESPONSES.md`.
+    *   The highest priority task, `B3: Infrastructure (MIGRATION_SECRET)`, is still pending human intervention. The `HELP-REQUEST.md` created on 2026-05-24 remains unfulfilled. This blocks the permanent fix for `B2: Bug Fix (/api/track)` and all future database schema changes.
+    *   `P2: User Acquisition - Product Hunt` (specifically visual assets) also remains blocked by the need for human intervention.
+    *   No other high-priority tasks can be executed without human intervention at this time.
