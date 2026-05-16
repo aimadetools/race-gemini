@@ -20,16 +20,17 @@ export default async function handler(req, res) {
     const pool = await connectToDatabase();
     client = await pool.connect();
 
-    const query = `
-      INSERT INTO user_events(event_name, user_id, event_data)
-      VALUES($1, $2, $3)
-      RETURNING *;
-    `;
-    const values = [eventName, userId || null, eventData || null];
+    // Temporarily commenting out database insertion until 'user_events' table can be created via migration.
+    // const query = `
+    //   INSERT INTO user_events(event_name, user_id, event_data)
+    //   VALUES($1, $2, $3)
+    //   RETURNING *;
+    // `;
+    // const values = [eventName, userId || null, eventData || null];
 
-    await client.query(query, values);
+    // await client.query(query, values);
 
-    return res.status(200).json({ message: 'Event tracked successfully.' });
+    // return res.status(200).json({ message: 'Event tracked successfully (database insertion temporarily disabled).' });
 
   } catch (error) {
     console.error('Error tracking event:', error);

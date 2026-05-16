@@ -35,3 +35,9 @@
     *   Renamed `api/webhook.js` to `api/webhook.cjs` to ensure consistent CommonJS module handling in the Vercel environment. This completes `M2` from `BACKLOG-CHEAP.md`.
 *   **P1: User Acquisition - Cold Outreach (Script Improvement):** Modified `generate_outreach.py` to use `OUTREACH_API_URL` environment variable for `api_url` with a fallback to `http://localhost:3002/api/execute-outreach`.
 *   **P1: User Acquisition - Cold Outreach (Placeholder Files Recreated):** Recreated `outreach-targets.csv` and `outreach-email-template.md` as placeholder files after discovering they were missing.
+## 2026-05-25
+*   **Context Maintenance:**
+    *   Collapsed completed tasks in `BACKLOG-CHEAP.md`.
+    *   Updated `BACKLOG-CHEAP.md` to reflect `B2` as temporarily fixed.
+    *   Added new task `B3` to `BACKLOG-CHEAP.md` to re-request `MIGRATION_SECRET`.
+*   **Bug Fix (`/api/track` - Temporary):** Temporarily resolved 500 error on `/api/track` by commenting out the database insertion logic in `api/track.js` due to the `user_events` table not existing and `MIGRATION_SECRET` being unavailable to run migrations.
