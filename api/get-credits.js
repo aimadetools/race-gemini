@@ -1,9 +1,9 @@
-const { parse } = require('cookie');
-const jwt = require('jsonwebtoken');
-const { query } = require('../db/index.js'); // Import PostgreSQL query utility
-const { logError } = require('../../lib/logger'); // Import centralized logger
+import { parse } from 'cookie';
+import jwt from 'jsonwebtoken';
+import { query } from '../db/index.js'; // Import PostgreSQL query utility
+import { logError } from '../../lib/logger.js'; // Import centralized logger
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'GET') {
         const cookies = parse(req.headers.cookie || '');
         const token = cookies.auth;
