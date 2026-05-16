@@ -36,7 +36,6 @@
     "python-test": ".venv/bin/python3 -m unittest discover tests",
     "build:js": "cat js/ab-test-home.js js/ab-test.js js/accordion.js js/admin-agency-inquiries.js js/agency-billing.js js/agency-form.js js/agency-subscription.js js/analytics.js js/app.js js/audit-form.js js/audit.js js/blog-search.js js/contact.js js/dashboard.js js/generate-form-validation.js js/generate.js js/mobile-swipe-nav.js js/referral-form.js js/social-share.js js/stripe-checkout.js js/testimonial-carousel.js js/tracking.js | ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
   },
-  "type": "module",
   "engines": {
     "node": "20.x"
   }
