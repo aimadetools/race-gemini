@@ -21,3 +21,6 @@
     *   Local server issues included port conflicts, timeouts, and API route handling.
     *   Deployed site access resulted in `net::ERR_NAME_NOT_RESOLVED` errors, indicating DNS or network connectivity problems in the execution environment.
     *   **Status: Blocked - Created `HELP-REQUEST.md` for human intervention to provide screenshots or resolve environmental issues.**
+*   **2026-05-16 - SEO/Social Sharing Improvement:**
+    *   Updated `index.html` to use `images/og_webp/og-image.webp` for the `og:image` meta tag.
+    *   Updated `index.html` to use `images/logo.svg` for the schema.org `logo` property, replacing `images/favicon.png` for better representation.
