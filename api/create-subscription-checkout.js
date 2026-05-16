@@ -10,7 +10,7 @@ export default async (req, res) => {
         const { priceId } = req.body;
 
         if (!priceId) {
-            await logError(new Error('Missing priceId in request body.'), 'Subscription Checkout Validation', 'subscription_checkout_error.log');
+            await logError(new Error('Missing priceId in request body.'), 'Subscription Checkout Validation');
             return res.status(400).json({ message: 'Missing priceId in request body.' });
         }
 
@@ -18,7 +18,7 @@ export default async (req, res) => {
         const token = cookies.token;
 
         if (!token) {
-            await logError(new Error('Auth token missing.'), 'Subscription Checkout - Authentication', 'subscription_checkout_error.log');
+            await logError(new Error('Auth token missing.'), 'Subscription Checkout - Authentication');
             return res.status(401).json({ message: 'Authentication required. Please log in.' });
         }
 
@@ -26,7 +26,7 @@ export default async (req, res) => {
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
         } catch (error) {
-            await logError(error, 'Subscription Checkout - JWT Verification Error', 'subscription_checkout_error.log');
+            await logError(error, 'Subscription Checkout - JWT Verification Error');
             return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
         }
 
@@ -45,8 +45,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'subscription',
-                success_url: `${req.headers.origin}/agency-dashboard.html?subscription=success`,
-                cancel_url: `${req.headers.origin}/agency-billing.html`,
+                success_url: `https://www.localleads.pro/agency-dashboard.html?subscription=success`,
+                cancel_url: `https://www.localleads.pro/agency-billing.html`,
                 metadata: {
                     agencyId: agencyId,
                     priceId: priceId
@@ -56,7 +56,7 @@ export default async (req, res) => {
             res.writeHead(303, { Location: session.url });
             res.end();
         } catch (error) {
-            await logError(error, 'Stripe subscription session creation failed', 'subscription_checkout_error.log');
+            await logError(error, 'Stripe subscription session creation failed');
             res.status(500).send('Failed to create subscription session.');
         }
     } else {

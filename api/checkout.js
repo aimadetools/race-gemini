@@ -16,13 +16,13 @@ export default async (req, res) => {
             userId = decoded.userId;
         } catch (error) {
             console.error('Error verifying token:', error);
-            await logError(error, 'Token Verification', 'checkout_error.log');
+            await logError(error, 'Token Verification');
             return res.status(401).json({ message: 'Invalid or expired token.' });
         }
     }
 
     if (!userId) {
-        await logError(new Error('User not authenticated.'), 'Authentication Check', 'checkout_error.log');
+        await logError(new Error('User not authenticated.'), 'Authentication Check');
         return res.status(401).json({ message: 'User not authenticated.' });
     }
 
@@ -46,7 +46,7 @@ export default async (req, res) => {
                 const parsedCustomCredits = parseInt(customCredits, 10);
 
                 if (isNaN(parsedCustomAmount) || parsedCustomAmount <= 0 || isNaN(parsedCustomCredits) || parsedCustomCredits <= 0) {
-                    await logError(new Error(`Invalid custom amount or credits provided: amount=${customAmount}, credits=${customCredits}`), 'Checkout Product Selection - Custom Pack Validation', 'checkout_error.log');
+                    await logError(new Error(`Invalid custom amount or credits provided: amount=${customAmount}, credits=${customCredits}`), 'Checkout Product Selection - Custom Pack Validation');
                     return res.status(400).json({ message: 'Invalid custom amount or credits for custom pack.' });
                 }
 
@@ -60,7 +60,7 @@ export default async (req, res) => {
             }
 
             if (!selectedPack) {
-                await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection', 'checkout_error.log');
+                await logError(new Error(`Credit pack details not found for ${creditPackId}.`), 'Checkout Product Selection');
                 return res.status(404).json({ message: 'Credit pack details not found for the selected ID.' });
             }
 
@@ -79,8 +79,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'payment',
-                success_url: `https://www.localseogen.com/success.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `https://www.localseogen.com/pricing.html`, // Redirect back to pricing page
+                success_url: `https://www.localleads.pro/success.html?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `https://www.localleads.pro/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
                     creditPackId: creditPackId, // Pass the pack ID
@@ -98,13 +98,13 @@ export default async (req, res) => {
             const selectedPlan = agencyPlanDetails[agencyPlanId];
 
             if (!selectedPlan) {
-                await logError(new Error(`Agency plan details not found for ${agencyPlanId}.`), 'Checkout Agency Plan Selection', 'checkout_error.log');
+                await logError(new Error(`Agency plan details not found for ${agencyPlanId}.`), 'Checkout Agency Plan Selection');
                 return res.status(404).json({ message: 'Agency plan details not found for the selected ID.' });
             }
 
             // Ensure the priceId is available in environment variables
             if (!selectedPlan.priceId) {
-                await logError(new Error(`Stripe Price ID not configured for agency plan ${agencyPlanId}.`), 'Checkout Agency Plan Price ID Missing', 'checkout_error.log');
+                await logError(new Error(`Stripe Price ID not configured for agency plan ${agencyPlanId}.`), 'Checkout Agency Plan Price ID Missing');
                 return res.status(500).json({ message: `Stripe Price ID not configured for agency plan ${agencyPlanId}.` });
             }
 
@@ -128,7 +128,7 @@ export default async (req, res) => {
                 },
             };
         } else {
-            await logError(new Error('Neither creditPackId nor agencyPlanId provided in request body.'), 'Checkout Validation', 'checkout_error.log');
+            await logError(new Error('Neither creditPackId nor agencyPlanId provided in request body.'), 'Checkout Validation');
             return res.status(400).json({ message: 'Missing creditPackId or agencyPlanId in request body.' });
         }
 
@@ -136,7 +136,7 @@ export default async (req, res) => {
             const session = await stripe.checkout.sessions.create(sessionConfig);
             res.status(200).json({ sessionId: session.id });
         } catch (error) {
-            await logError(error, 'Stripe Session Creation', 'checkout_error.log');
+            await logError(error, 'Stripe Session Creation');
             res.status(500).json({ message: 'Failed to create Stripe checkout session.' });
         }
     } else {
