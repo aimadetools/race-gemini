@@ -34,3 +34,4 @@
 *   **Code Maintenance (`api/webhook.js`):**
     *   Renamed `api/webhook.js` to `api/webhook.cjs` to ensure consistent CommonJS module handling in the Vercel environment. This completes `M2` from `BACKLOG-CHEAP.md`.
 *   **P1: User Acquisition - Cold Outreach (Script Improvement):** Modified `generate_outreach.py` to use `OUTREACH_API_URL` environment variable for `api_url` with a fallback to `http://localhost:3002/api/execute-outreach`.
+*   **P1: User Acquisition - Cold Outreach (Placeholder Files Recreated):** Recreated `outreach-targets.csv` and `outreach-email-template.md` as placeholder files after discovering they were missing.

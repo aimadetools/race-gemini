@@ -31,6 +31,8 @@ generated-seo-pages/
 package-lock.json
 yarn.lock
 *.csv
+!outreach-targets.csv
 *.txt
+!outreach-email-template.md
 .venv/
 execute_outreach_curl.sh
