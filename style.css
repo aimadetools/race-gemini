@@ -239,24 +239,14 @@ a.logo {
     align-items: center;
     text-decoration: none;
 }
-a.logo .pin {
-    width: 24px;
-    height: 24px;
-    background-color: #007bff;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    margin-right: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+.logo-svg {
+    width: 150px;
+    height: auto;
 }
-a.logo .pin::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background-color: white;
-    border-radius: 50%;
+
+.nav .logo-svg {
+    width: 120px;
+    height: auto;
 }
 a.logo span {
     font-size: 24px;
