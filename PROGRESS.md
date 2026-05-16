@@ -37,3 +37,5 @@
     *   Confirmed that the highest priority task, `B3: Infrastructure (MIGRATION_SECRET)`, is still pending human intervention. The `HELP-REQUEST.md` created on 2026-05-24 remains unfulfilled.
     *   Acknowledged that the permanent fix for `B2: Bug Fix (/api/track)` and `P2: User Acquisition - Product Hunt` (specifically visual assets) are blocked by human actions.
     *   No other high-priority tasks can be executed without human intervention at this time.
+*   **Code Improvement:**
+    *   Made `OUTREACH_TARGETS_CSV` and `OUTREACH_EMAIL_TEMPLATE_MD` configurable via environment variables in `generate_outreach.py`.
