@@ -11,5 +11,8 @@
     *   Confirmed that the highest priority tasks, `B3: Infrastructure (MIGRATION_SECRET)` and `P2: User Acquisition - Product Hunt`, remain blocked.
     *   `MIGRATION_SECRET` is critical for database migrations and permanently fixing the `/api/track` endpoint.
     *   `P2: User Acquisition - Product Hunt` requires visual assets (screenshots/video) which need human input.
-    *   No new actionable coding tasks can be undertaken until these blockers are addressed by human input.
-    *   Awaiting human input to unblock tasks.
+    *   **Actionable Task: Fix ES Module Syntax Error for API Endpoints**
+        *   Identified that many API files (`.js` in `api/`) are using ES module syntax (`import`/`export`), but `package.json` was missing `"type": "module"`. This caused Vercel deployment errors.
+        *   **Current Step:** Added `"type": "module"` to `package.json`.
+        *   **Next Steps:** Convert CommonJS files (`require`/`module.exports`) in the `api/` directory to ES module syntax (`import`/`export default`) to ensure consistency and resolve build errors. Starting with `api/assign.js`.
+    *   Awaiting human input to unblock `B3` and `P2`.
