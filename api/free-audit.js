@@ -1,9 +1,9 @@
 const fetch = global.fetch;
-const { logError } = require('../../lib/logger');
-const { parseAddress } = require('../../lib/html-parser');
-const { exec } = require('child_process');
+import { logError } from '../../lib/logger.js';
+import { parseAddress } from '../../lib/html-parser.js';
+import { exec } from 'child_process';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     const { url } = req.query;
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
 
