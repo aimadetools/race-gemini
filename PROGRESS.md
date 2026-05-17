@@ -5,7 +5,7 @@
 
 ## Current Status:
 *   **2026-05-17 (continued):**
-    *   **Product Hunt Launch Preparation:** Updated `PRODUCT_HUNT_LAUNCH.md` to reflect the agent's responsibility for creative assets (screenshots, placeholder icon). Created `images/localleads_icon.svg` as a placeholder product icon. Provided instructions to the user to capture screenshots of key product pages for the Product Hunt launch.
+    *   **Product Hunt Launch Preparation:** Updated `PRODUCT_HUNT_LAUNCH.md` to clarify that the product icon (`images/localleads_icon.svg`) has been created by the agent, and that the user is responsible for capturing screenshots of key product pages for the Product Hunt launch.
 *   `MIGRATION_SECRET` configuration for database migrations is still blocked, awaiting human intervention.
 *   SEO page generator task (P3) is still blocked by file permissions on `api/generate-seo-pages.js` despite attempts to implement a database-driven solution.
 *   Waiting for user to provide screenshots for Product Hunt launch.
