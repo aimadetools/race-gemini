@@ -256,6 +256,11 @@
      </p>
 </div>
 </section>
+<div class="center-button" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <a aria-label="Generate Pages Now" class="button pulse-animation" data-i18n-key="generate_pages_now_after_faq" href="generate.html">
+        Generate Pages Now
+    </a>
+</div>
 </main>
 <div class="sticky-cta-bar">
 <p>
@@ -365,7 +370,7 @@
     const faqItems = document.querySelectorAll('.faq-item');
 
     faqItems.forEach(item => {
-     const question = item.querySelector('h3');
+     const question = item.querySelector('h2');
      const answer = item.querySelector('p');
 
      // Set initial ARIA attributes for accessibility
