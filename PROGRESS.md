@@ -5,9 +5,9 @@
 
 ## 2026-05-17 - Detailed Progress
 *   **Work Performed:**
+    *   **Content Marketing:** Created a content calendar (`CONTENT_CALENDAR.md`) to plan future blog posts. Wrote a new high-quality, targeted blog post: "Local SEO for HVAC Companies". Updated the `blog.html` page to include the new post and removed hundreds of low-quality, auto-generated blog posts.
     *   **Outreach:** Refactored `generate_outreach.py` to send emails directly, removing the need for a shell script. Added error handling and logging. Discovered a 500 error when calling the `/api/execute-outreach.cjs` endpoint. After investigation, I suspect an issue with the SendGrid integration. I have created a `HELP-REQUEST.md` to get the Vercel logs for this endpoint.
     *   **SEO Page Generator:** Began work on adding multiple templates to the SEO page generator. Created a new `templates` directory and a new "modern" template. I was blocked from completing this task by a file permission error on `api/generate-seo-pages.js`.
-    *   **Content Marketing:** Identified and deleted over 500 low-quality, generic blog posts. Created two new high-quality, targeted blog posts: "Local SEO for Electricians" and "Local SEO for Landscapers".
 *   **Current Status:**
     *   Blocked on outreach task pending Vercel logs.
     *   Blocked on SEO page generator task pending file permissions.
