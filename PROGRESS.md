@@ -5,7 +5,7 @@
 
 ## 2026-05-17 - Detailed Progress
 *   **Work Performed:**
-    *   **Content Marketing:** Continued the content marketing campaign by writing a new high-quality, targeted blog post: "Local SEO for Roofers". Updated the `blog.html` page to include the new post.
+    *   **Content Marketing:** Continued the content marketing campaign by writing new high-quality, targeted blog posts for "Local SEO for Roofers" and "Local SEO for Lawyers". Updated the `blog.html` page to include the new posts.
 *   **Current Status:**
     *   Blocked on outreach task pending Vercel logs.
     *   Blocked on SEO page generator task pending file permissions.
