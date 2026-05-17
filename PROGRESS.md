@@ -13,6 +13,7 @@
     *   **UX Improvement:** Added hero section to `blog.html`.
     *   **Bug Fix:** Corrected FAQ accordion JavaScript in `faq.html` to target `h2` elements.
     *   **UX Improvement:** Added 'Generate Pages Now' CTA to `faq.html` after FAQ section.
+    *   **Cleanup:** Deleted `PROGRESS.md.bak` to remove unnecessary backup file.
 
 *   `MIGRATION_SECRET` configuration for database migrations is still blocked, awaiting human intervention.
 *   SEO page generator task (P3) is still blocked by file permissions on `api/generate-seo-pages.js` despite attempts to implement a database-driven solution.
