@@ -14,10 +14,13 @@ FROM_EMAIL = os.environ.get("FROM_EMAIL")
 OUTREACH_TARGETS_FILE = "outreach-targets.csv"
 GENERATED_EMAILS_FILE = "generated_outreach_emails.txt"
 
+
 def send_email(to_email, subject, html_content):
     """Sends an email using the SendGrid API."""
     if not all([SENDGRID_API_KEY, DOMAIN_URL, FROM_EMAIL]):
-        print("ERROR: Missing required environment variables (SENDGRID_API_KEY, DOMAIN_URL, FROM_EMAIL).")
+        print(
+            "ERROR: Missing required environment variables (SENDGRID_API_KEY, DOMAIN_URL, FROM_EMAIL)."
+        )
         print("Please complete the HELP-REQUEST.md to have these set.")
         return False
 
@@ -25,7 +28,7 @@ def send_email(to_email, subject, html_content):
         from_email=FROM_EMAIL,
         to_emails=to_email,
         subject=subject,
-        html_content=html_content
+        html_content=html_content,
     )
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -35,6 +38,7 @@ def send_email(to_email, subject, html_content):
     except Exception as e:
         print(f"Error sending email to {to_email}: {e}")
         return False
+
 
 def parse_generated_emails(file_path):
     """
@@ -49,11 +53,11 @@ def parse_generated_emails(file_path):
         print(f"ERROR: Could not find the generated emails file at {file_path}")
         return emails
 
-    email_blocks = content.split("--- EMAIL FOR:")[1:] # Split by the new header
+    email_blocks = content.split("--- EMAIL FOR:")[1:]  # Split by the new header
 
     for block in email_blocks:
-        lines = block.strip().split('\n')
-        
+        lines = block.strip().split("\n")
+
         # Extract business name from the first line, e.g., " Jensen's Plumbing in Dallas ---"
         match = re.search(r"^(.*?) in .*? ---", lines[0])
         if not match:
@@ -76,11 +80,14 @@ def parse_generated_emails(file_path):
         subject = subject_match.group(1).strip()
 
         # The rest is the HTML body (skip header, To, Subject, and empty line after Subject)
-        body = "\n".join(lines[4:]).strip() # Lines 0 is header, 1 is To, 2 is Subject, 3 is empty line.
+        body = "\n".join(
+            lines[4:]
+        ).strip()  # Lines 0 is header, 1 is To, 2 is Subject, 3 is empty line.
 
         emails[business_name] = {"to_email": to_email, "subject": subject, "body": body}
 
     return emails
+
 
 def main():
     """
@@ -106,7 +113,7 @@ def main():
             to_email = email_data["to_email"]
             subject = email_data["subject"]
             body = email_data["body"]
-            
+
             # Replace placeholder domain - this is now handled by generate_outreach_emails.py
             # body = body.replace("https://localleads.dev", DOMAIN_URL)
 
@@ -123,6 +130,7 @@ def main():
         print(f"An unexpected error occurred: {e}")
 
     print("Outreach email campaign script finished.")
+
 
 if __name__ == "__main__":
     main()

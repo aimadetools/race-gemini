@@ -2,10 +2,13 @@ import os
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
+
 def fix_blog_image_paths(base_path="."):
     blog_dir = os.path.join(base_path, "blog")
-    blog_image_dir_prefix = "/images/blog/" # This is the desired absolute prefix for all blog images
-    
+    blog_image_dir_prefix = (
+        "/images/blog/"  # This is the desired absolute prefix for all blog images
+    )
+
     if not os.path.isdir(blog_dir):
         print(f"Blog directory not found: {blog_dir}")
         return
@@ -16,37 +19,46 @@ def fix_blog_image_paths(base_path="."):
         for file in files:
             if file.endswith(".html"):
                 html_file_path = os.path.join(root, file)
-                
-                with open(html_file_path, 'r', encoding='utf-8', errors='ignore') as f:
+
+                with open(html_file_path, "r", encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
-                soup = BeautifulSoup(content, 'html.parser')
+                soup = BeautifulSoup(content, "html.parser")
                 modified = False
 
                 # Check <img> tags for src
-                for img_tag in soup.find_all('img', src=True):
-                    original_src = img_tag['src']
-                    
+                for img_tag in soup.find_all("img", src=True):
+                    original_src = img_tag["src"]
+
                     # Clean up malformed attributes if present
-                    if 'class' in img_tag.attrs and isinstance(img_tag['class'], list):
-                        img_tag['class'] = [c for c in img_tag['class'] if c not in ['generated-placeholder', '']]
-                        if not img_tag['class']:
-                            del img_tag['class']
-                    
-                    if "post" in original_src or "banner" in original_src: # Broaden to catch banner images
+                    if "class" in img_tag.attrs and isinstance(img_tag["class"], list):
+                        img_tag["class"] = [
+                            c
+                            for c in img_tag["class"]
+                            if c not in ["generated-placeholder", ""]
+                        ]
+                        if not img_tag["class"]:
+                            del img_tag["class"]
+
+                    if (
+                        "post" in original_src or "banner" in original_src
+                    ):  # Broaden to catch banner images
                         image_filename = os.path.basename(urlparse(original_src).path)
                         correct_src = blog_image_dir_prefix + image_filename
 
                         if original_src != correct_src:
-                            img_tag['src'] = correct_src
+                            img_tag["src"] = correct_src
                             modified = True
 
                 # Check <source> tags for srcset within <picture>
-                for source_tag in soup.find_all('source', srcset=True):
-                    original_srcset = source_tag['srcset']
+                for source_tag in soup.find_all("source", srcset=True):
+                    original_srcset = source_tag["srcset"]
                     # Split srcset by comma to handle multiple URLs and then clean up each
-                    srcset_parts = [part.strip().split(' ')[0] for part in original_srcset.split(',')] # Get only the URL part
-                    
+                    srcset_parts = [
+                        part.strip().split(" ")[0]
+                        for part in original_srcset.split(",")
+                    ]  # Get only the URL part
+
                     new_srcset_parts = []
                     srcset_modified = False
 
@@ -72,31 +84,40 @@ def fix_blog_image_paths(base_path="."):
 
                         # A more robust approach for srcset:
                         reconstructed_srcset = []
-                        original_parts_with_descriptors = [part.strip() for part in original_srcset.split(',')]
+                        original_parts_with_descriptors = [
+                            part.strip() for part in original_srcset.split(",")
+                        ]
 
-                        for i, part_with_descriptor in enumerate(original_parts_with_descriptors):
-                            url_only = part_with_descriptor.split(' ')[0]
-                            descriptor = ' '.join(part_with_descriptor.split(' ')[1:])
+                        for i, part_with_descriptor in enumerate(
+                            original_parts_with_descriptors
+                        ):
+                            url_only = part_with_descriptor.split(" ")[0]
+                            descriptor = " ".join(part_with_descriptor.split(" ")[1:])
 
                             if "post" in url_only or "banner" in url_only:
-                                image_filename = os.path.basename(urlparse(url_only).path)
+                                image_filename = os.path.basename(
+                                    urlparse(url_only).path
+                                )
                                 correct_src_url = blog_image_dir_prefix + image_filename
                                 if url_only != correct_src_url:
-                                    reconstructed_srcset.append(f"{correct_src_url} {descriptor}".strip())
+                                    reconstructed_srcset.append(
+                                        f"{correct_src_url} {descriptor}".strip()
+                                    )
                                     modified = True
                                 else:
                                     reconstructed_srcset.append(part_with_descriptor)
                             else:
                                 reconstructed_srcset.append(part_with_descriptor)
 
-                        source_tag['srcset'] = ', '.join(reconstructed_srcset)
+                        source_tag["srcset"] = ", ".join(reconstructed_srcset)
 
                 if modified:
-                    with open(html_file_path, 'w', encoding='utf-8') as f:
+                    with open(html_file_path, "w", encoding="utf-8") as f:
                         f.write(str(soup))
                     print(f"Updated: {html_file_path}")
 
     print("Image path fixing complete.")
+
 
 if __name__ == "__main__":
     fix_blog_image_paths()

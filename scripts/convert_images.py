@@ -3,6 +3,7 @@ from PIL import Image, UnidentifiedImageError
 
 LOG_FILE = "image_conversion.log"
 
+
 def convert_images_to_webp(directory):
     with open(LOG_FILE, "w") as log_file:
         for root, _, files in os.walk(directory):
@@ -21,7 +22,10 @@ def convert_images_to_webp(directory):
                     except UnidentifiedImageError:
                         log_file.write("Cannot identify image file: " + jpg_path + "\n")
                     except Exception as e:
-                        log_file.write("Could not convert " + jpg_path + ": " + str(e) + "\n")
+                        log_file.write(
+                            "Could not convert " + jpg_path + ": " + str(e) + "\n"
+                        )
+
 
 if __name__ == "__main__":
     convert_images_to_webp("images")

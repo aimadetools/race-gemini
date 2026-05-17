@@ -1,6 +1,6 @@
-
 import os
 import re
+
 
 def extract_broken_image_paths(log_output):
     """
@@ -11,7 +11,7 @@ def extract_broken_image_paths(log_output):
     # Example: Broken image (img src): ../images/blog/post255.webp -> images/blog/post255.webp (from blog/post255.html)
     # Example: Broken image (img src): /images/blog/hair-salon-seo.webp -> /home/race/race-gemini/images/blog/hair-salon-seo.webp (from blog/post219.html)
     # We want the resolved path, which is the second part of the '->'
-    
+
     # Updated regex to specifically capture the target path after '->'
     pattern = re.compile(r"Broken image \(img src\): .*? -> (.*?) \(from .*?\)")
 
@@ -22,17 +22,20 @@ def extract_broken_image_paths(log_output):
             full_path = match.group(1).strip()
             # Remove the project root path if present to get the relative path from project root
             # Assuming project root is /home/race/race-gemini/
-            project_root = os.getcwd() # Get current working directory dynamically
+            project_root = os.getcwd()  # Get current working directory dynamically
             if full_path.startswith(project_root):
-                relative_path = full_path[len(project_root) + 1:] # +1 for the leading slash
+                relative_path = full_path[
+                    len(project_root) + 1 :
+                ]  # +1 for the leading slash
             else:
                 relative_path = full_path
-            
-            # Ensure it's a file path, not a directory. 
+
+            # Ensure it's a file path, not a directory.
             # Some paths might be just image/blog which we want to ignore.
             if os.path.basename(relative_path) != "":
                 broken_image_paths.add(relative_path)
     return sorted(list(broken_image_paths))
+
 
 def create_placeholder_images(image_paths):
     """
@@ -42,18 +45,18 @@ def create_placeholder_images(image_paths):
     for path in image_paths:
         # Construct the full path
         full_path = os.path.join(os.getcwd(), path)
-        
+
         # Ensure the directory exists
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
-        
+
         # Create a placeholder file if it doesn't exist
         if not os.path.exists(full_path):
-            with open(full_path, 'w', encoding='utf-8') as f:
-                f.write(f"# Placeholder for missing image: {os.path.basename(path)}
-")
+            with open(full_path, "w", encoding="utf-8") as f:
+                f.write(f"# Placeholder for missing image: {os.path.basename(path)}\n")
             print(f"Created placeholder: {full_path}")
             created_count += 1
     return created_count
+
 
 def main():
     # Output from the last check_internal_links.py run (manually copied)
@@ -483,6 +486,7 @@ In file: blog/post237.html
     print(f"Found {len(broken_image_paths)} unique broken image paths.")
     created_count = create_placeholder_images(broken_image_paths)
     print(f"Created {created_count} placeholder image files.")
+
 
 if __name__ == "__main__":
     main()

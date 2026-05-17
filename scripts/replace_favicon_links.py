@@ -1,21 +1,22 @@
 import os
 
+
 def replace_string_in_file(file_path, old_string, new_string):
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
-        
+
         if old_string in content:
             updated_content = content.replace(old_string, new_string)
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
             print(f"Replaced string in {file_path}")
         else:
             # Check for minified version
-            minified_old_string = old_string.replace(' />', '/>')
+            minified_old_string = old_string.replace(" />", "/>")
             if minified_old_string in content:
                 updated_content = content.replace(minified_old_string, new_string)
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(updated_content)
                 print(f"Replaced minified string in {file_path}")
             else:
@@ -480,7 +481,7 @@ if __name__ == "__main__":
         "/home/race/race-gemini/es/index.html",
         "/home/race/race-gemini/es/generate.html",
         "/home/race/race-gemini/es/pricing.html",
-        "/home/race/race-gemini/about.html"
+        "/home/race/race-gemini/about.html",
     ]
 
     old_favicon_link = '<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>'

@@ -2,10 +2,11 @@ import os
 import re
 import glob
 
+
 def generate_blog_index():
     blog_dir = "blog/"
     blog_index_file = "blog.html"
-    
+
     blog_dir = "blog/"
     blog_index_file = "blog.html"
 
@@ -131,47 +132,69 @@ def generate_blog_index():
 
     # Read the existing blog.html to get header/footer content, if it exists
     if os.path.exists(blog_index_file):
-        with open(blog_index_file, 'r', encoding='utf-8') as f:
+        with open(blog_index_file, "r", encoding="utf-8") as f:
             blog_html_template = f.read()
 
         main_start_tag = '<main class="container blog-list">'
-        main_end_tag = '</main>'
+        main_end_tag = "</main>"
 
         if main_start_tag in blog_html_template and main_end_tag in blog_html_template:
-            pre_main_content = blog_html_template.split(main_start_tag, 1)[0] + main_start_tag
-            post_main_content = main_end_tag + blog_html_template.split(main_end_tag, 1)[1]
+            pre_main_content = (
+                blog_html_template.split(main_start_tag, 1)[0] + main_start_tag
+            )
+            post_main_content = (
+                main_end_tag + blog_html_template.split(main_end_tag, 1)[1]
+            )
         else:
-            print(f"Warning: '{main_start_tag}' or '{main_end_tag}' not found in '{blog_index_file}'. Using full fallback.")
+            print(
+                f"Warning: '{main_start_tag}' or '{main_end_tag}' not found in '{blog_index_file}'. Using full fallback."
+            )
     else:
-        print(f"Info: '{blog_index_file}' not found. Creating a new one with fallback content.")
-
-
+        print(
+            f"Info: '{blog_index_file}' not found. Creating a new one with fallback content."
+        )
 
     blog_posts_data = []
 
     # Find all blog post HTML files
     for filepath in glob.glob(os.path.join(blog_dir, "post*.html")):
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
 
             # Extract title
-            title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE | re.DOTALL)
+            title_match = re.search(
+                r"<title>(.*?)</title>", content, re.IGNORECASE | re.DOTALL
+            )
             title = title_match.group(1).strip() if title_match else "Untitled Post"
 
             # Extract description
-            description_match = re.search(r'<meta name="description" content="(.*?)"', content, re.IGNORECASE | re.DOTALL)
-            description = description_match.group(1).strip() if description_match else "No description available."
-            
+            description_match = re.search(
+                r'<meta name="description" content="(.*?)"',
+                content,
+                re.IGNORECASE | re.DOTALL,
+            )
+            description = (
+                description_match.group(1).strip()
+                if description_match
+                else "No description available."
+            )
+
             # Extract post number for sorting
-            post_number_match = re.search(r'post(\d+)\.html', os.path.basename(filepath), re.IGNORECASE)
+            post_number_match = re.search(
+                r"post(\d+)\.html", os.path.basename(filepath), re.IGNORECASE
+            )
             post_number = int(post_number_match.group(1)) if post_number_match else 0
 
-            blog_posts_data.append({
-                "title": title,
-                "description": description,
-                "link": os.path.join("/", filepath), # Ensure link is absolute from root
-                "post_number": post_number
-            })
+            blog_posts_data.append(
+                {
+                    "title": title,
+                    "description": description,
+                    "link": os.path.join(
+                        "/", filepath
+                    ),  # Ensure link is absolute from root
+                    "post_number": post_number,
+                }
+            )
 
     # Sort posts by post number in descending order
     blog_posts_data.sort(key=lambda x: x["post_number"], reverse=True)
@@ -179,7 +202,11 @@ def generate_blog_index():
     # Generate HTML for the blog post list
     blog_list_html = []
     for post in blog_posts_data:
-        description_html = f'<p>{post["description"]}</p>' if post["description"] != "No description available." else ""
+        description_html = (
+            f'<p>{post["description"]}</p>'
+            if post["description"] != "No description available."
+            else ""
+        )
         blog_list_html.append(f"""
         <article class="blog-preview">
             <h2><a href="{post["link"]}">{post["title"]}</a></h2>
@@ -192,10 +219,11 @@ def generate_blog_index():
     generated_blog_list_content = "\n".join(blog_list_html)
     final_blog_html = pre_main_content + generated_blog_list_content + post_main_content
 
-    with open(blog_index_file, 'w', encoding='utf-8') as f:
+    with open(blog_index_file, "w", encoding="utf-8") as f:
         f.write(final_blog_html)
-    
+
     print(f"Generated {len(blog_posts_data)} blog post entries in {blog_index_file}")
+
 
 if __name__ == "__main__":
     generate_blog_index()

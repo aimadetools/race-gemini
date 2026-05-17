@@ -1,6 +1,7 @@
 import unittest
 from audits_v2.readability import audit
 
+
 class TestAuditReadability(unittest.TestCase):
 
     def test_easily_readable_content(self):
@@ -17,11 +18,15 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        result = audit(html_content, 'html_content')
-        self.assertIsNotNone(result['results']["flesch_reading_ease"])
-        self.assertIsNotNone(result['results']["flesch_kincaid_grade"])
-        self.assertGreaterEqual(result['results']["flesch_reading_ease"], 80) # Very easy to read
-        self.assertLessEqual(result['results']["flesch_kincaid_grade"], 5)    # Grade 5 or lower
+        result = audit(html_content, "html_content")
+        self.assertIsNotNone(result["results"]["flesch_reading_ease"])
+        self.assertIsNotNone(result["results"]["flesch_kincaid_grade"])
+        self.assertGreaterEqual(
+            result["results"]["flesch_reading_ease"], 80
+        )  # Very easy to read
+        self.assertLessEqual(
+            result["results"]["flesch_kincaid_grade"], 5
+        )  # Grade 5 or lower
         self.assertEqual(len(result["issues"]), 0)
 
     def test_difficult_readable_content(self):
@@ -42,11 +47,15 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        result = audit(html_content, 'html_content')
-        self.assertIsNotNone(result['results']["flesch_reading_ease"])
-        self.assertIsNotNone(result['results']["flesch_kincaid_grade"])
-        self.assertLessEqual(result['results']["flesch_reading_ease"], 30) # Very difficult to read
-        self.assertGreaterEqual(result['results']["flesch_kincaid_grade"], 12) # High school or college level
+        result = audit(html_content, "html_content")
+        self.assertIsNotNone(result["results"]["flesch_reading_ease"])
+        self.assertIsNotNone(result["results"]["flesch_kincaid_grade"])
+        self.assertLessEqual(
+            result["results"]["flesch_reading_ease"], 30
+        )  # Very difficult to read
+        self.assertGreaterEqual(
+            result["results"]["flesch_kincaid_grade"], 12
+        )  # High school or college level
         self.assertEqual(len(result["issues"]), 0)
 
     def test_no_main_content_container(self):
@@ -60,11 +69,12 @@ class TestAuditReadability(unittest.TestCase):
         </body>
         </html>
         """
-        result = audit(html_content, 'html_content')
-        self.assertIsNone(result['results']["flesch_reading_ease"])
-        self.assertIsNone(result['results']["flesch_kincaid_grade"])
+        result = audit(html_content, "html_content")
+        self.assertIsNone(result["results"]["flesch_reading_ease"])
+        self.assertIsNone(result["results"]["flesch_kincaid_grade"])
         self.assertEqual(len(result["issues"]), 1)
         self.assertEqual(result["issues"][0]["type"], "WARNING")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

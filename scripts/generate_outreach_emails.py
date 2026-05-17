@@ -1,7 +1,8 @@
 import csv
 import os
 import re
-from extract_emails import clean_email # Import clean_email
+from extract_emails import clean_email  # Import clean_email
+
 
 def slugify(text):
     """
@@ -10,13 +11,17 @@ def slugify(text):
     'slugify' package with lower: true, strict: true.
     """
     text = text.lower()
-    text = re.sub(r'[^a-z0-9\s-]', '', text) # Remove non-alphanumeric characters except spaces and hyphens
-    text = re.sub(r'\s+', '-', text) # Replace spaces with a single hyphen
-    text = text.strip('-') # Remove leading/trailing hyphens
+    text = re.sub(
+        r"[^a-z0-9\s-]", "", text
+    )  # Remove non-alphanumeric characters except spaces and hyphens
+    text = re.sub(r"\s+", "-", text)  # Replace spaces with a single hyphen
+    text = text.strip("-")  # Remove leading/trailing hyphens
     return text
 
 
-def generate_email_content(template, business_name, city, sample_pages_link, booking_link, my_name, my_website):
+def generate_email_content(
+    template, business_name, city, sample_pages_link, booking_link, my_name, my_website
+):
     """
     Generates an email content from a template and provided data.
     """
@@ -28,10 +33,11 @@ def generate_email_content(template, business_name, city, sample_pages_link, boo
     email_body = email_body.replace("[My Website]", my_website)
     return email_body
 
+
 def main():
-    input_csv_path = 'outreach-targets.csv'
-    template_path = 'outreach-email-template.md'
-    output_txt_path = 'generated_outreach_emails.txt'
+    input_csv_path = "outreach-targets.csv"
+    template_path = "outreach-email-template.md"
+    output_txt_path = "generated_outreach_emails.txt"
 
     # Static values for placeholders - These need to be confirmed by human
     MY_NAME = "Gemini CLI Agent"
@@ -39,7 +45,7 @@ def main():
     MY_WEBSITE = "https://www.localseogen.com"
 
     try:
-        with open(template_path, 'r', encoding='utf-8') as f:
+        with open(template_path, "r", encoding="utf-8") as f:
             email_template = f.read()
     except FileNotFoundError:
         print(f"Error: Email template not found at {template_path}")
@@ -49,39 +55,45 @@ def main():
     skipped_count = 0
     total_prospects = 0
 
-    with open(input_csv_path, mode='r', encoding='utf-8') as infile:
+    with open(input_csv_path, mode="r", encoding="utf-8") as infile:
         # Filter out comment lines and empty lines
-        filtered_lines = (line for line in infile if not line.strip().startswith('#') and line.strip())
-        
+        filtered_lines = (
+            line for line in infile if not line.strip().startswith("#") and line.strip()
+        )
+
         reader = csv.DictReader(filtered_lines)
-        
+
         for i, row in enumerate(reader):
             total_prospects += 1
-            business_name = row.get('Business Name', '').strip()
-            website = row.get('Website', '').strip()
-            email = row.get('Email', '').strip()
-            city = row.get('City', '').strip()
-            service_type = row.get('Service Type', '').strip()
+            business_name = row.get("Business Name", "").strip()
+            website = row.get("Website", "").strip()
+            email = row.get("Email", "").strip()
+            city = row.get("City", "").strip()
+            service_type = row.get("Service Type", "").strip()
 
             cleaned_email = clean_email(email)
             if not cleaned_email:
-                print(f"Skipping {business_name} (row {i+1}): Invalid or empty email address '{email}'.")
+                print(
+                    f"Skipping {business_name} (row {i+1}): Invalid or empty email address '{email}'."
+                )
                 skipped_count += 1
                 continue
-            email = cleaned_email # Use the cleaned email for generation
-            
+            email = cleaned_email  # Use the cleaned email for generation
+
             if not website:
                 print(f"Skipping {business_name} (row {i+1}): No website provided.")
                 skipped_count += 1
                 continue
-            
+
             if not city:
                 print(f"Skipping {business_name} (row {i+1}): No city provided.")
                 skipped_count += 1
                 continue
-            
+
             if not service_type:
-                print(f"Skipping {business_name} (row {i+1}): No service type provided.")
+                print(
+                    f"Skipping {business_name} (row {i+1}): No service type provided."
+                )
                 skipped_count += 1
                 continue
 
@@ -92,31 +104,48 @@ def main():
             dynamic_sample_pages_link = f"https://www.localseogen.com/generated-seo-pages/{service_slug}-in-{city_slug}.html"
 
             # Assuming the Subject is the first line of the template
-            subject_line = email_template.split('\n', 1)[0]
-            subject = generate_email_content(subject_line, business_name, city, dynamic_sample_pages_link, BOOKING_LINK, MY_NAME, MY_WEBSITE).replace("Subject: ", "")
-            
-            body = generate_email_content(email_template.split('\n', 1)[1], business_name, city, dynamic_sample_pages_link, BOOKING_LINK, MY_NAME, MY_WEBSITE)
+            subject_line = email_template.split("\n", 1)[0]
+            subject = generate_email_content(
+                subject_line,
+                business_name,
+                city,
+                dynamic_sample_pages_link,
+                BOOKING_LINK,
+                MY_NAME,
+                MY_WEBSITE,
+            ).replace("Subject: ", "")
 
-            generated_emails.append(
-                f"""--- EMAIL FOR: {business_name} in {city} ---
+            body = generate_email_content(
+                email_template.split("\n", 1)[1],
+                business_name,
+                city,
+                dynamic_sample_pages_link,
+                BOOKING_LINK,
+                MY_NAME,
+                MY_WEBSITE,
+            )
+
+            generated_emails.append(f"""--- EMAIL FOR: {business_name} in {city} ---
 To: {email}
 Subject: {subject}
 
 {body}
 {'='*80}
 
-"""
-            )
+""")
 
     if generated_emails:
-        with open(output_txt_path, 'w', encoding='utf-8') as outfile:
+        with open(output_txt_path, "w", encoding="utf-8") as outfile:
             outfile.writelines(generated_emails)
-        print(f"\nSuccessfully generated {len(generated_emails)} emails to {output_txt_path}")
+        print(
+            f"\nSuccessfully generated {len(generated_emails)} emails to {output_txt_path}"
+        )
     else:
         print("\nNo emails were generated.")
 
     print(f"Total prospects in CSV: {total_prospects}")
     print(f"Emails skipped: {skipped_count}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

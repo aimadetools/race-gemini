@@ -1,7 +1,7 @@
-
 import os
 import glob
 from bs4 import BeautifulSoup
+
 
 def consolidate_js_in_html(filepath):
     """
@@ -9,47 +9,75 @@ def consolidate_js_in_html(filepath):
     Removes old individual script tags and adds a single reference to /js/app.js.
     """
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-        soup = BeautifulSoup(content, 'html.parser')
-        
+        soup = BeautifulSoup(content, "html.parser")
+
         changed = False
 
         # List of old script files that should be removed
         old_scripts = [
-            'ab-test-home.js', 'ab-test-home.min.js',
-            'ab-test.js', 'ab-test.min.js',
-            'accordion.js', 'accordion.min.js',
-            'admin-agency-inquiries.js', 'admin-agency-inquiries.min.js',
-            'agency-billing.js', 'agency-billing.min.js',
-            'agency-form.js', 'agency-form.min.js',
-            'agency-subscription.js', 'agency-subscription.min.js',
-            'analytics.js', 'analytics.min.js',
-            'app.js', 'app.unminified.js',
-            'audit-form.js', 'audit-form.min.js',
-            'audit.js', 'audit.min.js',
-            'blog-search.js', 'blog-search.min.js',
-            'contact.js', 'contact.min.js',
-            'dashboard.js', 'dashboard.min.js',
-            'generate-form-validation.js', 'generate-form-validation.min.js',
-            'generate.js', 'generate.min.js',
-            'mobile-swipe-nav.js', 'mobile-swipe-nav.min.js',
-            'referral-form.js', 'referral-form.min.js',
-            'social-share.js', 'social-share.min.js',
-            'stripe-checkout.js', 'stripe-checkout.min.js',
-            'testimonial-carousel.js', 'testimonial-carousel.min.js',
-            'tracking.js', 'tracking.min.js',
-            'nav.js', 'nav.min.js',
-            'scroll-to-top.js', 'scroll-to-top.min.js',
-            'cookie-consent.js', 'cookie-consent.min.js',
-            'sticky-cta.js', 'sticky-cta.min.js',
-            'main.js', 'main.min.js',
-            'auth.js', 'auth.min.js'
+            "ab-test-home.js",
+            "ab-test-home.min.js",
+            "ab-test.js",
+            "ab-test.min.js",
+            "accordion.js",
+            "accordion.min.js",
+            "admin-agency-inquiries.js",
+            "admin-agency-inquiries.min.js",
+            "agency-billing.js",
+            "agency-billing.min.js",
+            "agency-form.js",
+            "agency-form.min.js",
+            "agency-subscription.js",
+            "agency-subscription.min.js",
+            "analytics.js",
+            "analytics.min.js",
+            "app.js",
+            "app.unminified.js",
+            "audit-form.js",
+            "audit-form.min.js",
+            "audit.js",
+            "audit.min.js",
+            "blog-search.js",
+            "blog-search.min.js",
+            "contact.js",
+            "contact.min.js",
+            "dashboard.js",
+            "dashboard.min.js",
+            "generate-form-validation.js",
+            "generate-form-validation.min.js",
+            "generate.js",
+            "generate.min.js",
+            "mobile-swipe-nav.js",
+            "mobile-swipe-nav.min.js",
+            "referral-form.js",
+            "referral-form.min.js",
+            "social-share.js",
+            "social-share.min.js",
+            "stripe-checkout.js",
+            "stripe-checkout.min.js",
+            "testimonial-carousel.js",
+            "testimonial-carousel.min.js",
+            "tracking.js",
+            "tracking.min.js",
+            "nav.js",
+            "nav.min.js",
+            "scroll-to-top.js",
+            "scroll-to-top.min.js",
+            "cookie-consent.js",
+            "cookie-consent.min.js",
+            "sticky-cta.js",
+            "sticky-cta.min.js",
+            "main.js",
+            "main.min.js",
+            "auth.js",
+            "auth.min.js",
         ]
 
         # Find and remove old script references
-        for script_tag in soup.find_all('script', src=True):
-            src = script_tag['src']
+        for script_tag in soup.find_all("script", src=True):
+            src = script_tag["src"]
             # Check for absolute paths from root /js/ or relative paths ../js/
             if any(f"/{s}" in src or f"../{s}" in src for s in old_scripts):
                 script_tag.decompose()
@@ -58,26 +86,29 @@ def consolidate_js_in_html(filepath):
 
         # Check if /js/app.min.js is already present
         app_min_js_present = False
-        for script_tag in soup.find_all('script', src=True):
-            if '/js/app.min.js' in script_tag['src']:
+        for script_tag in soup.find_all("script", src=True):
+            if "/js/app.min.js" in script_tag["src"]:
                 app_min_js_present = True
                 break
-        
+
         # Add /js/app.min.js if not already present
         if not app_min_js_present:
             # Find a good place to insert, e.g., before </body>
             body_tag = soup.body
             if body_tag:
-                new_script_tag = soup.new_tag('script', src='/js/app.min.js', defer=True)
+                new_script_tag = soup.new_tag(
+                    "script", src="/js/app.min.js", defer=True
+                )
                 body_tag.append(new_script_tag)
                 changed = True
                 print(f"  Added /js/app.min.js")
             else:
-                print(f"  Warning: No <body> tag found in {filepath}, cannot add /js/app.min.js")
-
+                print(
+                    f"  Warning: No <body> tag found in {filepath}, cannot add /js/app.min.js"
+                )
 
         if changed:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with open(filepath, "w", encoding="utf-8") as f:
                 f.write(soup.prettify())
             return True
         return False
@@ -86,10 +117,11 @@ def consolidate_js_in_html(filepath):
         print(f"Error processing {filepath}: {e}")
         return False
 
+
 def main():
-    html_files = glob.glob('**/*.html', recursive=True)
+    html_files = glob.glob("**/*.html", recursive=True)
     updated_files_count = 0
-    
+
     # Exclude files in node_modules
     html_files = [f for f in html_files if "node_modules" not in f]
 
@@ -101,6 +133,7 @@ def main():
             updated_files_count += 1
 
     print(f"\nFinished. Updated {updated_files_count} files.")
+
 
 if __name__ == "__main__":
     main()

@@ -2,6 +2,7 @@ import unittest
 import os
 from audits_v2.h2_h3_tags import audit
 
+
 class TestAuditH2H3Tags(unittest.TestCase):
 
     def setUp(self):
@@ -17,7 +18,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
 
     def _create_html_file(self, filename, content):
         filepath = os.path.join(self.test_dir, filename)
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
         return filepath
 
@@ -37,7 +38,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("correct.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 2)
         self.assertEqual(result["num_h3_tags"], 3)
         self.assertEqual(len(result["issues"]), 0)
@@ -56,7 +57,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("empty_h2.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -74,7 +75,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("empty_h3.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -92,7 +93,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("h3_before_h2.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 1)
@@ -109,7 +110,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("no_h_tags.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 0)
         self.assertEqual(result["num_h3_tags"], 0)
         self.assertEqual(len(result["issues"]), 1)
@@ -128,7 +129,7 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("multiple_h3_before_h2.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 2)
         self.assertEqual(len(result["issues"]), 1)
@@ -145,10 +146,11 @@ class TestAuditH2H3Tags(unittest.TestCase):
         </html>
         """
         filepath = self._create_html_file("no_h1_correct_h2_h3.html", html_content)
-        result = audit(filepath, 'file_path')
+        result = audit(filepath, "file_path")
         self.assertEqual(result["num_h2_tags"], 1)
         self.assertEqual(result["num_h3_tags"], 1)
         self.assertEqual(len(result["issues"]), 0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

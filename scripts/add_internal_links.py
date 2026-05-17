@@ -1,12 +1,16 @@
-
 import os
 import re
 from pathlib import Path
 
+
 def get_blog_posts():
     """Gets a sorted list of blog post files."""
-    posts = sorted(Path("blog").glob("post*.html"), key=lambda p: int(re.search(r"post(\d+)\.html", str(p)).group(1)))
+    posts = sorted(
+        Path("blog").glob("post*.html"),
+        key=lambda p: int(re.search(r"post(\d+)\.html", str(p)).group(1)),
+    )
     return posts
+
 
 def get_post_title(post_path):
     """Reads a post and extracts the title from the <title> tag."""
@@ -19,6 +23,7 @@ def get_post_title(post_path):
         title = title.split("|")[0].strip()
         return title
     return None
+
 
 def add_internal_link(current_post_path, next_post_path):
     """Adds an internal link from the current post to the next post."""
@@ -83,7 +88,11 @@ def add_internal_link(current_post_path, next_post_path):
      Read our next article on <a href="{next_post_path.name}">{next_post_title}</a>.
     </p>
 """
-        new_content = current_post_content[:insertion_point] + link_to_add + current_post_content[insertion_point:]
+        new_content = (
+            current_post_content[:insertion_point]
+            + link_to_add
+            + current_post_content[insertion_point:]
+        )
 
         current_post_path.write_text(new_content)
         print(f"Added link to {next_post_path.name} in {current_post_path.name}")
@@ -96,8 +105,9 @@ def main():
     posts = get_blog_posts()
     for i in range(len(posts) - 1):
         current_post = posts[i]
-        next_post = posts[i+1]
+        next_post = posts[i + 1]
         add_internal_link(current_post, next_post)
+
 
 if __name__ == "__main__":
     main()

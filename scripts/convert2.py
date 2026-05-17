@@ -1,6 +1,7 @@
 import os
 from PIL import Image, UnidentifiedImageError
 
+
 def convert_images_to_webp(directory):
     for root, _, files in os.walk(directory):
         for file in files:
@@ -19,6 +20,7 @@ def convert_images_to_webp(directory):
                     print(f"Cannot identify image file: {jpg_path}")
                 except Exception as e:
                     print(f"Could not convert {jpg_path}: {e}")
+
 
 if __name__ == "__main__":
     convert_images_to_webp("images")

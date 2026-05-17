@@ -4,26 +4,41 @@ import json
 from urllib.parse import urljoin
 import os
 
+
 class LocalBusinessSchemaAudit:
     """
     Audits a given URL for the presence and correctness of Schema.org LocalBusiness markup (JSON-LD).
     It checks for essential properties and common subtypes to ensure comprehensive validation.
     """
+
     OPENCAGE_API_URL = "https://api.opencagedata.com/geocode/v1/json"
 
     def __init__(self, url):
         self.url = url
         self.findings = []
         self.essential_properties = [
-            "name", "address", "telephone", "url", "hasMap",
-            "openingHoursSpecification", "priceRange", "geo", "image"
+            "name",
+            "address",
+            "telephone",
+            "url",
+            "hasMap",
+            "openingHoursSpecification",
+            "priceRange",
+            "geo",
+            "image",
         ]
         self.address_sub_properties = [
-            "streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"
+            "streetAddress",
+            "addressLocality",
+            "addressRegion",
+            "postalCode",
+            "addressCountry",
         ]
         self.opencage_api_key = os.getenv("OPENCAGE_API_KEY")
         if not self.opencage_api_key:
-            self.findings.append("Warning: OPENCAGE_API_KEY environment variable not set. Geocoding validation will be skipped.")
+            self.findings.append(
+                "Warning: OPENCAGE_API_KEY environment variable not set. Geocoding validation will be skipped."
+            )
 
     def _geocode_address(self, address_str):
         """
@@ -39,35 +54,41 @@ class LocalBusinessSchemaAudit:
             return None, None
 
         params = {
-            'q': address_str,
-            'key': self.opencage_api_key,
-            'language': 'en',
-            'pretty': 1,
-            'no_annotations': 1
+            "q": address_str,
+            "key": self.opencage_api_key,
+            "language": "en",
+            "pretty": 1,
+            "no_annotations": 1,
         }
         try:
             response = requests.get(self.OPENCAGE_API_URL, params=params, timeout=5)
             response.raise_for_status()
             data = response.json()
-            
-            if data and data['results']:
-                geometry = data['results'][0]['geometry']
-                return geometry['lat'], geometry['lng']
+
+            if data and data["results"]:
+                geometry = data["results"][0]["geometry"]
+                return geometry["lat"], geometry["lng"]
             else:
-                self.findings.append(f"Geocoding failed for address '{address_str}': No results found.")
+                self.findings.append(
+                    f"Geocoding failed for address '{address_str}': No results found."
+                )
                 return None, None
         except requests.exceptions.RequestException as e:
-            self.findings.append(f"OpenCage API request failed for '{address_str}': {e}")
+            self.findings.append(
+                f"OpenCage API request failed for '{address_str}': {e}"
+            )
             return None, None
         except Exception as e:
-            self.findings.append(f"Error parsing OpenCage API response for '{address_str}': {e}")
+            self.findings.append(
+                f"Error parsing OpenCage API response for '{address_str}': {e}"
+            )
             return None, None
 
     def run_audit(self):
         """
         Executes the Local Business Schema audit by fetching the URL content,
         parsing JSON-LD scripts, and validating the schema.
-        
+
         Returns:
             list: A list of findings, including errors, schema presence, and validation results.
         """
@@ -75,13 +96,13 @@ class LocalBusinessSchemaAudit:
         try:
             response = requests.get(self.url, timeout=10)
             response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, "html.parser")
             self._check_local_business_schema(soup)
         except requests.exceptions.RequestException as e:
             self.findings.append(f"Error fetching URL {self.url}: {e}")
         except Exception as e:
             self.findings.append(f"An unexpected error occurred: {e}")
-        
+
         return self.findings
 
     def _check_local_business_schema(self, soup):
@@ -91,17 +112,18 @@ class LocalBusinessSchemaAudit:
         Args:
             soup (BeautifulSoup): The BeautifulSoup object of the parsed HTML.
         """
-        json_ld_scripts = soup.find_all('script', type='application/ld+json')
-        
+        json_ld_scripts = soup.find_all("script", type="application/ld+json")
+
         if not json_ld_scripts:
             self.findings.append("No JSON-LD schema.org markup found on the page.")
-        
 
         found_local_business_schema_in_scripts = False
         for script in json_ld_scripts:
             try:
                 if not script.string or not script.string.strip():
-                    self.findings.append(f"Invalid JSON-LD found: Script tag content is empty or contains only whitespace. Script element: {script.prettify().strip()[:200]}...")
+                    self.findings.append(
+                        f"Invalid JSON-LD found: Script tag content is empty or contains only whitespace. Script element: {script.prettify().strip()[:200]}..."
+                    )
                     continue
 
                 data = json.loads(script.string)
@@ -109,25 +131,38 @@ class LocalBusinessSchemaAudit:
                 schemas = [data] if not isinstance(data, list) else data
 
                 for schema in schemas:
-                    schema_type = schema.get('@type')
+                    schema_type = schema.get("@type")
                     # Check if it's LocalBusiness or a type that inherits from LocalBusiness
-                    if schema_type and (schema_type == "LocalBusiness" or
-                                        (isinstance(schema_type, list) and "LocalBusiness" in schema_type) or
-                                        self._is_sub_type_of_local_business(schema_type)):
-                        
+                    if schema_type and (
+                        schema_type == "LocalBusiness"
+                        or (
+                            isinstance(schema_type, list)
+                            and "LocalBusiness" in schema_type
+                        )
+                        or self._is_sub_type_of_local_business(schema_type)
+                    ):
+
                         found_local_business_schema_in_scripts = True
-                        self.findings.append(f"Found LocalBusiness schema of type: {schema_type}")
+                        self.findings.append(
+                            f"Found LocalBusiness schema of type: {schema_type}"
+                        )
                         self._validate_local_business_properties(schema)
 
             except json.JSONDecodeError as e:
-                self.findings.append(f"Invalid JSON-LD found: {e}. Script content: {script.string[:100]}...")
+                self.findings.append(
+                    f"Invalid JSON-LD found: {e}. Script content: {script.string[:100]}..."
+                )
             except Exception as e:
-                self.findings.append(f"Error processing JSON-LD script: {e}. Script content: {script.string[:100]}...")
-        
+                self.findings.append(
+                    f"Error processing JSON-LD script: {e}. Script content: {script.string[:100]}..."
+                )
+
         # After checking all scripts, if no LocalBusiness schema was found in any scripts,
         # add the general finding.
         if not found_local_business_schema_in_scripts:
-            self.findings.append("No schema of '@type': 'LocalBusiness' or its subtypes found on the page.")
+            self.findings.append(
+                "No schema of '@type': 'LocalBusiness' or its subtypes found on the page."
+            )
 
     def _is_sub_type_of_local_business(self, schema_type):
         """
@@ -144,19 +179,42 @@ class LocalBusinessSchemaAudit:
         # For now, manually list some common ones that directly inherit.
         # This is a simplification; a real check would involve recursive lookup in schema.org.
         local_business_sub_types = [
-            "AnimalShelter", "AutomotiveBusiness", "ChildCare", "Dentist", "DryCleaningOrLaundry",
-            "EmergencyService", "FinancialService", "FoodEstablishment", "GovernmentOffice",
-            "HealthAndBeautyBusiness", "HomeAndConstructionBusiness", "InternetCafe",
-            "LegalService", "Library", "LodgingBusiness", "MedicalBusiness", "NailSalon",
-            "NightlifeActivity", "NotaryService", "PerformingArtsTheater", "PetStore",
-            "ProfessionalService", "RadioStation", "RealEstateAgent", "RecyclingCenter",
-            "SelfStorage", "ShoppingCenter", "SportsActivityLocation", "Store", "TelevisionStation",
-            "TouristInformationCenter", "TravelAgency"
+            "AnimalShelter",
+            "AutomotiveBusiness",
+            "ChildCare",
+            "Dentist",
+            "DryCleaningOrLaundry",
+            "EmergencyService",
+            "FinancialService",
+            "FoodEstablishment",
+            "GovernmentOffice",
+            "HealthAndBeautyBusiness",
+            "HomeAndConstructionBusiness",
+            "InternetCafe",
+            "LegalService",
+            "Library",
+            "LodgingBusiness",
+            "MedicalBusiness",
+            "NailSalon",
+            "NightlifeActivity",
+            "NotaryService",
+            "PerformingArtsTheater",
+            "PetStore",
+            "ProfessionalService",
+            "RadioStation",
+            "RealEstateAgent",
+            "RecyclingCenter",
+            "SelfStorage",
+            "ShoppingCenter",
+            "SportsActivityLocation",
+            "Store",
+            "TelevisionStation",
+            "TouristInformationCenter",
+            "TravelAgency",
         ]
         if isinstance(schema_type, list):
             return any(t in local_business_sub_types for t in schema_type)
         return schema_type in local_business_sub_types
-
 
     def _validate_local_business_properties(self, schema):
         """
@@ -168,13 +226,15 @@ class LocalBusinessSchemaAudit:
         """
         address_obj = None
         address_str_parts = []
-        
+
         for prop in self.essential_properties:
             # Check if property is entirely missing or explicitly None
             if prop not in schema or schema[prop] is None:
-                self.findings.append(f"Missing essential LocalBusiness property: '{prop}'")
+                self.findings.append(
+                    f"Missing essential LocalBusiness property: '{prop}'"
+                )
                 continue
-            
+
             value = schema[prop]
 
             if prop == "address":
@@ -182,30 +242,42 @@ class LocalBusinessSchemaAudit:
                 if isinstance(address_obj, dict):
                     # Build address string for geocoding
                     for sub_prop in self.address_sub_properties:
-                        if sub_prop not in address_obj or address_obj[sub_prop] is None or (isinstance(address_obj[sub_prop], str) and not address_obj[sub_prop].strip()):
-                            self.findings.append(f"Missing or empty essential address sub-property: 'address.{sub_prop}'")
+                        if (
+                            sub_prop not in address_obj
+                            or address_obj[sub_prop] is None
+                            or (
+                                isinstance(address_obj[sub_prop], str)
+                                and not address_obj[sub_prop].strip()
+                            )
+                        ):
+                            self.findings.append(
+                                f"Missing or empty essential address sub-property: 'address.{sub_prop}'"
+                            )
                         else:
                             address_str_parts.append(str(address_obj[sub_prop]))
-                    
+
                 else:
-                    self.findings.append(f"Address property is not a structured object: '{address_obj}'")
-            
+                    self.findings.append(
+                        f"Address property is not a structured object: '{address_obj}'"
+                    )
+
             elif prop == "geo":
                 # Geo property validation will happen after potential geocoding
-                pass # Already handled
-            
+                pass  # Already handled
+
             elif prop == "openingHoursSpecification":
                 # It's valid to have an empty list for openingHoursSpecification, or a list of specific hours.
                 # Just check if it's a list.
                 if not isinstance(value, list):
                     self.findings.append(f"Invalid type for '{prop}', expected a list.")
-            
+
             elif isinstance(value, str):
                 # For strings, if present but empty after stripping whitespace, it's considered empty.
                 if not value.strip():
-                    self.findings.append(f"Empty essential LocalBusiness property: '{prop}'")
+                    self.findings.append(
+                        f"Empty essential LocalBusiness property: '{prop}'"
+                    )
             # For other types (like numbers, booleans, non-empty lists/dicts), if present, they are considered valid.
-
 
         # Geocode the address if available and API key is set
         geocoded_lat, geocoded_lon = None, None
@@ -214,46 +286,65 @@ class LocalBusinessSchemaAudit:
             self.findings.append(f"Attempting to geocode address: {address_str}")
             geocoded_lat, geocoded_lon = self._geocode_address(address_str)
             if geocoded_lat is not None and geocoded_lon is not None:
-                self.findings.append(f"Address geocoded by OpenCage: Lat={geocoded_lat}, Lon={geocoded_lon}")
+                self.findings.append(
+                    f"Address geocoded by OpenCage: Lat={geocoded_lat}, Lon={geocoded_lon}"
+                )
         elif address_obj and not address_str_parts:
-             self.findings.append(f"Could not construct a full address string for geocoding from schema address: {address_obj}")
-        
+            self.findings.append(
+                f"Could not construct a full address string for geocoding from schema address: {address_obj}"
+            )
+
         # Now validate the geo property and compare if geocoding was successful
         if "geo" in schema and schema["geo"]:
             geo = schema["geo"]
-            if not isinstance(geo, dict) or "latitude" not in geo or "longitude" not in geo:
-                self.findings.append(f"Missing or malformed 'geo' property (requires 'latitude' and 'longitude').")
+            if (
+                not isinstance(geo, dict)
+                or "latitude" not in geo
+                or "longitude" not in geo
+            ):
+                self.findings.append(
+                    f"Missing or malformed 'geo' property (requires 'latitude' and 'longitude')."
+                )
             else:
                 try:
                     schema_lat = float(geo["latitude"])
                     schema_lon = float(geo["longitude"])
-                    self.findings.append(f"Schema geo coordinates: Lat={schema_lat}, Lon={schema_lon}")
+                    self.findings.append(
+                        f"Schema geo coordinates: Lat={schema_lat}, Lon={schema_lon}"
+                    )
 
                     # Compare with geocoded coordinates if available
                     if geocoded_lat is not None and geocoded_lon is not None:
                         # Use a small tolerance for floating point comparison
-                        tolerance = 0.001 
-                        if abs(schema_lat - geocoded_lat) > tolerance or abs(schema_lon - geocoded_lon) > tolerance:
-                            self.findings.append(f"Geo coordinates mismatch! "
-                                                 f"Schema: ({schema_lat}, {schema_lon}), "
-                                                 f"Geocoded: ({geocoded_lat}, {geocoded_lon}). "
-                                                 f"This may indicate inaccurate schema data.")
+                        tolerance = 0.001
+                        if (
+                            abs(schema_lat - geocoded_lat) > tolerance
+                            or abs(schema_lon - geocoded_lon) > tolerance
+                        ):
+                            self.findings.append(
+                                f"Geo coordinates mismatch! "
+                                f"Schema: ({schema_lat}, {schema_lon}), "
+                                f"Geocoded: ({geocoded_lat}, {geocoded_lon}). "
+                                f"This may indicate inaccurate schema data."
+                            )
                         else:
-                            self.findings.append(f"Schema geo coordinates match geocoded coordinates within tolerance.")
+                            self.findings.append(
+                                f"Schema geo coordinates match geocoded coordinates within tolerance."
+                            )
 
                 except ValueError:
-                    self.findings.append(f"Invalid 'latitude' or 'longitude' format in 'geo' property (must be numeric).")
-
-
+                    self.findings.append(
+                        f"Invalid 'latitude' or 'longitude' format in 'geo' property (must be numeric)."
+                    )
 
 
 if __name__ == "__main__":
     # Example usage:
     # Test with a URL that has LocalBusiness schema
-    test_url_good = "https://www.example.com/local-business-with-schema" # Placeholder for a URL with LocalBusiness schema
+    test_url_good = "https://www.example.com/local-business-with-schema"  # Placeholder for a URL with LocalBusiness schema
     # test_url_good = "https://schema.org/LocalBusiness" # This one describes schema.org but doesn't have an example.
     # A real example would be a local business website with proper JSON-LD
-    test_url_no_schema = "https://www.example.com" # Should not have schema
+    test_url_no_schema = "https://www.example.com"  # Should not have schema
 
     # print("
     # --- Auditing a URL expected to have LocalBusiness schema ---")

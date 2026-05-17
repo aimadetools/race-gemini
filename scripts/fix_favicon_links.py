@@ -1,23 +1,46 @@
 import os
 import re
 
+
 def replace_multiple_favicon_links(file_path):
     replacements = [
         # SVG favicon (non-minified and minified)
-        ('<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>', '<link href="/images/favicon.png" rel="icon" type="image/png"/>'),
-        ('<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>'.replace(' />', '/>'), '<link href="/images/favicon.png" rel="icon" type="image/png"/>'),
-        
+        (
+            '<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>',
+            '<link href="/images/favicon.png" rel="icon" type="image/png"/>',
+        ),
+        (
+            '<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>'.replace(
+                " />", "/>"
+            ),
+            '<link href="/images/favicon.png" rel="icon" type="image/png"/>',
+        ),
         # ICO favicon with relative path (non-minified and minified)
-        ('<link href="../favicon.ico" rel="icon" type="image/x-icon"/>', '<link href="../images/favicon.png" rel="icon" type="image/png"/>'),
-        ('<link href="../favicon.ico" rel="icon" type="image/x-icon"/>'.replace(' />', '/>'), '<link href="../images/favicon.png" rel="icon" type="image/png"/>'),
-
+        (
+            '<link href="../favicon.ico" rel="icon" type="image/x-icon"/>',
+            '<link href="../images/favicon.png" rel="icon" type="image/png"/>',
+        ),
+        (
+            '<link href="../favicon.ico" rel="icon" type="image/x-icon"/>'.replace(
+                " />", "/>"
+            ),
+            '<link href="../images/favicon.png" rel="icon" type="image/png"/>',
+        ),
         # ICO favicon with absolute path (non-minified and minified)
-        ('<link href="/favicon.ico" rel="icon" type="image/x-icon"/>', '<link href="/images/favicon.png" rel="icon" type="image/png"/>'),
-        ('<link href="/favicon.ico" rel="icon" type="image/x-icon"/>'.replace(' />', '/>'), '<link href="/images/favicon.png" rel="icon" type="image/png"/>'),
+        (
+            '<link href="/favicon.ico" rel="icon" type="image/x-icon"/>',
+            '<link href="/images/favicon.png" rel="icon" type="image/png"/>',
+        ),
+        (
+            '<link href="/favicon.ico" rel="icon" type="image/x-icon"/>'.replace(
+                " />", "/>"
+            ),
+            '<link href="/images/favicon.png" rel="icon" type="image/png"/>',
+        ),
     ]
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -25,7 +48,7 @@ def replace_multiple_favicon_links(file_path):
             content = content.replace(old_string, new_string)
 
         if content != original_content:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             print(f"Updated favicon links in {file_path}")
         else:
@@ -33,6 +56,7 @@ def replace_multiple_favicon_links(file_path):
 
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
+
 
 if __name__ == "__main__":
     # Get all HTML files
