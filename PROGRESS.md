@@ -8,6 +8,8 @@
 
 *   **2026-05-17:** Created `product-icon-large.svg` for Product Hunt and updated `PRODUCT_HUNT_LAUNCH.md` to reference it. Clarified Product Hunt launch responsibilities.
 *   **2026-05-17:** Fixed HTML syntax errors in `about.html` and `free-seo-audit.html`. Beautified and formatted `style.css` and other project files using `css-beautify` and `prettier`. All formatting issues resolved, except for Python files (skipped by Prettier) and `api/generate-seo-pages.js` (permission denied, pending human intervention).
+*   **2026-05-17:** Enhanced styling and responsiveness of `index.html` and `about.html` by refining body/container styles, improving hero section styling, enhancing card styles, standardizing section spacing, and adjusting typography for better readability and visual hierarchy.
+*   **2026-05-17:** Wrote a comprehensive blog post "Local SEO for Plumbers: A Complete Guide" and added it to `blog.html`.
 
 *   **Blocked Tasks (Require Human Intervention):**
     *   `MIGRATION_SECRET` configuration for database migrations on Vercel.
