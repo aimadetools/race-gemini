@@ -6,6 +6,8 @@
 
 ## Current Status:
 
+*   **2026-05-17:** Formatted all Python files using the `black` formatter and fixed two `UnterminatedString` syntax errors in `scripts/audit_image_sizes.py` and `scripts/generate_placeholder_images.py`.
+
 *   **2026-05-17:** Created `product-icon-large.svg` for Product Hunt and updated `PRODUCT_HUNT_LAUNCH.md` to reference it. Clarified Product Hunt launch responsibilities.
 *   **2026-05-17:** Fixed HTML syntax errors in `about.html` and `free-seo-audit.html`. Beautified and formatted `style.css` and other project files using `css-beautify` and `prettier`. All formatting issues resolved, except for Python files (skipped by Prettier) and `api/generate-seo-pages.js` (permission denied, pending human intervention).
 *   **2026-05-17:** Enhanced styling and responsiveness of `index.html` and `about.html` by refining body/container styles, improving hero section styling, enhancing card styles, standardizing section spacing, and adjusting typography for better readability and visual hierarchy.
