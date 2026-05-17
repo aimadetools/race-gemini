@@ -8,11 +8,7 @@ jest.mock('@sendgrid/mail', () => ({
   send: jest.fn(),
 }));
 
-// Mock logger functions
-jest.mock('../../lib/logger', () => ({
-  logError: jest.fn(),
-  logInfo: jest.fn(),
-}));
+
 
 // Mock micro.json to return req.body directly, as node-mocks-http does not provide the body as a stream
 jest.mock('micro', () => ({
@@ -27,17 +23,16 @@ describe('api/execute-outreach', () => {
 
   beforeEach(() => {
     // Reset mocks before each test
-    const logger = require('../../lib/logger');
-    logError = logger.logError;
-    logInfo = logger.logInfo;
     sgMail.setApiKey.mockClear();
     sgMail.send.mockClear();
-    logError.mockClear();
-    logInfo.mockClear();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    console.error.mockClear();
+    console.log.mockClear();
 
     // Set SendGrid API Key and From Email for testing
     process.env.SENDGRID_API_KEY = 'SG.test_api_key';
-    process.env.FROM_EMAIL = 'test@example.com';
+    process.env.SENDGRID_FROM_EMAIL = 'test@example.com';
 
     // Initialize mock request and response
     req = httpMocks.createRequest({
@@ -61,7 +56,9 @@ describe('api/execute-outreach', () => {
   afterEach(() => {
     // Clean up environment variables
     delete process.env.SENDGRID_API_KEY;
-    delete process.env.FROM_EMAIL;
+    delete process.env.SENDGRID_FROM_EMAIL;
+    console.error.mockRestore();
+    console.log.mockRestore();
   });
 
   test('should send emails successfully with valid input', async () => {
@@ -85,8 +82,8 @@ describe('api/execute-outreach', () => {
       html: '<p>Test HTML</p>',
       message_id: 'test-message-id',
     });
-    expect(logInfo).toHaveBeenCalledWith(expect.stringContaining('Email sent successfully to recipient@example.com'), 'sendEmails');
-    expect(logError).not.toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('"level":"INFO","context":"sendEmails","message":"Email sent successfully to recipient@example.com"'));
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   test('should return 400 if no emails array is provided', async () => {
@@ -102,8 +99,8 @@ describe('api/execute-outreach', () => {
       details: [],
     });
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logInfo).not.toHaveBeenCalled(); // No logInfo for this client-side error
-    expect(logError).not.toHaveBeenCalled();
+    expect(console.log).not.toHaveBeenCalled(); // No logInfo for this client-side error
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   test('should return 400 if emails array is empty', async () => {
@@ -119,8 +116,8 @@ describe('api/execute-outreach', () => {
       details: [],
     });
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logInfo).not.toHaveBeenCalled(); // No logInfo for this client-side error
-    expect(logError).not.toHaveBeenCalled();
+    expect(console.log).not.toHaveBeenCalled(); // No logInfo for this client-side error
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   test('should handle SendGrid API Key missing', async () => {
@@ -134,21 +131,21 @@ describe('api/execute-outreach', () => {
     expect(JSON.parse(res._getData()).details[0].reason).toBe('SendGrid API Key is missing'); // Added JSON.parse
     expect(sgMail.setApiKey).not.toHaveBeenCalled();
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('"level":"ERROR","context":"sendEmails","errorName":"Error","errorMessage":"SendGrid API Key is missing"'));
   });
 
   test('should handle FROM_EMAIL missing', async () => {
-    delete process.env.FROM_EMAIL; // Simulate missing FROM_EMAIL
+    process.env.SENDGRID_FROM_EMAIL = ''; // Simulate missing FROM_EMAIL by setting to empty string
 
     await executeOutreach(req, res);
 
     expect(res._getStatusCode()).toBe(200); // Still 200 because the error is handled internally by sendEmails
     expect(JSON.parse(res._getData()).sent).toBe(0); // Added JSON.parse
     expect(JSON.parse(res._getData()).failed).toBe(1); // Added JSON.parse
-    expect(JSON.parse(res._getData()).details[0].reason).toBe('FROM_EMAIL is missing'); // Added JSON.parse
+    expect(JSON.parse(res._getData()).details[0].reason).toBe('SENDGRID_FROM_EMAIL is missing'); // Corrected reason string
     expect(sgMail.setApiKey).toHaveBeenCalledWith('SG.test_api_key'); // API key is present, so setApiKey is called
     expect(sgMail.send).not.toHaveBeenCalled();
-    expect(logError).toHaveBeenCalledWith(expect.any(Error), 'sendEmails');
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('"level":"ERROR","context":"sendEmails","errorName":"Error","errorMessage":"SENDGRID_FROM_EMAIL is missing"'));
   });
 
   test('should report failed emails when SendGrid send fails', async () => {
@@ -169,7 +166,7 @@ describe('api/execute-outreach', () => {
       }],
     });
     expect(sgMail.send).toHaveBeenCalledTimes(1);
-    expect(logError).toHaveBeenCalledWith(expect.any(Error), expect.stringContaining('Error sending email to recipient@example.com'));
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('"level":"ERROR","context":"Error sending email to recipient@example.com. Response: N/A","errorName":"Error","errorMessage":"SendGrid error"'));
   });
 
   test('should handle multiple emails with mixed success and failure', async () => {
@@ -191,7 +188,7 @@ describe('api/execute-outreach', () => {
     expect(JSON.parse(res._getData()).failed).toBe(1); // Added JSON.parse
     expect(JSON.parse(res._getData()).details[0].to).toBe('fail1@example.com'); // Added JSON.parse
     expect(sgMail.send).toHaveBeenCalledTimes(3);
-    expect(logError).toHaveBeenCalledTimes(1); // Only for the failed email
+    expect(console.error).toHaveBeenCalledTimes(1); // Only for the failed email
   });
 
   test('should correctly report failed emails with invalid recipient addresses', async () => {
@@ -225,6 +222,6 @@ describe('api/execute-outreach', () => {
       ])
     );
     expect(sgMail.send).toHaveBeenCalledTimes(3); // All emails attempted to send
-    expect(logError).toHaveBeenCalledWith(expect.any(Error), expect.stringContaining('Error sending email to invalid-recipient'));
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('"level":"ERROR","context":"Error sending email to invalid-recipient. Response: N/A","errorName":"Error","errorMessage":"Invalid recipient address"'));
   });
 });
