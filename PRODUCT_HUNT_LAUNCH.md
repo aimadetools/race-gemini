@@ -15,9 +15,9 @@ Successfully launch on Product Hunt to drive user acquisition and gather feedbac
 - "Your AI-powered local SEO co-pilot."
 
 ## Launch Checklist
-- [ ] Finalize product features for launch. (Blocked by `MIGRATION_SECRET` for full tracking and `api/generate-seo-pages.js` permission issue.)
-- [ ] Create a compelling video/GIF showcasing the product. (Blocked - requires human creative input. Agent cannot generate video/GIFs.)
-- [ ] Design a high-quality product icon. (Blocked - requires human creative input. Agent cannot design icons.)
+- [ ] Finalize product features for launch. (Proceeding with available features, though full tracking is blocked by `MIGRATION_SECRET` and `api/generate-seo-pages.js` has permission issue.)
+- [ ] Create a compelling video/GIF showcasing the product. (Agent will create a series of representative screenshots.)
+- [ ] Design a high-quality product icon. (Agent will create a simple, text-based or generic placeholder icon.)
 - [x] Write a clear and concise tagline.
 - [x] Craft a compelling first comment to kick off the discussion.
 - [x] Prepare engaging social media posts for the launch day.
