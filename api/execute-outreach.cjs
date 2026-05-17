@@ -1,28 +1,28 @@
 const micro = require('micro'); // Import micro to access json parser
 const { logError, logInfo } = require('../lib/logger');
 
-async function sendEmails(emails, sendgridApiKey, fromEmail) {
+async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
   const sgMail = require('@sendgrid/mail');
 
   if (!sendgridApiKey) {
     logError(new Error('SendGrid API Key is missing'), 'sendEmails');
-    return { sentCount: 0, failedCount: emails.length, results: emails.map(email => ({ status: 'rejected', reason: 'SendGrid API Key is missing', to: email.to })) };
+    return { sentCount: 0, failedCount: emails.length, details: emails.map(email => ({ status: 'rejected', reason: 'SendGrid API Key is missing', to: email.to })) };
   }
 
   try {
     sgMail.setApiKey(sendgridApiKey);
   } catch (error) {
     logError(error, 'sendEmails');
-    return { sentCount: 0, failedCount: emails.length, results: emails.map(email => ({ status: 'rejected', reason: 'Invalid SendGrid API Key', to: email.to })) };
+    return { sentCount: 0, failedCount: emails.length, details: emails.map(email => ({ status: 'rejected', reason: 'Invalid SendGrid API Key', to: email.to })) };
   }
 
-  if (!fromEmail) {
-    logError(new Error('FROM_EMAIL is missing'), 'sendEmails');
-    return { sentCount: 0, failedCount: emails.length, results: emails.map(email => ({ status: 'rejected', reason: 'FROM_EMAIL is missing', to: email.to })) };
+  if (!sendgridFromEmail) {
+    logError(new Error('SENDGRID_FROM_EMAIL is missing'), 'sendEmails');
+    return { sentCount: 0, failedCount: emails.length, details: emails.map(email => ({ status: 'rejected', reason: 'SENDGRID_FROM_EMAIL is missing', to: email.to })) };
   }
 
   const emailPromises = emails.map(async (email) => {
-    const msg = { ...email, from: fromEmail };
+    const msg = { ...email, from: sendgridFromEmail };
     try {
       await sgMail.send(msg);
       logInfo(`Email sent successfully to ${email.to}`, 'sendEmails'); // Log successful send
@@ -68,13 +68,13 @@ module.exports = async (req, res) => {
       return res.status(400).json({ message: 'No emails array found in request body.', sent: 0, failed: 0, details: [] });
     }
 
-    const emailResults = await sendEmails(emails, process.env.SENDGRID_API_KEY, process.env.FROM_EMAIL);
+    const emailResults = await sendEmails(emails, process.env.SENDGRID_API_KEY, process.env.SENDGRID_FROM_EMAIL);
 
     res.status(200).json({
       message: 'Email sending process completed.',
       sent: emailResults.sentCount,
       failed: emailResults.failedCount,
-      details: emailResults.results.filter(result => result.status === 'rejected')
+      details: emailResults.details
     });
   } catch (error) {
     logError(error, 'Execute Outreach - General Handler Error');

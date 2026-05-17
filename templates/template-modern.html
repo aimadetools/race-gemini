@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{businessName}} - {{service}} in {{town}}</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        .hero { background-color: {{primaryColor}}; color: white; padding: 4rem 2rem; text-align: center; }
+        .hero h1 { font-size: 2.5rem; margin: 0; }
+        .container { max-width: 960px; margin: 2rem auto; padding: 0 2rem; }
+        .content { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .footer { text-align: center; padding: 2rem; font-size: 0.9rem; color: #777; }
+        {{localBusinessSchema}}
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>{{businessName}}</h1>
+        <p>Your Trusted {{service}} Experts in {{town}}</p>
+    </header>
+    <main class="container">
+        <section class="content">
+            <h2>Our {{service}} Services</h2>
+            <div class="ai-content">
+                {{ai_content}}
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2026 {{businessName}}. All rights reserved.</p>
+    </footer>
+</body>
+</html>
