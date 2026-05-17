@@ -1,5 +1,6 @@
 import { pool, query } from './index.js';
 import { createUserEventsTable } from './create-user-events-table.js';
+import { createSeoPagesTable } from './migrations/create-seo-pages-table.js'; // New import
 
 export async function initializeDatabase() {
   let client;
@@ -32,6 +33,9 @@ export async function initializeDatabase() {
 
     // Create the user_events table
     await createUserEventsTable();
+
+    // Create the seo_pages table
+    await createSeoPagesTable(); // New call
 
     // Add index to email for faster lookups
     await client.query(`

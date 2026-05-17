@@ -1,8 +1,8 @@
 const micro = require('micro'); // Import micro to access json parser
 const { logError, logInfo } = require('../lib/logger');
+const sgMail = require('@sendgrid/mail'); // Moved to top
 
 async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
-  const sgMail = require('@sendgrid/mail');
 
   if (!sendgridApiKey) {
     logError(new Error('SendGrid API Key is missing'), 'sendEmails');
