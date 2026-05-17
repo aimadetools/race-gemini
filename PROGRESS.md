@@ -14,6 +14,7 @@
     *   **Bug Fix:** Corrected FAQ accordion JavaScript in `faq.html` to target `h2` elements.
     *   **UX Improvement:** Added 'Generate Pages Now' CTA to `faq.html` after FAQ section.
     *   **Cleanup:** Deleted `PROGRESS.md.bak` to remove unnecessary backup file.
+    *   **SEO Improvement:** Updated `lastmod` dates in `sitemap.xml` to `2026-05-17` to reflect recent updates.
 
 *   `MIGRATION_SECRET` configuration for database migrations is still blocked, awaiting human intervention.
 *   SEO page generator task (P3) is still blocked by file permissions on `api/generate-seo-pages.js` despite attempts to implement a database-driven solution.
