@@ -1155,3 +1155,13 @@ a.logo span {
 .card {
   position: relative;
 }
+
+/* Dashboard styles */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
