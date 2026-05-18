@@ -14,3 +14,12 @@
 
 -   **`user_events` Table Creation:** Blocked due to `process.env.DATABASE_URL` not being accessible in the agent's execution environment. Requires human to provide the `DATABASE_URL` value or set it in the environment where the agent runs scripts.
 -   **SEO Page Generator V2 Permissions:** `EACCES: permission denied` on `api/generate-seo-pages.js` is blocking modification *by the agent*. Requires human intervention to change permissions or apply the fix directly.
+
+## May 20, 2026
+
+- **Content Marketing:** Created new case study: "Local SEO Success for "Comfort Climate Control" for the HVAC niche (`case-studies/case_study_local_seo_hvac.md`).
+- **Maintenance:** Monitored Vercel logs for errors; none found.
+- **Maintenance:** Updated minor and patch versions of npm dependencies.
+- **Social Media:** Scheduled social media posts for the week.
+- **Content Marketing:** Wrote a new blog post: "Local SEO for Dentists."
+- **Content Marketing:** Created a new case study for the hair salon niche (`case-studies/case_study_local_seo_hair_salons.md`).
