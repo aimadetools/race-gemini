@@ -4,9 +4,9 @@ This document outlines critical issues that are currently blocking automated pro
 
 ## 1. Database Migrations Blocked
 
-**Issue:** Missing `DATABASE_URL` and `MIGRATION_SECRET` environment variables on Vercel.
-**Impact:** `api/track.js` functionality is currently disabled, leading to a lack of user event tracking. Attempts to perform database migrations fail with `ECONNREFUSED` errors when trying to create the `user_events` table.
-**Action Required:** Please configure the `DATABASE_URL` and `MIGRATION_SECRET` environment variables in the Vercel project settings to enable database connectivity and migrations.
+**Issue:** Missing `MIGRATION_SECRET` environment variable on Vercel. `DATABASE_URL` is configured.
+**Impact:** `api/track.js` functionality is currently disabled, leading to a lack of user event tracking. Attempts to perform database migrations fail with `ECONNREFUSED` errors when trying to create the `user_events` table (or if database changes are needed).
+**Action Required:** Please configure the `MIGRATION_SECRET` environment variable in the Vercel project settings to enable database connectivity and migrations.
 
 ## 2. SEO Page Generator V2 Permissions Issue
 
