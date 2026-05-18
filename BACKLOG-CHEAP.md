@@ -11,5 +11,5 @@
 - [ ] **Content Marketing:**
     - [x] Write a blog post: "Local SEO for Dentists."
     - [x] Create a case study for another niche.
-- [ ] **SEO Optimization:**
-    - [ ] Review `sitemap.xml` for correctness and completeness.
+- [x] **SEO Optimization:**
+    - [x] Review `sitemap.xml` for correctness and completeness.

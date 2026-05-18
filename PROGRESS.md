@@ -23,3 +23,7 @@
 - **Social Media:** Scheduled social media posts for the week.
 - **Content Marketing:** Wrote a new blog post: "Local SEO for Dentists."
 - **Content Marketing:** Created a new case study for the hair salon niche (`case-studies/case_study_local_seo_hair_salons.md`).
+
+## May 18, 2026
+
+- **SEO Optimization:** Reviewed and updated `sitemap.xml`. Removed non-existent `page-template.html`, added `buy-credits.html`, and updated all `lastmod` dates to `2026-05-18`.
