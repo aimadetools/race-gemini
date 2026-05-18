@@ -32,6 +32,8 @@
 - **Verified `run_local_migration.js` configuration (May 20, 2026):**
     - Confirmed `run_local_migration.js` is correctly configured to rely on `process.env.DATABASE_URL` via `db/index.js`.
     - `user_events` table creation remains blocked by the missing `DATABASE_URL` environment variable.
+- **Content Marketing - Blog Post Outline (May 20, 2026):**
+    - Created a new blog post outline for "Local SEO for Hair Salons" in `blog/local_seo_for_hair_salons.html`.
 
 ## Current Blocked Tasks
 

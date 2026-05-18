@@ -6,7 +6,7 @@
     - [x] **P2: Generate Product Hunt Launch Screenshots.** (Blocking launch asset - **Completed by creating descriptions in `product_hunt_screenshots_description.md`**)
 
 - [ ] **Content Marketing:**
-    - [ ] Write a blog post about local SEO for a new niche.
+    - [x] Write a blog post about local SEO for a new niche.
     - [ ] Create a case study based on a successful user story.
 - [ ] **Maintenance:**
     - [ ] Monitor Vercel logs for new errors.
