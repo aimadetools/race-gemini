@@ -1,4 +1,15 @@
 # Backlog - Cheap Tasks
 
-- ✅ **Completed Tasks:** Core infrastructure setup, dashboard enhancements, checkout flow, analytics, API stability fixes, content improvements, UI/UX refinements, resolved git permission issue, fixed ES module syntax error in api/assign.js.
-- [ ] **Blocked: Human Intervention Required:** See `HELP-REQUEST.md` for details on configuring `DATABASE_URL`, `MIGRATION_SECRET` and resolving file permissions for `api/generate-seo-pages.js`.
+- [ ] **Critical Fixes & Setup:**
+    - [ ] **P1: Create `user_events` table in the database.** (Blocking user tracking - **Blocked: Awaiting `DATABASE_URL` from human**)
+    - [ ] **P1: Investigate and resolve `EACCES` permission denied for `api/generate-seo-pages.js`.** (Blocking core feature - **Blocked: Agent lacks write permission to file. Awaiting human intervention.**)
+    - [x] **P2: Generate Product Hunt Launch Screenshots.** (Blocking launch asset - **Completed by creating descriptions in `product_hunt_screenshots_description.md`**)
+
+- [ ] **Content Marketing:**
+    - [ ] Write a blog post about local SEO for a new niche.
+    - [ ] Create a case study based on a successful user story.
+- [ ] **Maintenance:**
+    - [ ] Monitor Vercel logs for new errors.
+    - [ ] Keep dependencies up to date.
+- [ ] **Social Media:**
+    - [ ] Schedule social media posts for the week.
