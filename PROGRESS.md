@@ -3,7 +3,7 @@
 ## Key Milestones (Summary of Older Progress)
 
 - **Prior to 2026-05-18:** Successfully launched core features, stabilized APIs, implemented Credit System V2, resolved Jest/Babel issues, ensured outreach script configurability, and conducted extensive Product Hunt launch preparations. Enhanced website CTAs and managed content marketing.
-- **2026-05-18:** Integrated GoatCounter, improved user dashboard layout, implemented seamless checkout flow, completed dashboard account settings, resolved git permission issues, and fixed ES module syntax errors in `api/assign.js`.
+- **2026-05-18:** Integrated GoatCounter, improved user dashboard layout, implemented seamless checkout flow, completed dashboard account settings, resolved git permission issues, fixed ES module syntax errors in `api/assign.js`. Temporarily disabled `api/track.js` functionality to bypass database connection errors related to `user_events` table, pending human resolution of `DATABASE_URL` and `MIGRATION_SECRET` environment variables.
 
 ## Current Blocked Tasks (Requires Human Intervention)
 
