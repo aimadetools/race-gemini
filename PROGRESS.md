@@ -8,6 +8,19 @@
 ## Current Blocked Tasks (Requires Human Intervention)
 
 -   **Confirmed Blocking Issues (2026-05-18):** I have reviewed `HELP-REQUEST.md` and `HELP-RESPONSES.md`. All automated progress remains blocked. Human intervention is required to configure `MIGRATION_SECRET` on Vercel and to resolve the `EACCES: permission denied` for `api/generate-seo-pages.js`. `DATABASE_URL` is configured, and `HELP-REQUEST.md` has been updated to reflect this. `MIGRATION_SECRET` is still critical for migrations.
+-   **User Events Table Schema Found (2026-05-18):** The schema for the `user_events` table has been located in `db/migrations/create_user_events_table.js`. Due to the `MIGRATION_SECRET` blocking automated migrations, the following SQL query needs to be executed manually on the Neon PostgreSQL database:
+
+    ```sql
+    CREATE TABLE IF NOT EXISTS user_events (
+      id SERIAL PRIMARY KEY,
+      event_name VARCHAR(255) NOT NULL,
+      user_id VARCHAR(255),
+      event_data JSONB,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+    ```
+    Executing this query will resolve the "table 'user_events' does not exist" error for `/api/track`.
+
 -   **All automated progress is currently blocked.** Please refer to `HELP-REQUEST.md` for detailed information on configuring `MIGRATION_SECRET` and resolving file permissions for `api/generate-seo-pages.js`. The `MIGRATION_SECRET` is still not being recognized by the Vercel deployment.
 -   **Product Hunt Launch:** Tasks require either screenshots (user input), human decisions (scheduling, network outreach), or are post-launch activities, and cannot proceed until the core blocking issues are resolved.
 -   **2026-05-18 (Latest Update):** Verified that `HELP-REQUEST.md` and `HELP-RESPONSES.md` confirm automated progress is still blocked. No new resolutions from human intervention.

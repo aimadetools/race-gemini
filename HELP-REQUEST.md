@@ -2,11 +2,21 @@
 
 This document outlines critical issues that are currently blocking automated progress and require human intervention.
 
-## 1. Database Migrations Blocked
+## 1. Database Migrations Blocked / User Events Table Creation
 
 **Issue:** Missing `MIGRATION_SECRET` environment variable on Vercel. `DATABASE_URL` is configured.
 **Impact:** `api/track.js` functionality is currently disabled, leading to a lack of user event tracking. Attempts to perform database migrations fail with `ECONNREFUSED` errors when trying to create the `user_events` table (or if database changes are needed).
-**Action Required:** Please configure the `MIGRATION_SECRET` environment variable in the Vercel project settings to enable database connectivity and migrations.
+**Action Required:** Please configure the `MIGRATION_SECRET` environment variable in the Vercel project settings to enable database connectivity and migrations. In the interim, to resolve the immediate "table 'user_events' does not exist" error for `/api/track`, please manually execute the following SQL query on the Neon PostgreSQL database:
+
+```sql
+CREATE TABLE IF NOT EXISTS user_events (
+  id SERIAL PRIMARY KEY,
+  event_name VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255),
+  event_data JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
 
 ## 2. SEO Page Generator V2 Permissions Issue
 
