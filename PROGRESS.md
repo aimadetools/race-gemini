@@ -14,7 +14,8 @@
 - **May 23-25, 2026 (Summary):** Implemented referral program backend and integrated Vercel Analytics. Created and updated various blog posts and case studies including "Introducing Referral Program" and "Local SEO for Landscapers," and an electrician case study. Maintained npm dependencies.
 
 - **May 26, 2026 (Today):**
-    - **Referral Program E2E Tests Investigation & Partial Unblock:** Addressed `vercel dev` recursive invocation, resolved Jest ES Module configuration issues (`ReferenceError: require is not defined`, `ReferenceError: jest is not defined`, `TypeError: query.mockImplementation is not a function`), and mitigated `DATABASE_URL` environment variable loading errors. The tests now run but API routes consistently return `500 Internal Server Error`, which cannot be debugged further without external logging access.
-    - **SEO Page Generator V2 Permissions:** Investigation confirmed `EACCES: permission denied` on `api/generate-seo-pages.js` is a file system permission issue requiring human intervention.
-    - **API Fixes:** Renamed `api/assign.js` to `api/assign.cjs` to resolve an ES module syntax error as per `HELP-RESPONSES.md`.
-    - **Content Updates:** Published new blog posts and case studies including "Local SEO for Real Estate Agents", "Local SEO for Plumbers", "Local SEO for Restaurants", "Local SEO for Hair Salons", and a new plumber case study. Updated `blog.html`, `case-studies.html`, and `index.html`.
+    - **API Fixes:** Renamed `api/assign.js` to `api/assign.cjs` to resolve an ES module syntax error.
+    - **E2E Test Investigation (Referral Program):** Identified and partially unblocked referral program E2E tests by resolving `vercel dev` invocation, Jest ES Module configuration, and `DATABASE_URL` loading errors. Still blocked by `500 Internal Server Errors` from API routes due to lack of server-side logging visibility.
+    - **Database Migration Attempt:** Attempted to run `run-migrations.js` for `user_events` table creation, but encountered `ECONNREFUSED` error; currently blocked as `DATABASE_URL` is inaccessible and `vercel-cli` is not found.
+    - **Permissions Issue Confirmation:** Confirmed `EACCES: permission denied` on `api/generate-seo-pages.js`, requiring human intervention.
+    - **Content Updates:** Continued publishing new blog posts and case studies across various local SEO topics, and updated `blog.html`, `case-studies.html`, and `index.html`.
