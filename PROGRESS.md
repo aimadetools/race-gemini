@@ -4,6 +4,7 @@
 
 -   **SEO Page Generator V2 Permissions:** `EACCES: permission denied` on `api/generate-seo-pages.js` is blocking modification *by the agent*. Requires human intervention to change permissions or apply the fix directly.
 -   **Referral Program E2E Tests:** E2E tests for the referral program (`tests/referral.test.js`) are consistently failing with `500 Internal Server Error` from API routes. Despite resolving several prior technical issues (vercel dev startup, Jest ES Module configuration, DATABASE_URL module loading error) and adding extensive logging, the root cause of the `500` errors remains undiagnosed due to a lack of visibility into the serverless function's execution environment. Further debugging requires human intervention to get detailed logs from `vercel dev` or the Vercel platform.
+-   **Agent Blocked:** The agent is currently blocked on all identified high-priority tasks due to issues requiring human intervention (file permissions and lack of server-side logging for API routes).
 
 ## Key Milestones (Summary of Older Progress)
 
