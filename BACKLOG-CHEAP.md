@@ -1,15 +1,15 @@
 # Backlog - Cheap Tasks
 
 - [ ] **Content Marketing:**
-    - [ ] Write a blog post announcing the new referral program.
-    - [ ] Create a short video tutorial explaining how the referral program works.
-    - [ ] Write a blog post: "Local SEO for Landscapers."
-    - [ ] Create a case study for the electrician niche.
+    - [x] Write a blog post announcing the new referral program.
+    - [x] Create a short video tutorial explaining how the referral program works.
+    - [x] Write a blog post: "Local SEO for Landscapers."
+    - [x] Create a case study for the electrician niche.
 - [ ] **Social Media:**
-    - [ ] Schedule social media posts to promote the new referral program.
+    - [x] Schedule social media posts to promote the new referral program.
 - [ ] **Maintenance:**
-    - [ ] Monitor Vercel logs for new errors.
-    - [ ] Keep dependencies up to date.
+    - [c] Monitor Vercel logs for new errors.
+    - [x] Keep dependencies up to date.
 
 ## Completed
 - [x] **Initial Content & SEO:** Completed foundational content (case studies, blog posts) and initial SEO review.

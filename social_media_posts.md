@@ -14,7 +14,21 @@
 **Text:**
 Struggling with local search rankings? 🗺️ Optimizing your Google Business Profile is key! Ensure your info is accurate, add high-quality photos, and encourage customer reviews. Need more localized presence? LocalSEO Gen can help! #LocalSEOTips #GoogleMyBusiness #SEOHacks
 
-## Post 3: Engaging Question/Poll
+## Post 3: Announcing Referral Program - Earn Credits!
+
+**Platform:** Twitter, LinkedIn, Facebook
+**Date:** Thursday, May 23, 2026
+**Text:**
+🎁 Big News! Introducing the LocalLeads Referral Program! Now you can share the power of local SEO with your network AND earn valuable credits for every successful referral. It's a win-win for growing local businesses! Learn more: [Link to referral program blog post] #ReferralProgram #LocalLeads #ShareAndEarn #LocalSEO
+
+## Post 4: Announcing Referral Program - Welcome Bonus!
+
+**Platform:** Twitter, LinkedIn, Facebook
+**Date:** Friday, May 24, 2026
+**Text:**
+Know a local business struggling to get found online? 🚀 Refer them to LocalLeads through our new Referral Program and they'll get a FREE welcome credit bonus to kickstart their local SEO! Help them grow, earn rewards. #SmallBusiness #LocalMarketing #ReferAndEarn #GrowTogether
+
+## Post 5: Engaging Question/Poll
 
 **Platform:** Twitter, LinkedIn, Facebook (Poll on Twitter/LinkedIn)
 **Date:** Friday, May 24, 2026
@@ -26,7 +40,7 @@ C) Competing with larger businesses
 D) Managing online reviews
 #SmallBusiness #MarketingChallenge #LocalMarketing #Entrepreneurship
 
-## Post 4: Feature Spotlight (Page Generator)
+## Post 6: Feature Spotlight (Page Generator)
 
 **Platform:** LinkedIn, Facebook
 **Date:** Saturday, May 25, 2026
