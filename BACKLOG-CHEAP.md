@@ -10,11 +10,8 @@
 - [ ] **Maintenance:**
     - [ ] Monitor Vercel logs for new errors.
     - [ ] Keep dependencies up to date.
-- [ ] **SEO Optimization:**
-    - [ ] Review `sitemap.xml` for correctness and completeness.
 
 ## Completed
-- [x] **Critical Fixes & Setup:** Addressed initial blocked tasks and completed foundational content (case studies, blog posts).
+- [x] **Initial Content & SEO:** Completed foundational content (case studies, blog posts) and initial SEO review.
 - [x] **Maintenance:** Monitored logs and updated dependencies.
 - [x] **Social Media:** Scheduled initial posts.
-- [x] **SEO Optimization:** Reviewed sitemap.
