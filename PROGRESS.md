@@ -16,3 +16,12 @@
     - **Log Inaccessibility Confirmed:** Confirmed that `vercel-dev.log` is ignored by the `.gitignore` patterns, making server-side logs inaccessible. This blocks debugging of both the `vercel dev` server failure and the underlying 500 errors in the API endpoints for the referral program E2E tests.
     - **SEO Page Generator V2 Permissions:** Investigation confirmed `EACCES: permission denied` on `api/generate-seo-pages.js` is a file system permission issue requiring human intervention. No code changes needed.
     - **New Blog Post Created:** Published "Local SEO for Real Estate Agents."
+    - **New Blog Post Created:** Published "Local SEO for Plumbers."
+    - **Blog Page Updated:** Added "Local SEO for Plumbers" to `blog.html`.
+    - **New Case Study Created:** Converted 'case_study_local_seo_plumber.md' to 'case-studies/pipeperfect-plumbing-case-study.html'.
+    - **Case Studies Index Page Created:** Created `case-studies.html` to list all case studies.
+    - **Index Page Updated:** Corrected "View All Case Studies" link in `index.html` to point to `case-studies.html`.
+    - **New Blog Post Created:** Published "Local SEO for Restaurants."
+    - **Blog Page Updated:** Added "Local SEO for Restaurants" to `blog.html`.
+    - **New Blog Post Created:** Published "Local SEO for Gyms."
+    - **Blog Page Updated:** Added "Local SEO for Gyms" to `blog.html`.
