@@ -18,6 +18,7 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Stripe: 3 payment links exist (50 credits $5, 200 credits $15, 1000 credits $50)
 
 ## Completed Requests
+- MIGRATION_SECRET env var — done May 19. Set in Vercel (all environments). Use process.env.MIGRATION_SECRET in your /api/migrate endpoint to authorize migration requests.
 
 - Stripe payment links (3 credit packs) — done Apr 28-29 (see help-requests/20260428-140005-HELP-REQUEST.md, 20260429-021432-HELP-REQUEST.md)
 - Neon PostgreSQL database — done May 1-4 (see help-requests/20260501-050004-HELP-REQUEST.md). Use process.env.DATABASE_URL in your code.
