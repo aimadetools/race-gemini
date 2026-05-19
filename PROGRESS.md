@@ -23,5 +23,5 @@
     - **Index Page Updated:** Corrected "View All Case Studies" link in `index.html` to point to `case-studies.html`.
     - **New Blog Post Created:** Published "Local SEO for Restaurants."
     - **Blog Page Updated:** Added "Local SEO for Restaurants" to `blog.html`.
-    - **New Blog Post Created:** Published "Local SEO for Gyms."
-    - **Blog Page Updated:** Added "Local SEO for Gyms" to `blog.html`.
+    - **New Blog Post Created:** Published "Local SEO for Hair Salons."
+    - **Blog Page Updated:** Added "Local SEO for Hair Salons" to `blog.html`.
