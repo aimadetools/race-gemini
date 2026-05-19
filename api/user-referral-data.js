@@ -1,67 +1,44 @@
-// api/user-referral-data.js
-import { kv } from '@vercel/kv';
+import { query } from '../db/index.js';
+import { logError } from '../../lib/logger';
 import jwt from 'jsonwebtoken';
-import { parse } from 'cookie';
-import fs from 'fs'; // For error logging
-import path from 'path'; // For error logging
-import { logError } from '../../../lib/logger';
 
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', ['GET']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
+  const { authToken } = req.cookies;
 
-export default async function handler(req, res, currentKvClient) {
-    const currentKv = currentKvClient || kv;
-    if (req.method !== 'GET') {
-        res.setHeader('Allow', ['GET']);
-        return res.status(405).end(`Method ${req.method} Not Allowed`);
+  if (!authToken) {
+    return res.status(401).json({ message: 'Not authenticated.' });
+  }
+
+  try {
+    const decoded = jwt.verify(authToken, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // In a real application, you would fetch the user's referral data from the database.
+    // For now, we'll return some mock data.
+
+    const referralData = {
+      referralCode: `REF-${userId}`,
+      clicks: 123,
+      signups: 45,
+      totalEarned: 67.89,
+      referredUsers: [
+        { email: 'test1@example.com', date: '2026-05-10', status: 'Purchased', commission: 9.80 },
+        { email: 'test2@example.com', date: '2026-05-11', status: 'Signed Up', commission: 0 },
+      ]
+    };
+
+    return res.status(200).json(referralData);
+
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ message: 'Invalid token.' });
     }
-
-    try {
-        const cookies = parse(req.headers.cookie || '');
-        const token = cookies.authToken;
-
-        if (!token) {
-            return res.status(401).json({ message: 'Not authenticated. Please log in.' });
-        }
-
-        let decoded;
-        try {
-            decoded = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (error) {
-            await logError(error, 'JWT Verification Error', 'user_referral_data_error.log');
-            return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
-        }
-
-        const userId = decoded.userId;
-
-        // Fetch user's referral data from Vercel KV
-        // For now, we'll simulate fetching data from KV.
-        // In a real scenario, you'd store and retrieve specific referral data for this userId.
-        const userReferralDataString = await currentKv.get(`user:${userId}:referral_data`);
-        let referralData;
-
-        if (userReferralDataString) {
-            referralData = JSON.parse(userReferralDataString);
-        } else {
-            // If no referral data found, provide defaults
-            referralData = {
-                referralLink: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/referral-signup?ref=${userId}`,
-                totalReferrals: 0,
-                convertedReferrals: 0,
-                earnedRewards: 0.00,
-                recentReferrals: [
-                    { id: 'ref1', userEmail: 'user1@example.com', status: 'Converted', date: '2026-04-15', reward: 25.00 },
-                    { id: 'ref2', userEmail: 'user2@example.com', status: 'Pending', date: '2026-04-10', reward: 0.00 },
-                    { id: 'ref3', userEmail: 'user3@example.com', status: 'Converted', date: '2026-03-20', reward: 50.00 },
-                    { id: 'ref4', userEmail: 'user4@example.com', status: 'Pending', date: '2026-03-01', reward: 0.00 },
-                ],
-            };
-            // Optionally save this initial data to KV
-            await currentKv.set(`user:${userId}:referral_data`, JSON.stringify(referralData));
-        }
-
-        return res.status(200).json(referralData);
-    } catch (error) {
-        await logError(error, 'User Referral Data Fetch Error', 'user_referral_data_error.log');
-        return res.status(500).json({ message: 'Failed to fetch referral data.', error: error.message });
-    }
+    await logError(error, 'User Referral Data Error', 'user_referral_data_error.log');
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
 }

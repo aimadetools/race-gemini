@@ -1,72 +1,34 @@
-import { kv } from '@vercel/kv';
-import { customAlphabet } from 'nanoid';
-import trackEventHandler from './track.js'; // Import the event tracking handler
+import { query } from '../db/index.js';
+import { logError } from '../../lib/logger';
 
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
-export default async (req, res, currentKvClient) => {
-    const currentKv = currentKvClient || kv;
-    if (req.method === 'POST') {
-        const { yourName, yourEmail, companyName, website, monthlyReferrals, message } = req.body;
+  const { email, password, referralCode } = req.body;
 
-        // Basic validation
-        if (!yourName || !yourEmail) {
-            return res.status(400).json({ message: 'Your Name and Your Email are required.' });
-        }
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
 
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(yourEmail)) {
-            return res.status(400).json({ message: 'Please enter a valid email address.' });
-        }
+  try {
+    // In a real application, you would add the user to your database here.
+    // For now, we'll just log the information.
 
-        // Basic URL validation (if website is provided)
-        if (website) {
-            const urlRegex = /^(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|[a-zA-Z0-9]+\.[^\s]{2,})$/i;
-            if (!urlRegex.test(website)) {
-                return res.status(400).json({ message: 'Please enter a valid website URL.' });
-            }
-        }
+    console.log(`New user signup: ${email}`);
 
-        const inquiryId = nanoid();
-        const inquiryData = {
-            id: inquiryId,
-            timestamp: new Date().toISOString(),
-            yourName,
-            yourEmail,
-            companyName: companyName || null,
-            website: website || null,
-            monthlyReferrals: monthlyReferrals || null,
-            message: message || null,
-        };
-
-        try {
-            await currentKv.set(`referral-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
-            console.log(`Referral inquiry stored in Vercel KV with ID: ${inquiryId}`);
-            // Track the referral signup event
-            // Mock req and res objects for trackEventHandler
-            await trackEventHandler({
-                method: 'POST',
-                body: {
-                    eventName: 'referral_signup',
-                    eventData: {
-                        yourName,
-                        yourEmail,
-                        companyName,
-                        inquiryId
-                    }
-                }
-            }, {
-                status: () => ({ json: () => {} }) // Mock response for tracking
-            });
-
-            res.status(200).json({ message: 'Referral inquiry submitted successfully. We will get back to you shortly.', inquiryId });
-        } catch (error) {
-            console.error('Failed to store referral inquiry in Vercel KV:', error);
-            res.status(500).json({ message: 'Failed to submit inquiry due to a server error. Please try again later.' });
-        }
-
-    } else {
-        res.status(405).json({ message: 'Method Not Allowed' });
+    if (referralCode) {
+      console.log(`User signed up with referral code: ${referralCode}`);
+      // Here you would look up the referrer and credit them.
     }
-};
+
+    // You would typically return a JWT token here, similar to the login endpoint.
+    return res.status(201).json({ message: 'User created successfully.' });
+
+  } catch (error) {
+    await logError(error, 'Referral Signup Error', 'referral_signup_error.log');
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+}

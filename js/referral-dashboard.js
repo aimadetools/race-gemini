@@ -1,95 +1,51 @@
-document.addEventListener("DOMContentLoaded", async function() {
-    // Function to copy referral link to clipboard
-    const copyReferralLinkButton = document.getElementById("copyReferralLink");
-    const referralLinkInput = document.getElementById("referralLink");
 
-    if (copyReferralLinkButton && referralLinkInput) {
-        copyReferralLinkButton.addEventListener("click", async () => {
-            try {
-                await navigator.clipboard.writeText(referralLinkInput.value);
-                copyReferralLinkButton.textContent = "Copied!";
-                setTimeout(() => {
-                    copyReferralLinkButton.textContent = "Copy Link";
-                }, 2000);
-            } catch (err) {
-                console.error("Failed to copy referral link: ", err);
-                alert("Failed to copy link. Please copy it manually: " + referralLinkInput.value);
-            }
-        });
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  const referralLink = document.getElementById('referralLink');
+  const copyButton = document.getElementById('copyButton');
+  const clicksCount = document.getElementById('clicksCount');
+  const signupsCount = document.getElementById('signupsCount');
+  const totalEarned = document.getElementById('totalEarned');
+  const referredUsersTable = document.getElementById('referredUsersTable').getElementsByTagName('tbody')[0];
 
-    // Placeholder for fetching referral data
-    // In a real application, this would fetch data from an API endpoint
-    // For now, we'll simulate some data
-    const fetchReferralData = async () => {
-        const response = await fetch('/api/user-referral-data');
-        if (!response.ok) {
-            if (response.status === 401) {
-                // Not authenticated, redirect to login page
-                window.location.href = '/auth.html';
-                return null;
-            }
-            throw new Error(`Failed to fetch referral data: ${response.statusText}`);
-        }
-        const data = await response.json();
-        return data;
-    };
+  // Fetch referral data from the API
+  fetch('/api/user-referral-data')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch referral data');
+      }
+      return response.json();
+    })
+    .then(data => {
+      referralLink.value = `https://localleads.pro/signup?ref=${data.referralCode}`;
+      clicksCount.textContent = data.clicks;
+      signupsCount.textContent = data.signups;
+      totalEarned.textContent = data.totalEarned.toFixed(2);
 
-    const updateDashboard = async () => {
-        try {
-            const data = await fetchReferralData();
-            if (!data) {
-                // Authentication failed or redirect occurred, do not proceed with updating dashboard elements
-                return;
-            }
+      // Populate the referred users table
+      data.referredUsers.forEach(user => {
+        const row = referredUsersTable.insertRow();
+        row.innerHTML = `
+          <td>${user.email}</td>
+          <td>${new Date(user.date).toLocaleDateString()}</td>
+          <td>${user.status}</td>
+          <td>$${user.commission.toFixed(2)}</td>
+        `;
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching referral data:', error);
+      // Display an error message to the user
+      const dashboard = document.querySelector('main');
+      dashboard.innerHTML = '<p class="error">Could not load your referral data. Please try again later.</p>';
+    });
 
-            if (referralLinkInput) {
-                referralLinkInput.value = data.referralLink;
-            }
-            const totalReferralsElement = document.getElementById("totalReferrals");
-            if (totalReferralsElement) {
-                totalReferralsElement.textContent = data.totalReferrals;
-            }
-
-            const convertedReferralsElement = document.getElementById("convertedReferrals");
-            if (convertedReferralsElement) {
-                convertedReferralsElement.textContent = data.convertedReferrals;
-            }
-
-            const earnedRewardsElement = document.getElementById("earnedRewards");
-            if (earnedRewardsElement) {
-                earnedRewardsElement.textContent = `$${data.earnedRewards}`;
-            }
-
-            const recentReferralsTableBody = document.querySelector("#recent-referrals tbody");
-            if (recentReferralsTableBody) {
-                if (data.recentReferrals && data.recentReferrals.length > 0) {
-                    recentReferralsTableBody.innerHTML = ""; // Clear existing placeholder
-                    data.recentReferrals.forEach(referral => {
-                        const row = `
-                            <tr>
-                                <td>${referral.user}</td>
-                                <td>${referral.status}</td>
-                                <td>${referral.date}</td>
-                                <td>${referral.reward}</td>
-                            </tr>
-                        `;
-                        recentReferralsTableBody.insertAdjacentHTML("beforeend", row);
-                    });
-                } else {
-                    recentReferralsTableBody.innerHTML = `<tr><td colspan="4">No recent referrals.</td></tr>`;
-                }
-            }
-        } catch (error) {
-            console.error("Error updating referral dashboard:", error);
-            // Display an error message on the dashboard if data fetching fails
-            const referralLinkSection = document.querySelector(".referral-link-section");
-            if (referralLinkSection) {
-                referralLinkSection.innerHTML = "<p class='error-message'>Failed to load referral data. Please try again later.</p>";
-            }
-        }
-    };
-
-    // Initial dashboard update
-    updateDashboard();
+  // Copy referral link to clipboard
+  copyButton.addEventListener('click', () => {
+    referralLink.select();
+    document.execCommand('copy');
+    copyButton.textContent = 'Copied!';
+    setTimeout(() => {
+      copyButton.textContent = 'Copy Link';
+    }, 2000);
+  });
 });
