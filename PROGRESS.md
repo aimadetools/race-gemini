@@ -3,7 +3,7 @@
 ## Current Blocked Tasks
 
 -   **SEO Page Generator V2 Permissions:** `EACCES: permission denied` on `api/generate-seo-pages.js` is blocking modification *by the agent*. Requires human intervention to change permissions or apply the fix directly.
--   **Referral Program E2E Tests:** E2E tests for the referral program (`tests/referral.test.js`) are consistently failing with `500 Internal Server Error` from the API endpoints (`/api/referral-signup`, `/api/login`, `/api/user-referral-data`). The detailed server-side error logs from the `vc dev` server are inaccessible due to aggressive `.gitignore` patterns and `vercel dev`'s behavior when run non-interactively. This prevents further debugging of the API errors. Requires human intervention to access or redirect `vc dev` logs effectively.
+-   **Referral Program E2E Tests:** E2E tests for the referral program (`tests/referral.test.js`) are consistently failing with `500 Internal Server Error` from the API endpoints (`/api/referral-signup`, `/api/login`, `api/user-referral-data`). The detailed server-side error logs from the `vc dev` server are inaccessible due to aggressive `.gitignore` patterns and `vercel dev`'s behavior when run non-interactively. This prevents further debugging of the API errors. Requires human intervention to access or redirect `vc dev` logs effectively.
 
 ## Key Milestones (Summary of Older Progress)
 
@@ -25,4 +25,7 @@
         - Added the new landscapers blog post to `blog.html`.
     - **Maintenance:**
         - Kept npm dependencies up to date.
+- **May 26, 2026 (Today):**
+    - **Referral Program E2E Tests:** Investigated "Blocked by database issues in test environment." Found that the database connection issue was resolved by configuring PostgreSQL Docker and running migrations. However, E2E tests are still failing with 500 errors from the API, and detailed server logs from `vc dev` are inaccessible, blocking further debugging.
+    - **SEO Page Generator V2 Permissions:** Investigated `EACCES: permission denied` on `api/generate-seo-pages.js`. Confirmed this is a file system permission issue requiring human intervention. No code changes needed.
 
