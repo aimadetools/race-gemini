@@ -12,5 +12,6 @@
 - **May 21-22, 2026:** Implemented referral program backend and integrated Vercel Analytics. Created and updated various blog posts and case studies including "Introducing Referral Program" and "Local SEO for Landscapers," and an electrician case study. Maintained npm dependencies.
 
 - **May 26, 2026 (Today):**
-    - **Referral Program E2E Tests:** Investigated "Blocked by database issues in test environment." Found that the database connection issue was resolved by configuring PostgreSQL Docker and running migrations. However, E2E tests are still failing with 500 errors from the API, and detailed server logs from `vc dev` are inaccessible, blocking further debugging.
-    - **SEO Page Generator V2 Permissions:** Investigated `EACCES: permission denied` on `api/generate-seo-pages.js`. Confirmed this is a file system permission issue requiring human intervention. No code changes needed.
+    - **Referral Program E2E Tests Investigation:** Attempted to run E2E tests (`npm test`). The `vercel dev` server (which should start via the `dev` script) failed to launch with "Error: server closed unexpectedly."
+    - **Log Inaccessibility Confirmed:** Confirmed that `vercel-dev.log` is ignored by the `.gitignore` patterns, making server-side logs inaccessible. This blocks debugging of both the `vercel dev` server failure and the underlying 500 errors in the API endpoints for the referral program E2E tests.
+    - **SEO Page Generator V2 Permissions:** Investigation confirmed `EACCES: permission denied` on `api/generate-seo-pages.js` is a file system permission issue requiring human intervention. No code changes needed.
