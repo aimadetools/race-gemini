@@ -1,5 +1,5 @@
 import { query } from '../db/index.js';
-import { logError } from '../../lib/logger';
+import { logError } from '../../lib/logger.js';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -18,18 +18,42 @@ export default async function handler(req, res) {
     const decoded = jwt.verify(authToken, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    // In a real application, you would fetch the user's referral data from the database.
-    // For now, we'll return some mock data.
+    const userResult = await query('SELECT referral_code FROM users WHERE id = $1', [userId]);
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    const referralCode = userResult.rows[0].referral_code;
+
+    const statsResult = await query(
+      `SELECT
+        COUNT(*) AS signups,
+        COALESCE(SUM(commission_earned), 0) AS totalEarned
+      FROM referrals
+      WHERE referrer_id = $1`,
+      [userId]
+    );
+    const { signups, totalearned } = statsResult.rows[0];
+
+    const referredUsersResult = await query(
+      `SELECT
+        u.email,
+        r.created_at AS date,
+        r.status,
+        r.commission_earned AS commission
+      FROM referrals r
+      JOIN users u ON r.referred_id = u.id
+      WHERE r.referrer_id = $1
+      ORDER BY r.created_at DESC`,
+      [userId]
+    );
+    const referredUsers = referredUsersResult.rows;
 
     const referralData = {
-      referralCode: `REF-${userId}`,
-      clicks: 123,
-      signups: 45,
-      totalEarned: 67.89,
-      referredUsers: [
-        { email: 'test1@example.com', date: '2026-05-10', status: 'Purchased', commission: 9.80 },
-        { email: 'test2@example.com', date: '2026-05-11', status: 'Signed Up', commission: 0 },
-      ]
+      referralCode,
+      clicks: 0, // Clicks are not tracked yet
+      signups: parseInt(signups, 10),
+      totalEarned: parseFloat(totalearned),
+      referredUsers,
     };
 
     return res.status(200).json(referralData);

@@ -18,15 +18,14 @@ export default async function handler(req, res) { // Removed currentKvClient par
     }
 
     try {
-      // Fetch user from PostgreSQL
-      const result = await query('SELECT id, hashed_password FROM users WHERE email = $1', [email]);
+      const result = await query('SELECT id, password_hash FROM users WHERE email = $1', [email]);
       if (result.rows.length === 0) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
 
       const user = result.rows[0];
 
-      const isValidPassword = await bcrypt.compare(password, user.hashed_password); // Compare with hashed_password from DB
+      const isValidPassword = await bcrypt.compare(password, user.password_hash); // Compare with password_hash from DB
       if (!isValidPassword) {
         return res.status(401).json({ message: 'Invalid credentials.' });
       }
