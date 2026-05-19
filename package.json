@@ -34,9 +34,10 @@
     "wait-on": "^9.0.10"
   },
   "scripts": {
-    "test": "start-server-and-test dev http://localhost:3000 test-e2e",
-    "dev": "node ./node_modules/vercel/dist/vc.js dev --scope jochenvandenbroele-5976s-projects > vercel-dev.log 2>&1",
+    "test": "start-server-and-test start-vercel http://localhost:3000 test-e2e",
+    "_dev": "node ./node_modules/vercel/dist/vc.js dev --scope jochenvandenbroele-5976s-projects > vercel-dev.log 2>&1",
     "test-e2e": "node -r dotenv/config --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles tests/referral.test.js",
+    "start-vercel": "node -r dotenv/config ./node_modules/vercel/dist/vc.js dev --scope jochenvandenbroele-5976s-projects",
     "python-test": ".venv/bin/python3 -m unittest discover tests",
     "build:js": "cat js/ab-test-home.js js/ab-test.js js/accordion.js js/admin-agency-inquiries.js js/agency-billing.js js/agency-form.js js/agency-subscription.js js/analytics.js js/app.js js/audit-form.js js/audit.js js/blog-search.js js/contact.js js/dashboard.js js/generate-form-validation.js js/generate.js js/mobile-swipe-nav.js js/referral-form.js js/social-share.js js/stripe-checkout.js js/testimonial-carousel.js js/tracking.js | ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
   },

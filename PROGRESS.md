@@ -3,7 +3,7 @@
 ## Current Blocked Tasks
 
 -   **SEO Page Generator V2 Permissions:** `EACCES: permission denied` on `api/generate-seo-pages.js` is blocking modification *by the agent*. Requires human intervention to change permissions or apply the fix directly.
--   **Referral Program E2E Tests:** E2E tests for the referral program (`tests/referral.test.js`) are consistently failing. The `vercel dev` server, required for API functions, consistently fails to start with "Error: server closed unexpectedly", and its detailed logs are inaccessible. Attempts to mitigate this by modifying `package.json` scripts (log redirection, explicit `dotenv` loading, `--env` flag, direct `vercel dev` calls, `start-server-and-test` configurations, and even mocking the database within tests) have been unsuccessful. This prevents further debugging of the API errors and confirms that the issue requires human intervention to configure `vercel dev` reliably for automated testing.
+-   **Referral Program E2E Tests:** E2E tests for the referral program (`tests/referral.test.js`) are consistently failing. The `vercel dev` server, required for API functions, was initially failing to start with "Error: server closed unexpectedly." This issue has been partially resolved, but new blocking issues have arisen.
 
 ## Key Milestones (Summary of Older Progress)
 
@@ -12,8 +12,17 @@
 - **May 23-25, 2026 (Summary):** Implemented referral program backend and integrated Vercel Analytics. Created and updated various blog posts and case studies including "Introducing Referral Program" and "Local SEO for Landscapers," and an electrician case study. Maintained npm dependencies.
 
 - **May 26, 2026 (Today):**
-    - **Referral Program E2E Tests Investigation:** Attempted to run E2E tests (`npm test`). The `vercel dev` server (which should start via the `dev` script) failed to launch with "Error: server closed unexpectedly."
-    - **Log Inaccessibility Confirmed:** Confirmed that `vercel-dev.log` is ignored by the `.gitignore` patterns, making server-side logs inaccessible. This blocks debugging of both the `vercel dev` server failure and the underlying 500 errors in the API endpoints for the referral program E2E tests.
+    - **Referral Program E2E Tests Investigation - `vercel dev` startup:**
+        - **Problem:** `vercel dev` failed to launch with "Error: server closed unexpectedly" and logs were inaccessible.
+        - **Action:** Modified `package.json` to rename `dev` script to `_dev` (to prevent recursive invocation of `vercel dev`), created a new `start-vercel` script (to explicitly launch `vercel dev`), and adjusted the `test` script to use `start-server-and-test start-vercel`. This resolved the `vercel dev` startup error.
+    - **Referral Program E2E Tests Investigation - Test Execution Errors:**
+        - **Problem:** Encountered `ReferenceError: require is not defined` and `ReferenceError: jest is not defined` errors during test execution, indicating issues with Jest's ES Module support.
+        - **Action:** Explicitly imported `jest` from `@jest/globals` in `tests/referral.test.js`, moved test-related variables (`mockUsers`, `mockReferrals`, `userIdCounter`, `API_URL`) into the `describe` block, and moved `getMockQueryImplementation` into `beforeEach` to ensure `jest` was in scope.
+        - **Problem:** Encountered `TypeError: query.mockImplementation is not a function`.
+        - **Action:** Replaced `import { query } from '../db/index.js';` with `const query = jest.fn();` within the `describe` block to explicitly make `query` a Jest mock.
+        - **Problem:** API routes began returning `500 Internal Server Error` due to `db/index.js` throwing an error when `DATABASE_URL` environment variable was not set.
+        - **Action:** Modified `db/index.js` to gracefully handle a missing `DATABASE_URL` by providing dummy database functions, preventing module loading errors and allowing API routes to load.
+        - **Current Blocked Status:** API routes are still returning `500 Internal Server Error`. Despite extensive `console.log` statements added to `api/referral-signup.js` (at the top-level and within the `catch` block), no output is visible from within the API function's context, even though `console.warn` from `db/index.js` (due to missing `DATABASE_URL`) *is* appearing. This indicates a runtime error occurring within the Vercel serverless function environment that is not being captured or reported to `stdout`/`stderr` in the testing setup. Further debugging of the `500` errors is blocked due to lack of visibility into the serverless function's execution environment. Human intervention may be required to get detailed logs from `vercel dev` or the Vercel platform.
     - **SEO Page Generator V2 Permissions:** Investigation confirmed `EACCES: permission denied` on `api/generate-seo-pages.js` is a file system permission issue requiring human intervention. No code changes needed.
     - **New Blog Post Created:** Published "Local SEO for Real Estate Agents."
     - **New Blog Post Created:** Published "Local SEO for Plumbers."
