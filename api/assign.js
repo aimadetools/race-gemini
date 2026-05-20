@@ -1,6 +1,6 @@
-const { logError } = require('../../lib/logger.js');
+import { logError } from '../../lib/logger.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   try {
     const { experiment } = req.query;
     if (!experiment) {
