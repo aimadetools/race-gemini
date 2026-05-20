@@ -126,7 +126,7 @@ describe('Referral Program E2E Test', () => {
 
   it('should create a new referrer user', async () => {
     console.log('Creating referrer user...');
-    const res = await fetch(`${API_URL}/api/referral-signup`, {
+    const res = await fetch(`${API_URL}/api/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: referrer.email, password: referrer.password }),
@@ -162,13 +162,13 @@ describe('Referral Program E2E Test', () => {
 
   it(`should create a new referred user with the referrer's code`, async () => {
     console.log('Creating referred user...');
-    const res = await fetch(`${API_URL}/api/referral-signup`, {
+    const res = await fetch(`${API_URL}/api/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: referred.email,
         password: referred.password,
-        referralCode: referrer.referralCode,
+        referrerId: referrer.referralCode,
       }),
     });
     console.log('Referred user creation response:', res.status);
