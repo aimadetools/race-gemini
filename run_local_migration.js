@@ -1,4 +1,6 @@
 import { createTableUserEvents } from './db/migrations/create_user_events_table.js';
+import { createUsersTable } from './db/migrations/create_users_table.js'; // Import the new users table migration
+import { createReferralsAndAlterUsers } from './db/migrations/create_referrals_and_update_users.js';
 import { Pool } from 'pg'; // This import is actually not needed if using db/index.js global pool
 
 async function runLocalMigration() {
@@ -9,11 +11,16 @@ async function runLocalMigration() {
 
   try {
     console.log('Attempting to run database migrations for user_events...');
-
-    // createTableUserEvents internally uses the 'query' function from db/index.js,
-    // which in turn uses the globally configured pool with process.env.DATABASE_URL.
     await createTableUserEvents();
     console.log('Local migration for user_events table completed successfully.');
+
+    console.log('Attempting to run database migrations for users table...');
+    await createUsersTable(); // Call the new users table migration FIRST
+    console.log('Local migration for users table completed successfully.');
+
+    console.log('Attempting to run database migrations for referrals table and altering users table...');
+    await createReferralsAndAlterUsers();
+    console.log('Local migration for referrals table and altering users table completed successfully.');
   } catch (error) {
     console.error('Error during local migration:', error);
     process.exit(1);
