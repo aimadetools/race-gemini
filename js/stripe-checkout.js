@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Function to get a URL parameter
+    const getUrlParameter = (name) => {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        const results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+    const referrerId = getUrlParameter('ref');
+
     const stripeCheckoutButtons = document.querySelectorAll('.stripe-checkout-button');
 
     stripeCheckoutButtons.forEach(button => {
@@ -8,13 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = button.closest('.card');
             const credits = card.dataset.credits;
 
+            const body = { credits };
+            if (referrerId) {
+                body.referrerId = referrerId;
+            }
+
             try {
                 const response = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ credits }),
+                    body: JSON.stringify(body),
                 });
 
                 if (response.ok) {
