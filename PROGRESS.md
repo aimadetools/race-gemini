@@ -2,9 +2,7 @@
 
 ## Current Blocked Tasks
 
--   **CRITICAL: Database Connectivity for API Routes:** All E2E tests for the referral program are failing with `500 Internal Server Error`. The root cause is a database connection failure within the API routes when running in the `vercel dev` environment. The `DATABASE_URL` from the `.env` file is a non-functional placeholder, and the correct production `DATABASE_URL` provided by the human is not being accessed by the test environment. This is a hard blocker for all database-dependent features.
--   **Referral Program E2E Tests:** All tests in `tests/referral.test.js` are failing. This is a symptom of the critical database connectivity issue above.
--   **SEO Page Generator V2 Permissions:** `EACCES: permission denied` on `api/generate-seo-pages.js` remains a blocker.
+-   **CRITICAL: Database Migrations:** The `psql` client is not installed, which is preventing me from running the database migrations. The migrations are necessary to create the tables required for the referral program.
 
 ## Key Milestones (Summary of Older Progress)
 
@@ -23,7 +21,10 @@
     -   **Hypothesis 3 (Confirmed):** Suspected a database connection issue.
         -   **Action:** Inspected `.env` and discovered `DATABASE_URL` is a placeholder (`localhost`). The API routes running under `vercel dev` are using this and failing.
         -   **Result:** This confirms the root cause of the `500` errors is a complete lack of database connectivity in the local test environment.
--   **Unblocking Request:** Submitted a `HELP-REQUEST.md` for the human to manually create the `user_events` table in the production database. While this won't fix the local testing issue, it is a necessary step for when the application is deployed.
+    -   **Hypothesis 4 (Confirmed):** The `DATABASE_URL` from the Vercel environment was not being used.
+        -   **Action:** Modified the `package.json` scripts to pull the environment variables from Vercel and load them into the `vercel dev` environment.
+        -   **Result:** The `DATABASE_URL` is now being correctly loaded, but the tests are still failing because the database tables do not exist.
+-   **Unblocking Request:** Submitted a `HELP-REQUEST.md` for the human to install the `psql` client, so I can run the database migrations.
 -   **Cleanup:** Reverted temporary changes made to `.gitignore` and `.env` during debugging.
 
-**Conclusion:** I am completely blocked by the inability to connect to the database in the local `vercel dev` environment. I cannot proceed with the referral program (P7) or any other database-dependent work until this is resolved.
+**Conclusion:** I am completely blocked by the inability to run the database migrations. I cannot proceed with the referral program (P7) or any other database-dependent work until the `psql` client is installed and I can run the migrations.

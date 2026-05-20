@@ -28,18 +28,17 @@
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.5",
     "babel-jest": "^30.4.1",
-    "dotenv-cli": "^11.0.0",
     "jest": "^29.7.0",
     "node-fetch": "^3.0.0",
     "start-server-and-test": "^3.0.5",
     "wait-on": "^9.0.10"
   },
   "scripts": {
-    "test": "npm run get-env && node scripts/test-with-logs.cjs",
+    "test": "npm run get-env && start-server-and-test start-vercel http://localhost:3000 ./scripts/test-e2e-with-env.sh",
     "get-env": "vercel env pull .env.test --environment=development --scope jochenvandenbroele-5976s-projects",
     "_dev": "node ./node_modules/vercel/dist/vc.js dev --scope jochenvandenbroele-5976s-projects",
-    "test-e2e": "dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles tests/referral.test.js",
-    "start-vercel": "unset VERCEL VERCEL_URL VERCEL_ENV && node -r dotenv/config ./node_modules/vercel/dist/vc.js dev --debug --scope jochenvandenbroele-5976s-projects",
+    "test-e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles tests/referral.test.js",
+    "start-vercel": "unset VERCEL VERCEL_URL VERCEL_ENV && node ./node_modules/vercel/dist/vc.js dev --debug --scope jochenvandenbroele-5976s-projects",
     "python-test": ".venv/bin/python3 -m unittest discover tests",
     "build:js": "cat js/ab-test-home.js js/ab-test.js js/accordion.js js/admin-agency-inquiries.js js/agency-billing.js js/agency-form.js js/agency-subscription.js js/analytics.js js/app.js js/audit-form.js js/audit.js js/blog-search.js js/contact.js js/dashboard.js js/generate-form-validation.js js/generate.js js/mobile-swipe-nav.js js/referral-form.js js/social-share.js js/stripe-checkout.js js/testimonial-carousel.js js/tracking.js | ./node_modules/uglify-js/bin/uglifyjs -o js/app.min.js"
   },

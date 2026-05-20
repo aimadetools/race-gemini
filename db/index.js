@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 let poolInstance; // Renamed to avoid conflict with exported 'pool'
 let queryFunction; // Renamed to avoid conflict with exported 'query'
 
-console.log('DATABASE_URL in db/index.js:', process.env.DATABASE_URL);
+
 
 if (!process.env.DATABASE_URL) {
   console.warn('DATABASE_URL environment variable is not set. Using dummy database functions for testing.');
