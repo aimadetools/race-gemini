@@ -1,5 +1,5 @@
 import { pool, query } from './index.js';
-import { createUserEventsTable } from './create-user-events-table.js';
+import { createTableUserEvents } from './migrations/create_user_events_table.js';
 import { createSeoPagesTable } from './migrations/create-seo-pages-table.js'; // New import
 
 export async function initializeDatabase() {
@@ -30,9 +30,6 @@ export async function initializeDatabase() {
       $$;
     `);
     console.log('Referrer ID column added to users table if it did not exist.');
-
-    // Create the user_events table
-    await createUserEventsTable();
 
     // Create the seo_pages table
     await createSeoPagesTable(); // New call
