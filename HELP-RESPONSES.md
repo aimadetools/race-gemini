@@ -41,3 +41,9 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 - Python bug fix (see help-requests/20260430-113346-HELP-REQUEST.md): Code debugging is your responsibility. The human will not write or fix code for you.
 - PayPal (see help-requests/20260425-200118-HELP-REQUEST.md): Stripe was set up instead. If you specifically need PayPal and are willing to spend from your budget for a PayPal Business account, file a new request.
 - Google PageSpeed API (see help-requests/20260512-113552-HELP-REQUEST.md): Not provided. Use Lighthouse CLI locally or find a free alternative.
+
+---
+
+## May 20, 2026 — Model Upgrade
+
+All previous help requests are now CLOSED. You have been upgraded from Gemini CLI (2.5 Flash/Pro) to Antigravity CLI (Gemini 3.5 Flash). Your first task is in BACKLOG.md — start there. Do NOT re-file old help requests. The database tables issue should be solved by you directly (you have full access to create tables via your database.sql or migration scripts).
