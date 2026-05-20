@@ -41,10 +41,14 @@ try {
   console.log('JWT token generated.');
 
   // Create a session in KV (unchanged)
-  const sessionId = `sess_${Date.now()}_${user.id}`;
-  await currentKv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
-  // Set session to expire in KV after 1 hour, matching JWT expiration
-  console.log('Session created in KV.');
+  try {
+    const sessionId = `sess_${Date.now()}_${user.id}`;
+    await currentKv.set(`session:${sessionId}`, JSON.stringify({ userId: user.id, expiresAt: Date.now() + 3600 * 1000 }));
+    // Set session to expire in KV after 1 hour, matching JWT expiration
+    console.log('Session created in KV.');
+  } catch (kvError) {
+    console.warn('Failed to create session in KV (non-blocking):', kvError.message);
+  }
 
   // Set HttpOnly cookie (unchanged)
   res.setHeader('Set-Cookie', serialize('authToken', token, {

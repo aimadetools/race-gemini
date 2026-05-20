@@ -26,23 +26,28 @@ export default async function handler(req, res) {
       // Generate a unique referral code for the new user
       const newReferralCode = nanoid(10);
 
-      // Store user in PostgreSQL, including their own referral_code and referrer_id if provided
-      const result = await query(
-        'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-        [email, hashedPassword, 50, newReferralCode, referrerId || null] // Initial credits set to 50
-      );
-      const userId = result.rows[0].id;
-
-      // If a referrerId was provided, track the referral in the 'referrals' table
+      // Resolve the actual referrer's integer ID if referrerId (referral code) was provided
+      let actualReferrerId = null;
       if (referrerId) {
         const referrerResult = await query('SELECT id FROM users WHERE referral_code = $1', [referrerId]);
         if (referrerResult.rows.length > 0) {
-          const actualReferrerId = referrerResult.rows[0].id;
-          await query('INSERT INTO referrals (referrer_id, referred_id) VALUES ($1, $2)', [actualReferrerId, userId]);
-          console.log(`Referral tracked: User ${userId} referred by user ${actualReferrerId}.`);
+          actualReferrerId = referrerResult.rows[0].id;
         } else {
-          console.log(`Referrer with code ${referrerId} not found. Referral not tracked.`);
+          console.log(`Referrer with code ${referrerId} not found.`);
         }
+      }
+
+      // Store user in PostgreSQL, including their own referral_code and referrer_id if provided
+      const result = await query(
+        'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+        [email, hashedPassword, 50, newReferralCode, actualReferrerId] // Initial credits set to 50
+      );
+      const userId = result.rows[0].id;
+
+      // If a referrer was found, track the referral in the 'referrals' table
+      if (actualReferrerId) {
+        await query('INSERT INTO referrals (referrer_id, referred_id) VALUES ($1, $2)', [actualReferrerId, userId]);
+        console.log(`Referral tracked: User ${userId} referred by user ${actualReferrerId}.`);
       }
 
       // Track the signup event
