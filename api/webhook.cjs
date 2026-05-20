@@ -1,6 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { buffer } = require('micro');
-import { kv } from '@vercel/kv'; // Import kv
+
 const fs = require('fs');
 const path = require('path');
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
@@ -19,76 +19,45 @@ function getCreditsToAdd(priceId) {
     return creditsToAdd;
 }
 
-// Helper function to update referrer data in Vercel KV
-async function updateReferrerData(referrerId, userId, amountTotal, sessionMode, currentKv) {
+// New helper function to update referral status and commission in PostgreSQL
+async function updateReferralStatusAndCommission(referrerId, referredUserId, amountTotal, sessionMode) {
     try {
-        const referrerDataKey = `user:${referrerId}:referral_data`;
-        let referrerData = await currentKv.get(referrerDataKey);
-
-        // Initialize referrer data if it doesn't exist (should ideally exist from signup)
-        if (!referrerData) {
-            referrerData = {
-                referralLink: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/referral-signup?ref=${referrerId}`,
-                totalReferrals: 0,
-                convertedReferrals: 0,
-                earnedRewards: 0.00,
-                recentReferrals: [],
-            };
-        } else {
-            referrerData = JSON.parse(referrerData);
-        }
-
-        // Update convertedReferrals
-        referrerData.convertedReferrals = (referrerData.convertedReferrals || 0) + 1;
-
-        // Calculate earned rewards (20% commission)
-        const commissionRate = 0.20;
+        const commissionRate = 0.20; // 20% commission
         const earnedAmount = (amountTotal / 100) * commissionRate; // Convert cents to dollars and apply commission
-        referrerData.earnedRewards = (referrerData.earnedRewards || 0.00) + earnedAmount;
 
-        // Update status and reward for the referred user in recentReferrals
-        const referredUserIndex = referrerData.recentReferrals.findIndex(
-            (ref) => ref.id === userId
+        // Update the referral entry in the 'referrals' table
+        const result = await query(
+            `UPDATE referrals
+             SET status = $1, commission_earned = $2, updated_at = NOW()
+             WHERE referrer_id = (SELECT id FROM users WHERE referral_code = $3) AND referred_id = $4 RETURNING id`,
+            ['purchased', earnedAmount, referrerId, referredUserId]
         );
-        if (referredUserIndex !== -1) {
-            referrerData.recentReferrals[referredUserIndex].status = 'Converted';
-            referrerData.recentReferrals[referredUserIndex].reward = earnedAmount;
-        } else {
-            // If for some reason the referred user wasn't in recentReferrals (e.g., direct purchase without prior signup tracking), add them
-            // This case should be rare if signup tracking is working correctly.
-            referrerData.recentReferrals.push({
-                id: userId,
-                userEmail: `user_${userId}@unknown.com`, // Placeholder email if not tracked during signup
-                status: 'Converted',
-                date: new Date().toISOString(),
-                reward: earnedAmount,
-            });
-        }
 
-        // Save updated referrer data back to Vercel KV
-        await currentKv.set(referrerDataKey, JSON.stringify(referrerData));
-        await logInfo(`Referrer ${referrerId} data updated in Vercel KV with conversion.`, 'Referral Logic');
-        
-        // Track referral conversion event
-        await trackEventHandler({
-            method: 'POST',
-            body: {
-                eventName: 'referral_conversion',
-                userId: userId, // The converted user's ID
-                eventData: {
-                    referrerId: referrerId,
-                    convertedAmount: amountTotal,
-                    earnedReward: earnedAmount,
-                    checkoutMode: sessionMode
+        if (result.rows.length > 0) {
+            await logInfo(`Referral ${result.rows[0].id} updated: referred user ${referredUserId} made a purchase. Referrer ${referrerId} earned $${earnedAmount.toFixed(2)}.`, 'Referral Logic');
+
+            // Track referral conversion event
+            await trackEventHandler({
+                method: 'POST',
+                body: {
+                    eventName: 'referral_conversion',
+                    userId: referredUserId, // The converted user's ID
+                    eventData: {
+                        referrerId: referrerId,
+                        convertedAmount: amountTotal,
+                        earnedReward: earnedAmount,
+                        checkoutMode: sessionMode
+                    }
                 }
-            }
-        }, {
-            status: () => ({ json: () => {} }) // Mock response for tracking
-        });
-
-    } catch (kvError) {
-        await logError(kvError, 'Vercel KV Update Error for Referrer Conversion');
-        // Do not block webhook processing if KV update fails
+            }, {
+                status: () => ({ json: () => {} }) // Mock response for tracking
+            });
+        } else {
+            await logInfo(`No matching referral found for referrer ${referrerId} and referred user ${referredUserId}. Status and commission not updated.`, 'Referral Logic');
+        }
+    } catch (error) {
+        await logError(error, 'PostgreSQL Referral Update Error');
+        // Do not block webhook processing if referral update fails
     }
 }
 
@@ -106,9 +75,9 @@ async function getUserEmail(userId) {
     }
 }
 
-module.exports = async (req, res, currentKvClient) => {
+module.exports = async (req, res) => { // Removed currentKvClient parameter
     await logInfo('Stripe webhook received.', 'Stripe Webhook');
-    const currentKv = currentKvClient || kv;
+    // const currentKv = currentKvClient || kv; // Removed: Vercel KV is no longer used for referral data
     if (req.method === 'POST') {
         const sig = req.headers['stripe-signature'];
         const buf = await buffer(req);
@@ -126,22 +95,19 @@ module.exports = async (req, res, currentKvClient) => {
         if (event.type === 'checkout.session.completed') {
             await logInfo('Processing checkout.session.completed event.', 'Stripe Webhook');
             const session = event.data.object;
-            const userId = session.client_reference_id;
+            const userId = session.metadata.userId; // Get userId from metadata
+            const referrerId = session.metadata.referrerId; // Get referrerId from metadata
             const amountTotal = session.amount_total; // Amount in cents
 
             if (!userId) {
-                await logError(new Error('Missing userId (from client_reference_id) in session.'), 'Stripe Webhook - Missing Data (userId)');
-                return res.status(400).json({ message: 'Missing user identifier in session.' });
+                await logError(new Error('Missing userId in session metadata.'), 'Stripe Webhook - Missing Data (userId)');
+                return res.status(400).json({ message: 'Missing user identifier in session metadata.' });
             }
 
             // --- Referral Logic Start ---
-            // Fetch the purchasing user's referrerId from PostgreSQL
-            const userResult = await query('SELECT referrer_id FROM users WHERE id = $1', [userId]);
-            const referrerId = userResult.rows.length > 0 ? userResult.rows[0].referrer_id : null;
-
-            // If the user was referred, update the referrer's data
+            // If the user was referred and referrerId is passed in metadata, update the referral status and commission
             if (referrerId) {
-                await updateReferrerData(referrerId, userId, amountTotal, session.mode, currentKv);
+                await updateReferralStatusAndCommission(referrerId, userId, amountTotal, session.mode);
             }
             // --- Referral Logic End ---
 
@@ -168,7 +134,7 @@ module.exports = async (req, res, currentKvClient) => {
                             description: `Subscription renewal (${agencyPlanId})`,
                             amount: creditsToAdd
                         };
-                        await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
                         await logInfo(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`, 'Subscription');
 
 
@@ -233,7 +199,7 @@ module.exports = async (req, res, currentKvClient) => {
                         description: `Purchased ${parsedCredits} credits`,
                         amount: parsedCredits
                     };
-                    await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
                     await logInfo(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`, 'Credit Purchase');
 
                     // Send email notification
@@ -293,7 +259,7 @@ module.exports = async (req, res, currentKvClient) => {
                             description: `Subscription renewal`,
                             amount: creditsToAdd
                         };
-                        await currentKv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
                         await logInfo(`Added ${creditsToAdd} credits to agency user ${userId} on invoice payment. New balance: ${result.rows[0].credits}`, 'Invoice Payment');
 
                         // Send email notification
