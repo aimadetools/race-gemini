@@ -1,8 +1,8 @@
 import Stripe from 'stripe';
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import { parse } from 'cookie';
 import jwt from 'jsonwebtoken';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 
 
 export default async (req, res) => {

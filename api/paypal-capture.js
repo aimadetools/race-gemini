@@ -3,8 +3,8 @@ import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import * as paypal from '@paypal/checkout-server-sdk'; // Import the PayPal SDK
 import { parse } from 'cookie'; // Use parse from 'cookie' directly
 import jwt from 'jsonwebtoken';
-import { logError } from '../../lib/logger.js';
-import { sendEmail } from '../../lib/email.js';
+import { logError } from '../lib/logger.js';
+import { sendEmail } from '../lib/email.js';
 
 
 

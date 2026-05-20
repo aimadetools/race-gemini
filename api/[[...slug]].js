@@ -2,7 +2,7 @@ import { kv } from '@vercel/kv';
 import slugify from 'slugify';
 import fs from 'fs';
 import path from 'path';
-import { logError } from '../../lib/logger.js'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;

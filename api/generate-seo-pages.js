@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { parse } = require('cookie'); // Import parse from cookie
 const jwt = require('jsonwebtoken'); // Import jwt
 const { query } = require('../db/index.js'); // Import PostgreSQL query utility
-const { logError } = require('../../lib/logger'); // Import centralized logger
+const { logError } = require('../lib/logger.js'); // Import centralized logger
 const { parseOpeningHours } = require('../../lib/time-helpers'); // Import parseOpeningHours
 
 // Define the path to the page template

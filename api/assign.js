@@ -1,4 +1,4 @@
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 
 export default async function handler(req, res) {
   try {

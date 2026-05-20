@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv';
 import { customAlphabet } from 'nanoid';
-import { logError } from '../../lib/logger';
+import { logError } from '../lib/logger.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
 

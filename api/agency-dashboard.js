@@ -2,8 +2,8 @@ import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import Stripe from 'stripe';
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY); // Initialize Stripe
-import { logError } from '../../lib/logger.js';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Initialize Stripe
+import { logError } from '../lib/logger.js';
 
 async function handler(req, res) {
     if (req.method !== 'GET') {

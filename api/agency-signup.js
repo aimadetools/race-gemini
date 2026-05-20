@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 import trackEventHandler from './track.js'; // Import the event tracking handler
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 

@@ -6,7 +6,7 @@ import archiver from 'archiver';
 import fs from 'fs';
 import path from 'path';
 import slugify from 'slugify';
-import { logError } from '../../lib/logger.js'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');

@@ -2,7 +2,7 @@ import { kv } from '@vercel/kv';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import slugify from 'slugify';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;

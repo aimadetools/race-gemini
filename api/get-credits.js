@@ -1,7 +1,7 @@
 import { parse } from 'cookie';
 import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
-import { logError } from '../../lib/logger.js'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 
 export default async (req, res) => {
     if (req.method === 'GET') {

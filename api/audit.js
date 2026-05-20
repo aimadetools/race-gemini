@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 import { parseAddress } from '../../lib/html-parser.js';
 const fetch = global.fetch; // Keep global.fetch as is
 

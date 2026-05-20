@@ -1,7 +1,7 @@
 import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import { logError } from '../../lib/logger';
+import { logError } from '../lib/logger.js';
 
 export default async function handler(request, response) {
     if (request.method === 'POST') {

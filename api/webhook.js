@@ -1,12 +1,13 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { buffer } = require('micro');
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+import { buffer } from 'micro';
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
-import { logError, logInfo } from '../../lib/logger';
-import { sendEmail } from '../../lib/email';
+import { logError, logInfo } from '../lib/logger.js';
+import { sendEmail } from '../lib/email.js';
 
 // Helper function to determine credits based on price ID
 function getCreditsToAdd(priceId) {

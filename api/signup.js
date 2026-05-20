@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
-import { logError } from '../../lib/logger'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 import { nanoid } from 'nanoid'; // Import nanoid for generating referral codes
 
 export default async function handler(req, res) {

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import fs from 'fs';
 import path from 'path';
-import { logError } from '../../../lib/logger'; // Import centralized logger
+import { logError } from '../../lib/logger.js'; // Import centralized logger
 
 
 

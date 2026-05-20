@@ -1,5 +1,5 @@
 import { kv } from '@vercel/kv'; // Keep for session management
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility

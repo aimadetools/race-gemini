@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 
 // This is a temporary admin script to create an agency from an inquiry
 // In the future, this should be replaced with a proper admin panel

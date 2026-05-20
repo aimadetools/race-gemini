@@ -73,7 +73,7 @@ describe('Webhook API', () => {
 
     beforeEach(() => {
         // Import handler and stripe after doMocks are set up
-        handler = require('../../api/webhook');
+        handler = require('../../api/webhook.js');
         stripe = require('stripe');
 
         jest.clearAllMocks();

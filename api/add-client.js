@@ -2,7 +2,7 @@ import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import { logError } from '../../lib/logger.js'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;

@@ -1,6 +1,6 @@
 import pg from 'pg'; // Import the pg library correctly
 const { Pool } = pg; // Destructure Pool from the imported pg object
-import { logError } from '../../lib/logger.js'; // Note the .js extension for relative imports
+import { logError } from '../lib/logger.js'; // Note the .js extension for relative imports
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,

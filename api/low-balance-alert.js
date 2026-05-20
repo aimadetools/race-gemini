@@ -1,5 +1,5 @@
 import { query } from '../db/index.js';
-import { sendEmail } from '../../lib/email';
+import { sendEmail } from '../lib/email.js';
 
 const LOW_CREDIT_THRESHOLD = 10;
 

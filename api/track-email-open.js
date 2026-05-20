@@ -1,4 +1,4 @@
-import { logInfo, logError } from '../../lib/logger.js';
+import { logInfo, logError } from '../lib/logger.js';
 
 // 1x1 transparent GIF (base64 encoded)
 const GIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
