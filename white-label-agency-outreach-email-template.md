@@ -1,0 +1,18 @@
+Subject: Expand Your Agency's Local SEO Services with a White-Label Partnership
+
+Hi [Agency Contact Name],
+
+{{ai_personalization}}
+
+I'm reaching out from LocalLeads. We offer a powerful platform that generates dozens of professionally designed, search-optimized pages for local businesses across every town they serve. This helps them attract more local customers by significantly improving their online visibility.
+
+We've found that marketing agencies like yours are perfectly positioned to leverage our technology as a white-label solution, allowing you to:
+
+*   **Expand your service offerings:** Provide cutting-edge local SEO page generation without the development overhead.
+*   **Increase client results:** Deliver tangible, measurable improvements in local search rankings for your clients.
+*   **Boost your agency's revenue:** Offer a high-demand service under your own brand, enhancing your profitability and competitive edge.
+
+Would you be open to a brief discussion about how a white-label partnership with LocalLeads could benefit your agency and your clients?
+
+Best regards,
+[Your Name/LocalLeads Team]
