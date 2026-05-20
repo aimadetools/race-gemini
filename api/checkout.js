@@ -27,8 +27,16 @@ export default async (req, res) => {
     }
 
     if (req.method === 'POST') {
-        const { creditPackId, agencyPlanId } = req.body; // Expect either creditPackId or agencyPlanId
+        const { creditPackId, agencyPlanId, referrerId } = req.body; // Expect either creditPackId, agencyPlanId, and optionally referrerId
         let sessionConfig = {}; // Initialize a configuration object for the Stripe session
+
+        // Add referrerId to metadata if present
+        const metadata = {
+            userId: userId // Explicitly pass userId
+        };
+        if (referrerId) {
+            metadata.referrerId = referrerId;
+        }
 
         if (creditPackId) {
             // Logic for one-time credit pack purchase
@@ -83,9 +91,9 @@ export default async (req, res) => {
                 cancel_url: `https://www.localleads.pro/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
+                    ...metadata, // Spread existing metadata (including referrerId if present)
                     creditPackId: creditPackId, // Pass the pack ID
                     credits: selectedPack.credits, // Pass the actual credits
-                    userId: userId // Explicitly pass userId
                 },
             };
         } else if (agencyPlanId) {
@@ -122,8 +130,8 @@ export default async (req, res) => {
                 client_reference_id: userId,
                 customer_creation: 'always', // Ensure a customer is created in Stripe
                 metadata: {
+                    ...metadata, // Spread existing metadata (including referrerId if present)
                     agencyPlanId: agencyPlanId,
-                    userId: userId, // Explicitly pass userId
                     agencyId: userId // Pass userId as agencyId for subscription metadata
                 },
             };
