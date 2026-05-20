@@ -1,5 +1,5 @@
 import { query } from '../db/index.js';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
 

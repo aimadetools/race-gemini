@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
-import { logError } from '../../lib/logger'; // Import centralized logger
+import { logError } from '../lib/logger.js'; // Import centralized logger
 
 
 

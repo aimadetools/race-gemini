@@ -1,5 +1,5 @@
 import { query } from '../db/index.js';
-import { logError } from '../../lib/logger.js';
+import { logError } from '../lib/logger.js';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
