@@ -87,8 +87,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'payment',
-                success_url: `https://www.localleads.pro/success.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `https://www.localleads.pro/pricing.html`, // Redirect back to pricing page
+                success_url: `https://localseogen.com/success.html?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `https://localseogen.com/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
                     ...metadata, // Spread existing metadata (including referrerId if present)

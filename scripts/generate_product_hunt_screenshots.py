@@ -5,7 +5,7 @@ import time
 
 # Configuration
 SCREENSHOT_DIR = "screenshots/product-hunt"
-BASE_URL = "https://www.localleads.pro"  # Using the deployed site
+BASE_URL = "https://www.localseogen.com"  # Using the deployed site
 
 PAGES_TO_SCREENSHOT = {
     "homepage": {

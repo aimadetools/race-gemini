@@ -45,8 +45,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'subscription',
-                success_url: `https://www.localleads.pro/agency-dashboard.html?subscription=success`,
-                cancel_url: `https://www.localleads.pro/agency-billing.html`,
+                success_url: `https://www.localseogen.com/agency-dashboard.html?subscription=success`,
+                cancel_url: `https://www.localseogen.com/agency-billing.html`,
                 metadata: {
                     agencyId: agencyId,
                     priceId: priceId

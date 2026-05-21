@@ -76,7 +76,7 @@ async function getUserEmail(userId) {
     }
 }
 
-module.exports = async (req, res) => { // Removed currentKvClient parameter
+export default async (req, res) => { // Removed currentKvClient parameter
     await logInfo('Stripe webhook received.', 'Stripe Webhook');
     // const currentKv = currentKvClient || kv; // Removed: Vercel KV is no longer used for referral data
     if (req.method === 'POST') {

@@ -158,11 +158,11 @@ def generate_blog_post_html(
       </p>
 <div class="social-icons">
 
-<a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localleads.pro" target="_blank">
+<a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localseogen.com" target="_blank">
 <i class="fab fa-facebook-f">
 </i>
 </a>
-<a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localleads.pro&amp;title=LocalLeads - Get Found in Every Town" target="_blank">
+<a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localseogen.com&amp;title=LocalLeads - Get Found in Every Town" target="_blank">
 <i class="fab fa-linkedin-in">
 </i>
 </a>
@@ -346,8 +346,8 @@ def create_new_blog_posts(start_num, count):
         else:
             content = """This blog post provides an in-depth look into optimizing your business for local search, focusing on techniques that drive organic traffic and convert local customers. Key areas include Google My Business optimization, local citation building, and reputation management. This is the main content for post {post_number}."""
 
-        image_url = f"https://www.localleads.pro/images/og_webp/post{post_number}.webp"  # Placeholder for now, could be LLM generated
-        canonical_url = f"https://www.localleads.pro/blog/post{post_number}.html"
+        image_url = f"https://www.localseogen.com/images/og_webp/post{post_number}.webp"  # Placeholder for now, could be LLM generated
+        canonical_url = f"https://www.localseogen.com/blog/post{post_number}.html"
 
         html_content = generate_blog_post_html(
             title,

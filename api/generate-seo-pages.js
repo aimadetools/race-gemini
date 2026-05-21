@@ -1,12 +1,12 @@
-const fs = require('fs').promises;
-const path = require('path');
-const slugify = require('slugify');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { parse } = require('cookie'); // Import parse from cookie
-const jwt = require('jsonwebtoken'); // Import jwt
-const { query } = require('../db/index.js'); // Import PostgreSQL query utility
-const { logError } = require('../lib/logger.js'); // Import centralized logger
-const { parseOpeningHours } = require('../../lib/time-helpers'); // Import parseOpeningHours
+import { promises as fs } from 'fs';
+import path from 'path';
+import slugify from 'slugify';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { parse } from 'cookie';
+import jwt from 'jsonwebtoken';
+import { query } from '../db/index.js';
+import { logError, logInfo } from '../lib/logger.js';
+import { parseOpeningHours } from '../lib/time-helpers.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -50,7 +50,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
             // You might want to add more specific address details here if available
         },
         "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ' ' + town)}`,
-        "url": `https://www.localleads.pro/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
+        "url": `https://www.localseogen.com/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
         "telephone": telephone || "", // Use provided telephone or default to empty string
         "priceRange": priceRange || "", // Use provided priceRange or default to empty string
         "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [ // Use provided openingHours if available, otherwise default
@@ -69,7 +69,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
         ],
         "servesCuisine": service, // Using service as servesCuisine for now, can be more specific
         "description": `Expert ${service} services in ${town} by ${businessName}.`,
-        "image": "https://www.localleads.pro/images/logo.svg", // Placeholder: use actual business logo
+        "image": "https://www.localseogen.com/images/logo.svg", // Placeholder: use actual business logo
         "areaServed": {
             "@type": "State", // Could be more specific like City, if needed
             "name": town
@@ -80,7 +80,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
 
 
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     if (req.method === 'POST') {
         const cookies = parse(req.headers.cookie || '');
         const token = cookies.authToken; // Changed from 'auth' to 'authToken'

@@ -67,7 +67,7 @@ def convert_blog_og_images(quality=80):
                     # Update the URL in the meta tag
                     # Assuming the base URL for images is consistent
                     new_url = (
-                        f"https://www.localleads.pro/images/og_webp/{webp_filename}"
+                        f"https://www.localseogen.com/images/og_webp/{webp_filename}"
                     )
                     if meta_tag["content"] != new_url:
                         meta_tag["content"] = new_url

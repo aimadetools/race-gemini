@@ -28,7 +28,7 @@ This document outlines the ideal screenshots for the Product Hunt launch. The ai
 
 **Focus:** A fully generated SEO page, showcasing the output.
 **Key Elements to Highlight:**
-*   A sample generated page URL (e.g., `localleads.pro/plumber-in-london-johns-plumbing.html`).
+*   A sample generated page URL (e.g., `localseogen.com/plumber-in-london-johns-plumbing.html`).
 *   The business name, service, and town prominently displayed.
 *   AI-generated marketing copy.
 *   Evidence of schema markup (e.g., using a schema validator tool's screenshot, or just showing the rendered content which implies schema).

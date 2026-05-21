@@ -22,10 +22,10 @@ def generate_sitemap(project_root=".", output_file="sitemap.xml"):
         # Assuming project_root is the base for the website
         relative_path = os.path.relpath(filepath, project_root).replace(os.sep, "/")
 
-        # Construct the full URL. Assuming the base URL for the site is https://www.localleads.pro
+        # Construct the full URL. Assuming the base URL for the site is https://www.localseogen.com
         # This might need to be configurable or extracted from a .env file in a more robust solution
         # For now, I'll use a placeholder base URL
-        base_url = "https://www.localleads.pro/"
+        base_url = "https://www.localseogen.com/"
         loc_url = urljoin(base_url, relative_path)
 
         sitemap_content += f"""  <url>

@@ -38,7 +38,7 @@ def add_article_schema(file_path):
     canonical_url = (
         og_url_meta["content"].strip()
         if og_url_meta and "content" in og_url_meta.attrs
-        else f"https://www.localleads.pro/{file_path}"
+        else f"https://www.localseogen.com/{file_path}"
     )
 
     # Get content from the blog-content section
