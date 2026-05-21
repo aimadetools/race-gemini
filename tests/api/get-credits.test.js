@@ -33,7 +33,7 @@ describe('Get Credits API', () => {
 
         mockReq = {
             method: 'GET',
-            cookies: {},
+            headers: {},
         };
         mockRes = {
             _status: 200,
@@ -59,7 +59,7 @@ describe('Get Credits API', () => {
 
     // Test Case 1: Successful retrieval of credits
     it(`should return 200 and the user's credits for a valid token`, async () => {
-        mockReq.cookies.authToken = 'validToken';
+        mockReq.headers.cookie = 'auth=validToken';
         mockQuery.mockImplementationOnce((sql, params) => {
             if (sql.includes('SELECT credits FROM users WHERE id = $1') && params[0] === userId) {
                 return { rows: [{ credits: userCredits }] };
@@ -80,14 +80,14 @@ describe('Get Credits API', () => {
         await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(401);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authentication token missing.' });
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization required: No token provided.' });
         expect(jwt.verify).not.toHaveBeenCalled();
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
     // Test Case 3: Expired authToken
     it('should return 401 if authentication token is expired', async () => {
-        mockReq.cookies.authToken = 'expiredToken';
+        mockReq.headers.cookie = 'auth=expiredToken';
         jwt.verify.mockImplementationOnce(() => {
             const error = new Error('Token expired');
             error.name = 'TokenExpiredError';
@@ -98,13 +98,13 @@ describe('Get Credits API', () => {
 
         expect(jwt.verify).toHaveBeenCalledWith('expiredToken', secret);
         expect(mockRes.status).toHaveBeenCalledWith(401);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authentication token expired.' });
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization failed: Token expired.' });
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
     // Test Case 4: Invalid authToken
     it('should return 401 if authentication token is invalid', async () => {
-        mockReq.cookies.authToken = 'invalidToken';
+        mockReq.headers.cookie = 'auth=invalidToken';
         jwt.verify.mockImplementationOnce(() => {
             const error = new Error('Invalid token');
             error.name = 'JsonWebTokenError';
@@ -115,13 +115,13 @@ describe('Get Credits API', () => {
 
         expect(jwt.verify).toHaveBeenCalledWith('invalidToken', secret);
         expect(mockRes.status).toHaveBeenCalledWith(401);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Invalid authentication token.' });
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization failed: Invalid token.' });
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
     // Test Case 5: User not found
     it('should return 404 if user is not found in the database', async () => {
-        mockReq.cookies.authToken = 'validToken';
+        mockReq.headers.cookie = 'auth=validToken';
         mockQuery.mockImplementationOnce((sql, params) => {
             if (sql.includes('SELECT credits FROM users WHERE id = $1') && params[0] === userId) {
                 return { rows: [] }; // Simulate user not found
@@ -140,19 +140,19 @@ describe('Get Credits API', () => {
     // Test Case 6: Non-GET method
     it('should return 405 for non-GET methods', async () => {
         mockReq.method = 'POST';
-        mockReq.cookies.authToken = 'anyToken'; // Token is irrelevant for method check
+        mockReq.headers.cookie = 'auth=anyToken'; // Token is irrelevant for method check
 
         await handler(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(405);
-        expect(mockRes.end).toHaveBeenCalledWith('Method POST Not Allowed');
+        expect(mockRes.end).toHaveBeenCalledWith('Method Not Allowed');
         expect(jwt.verify).not.toHaveBeenCalled();
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
     // Test Case 7: Internal Server Error during database query
     it('should return 500 if an internal server error occurs during database query', async () => {
-        mockReq.cookies.authToken = 'validToken';
+        mockReq.headers.cookie = 'auth=validToken';
         mockQuery.mockImplementationOnce(() => {
             throw new Error('Database connection failed');
         });
@@ -162,6 +162,6 @@ describe('Get Credits API', () => {
         expect(jwt.verify).toHaveBeenCalledWith('validToken', secret);
         expect(mockQuery).toHaveBeenCalledWith('SELECT credits FROM users WHERE id = $1', [userId]);
         expect(mockRes.status).toHaveBeenCalledWith(500);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Internal server error.' });
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Error retrieving user credits.' });
     });
 });

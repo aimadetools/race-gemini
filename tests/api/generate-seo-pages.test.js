@@ -50,7 +50,7 @@ beforeAll(async () => {
     // Ensure the mock directories exist for testing, using the MOCKED fs.promises.mkdir
     await fs.promises.mkdir(path.join(mockCwd, 'generated-seo-pages'), { recursive: true });
     // Store original handler, it might be loaded once
-    originalHandler = require('../../api/generate-seo-pages');
+    originalHandler = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 });
 
 afterAll(async () => {
@@ -78,7 +78,7 @@ describe('POST /api/generate-seo-pages', () => {
         // For a more robust solution, the application code itself might need refactoring
         // to not rely on top-level module initialization of AI client based on process.env.
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        handlerToTest = require('../../api/generate-seo-pages');
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         // Access the globally defined mock instances and reset their state if needed
         mockGenAI = _getMockGenAI();

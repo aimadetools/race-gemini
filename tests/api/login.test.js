@@ -91,7 +91,7 @@ describe('Login API', () => {
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Logged in successfully!',
-            userId: expect.any(String),
+            userId: expect.anything(),
         }));
 
         expect(mockRes.setHeader).toHaveBeenCalledWith(

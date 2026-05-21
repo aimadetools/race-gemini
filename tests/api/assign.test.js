@@ -1,5 +1,5 @@
 const httpMocks = require('node-mocks-http');
-const assignHandler = require('../../api/assign.js');
+const assignHandler = require('../../api/assign.js').default || require('../../api/assign.js');
 const { logError } = require('../../lib/logger');
 
 jest.mock('../../lib/logger', () => ({
