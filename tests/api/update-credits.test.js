@@ -1,15 +1,17 @@
 import handler from '../../api/update-credits';
-import { jest } from '@jest/globals';
 import { mockQuery as originalMockQuery, clearMockUsers, mockBcrypt } from '../../db/mockDb'; // Import mockBcrypt too for consistency, though not used here
 import jwt from 'jsonwebtoken';
 
-// Re-declare mockQuery as a Jest mock function
-const mockQuery = jest.fn(originalMockQuery);
+// Mock the ../db/index.js module to use our mockQuery while preserving other exports
+jest.mock('../../db/index.js', () => {
+    const mockDb = jest.requireActual('../../db/mockDb.js');
+    return {
+        ...mockDb,
+        query: jest.fn(mockDb.mockQuery),
+    };
+});
 
-// Mock the ../db/index.js module to use our mockQuery
-jest.mock('../../db/index.js', () => ({
-    query: (...args) => mockQuery(...args),
-}));
+import { query as mockQuery } from '../../db/index.js';
 
 // Mock jsonwebtoken
 jest.mock('jsonwebtoken');

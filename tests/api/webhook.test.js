@@ -1,7 +1,4 @@
 // tests/api/webhook.test.js
-import { jest } from '@jest/globals';
-
-
 import { createRequest, createResponse } from 'node-mocks-http';
 import { mockQuery as originalMockQuery, clearMockUsers, addMockUser, getMockUsers } from '../../db/mockDb';
 import stripePackage from 'stripe';
@@ -10,13 +7,16 @@ import { kv } from '@vercel/kv';
 import fs from 'fs';
 import path from 'path';
 
-// Mock external dependencies
-const mockQuery = jest.fn(originalMockQuery);
+// Mock ../db/index.js to use our mockQuery while preserving other exports
+jest.mock('../../db/index.js', () => {
+    const mockDb = jest.requireActual('../../db/mockDb.js');
+    return {
+        ...mockDb,
+        query: jest.fn(mockDb.mockQuery),
+    };
+});
 
-// Mock ../db/index.js to use our mockQuery
-jest.mock('../../db/index.js', () => ({
-    query: (...args) => mockQuery(...args),
-}));
+import { query as mockQuery } from '../../db/index.js';
 
 // Mock micro's buffer
 jest.mock('micro', () => ({

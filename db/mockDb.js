@@ -2,43 +2,124 @@ const mockUsers = [];
 let nextId = 1;
 
 export const mockQuery = async (text, params) => {
-    if (text.startsWith('SELECT id FROM users WHERE email = $1')) {
-        const email = params[0];
-        const existingUser = mockUsers.find(user => user.email === email);
-        return { rows: existingUser ? [{ id: existingUser.id }] : [] };
-    } else if (text.startsWith('INSERT INTO users (email, hashed_password, credits) VALUES ($1, $2, $3) RETURNING id') || text.startsWith('INSERT INTO users (id, email, hashed_password, credits) VALUES ($1, $2, $3, $4) RETURNING id')) {
-        let newUser;
-        if (text.startsWith('INSERT INTO users (id, email, hashed_password, credits)')) {
-            const [id, email, hashedPassword, credits] = params;
-            newUser = { id, email, hashed_password: hashedPassword, credits };
-        } else {
-            const [email, hashedPassword, credits] = params;
-            newUser = { id: (nextId++).toString(), email, hashed_password: hashedPassword, credits };
+    const textLower = text.toLowerCase();
+
+    // 1. SELECT query
+    if (textLower.startsWith('select')) {
+        // Check WHERE clauses
+        if (textLower.includes('where email = $1')) {
+            const email = params[0];
+            const user = mockUsers.find(u => u.email === email);
+            if (user) {
+                const u = {
+                    id: user.id,
+                    email: user.email,
+                    password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                    passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
+                    hashed_password: user.password_hash || user.passwordHash || user.hashed_password,
+                    credits: user.credits || 0,
+                    referral_code: user.referral_code,
+                    referrer_id: user.referrer_id,
+                    subscription_status: user.subscription_status || 'inactive',
+                    stripe_subscription_id: user.stripe_subscription_id || null,
+                    logo_url: user.logo_url || null,
+                    primary_color: user.primary_color || null,
+                };
+                return { rows: [u] };
+            }
+            return { rows: [] };
         }
-        mockUsers.push(newUser);
-        return { rows: [{ id: newUser.id }] };
-    } else if (text.startsWith('SELECT id, email, hashed_password, credits FROM users WHERE email = $1')) {
-        const email = params[0];
-        const user = mockUsers.find(u => u.email === email);
-        return { rows: user ? [user] : [] };
-    } else if (text.startsWith('UPDATE users SET credits = credits + $1 WHERE id = $2')) {
-        const [amount, userId] = params;
-        const userIndex = mockUsers.findIndex(u => u.id === userId);
-        if (userIndex > -1) {
-            mockUsers[userIndex].credits += amount;
-            return { rows: [{ credits: mockUsers[userIndex].credits }] };
+        
+        if (textLower.includes('where id = $1')) {
+            const id = params[0]?.toString();
+            const user = mockUsers.find(u => u.id.toString() === id);
+            if (user) {
+                const u = {
+                    id: user.id,
+                    email: user.email,
+                    password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                    passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
+                    hashed_password: user.password_hash || user.passwordHash || user.hashed_password,
+                    credits: user.credits || 0,
+                    referral_code: user.referral_code,
+                    referrer_id: user.referrer_id,
+                    subscription_status: user.subscription_status || 'inactive',
+                    stripe_subscription_id: user.stripe_subscription_id || null,
+                    logo_url: user.logo_url || null,
+                    primary_color: user.primary_color || null,
+                };
+                return { rows: [u] };
+            }
+            return { rows: [] };
         }
-        return { rows: [] };
-    } else if (text.startsWith('SELECT credits FROM users WHERE id = $1')) {
-        const userId = params[0];
-        const user = mockUsers.find(u => u.id === userId);
-        return { rows: user ? [{ credits: user.credits }] : [] };
-    } else if (text.startsWith('SELECT * FROM users WHERE id = $1')) {
-        const userId = params[0];
-        const user = mockUsers.find(u => u.id === userId);
-        return { rows: user ? [user] : [] };
+
+        if (textLower.includes('where referral_code = $1')) {
+            const refCode = params[0];
+            const user = mockUsers.find(u => u.referral_code === refCode);
+            if (user) {
+                const u = {
+                    id: user.id,
+                    email: user.email,
+                    password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                    passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
+                    hashed_password: user.password_hash || user.passwordHash || user.hashed_password,
+                    credits: user.credits || 0,
+                    referral_code: user.referral_code,
+                    referrer_id: user.referrer_id,
+                };
+                return { rows: [u] };
+            }
+            return { rows: [] };
+        }
     }
-    // Add other query mocks as needed
+
+    // 2. INSERT query
+    if (textLower.includes('insert into users')) {
+        const match = text.match(/insert\s+into\s+users\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newUser = { id: (nextId++).toString() };
+            cols.forEach((col, i) => {
+                newUser[col] = params[i];
+            });
+            // Ensure credits defaults to 0 if not provided
+            if (newUser.credits === undefined) {
+                newUser.credits = 0;
+            }
+            mockUsers.push(newUser);
+            return { rows: [{ id: newUser.id }] };
+        }
+    }
+
+    // 3. UPDATE query
+    if (textLower.includes('update users')) {
+        if (textLower.includes('credits = credits + $1')) {
+            const [amount, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.credits = (user.credits || 0) + amount;
+                return { rows: [{ credits: user.credits }] };
+            }
+        }
+        if (textLower.includes('credits = credits - $1')) {
+            const [amount, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.credits = (user.credits || 0) - amount;
+                return { rows: [{ credits: user.credits }] };
+            }
+        }
+        if (textLower.includes('credits = $1')) {
+            const [amount, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.credits = amount;
+                return { rows: [{ credits: user.credits }] };
+            }
+        }
+    }
+
+    // Default mock behavior
     return { rows: [] };
 };
 
@@ -59,4 +140,13 @@ export const clearMockUsers = () => {
 export const mockBcrypt = {
     hash: (password, saltRounds) => Promise.resolve(`mock-hashed-${password}`),
     compare: (password, hashedPassword) => Promise.resolve(hashedPassword === `mock-hashed-${password}`),
+};
+
+export const query = mockQuery;
+
+export const pool = {
+    connect: async () => ({
+        query: mockQuery,
+        release: () => {},
+    }),
 };
