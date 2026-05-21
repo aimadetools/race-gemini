@@ -1,7 +1,12 @@
 const mockUsers = [];
 let nextId = 1;
 
-export const mockQuery = async (text, params) => {
+let queryDelegate = null;
+export const setQueryDelegate = (fn) => {
+    queryDelegate = fn;
+};
+
+export const originalMockQuery = async (text, params) => {
     const textLower = text.toLowerCase();
 
     // 1. SELECT query
@@ -131,6 +136,13 @@ export const mockQuery = async (text, params) => {
 
     // Default mock behavior
     return { rows: [] };
+};
+
+export const mockQuery = async (text, params) => {
+    if (queryDelegate) {
+        return queryDelegate(text, params);
+    }
+    return originalMockQuery(text, params);
 };
 
 export const getMockUsers = () => {

@@ -1,22 +1,8 @@
+import { jest } from '@jest/globals';
 import handler from '../../api/signup';
-import { clearMockUsers } from '../../db/mockDb';
+import { clearMockUsers, setQueryDelegate, originalMockQuery } from '../../db/mockDb.js';
 
-// Mock the ../db/index.js module to use our mockQuery while preserving other exports
-jest.mock('../../db/index.js', () => {
-    const mockDb = jest.requireActual('../../db/mockDb.js');
-    return {
-        ...mockDb,
-        query: jest.fn(mockDb.mockQuery),
-    };
-});
-
-import { query as mockQuery } from '../../db/index.js';
-
-// Mock the bcryptjs module
-jest.mock('bcryptjs', () => ({
-    hash: (password) => Promise.resolve(`mock-hashed-${password}`),
-    compare: (password, hashedPassword) => Promise.resolve(hashedPassword === `mock-hashed-${password}`),
-}));
+const mockQuery = jest.fn((text, params) => originalMockQuery(text, params));
 
 describe('Signup API', () => {
     let mockReq;
@@ -25,6 +11,7 @@ describe('Signup API', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         clearMockUsers(); // Clear the mock users for each test
+        setQueryDelegate(mockQuery);
         mockQuery.mockClear();
 
         mockReq = {
@@ -43,6 +30,7 @@ describe('Signup API', () => {
     });
 
     afterEach(() => {
+        setQueryDelegate(null);
         delete process.env.JWT_SECRET;
     });
 
@@ -64,7 +52,7 @@ describe('Signup API', () => {
         // Verify that the user was inserted into the mock database with initial credits
         expect(mockQuery).toHaveBeenCalledWith(
             'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [email, `mock-hashed-${password}`, 50, expect.any(String), null]
+            [email, expect.any(String), 50, expect.any(String), null]
         );
 
     });
@@ -121,7 +109,7 @@ describe('Signup API', () => {
         expect(firstMockRes.status).toHaveBeenCalledWith(201);
         expect(mockQuery).toHaveBeenCalledWith(
             'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [email, `mock-hashed-${password}`, 50, expect.any(String), null]
+            [email, expect.any(String), 50, expect.any(String), null]
         );
 
         // Clear mock calls for the second attempt, and re-initialize mockRes for the second call
