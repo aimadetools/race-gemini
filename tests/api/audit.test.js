@@ -97,7 +97,7 @@ describe('audit API', () => {
         const pythonExecutable = path.resolve(MOCK_CWD, 'venv', 'bin', 'python');
         const auditorCliPath = path.resolve(MOCK_CWD, 'scripts', 'auditor_cli.py');
 
-        expect(mockSpawn).toHaveBeenCalledTimes(9);
+        expect(mockSpawn).toHaveBeenCalledTimes(13);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutable, [auditorCliPath, 'html', 'alt-attributes', 'https://example.com']);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutable, [auditorCliPath, 'html', 'h1-tags', 'https://example.com']);
         
@@ -107,11 +107,21 @@ describe('audit API', () => {
             'h1-tags': { mock: 'data' },
             'broken-links': { mock: 'data' },
             'h2-h3-tags': { mock: 'data' },
-            'mobile-friendliness': { mock: 'data' },
             'structured-data': { mock: 'data' },
             'readability': { mock: 'data' },
             'page-load-times': { mock: 'data' },
-            'gmb': { mock: 'data' },
+            'robots-txt': { mock: 'data' },
+            'canonical-tags': { mock: 'data' },
+            'sitemap-xml': { mock: 'data' },
+            'schema-markup': { mock: 'data' },
+            'meta-tags': { mock: 'data' },
+            'header-response-codes': { mock: 'data' },
+            'mobile-friendliness': {
+                error: 'GOOGLE_PAGE_SPEED_API_KEY environment variable is not set. Cannot perform mobile-friendliness audit.'
+            },
+            'gbp_category_check': {
+                error: 'OpenCage API key is not configured.'
+            }
         });
     });
     
@@ -126,7 +136,7 @@ describe('audit API', () => {
         const pythonExecutable = path.resolve(MOCK_CWD, 'venv', 'bin', 'python');
         const auditorCliPath = path.resolve(MOCK_CWD, 'scripts', 'auditor_cli.py');
 
-        expect(mockSpawn).toHaveBeenCalledTimes(10);
+        expect(mockSpawn).toHaveBeenCalledTimes(14);
         expect(mockSpawn).toHaveBeenCalledWith(pythonExecutable, [auditorCliPath, 'locations', 'https://example.com', '--locations-db', 'New York,London']);
         
         expect(res.status).toHaveBeenCalledWith(200);

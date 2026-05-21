@@ -29,6 +29,10 @@ export default async (req, res) => {
     if (req.method === 'POST') {
         const { creditPackId, agencyPlanId, referrerId } = req.body; // Expect either creditPackId, agencyPlanId, and optionally referrerId
         let sessionConfig = {}; // Initialize a configuration object for the Stripe session
+        
+        const host = req.headers.host || 'localseogen.com';
+        const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+        const baseUrl = `${protocol}://${host}`;
 
         // Add referrerId to metadata if present
         const metadata = {
@@ -87,8 +91,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'payment',
-                success_url: `https://localseogen.com/success.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `https://localseogen.com/pricing.html`, // Redirect back to pricing page
+                success_url: `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${baseUrl}/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
                 metadata: {
                     ...metadata, // Spread existing metadata (including referrerId if present)
@@ -125,8 +129,8 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'subscription', // Use subscription mode for recurring payments
-                success_url: `https://www.localseogen.com/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
-                cancel_url: `https://www.localseogen.com/agency-partnerships.html`, // Redirect back to agency pricing page
+                success_url: `${baseUrl}/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
+                cancel_url: `${baseUrl}/agency-partnerships.html`, // Redirect back to agency pricing page
                 client_reference_id: userId,
                 customer_creation: 'always', // Ensure a customer is created in Stripe
                 metadata: {

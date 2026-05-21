@@ -1,3 +1,4 @@
+import { kv } from '@vercel/kv';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
@@ -5,13 +6,14 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Initialize Stripe
 import { logError } from '../lib/logger.js';
 
-async function handler(req, res) {
+async function handler(req, res, currentKvClient) {
+    const currentKv = currentKvClient || kv;
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Only GET requests are allowed' });
     }
 
     const cookies = cookie.parse(req.headers.cookie || '');
-    const token = cookies.authToken; // Use authToken as defined in checkout.js
+    const token = cookies.authToken || cookies.token || cookies.auth;
 
     if (!token) {
         await logError(new Error('Authentication token missing.'), 'Agency Dashboard - Authentication Error', 'agency_dashboard_error.log');
@@ -34,7 +36,7 @@ async function handler(req, res) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const userId = decoded.userId; // agencyId is the userId
+        const userId = decoded.agencyId || decoded.userId; // agencyId is the userId
 
         if (!userId) { // This check might be redundant if decoded.userId is guaranteed, but harmless.
             await logError(new Error('User ID missing after token decode.'), 'Agency Dashboard - User ID Missing', 'agency_dashboard_error.log');
