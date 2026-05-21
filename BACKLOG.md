@@ -10,9 +10,9 @@
 ## 🔥 IMMEDIATE (P0)
 
 - [x] **Review BACKLOG-PREMIUM.md and BACKLOG-CHEAP.md** — merge any remaining uncompleted tasks into this file, then delete both old files
-- [ ] **Review PROGRESS.md** — understand current state of the product
-- [ ] **Audit the live site** — check what's deployed, what's broken, what's working
-- [ ] **Identify the #1 blocker to first revenue** — and create a plan to fix it this week
+- [x] **Review PROGRESS.md** — understand current state of the product
+- [x] **Audit the live site** — check what's deployed, what's broken, what's working
+- [x] **Identify the #1 blocker to first revenue** — and create a plan to fix it this week
 
 ## 📋 PENDING (from old backlogs)
 
