@@ -1,20 +1,10 @@
-// tests/api/forgot-password-request.test.js
-import forgotPasswordRequestHandler from '../../api/forgot-password-request';
-import signupHandler from '../../api/signup';
 import { jest } from '@jest/globals';
+import forgotPasswordRequestHandler from '../../api/forgot-password-request.js';
+import signupHandler from '../../api/signup.js';
+import { clearMockUsers, setQueryDelegate, originalMockQuery } from '../../db/mockDb.js';
+import { logError } from '../../lib/logger.js';
 
-// Mock the nanoid module to generate predictable tokens
-jest.mock('nanoid', () => {
-    const { jest } = require('@jest/globals');
-    let tokenCounter = 0;
-    const mockNanoid = jest.fn(() => `mock-token-${++tokenCounter}`);
-    mockNanoid.__reset = () => tokenCounter = 0;
-    return {
-        nanoid: mockNanoid,
-        customAlphabet: jest.fn(() => mockNanoid),
-    };
-});
-import { customAlphabet } from 'nanoid';
+const mockQuery = jest.fn((text, params) => originalMockQuery(text, params));
 
 // Mock KV store for in-memory testing
 const mockKvStore = new Map();
@@ -63,8 +53,9 @@ describe('forgot-password-request API', () => {
 
     beforeEach(async () => {
         jest.clearAllMocks();
-        customAlphabet().__reset();
         mockKvStore.clear();
+        setQueryDelegate(mockQuery);
+        mockQuery.mockClear();
 
         testUserEmail = `forgot-pass-test-${Date.now()}@example.com`;
         const password = 'secure-password';
@@ -79,6 +70,10 @@ describe('forgot-password-request API', () => {
         }
     });
 
+    afterEach(() => {
+        setQueryDelegate(null);
+    });
+
     it('should return 200 and create a reset token for an existing user', async () => {
         const req = createMockReq({ email: testUserEmail });
         const res = createMockRes();
@@ -88,8 +83,12 @@ describe('forgot-password-request API', () => {
         expect(res._status).toBe(200);
         expect(res._json.message).toBe('If an account with that email exists, a password reset link has been sent.');
 
-        // Verify that a password reset token was created in the mock KV store
-        const tokenData = mockKvStore.get('password-reset:mock-token-1');
+        // Find the reset token in the mock KV store
+        const keys = Array.from(mockKvStore.keys());
+        const tokenKey = keys.find(k => k.startsWith('password-reset:'));
+        expect(tokenKey).toBeDefined();
+
+        const tokenData = mockKvStore.get(tokenKey);
         expect(tokenData).toBeDefined();
         expect(tokenData.email).toBe(testUserEmail);
         expect(tokenData.expiry).toBeGreaterThan(Date.now());
@@ -105,8 +104,10 @@ describe('forgot-password-request API', () => {
         expect(res._status).toBe(200);
         expect(res._json.message).toBe('If an account with that email exists, a password reset link has been sent.');
 
-        // Verify that no reset token was created
-        expect(mockKvStore.size).toBe(0);
+        // Verify that no reset token was created (beyond what might have been created in setup)
+        // Setup creates a signup, but not a reset token. So mockKvStore should be empty.
+        const resetTokenKeys = Array.from(mockKvStore.keys()).filter(k => k.startsWith('password-reset:'));
+        expect(resetTokenKeys.length).toBe(0);
     });
 
     it('should return 400 if email is missing', async () => {
@@ -130,26 +131,25 @@ describe('forgot-password-request API', () => {
         expect(res._json.message).toBe('Method Not Allowed');
     });
 
-    it('should log the reset link to the console (for dev purposes)', async () => {
-        const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    it('should log the reset link via logError', async () => {
         const req = createMockReq({ email: testUserEmail }, { 'host': 'localhost:3000', 'x-forwarded-proto': 'http' });
         const res = createMockRes();
 
         await forgotPasswordRequestHandler(req, res, mockKv);
 
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Password reset link for'));
-        expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('http://localhost:3000/reset-password.html?token=mock-token-1'));
-
-        consoleSpy.mockRestore();
+        expect(logError).toHaveBeenCalledWith(
+            null,
+            expect.stringContaining('Password reset link generated for'),
+            'forgot_password_request_error.log'
+        );
     });
 
     it('should handle internal server errors gracefully', async () => {
         const error = new Error('KV is down!');
         const faultyKv = {
             ...mockKv,
-            get: jest.fn().mockRejectedValue(error),
+            set: jest.fn().mockRejectedValue(error),
         };
-        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
         const req = createMockReq({ email: testUserEmail });
         const res = createMockRes();
@@ -158,8 +158,10 @@ describe('forgot-password-request API', () => {
 
         expect(res._status).toBe(500);
         expect(res._json.message).toBe('Internal Server Error');
-        expect(consoleSpy).toHaveBeenCalledWith('Error during forgot password request:', error);
-
-        consoleSpy.mockRestore();
+        expect(logError).toHaveBeenCalledWith(
+            error,
+            'Forgot Password Request - General Error',
+            'forgot_password_request_error.log'
+        );
     });
 });

@@ -1,36 +1,27 @@
+import { jest } from '@jest/globals';
 import handler from '../../api/get-credits';
-import { clearMockUsers } from '../../db/mockDb';
+import { clearMockUsers, setQueryDelegate } from '../../db/mockDb.js';
 import jwt from 'jsonwebtoken';
 
-// Mock the ../db/index.js module to use our mockQuery while preserving other exports
-jest.mock('../../db/index.js', () => {
-    const mockDb = jest.requireActual('../../db/mockDb.js');
-    return {
-        ...mockDb,
-        query: jest.fn(mockDb.mockQuery),
-    };
-});
-
-import { query as mockQuery } from '../../db/index.js';
-
-// Mock jsonwebtoken
-jest.mock('jsonwebtoken');
+const mockQuery = jest.fn();
 
 describe('Get Credits API', () => {
     let mockReq;
     let mockRes;
     const userId = 'testUserId123';
-    const userEmail = 'test@example.com';
     const userCredits = 100;
     const secret = 'test_jwt_secret';
+    let verifySpy;
 
     beforeAll(() => {
         process.env.JWT_SECRET = secret;
+        verifySpy = jest.spyOn(jwt, 'verify');
     });
 
     beforeEach(() => {
         jest.clearAllMocks();
         clearMockUsers(); // Ensure a clean mock DB state for each test
+        setQueryDelegate(mockQuery);
         mockQuery.mockClear();
 
         mockReq = {
@@ -47,16 +38,16 @@ describe('Get Credits API', () => {
         };
 
         // Default mock for jwt.verify to return a valid token
-        jwt.verify.mockReturnValue({ userId });
+        verifySpy.mockReturnValue({ userId });
+    });
 
-        // Add a mock user to the mock DB for tests that require it
-        // We can't directly call mockQuery for INSERT here as it's a mock,
-        // instead, we'll manually add to mockUsers if needed or use mockQuery.mockImplementationOnce
-        // For get-credits, we'll directly set up mockQuery responses.
+    afterEach(() => {
+        setQueryDelegate(null);
     });
 
     afterAll(() => {
         delete process.env.JWT_SECRET;
+        verifySpy.mockRestore();
     });
 
     // Test Case 1: Successful retrieval of credits
@@ -71,7 +62,7 @@ describe('Get Credits API', () => {
 
         await handler(mockReq, mockRes);
 
-        expect(jwt.verify).toHaveBeenCalledWith('validToken', secret);
+        expect(verifySpy).toHaveBeenCalledWith('validToken', secret);
         expect(mockQuery).toHaveBeenCalledWith('SELECT credits FROM users WHERE id = $1', [userId]);
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.json).toHaveBeenCalledWith({ credits: userCredits });
@@ -83,14 +74,14 @@ describe('Get Credits API', () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(401);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization required: No token provided.' });
-        expect(jwt.verify).not.toHaveBeenCalled();
+        expect(verifySpy).not.toHaveBeenCalled();
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
     // Test Case 3: Expired authToken
     it('should return 401 if authentication token is expired', async () => {
         mockReq.headers.cookie = 'auth=expiredToken';
-        jwt.verify.mockImplementationOnce(() => {
+        verifySpy.mockImplementationOnce(() => {
             const error = new Error('Token expired');
             error.name = 'TokenExpiredError';
             throw error;
@@ -98,7 +89,7 @@ describe('Get Credits API', () => {
 
         await handler(mockReq, mockRes);
 
-        expect(jwt.verify).toHaveBeenCalledWith('expiredToken', secret);
+        expect(verifySpy).toHaveBeenCalledWith('expiredToken', secret);
         expect(mockRes.status).toHaveBeenCalledWith(401);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization failed: Token expired.' });
         expect(mockQuery).not.toHaveBeenCalled();
@@ -107,7 +98,7 @@ describe('Get Credits API', () => {
     // Test Case 4: Invalid authToken
     it('should return 401 if authentication token is invalid', async () => {
         mockReq.headers.cookie = 'auth=invalidToken';
-        jwt.verify.mockImplementationOnce(() => {
+        verifySpy.mockImplementationOnce(() => {
             const error = new Error('Invalid token');
             error.name = 'JsonWebTokenError';
             throw error;
@@ -115,7 +106,7 @@ describe('Get Credits API', () => {
 
         await handler(mockReq, mockRes);
 
-        expect(jwt.verify).toHaveBeenCalledWith('invalidToken', secret);
+        expect(verifySpy).toHaveBeenCalledWith('invalidToken', secret);
         expect(mockRes.status).toHaveBeenCalledWith(401);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Authorization failed: Invalid token.' });
         expect(mockQuery).not.toHaveBeenCalled();
@@ -133,7 +124,7 @@ describe('Get Credits API', () => {
 
         await handler(mockReq, mockRes);
 
-        expect(jwt.verify).toHaveBeenCalledWith('validToken', secret);
+        expect(verifySpy).toHaveBeenCalledWith('validToken', secret);
         expect(mockQuery).toHaveBeenCalledWith('SELECT credits FROM users WHERE id = $1', [userId]);
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'User not found.' });
@@ -148,7 +139,7 @@ describe('Get Credits API', () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(405);
         expect(mockRes.end).toHaveBeenCalledWith('Method Not Allowed');
-        expect(jwt.verify).not.toHaveBeenCalled();
+        expect(verifySpy).not.toHaveBeenCalled();
         expect(mockQuery).not.toHaveBeenCalled();
     });
 
@@ -161,7 +152,7 @@ describe('Get Credits API', () => {
 
         await handler(mockReq, mockRes);
 
-        expect(jwt.verify).toHaveBeenCalledWith('validToken', secret);
+        expect(verifySpy).toHaveBeenCalledWith('validToken', secret);
         expect(mockQuery).toHaveBeenCalledWith('SELECT credits FROM users WHERE id = $1', [userId]);
         expect(mockRes.status).toHaveBeenCalledWith(500);
         expect(mockRes.json).toHaveBeenCalledWith({ message: 'Error retrieving user credits.' });

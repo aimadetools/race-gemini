@@ -1,45 +1,25 @@
-// tests/api/reset-password.test.js
-import resetPasswordHandler from '../../api/reset-password';
-import signupHandler from '../../api/signup'; // Needed for user creation in setup
-import bcrypt from 'bcryptjs';
 import { jest } from '@jest/globals';
-import { clearMockUsers, getMockUsers } from '../../db/mockDb';
+import resetPasswordHandler from '../../api/reset-password.js';
+import signupHandler from '../../api/signup.js';
+import bcrypt from 'bcryptjs';
+import { clearMockUsers, getMockUsers, setQueryDelegate, originalMockQuery } from '../../db/mockDb.js';
 
-// Mock the bcryptjs module explicitly for predictable hashing and comparison
-jest.mock('bcryptjs', () => {
-    const { jest } = require('@jest/globals'); // Import jest inside the factory
-    return {
-        hash: jest.fn((password) => Promise.resolve(`mock-hashed-${password}`)),
-        compare: jest.fn((data, hash) => Promise.resolve(hash === `mock-hashed-${data}`)),
-    };
-});
+const mockQuery = jest.fn((text, params) => originalMockQuery(text, params));
 
-// Mock the uuid module to generate unique IDs
-jest.mock('uuid', () => {
-    let uuidCounter = 0; // Move inside the factory function
-    return {
-        v4: jest.fn(() => `mock-uuid-${++uuidCounter}`),
-    };
-});
-import { v4 as uuidv4 } from 'uuid'; // Import uuidv4 from the mocked module
-
-
+// Helper to generate unique random tokens
+const generateToken = () => `mock-token-${Math.random().toString(36).substring(2, 10)}`;
 
 // Mock KV store for in-memory testing
 const mockKvStore = new Map();
 
 const mockKv = {
     async get(key) {
-        const value = mockKvStore.get(key);
-        // console.log(`mockKv.get: ${key} -> ${value}`);
-        return value; // Return raw value, let API handler parse if needed
+        return mockKvStore.get(key);
     },
     async set(key, value) {
-        // console.log(`mockKv.set: ${key} -> ${JSON.stringify(value)}`);
         mockKvStore.set(key, typeof value === 'object' && value !== null ? JSON.stringify(value) : value);
     },
     async del(key) {
-        // console.log(`mockKv.del: ${key}`);
         mockKvStore.delete(key);
     },
     async incr(key) {
@@ -79,11 +59,20 @@ describe('reset-password API', () => {
     let resetToken;
     let expiredToken;
     let invalidToken;
+    let hashSpy;
+    let compareSpy;
+
+    beforeAll(() => {
+        hashSpy = jest.spyOn(bcrypt, 'hash').mockImplementation((password) => Promise.resolve(`mock-hashed-${password}`));
+        compareSpy = jest.spyOn(bcrypt, 'compare').mockImplementation((data, hash) => Promise.resolve(hash === `mock-hashed-${data}`));
+    });
 
     beforeEach(async () => {
         jest.clearAllMocks();
         mockKvStore.clear(); // Clear KV store for each test
         clearMockUsers(); // Clear mock users database
+        setQueryDelegate(mockQuery);
+        mockQuery.mockClear();
 
         testUserEmail = `reset-test-${Date.now()}@example.com`;
         initialPassword = 'initial-secure-password';
@@ -103,17 +92,26 @@ describe('reset-password API', () => {
         }
 
         // Generate a valid reset token and store it in KV
-        resetToken = uuidv4();
+        resetToken = generateToken();
         const expiryTime = Date.now() + 3600000; // 1 hour from now
         await mockKv.set(`password-reset:${resetToken}`, { email: testUserEmail, expiry: expiryTime });
 
         // Generate an expired token
-        expiredToken = uuidv4();
+        expiredToken = generateToken();
         const expiredTime = Date.now() - 3600000; // 1 hour ago
         await mockKv.set(`password-reset:${expiredToken}`, { email: testUserEmail, expiry: expiredTime });
 
         // Generate an invalid token (not stored in KV)
-        invalidToken = uuidv4();
+        invalidToken = generateToken();
+    });
+
+    afterEach(() => {
+        setQueryDelegate(null);
+    });
+
+    afterAll(() => {
+        hashSpy.mockRestore();
+        compareSpy.mockRestore();
     });
 
     it('should successfully reset password with a valid token', async () => {
@@ -156,7 +154,7 @@ describe('reset-password API', () => {
     it('should return 400 if newPassword is missing', async () => {
         const req = {
             method: 'POST',
-            body: { token: uuidv4() },
+            body: { token: generateToken() },
         };
         const res = createMockRes();
 
@@ -199,7 +197,7 @@ describe('reset-password API', () => {
     it('should return 404 if user not found (after token validation) and invalidate token', async () => {
         // Create a token that points to a non-existent user
         const nonExistentEmail = `nonexistent-${Date.now()}@example.com`;
-        const tokenForNonExistentUser = uuidv4();
+        const tokenForNonExistentUser = generateToken();
         const expiryTime = Date.now() + 3600000;
         await mockKv.set(`password-reset:${tokenForNonExistentUser}`, { email: nonExistentEmail, expiry: expiryTime });
 
@@ -217,15 +215,12 @@ describe('reset-password API', () => {
         // Ensure the token was consumed/deleted even if user not found
         const tokenInKv = await mockKv.get(`password-reset:${tokenForNonExistentUser}`);
         expect(tokenInKv).toBeUndefined();
-
-        // Clean up the token created specifically for this test's setup
-        await mockKv.del(`password-reset:${tokenForNonExistentUser}`);
     });
 
     it('should return 405 for non-POST methods', async () => {
         const req = {
             method: 'GET', // Using GET instead of POST
-            body: { token: uuidv4(), newPassword: 'any-password' },
+            body: { token: generateToken(), newPassword: 'any-password' },
         };
         const res = createMockRes();
 

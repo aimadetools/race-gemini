@@ -1,4 +1,4 @@
-const { parseOpeningHours, convertTo24Hour } = require('../../lib/time-helpers');
+import { parseOpeningHours, convertTo24Hour } from '../../lib/time-helpers';
 
 describe('convertTo24Hour', () => {
     test('should convert AM times correctly', () => {

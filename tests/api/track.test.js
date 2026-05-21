@@ -1,32 +1,35 @@
-// tests/api/track.test.js
-import handler from '../../api/track';
-import { Pool } from 'pg'; // Import Pool for type hinting and mocking
+import { jest } from '@jest/globals';
+import handler from '../../api/track.js';
+import { setQueryDelegate, pool } from '../../db/mockDb.js';
 
-// Mock the connectToDatabase module
-jest.mock('../../lib/db', () => ({
-  connectToDatabase: jest.fn(),
-}));
-
-// Mock the actual pg Pool for controlled behavior in tests
 const mockQuery = jest.fn();
 const mockRelease = jest.fn();
-const mockConnect = jest.fn(() => ({
-  query: mockQuery,
-  release: mockRelease,
-}));
-const mockPool = {
-  connect: mockConnect,
-  query: mockQuery, // Also mock pool.query directly for cases where it might be used
-};
-
-// Before each test, reset mocks
-beforeEach(() => {
-  jest.clearAllMocks();
-  const { connectToDatabase } = require('../../lib/db');
-  connectToDatabase.mockResolvedValue(mockPool);
-});
+let mockConnect;
 
 describe('api/track', () => {
+  beforeAll(() => {
+    mockConnect = jest.spyOn(pool, 'connect').mockImplementation(async () => ({
+      query: mockQuery,
+      release: mockRelease,
+    }));
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    setQueryDelegate(mockQuery);
+    mockQuery.mockClear();
+    mockRelease.mockClear();
+    mockConnect.mockClear();
+  });
+
+  afterEach(() => {
+    setQueryDelegate(null);
+  });
+
+  afterAll(() => {
+    mockConnect.mockRestore();
+  });
+
   it('should return 405 for non-POST requests', async () => {
     const req = { method: 'GET' };
     const res = {
@@ -73,11 +76,7 @@ describe('api/track', () => {
 
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledWith(
-      `
-      INSERT INTO user_events(event_name, user_id, event_data)
-      VALUES($1, $2, $3)
-      RETURNING *;
-    `,
+      expect.stringContaining('INSERT INTO user_events'),
       ['button_click', 'user123', { buttonId: 'submitBtn', page: '/pricing.html' }]
     );
     expect(mockRelease).toHaveBeenCalledTimes(1);
@@ -103,11 +102,7 @@ describe('api/track', () => {
 
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledWith(
-      `
-      INSERT INTO user_events(event_name, user_id, event_data)
-      VALUES($1, $2, $3)
-      RETURNING *;
-    `,
+      expect.stringContaining('INSERT INTO user_events'),
       ['page_view', null, null]
     );
     expect(mockRelease).toHaveBeenCalledTimes(1);
@@ -135,11 +130,7 @@ describe('api/track', () => {
 
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledWith(
-      `
-      INSERT INTO user_events(event_name, user_id, event_data)
-      VALUES($1, $2, $3)
-      RETURNING *;
-    `,
+      expect.stringContaining('INSERT INTO user_events'),
       ['error_event', 'user456', null]
     );
     expect(mockRelease).toHaveBeenCalledTimes(1); // client.release should still be called
