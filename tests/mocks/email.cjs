@@ -1,4 +1,1 @@
-const { jest } = require('@jest/globals');
-module.exports = {
-  sendEmail: jest.fn(),
-};
+exports.sendEmail = jest.fn();

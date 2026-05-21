@@ -1,5 +1,2 @@
-const { jest } = require('@jest/globals');
-module.exports = {
-  logError: jest.fn(),
-  logInfo: jest.fn(),
-};
+exports.logError = jest.fn();
+exports.logInfo = jest.fn();

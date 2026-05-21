@@ -8,9 +8,8 @@ module.exports = {
   ],
   testEnvironment: 'node',
   moduleNameMapper: {
-    "^.*\\/lib\\/logger(\\.js)?$": "<rootDir>/tests/mocks/logger.js",
-    "^.*\\/lib\\/email(\\.js)?$": "<rootDir>/tests/mocks/email.js",
-    "^.*\\/lib\\/html-parser(\\.js)?$": "<rootDir>/tests/mocks/html-parser.js",
+    "^.*\\/lib\\/logger(\\.js)?$": "<rootDir>/tests/mocks/logger.cjs",
+    "^.*\\/lib\\/html-parser(\\.js)?$": "<rootDir>/tests/mocks/html-parser.cjs",
     "^.*\\/db\\/index(\\.js)?$": "<rootDir>/db/mockDb.js"
   },
   testTimeout: 30000,
