@@ -1,21 +1,9 @@
 import { jest } from '@jest/globals';
 
-// Mock KV
-jest.mock('@vercel/kv', () => ({
-  kv: {
-    get: jest.fn(),
-    set: jest.fn(),
-  },
-}));
-
 // Mock jsonwebtoken
 jest.mock('jsonwebtoken', () => ({
   verify: jest.fn(),
-}));
-
-// Mock cookie parser
-jest.mock('cookie', () => ({
-  parse: jest.fn(),
+  JsonWebTokenError: class JsonWebTokenError extends Error {}
 }));
 
 // Mock fs for logError function
@@ -33,33 +21,31 @@ jest.mock('path', () => ({
 }));
 
 import handler from '../../api/user-referral-data';
-import { kv } from '@vercel/kv';
 import jwt from 'jsonwebtoken';
-import { parse as parseCookie } from 'cookie';
 import fs from 'fs';
 import path from 'path';
+import { setQueryDelegate } from '../../db/mockDb.js';
 
 describe('user-referral-data API', () => {
   let req;
   let res;
-  let mockKv;
+  let mockQuery;
 
   beforeEach(() => {
-    mockKv = {
-      get: jest.fn(),
-      set: jest.fn(),
-    };
+    mockQuery = jest.fn();
+    setQueryDelegate(mockQuery);
 
     req = {
       method: 'GET',
       headers: {},
+      cookies: {},
     };
 
     res = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-      setHeader: jest.fn(),
-      end: jest.fn(),
+      json: jest.fn().mockReturnThis(),
+      setHeader: jest.fn().mockReturnThis(),
+      end: jest.fn().mockReturnThis(),
     };
 
     jest.clearAllMocks();
@@ -75,13 +61,14 @@ describe('user-referral-data API', () => {
   });
 
   afterEach(() => {
+    setQueryDelegate(null);
     delete process.env.JWT_SECRET;
     delete process.env.NEXT_PUBLIC_BASE_URL;
   });
 
   test('should return 405 for non-GET methods', async () => {
     req.method = 'POST';
-    await handler(req, res, mockKv);
+    await handler(req, res);
 
     expect(res.setHeader).toHaveBeenCalledWith('Allow', ['GET']);
     expect(res.status).toHaveBeenCalledWith(405);
@@ -89,86 +76,74 @@ describe('user-referral-data API', () => {
   });
 
   test('should return 401 if no token is provided', async () => {
-    parseCookie.mockReturnValue({});
+    req.cookies = {}; // No token
 
-    await handler(req, res, mockKv);
+    await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Not authenticated. Please log in.' });
+    expect(res.json).toHaveBeenCalledWith({ message: 'Not authenticated.' });
   });
 
   test('should return 401 if token is invalid', async () => {
-    parseCookie.mockReturnValue({ authToken: 'invalid_token' });
-    jwt.verify.mockImplementation(() => { throw new Error('invalid token'); });
+    req.cookies = { authToken: 'invalid_token' };
+    jwt.verify.mockImplementation(() => { throw new jwt.JsonWebTokenError('invalid token'); });
 
-    await handler(req, res, mockKv);
+    await handler(req, res);
 
     expect(jwt.verify).toHaveBeenCalledWith('invalid_token', 'test_secret');
     expect(fs.appendFileSync).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid or expired token. Please log in again.' });
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid token.' });
   });
 
   test('should return referral data for authenticated user', async () => {
     const userId = 'user123';
-    const mockReferralData = {
-      referralLink: `http://localhost:3000/referral-signup?ref=${userId}`,
-      totalReferrals: 10,
-      convertedReferrals: 5,
-      earnedRewards: 150.00,
-      recentReferrals: [
-        { id: 'refA', userEmail: 'a@example.com', status: 'Converted', date: '2026-04-01', reward: 25.00 },
-      ],
-    };
-
-    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    req.cookies = { authToken: 'valid_token' };
     jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(mockReferralData)); // Existing referral data in KV
 
-    await handler(req, res, mockKv);
+    // Mock PostgreSQL query returns
+    mockQuery.mockImplementation(async (text, params) => {
+      if (text.includes('SELECT referral_code FROM users')) {
+        return { rows: [{ referral_code: 'REF123' }] };
+      }
+      if (text.includes('COUNT(*) AS signups')) {
+        return { rows: [{ signups: '2', totalearned: '50.00' }] };
+      }
+      if (text.includes('JOIN users u ON r.referred_id')) {
+        return {
+          rows: [
+            { email: 'referred@example.com', date: '2026-04-01', status: 'Completed', commission: '50.00' }
+          ]
+        };
+      }
+      return { rows: [] };
+    });
 
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${userId}:referral_data`);
+    await handler(req, res);
+
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(mockReferralData);
+    expect(res.json).toHaveBeenCalledWith({
+      referralCode: 'REF123',
+      clicks: 0,
+      signups: 2,
+      totalEarned: 50.00,
+      referredUsers: [
+        { email: 'referred@example.com', date: '2026-04-01', status: 'Completed', commission: '50.00' }
+      ]
+    });
   });
 
-  test('should return default referral data if no existing data in KV', async () => {
+  test('should handle internal server error during database operations', async () => {
     const userId = 'user123';
-    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    req.cookies = { authToken: 'valid_token' };
     jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockResolvedValueOnce(null); // No existing referral data in KV
 
-    const expectedDefaultData = {
-      referralLink: `http://localhost:3000/referral-signup?ref=${userId}`,
-      totalReferrals: 0,
-      convertedReferrals: 0,
-      earnedRewards: 0.00,
-      recentReferrals: [
-        { id: 'ref1', userEmail: 'user1@example.com', status: 'Converted', date: '2026-04-15', reward: 25.00 },
-        { id: 'ref2', userEmail: 'user2@example.com', status: 'Pending', date: '2026-04-10', reward: 0.00 },
-        { id: 'ref3', userEmail: 'user3@example.com', status: 'Converted', date: '2026-03-20', reward: 50.00 },
-        { id: 'ref4', userEmail: 'user4@example.com', status: 'Pending', date: '2026-03-01', reward: 0.00 },
-      ],
-    };
+    mockQuery.mockRejectedValueOnce(new Error('Database query failed'));
 
-    await handler(req, res, mockKv);
-
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${userId}:referral_data`);
-    expect(mockKv.set).toHaveBeenCalledWith(`user:${userId}:referral_data`, JSON.stringify(expectedDefaultData));
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(expectedDefaultData);
-  });
-
-  test('should handle internal server error during KV operations', async () => {
-    const userId = 'user123';
-    parseCookie.mockReturnValue({ authToken: 'valid_token' });
-    jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockRejectedValueOnce(new Error('KV connection failed'));
-
-    await handler(req, res, mockKv);
+    await handler(req, res);
 
     expect(fs.appendFileSync).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Failed to fetch referral data.', error: 'KV connection failed' });
+    expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error.' });
   });
 });

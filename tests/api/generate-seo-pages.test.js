@@ -1,4 +1,15 @@
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const { clearMockUsers, addMockUser } = require('../../db/mockDb.js');
+
+jest.mock('jsonwebtoken', () => ({
+    verify: jest.fn(() => ({ userId: 'testUserId123' }))
+}));
+
+jest.mock('cookie', () => ({
+    parse: jest.fn(() => ({ authToken: 'mockValidToken' }))
+}));
+
 
 // Mock process.cwd() to return a temporary directory for testing
 const mockCwd = path.join(__dirname, 'test-temp-dir');
@@ -69,6 +80,10 @@ describe('POST /api/generate-seo-pages', () => {
 
         // Set default GEMINI_API_KEY for tests (can be overridden in specific tests)
         process.env.GEMINI_API_KEY = 'mock-api-key';
+        process.env.JWT_SECRET = 'test_jwt_secret';
+
+        clearMockUsers();
+        addMockUser({ id: 'testUserId123', credits: 100 });
 
         // Clear module cache and re-import handler to pick up environment variable changes
         // This is crucial for modules that initialize based on process.env at load time.
@@ -157,6 +172,9 @@ describe('POST /api/generate-seo-pages', () => {
 
         await handlerToTest(req, res); // Use the reloaded handler
 
+        if (res.statusCode !== 200) {
+            console.log("DEBUG: Generate SEO Pages returned status", res.statusCode, "with body:", res._getJSONData());
+        }
         expect(res.statusCode).toBe(200);
         expect(res._getJSONData()).toEqual(
             expect.objectContaining({
