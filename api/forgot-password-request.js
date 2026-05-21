@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 import { customAlphabet } from 'nanoid';
 import { logError } from '../lib/logger.js';
+import { query } from '../db/index.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 32);
 
@@ -18,10 +19,10 @@ export default async function (request, response, currentKvClient) {
     }
 
     try {
-        const user = await currentKv.get(`user:${email}`);
+        const userResult = await query('SELECT id FROM users WHERE email = $1', [email]);
 
         // Prevent user enumeration by always sending a generic success message
-        if (!user) {
+        if (userResult.rows.length === 0) {
             await logError(null, `Password reset requested for non-existent email: ${email}`, 'forgot_password_request_error.log');
             return response.status(200).json({ message: 'If an account with that email exists, a password reset link has been sent.' });
         }

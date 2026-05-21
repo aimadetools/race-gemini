@@ -140,7 +140,7 @@ describe('POST /api/generate-seo-pages', () => {
         // For now, testing without AI copy due to module loading complexities for AI client initialization.
         process.env.GEMINI_API_KEY = ''; 
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        handlerToTest = require('../../api/generate-seo-pages');
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         const req = createRequest({
             method: 'POST',
@@ -304,7 +304,7 @@ describe('POST /api/generate-seo-pages', () => {
         // For now, testing without AI copy due to module loading complexities for AI client initialization.
         process.env.GEMINI_API_KEY = '';
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        handlerToTest = require('../../api/generate-seo-pages');
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         const req = createRequest({
             method: 'POST',
@@ -339,7 +339,7 @@ describe('POST /api/generate-seo-pages', () => {
         // Explicitly set GEMINI_API_KEY to ensure it's not picked up from global for this test if AI is meant to be off
         process.env.GEMINI_API_KEY = '';
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        handlerToTest = require('../../api/generate-seo-pages');
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         // Mock the AI model to throw an error (this mock won't be hit if enableAICopy is false or API key is missing)
         _getMockGeminiModel().generateContent.mockImplementationOnce(() => {
@@ -381,7 +381,7 @@ describe('POST /api/generate-seo-pages', () => {
 
         // Clear cache and re-import handler to ensure it picks up the unset API key
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        const handlerWithoutApiKey = require('../../api/generate-seo-pages');
+        const handlerWithoutApiKey = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         const req = createRequest({
             method: 'POST',
@@ -417,7 +417,7 @@ describe('POST /api/generate-seo-pages', () => {
         // For now, testing without AI copy due to module loading complexities for AI client initialization.
         process.env.GEMINI_API_KEY = '';
         delete require.cache[require.resolve('../../api/generate-seo-pages')];
-        handlerToTest = require('../../api/generate-seo-pages');
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
 
         const req = createRequest({
             method: 'POST',

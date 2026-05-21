@@ -81,7 +81,7 @@ describe('client-details API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Client ID is required' });
   });
 
-  test('should return 403 if token is invalid', async () => {
+  test('should return 401 if token is invalid', async () => {
     req.query.id = 'client123';
     cookie.parse.mockReturnValue({ token: 'invalid_token' });
     jwt.verify.mockImplementation(() => { throw new Error('invalid token'); });
@@ -89,8 +89,8 @@ describe('client-details API', () => {
     await handler(req, res, mockKv);
 
     expect(jwt.verify).toHaveBeenCalledWith('invalid_token', 'test_secret');
-    expect(res.status).toHaveBeenCalledWith(500); // Because error is caught and returns 500
-    expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
   });
 
   test('should return 403 if token does not contain agencyId', async () => {

@@ -10,6 +10,7 @@ jest.mock('nanoid', () => {
     const mockNanoid = jest.fn(() => `mock-token-${++tokenCounter}`);
     mockNanoid.__reset = () => tokenCounter = 0;
     return {
+        nanoid: mockNanoid,
         customAlphabet: jest.fn(() => mockNanoid),
     };
 });
@@ -105,7 +106,7 @@ describe('forgot-password-request API', () => {
         expect(res._json.message).toBe('If an account with that email exists, a password reset link has been sent.');
 
         // Verify that no reset token was created
-        expect(mockKvStore.size).toBe(2); // Initial user + credits
+        expect(mockKvStore.size).toBe(0);
     });
 
     it('should return 400 if email is missing', async () => {

@@ -225,13 +225,13 @@ describe('agency-dashboard API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
   });
 
-  test('should return 500 for internal server error during JWT verification', async () => {
+  test('should return 401 for invalid JWT verification', async () => {
     cookie.parse.mockReturnValue({ token: 'invalid_token' });
     jwt.verify.mockImplementation(() => { throw new Error('JWT verification failed'); });
 
     await handler(req, res, mockKv);
 
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
   });
 });

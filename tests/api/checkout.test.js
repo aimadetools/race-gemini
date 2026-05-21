@@ -44,10 +44,7 @@ describe('Checkout API', () => {
         // Clear module cache for handler and re-import to ensure fresh state
         // This makes sure the mocked 'stripe' is picked up and handler is fresh
         delete require.cache[require.resolve('../../api/checkout')];
-        handler = require('../../api/checkout'); // Assign handler here
-
-        // Ensure path.join is reset if it's been manipulated
-        path.join.mockImplementation(jest.requireActual('path').join);
+        handler = require('../../api/checkout').default || require('../../api/checkout'); // Assign handler here
 
         // Reset and get the mocked stripe instance
         mockStripeCheckoutSessionsCreate.mockClear();

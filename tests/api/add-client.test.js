@@ -175,13 +175,12 @@ describe('add-client API', () => {
         expect(mockKv.sadd).toHaveBeenCalledWith('agency:agency123:clients', 1);
 
         expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-            message: 'Client created successfully',
-            password: expect.any(String), // Password is random, so just check type
-        }));
+        expect(res.json).toHaveBeenCalledWith({
+            message: 'Client created successfully. Password sent via email (mocked).'
+        });
     });
 
-    it('should return 500 for internal server errors', async () => {
+    it('should return 401 for JWT verification errors', async () => {
         require('cookie').parse.mockReturnValue({ token: 'mock_agency_token' });
         require('jsonwebtoken').verify.mockImplementation(() => {
             throw new Error('Invalid token');
@@ -202,8 +201,8 @@ describe('add-client API', () => {
 
         await handler(req, res, mockKv);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
         expect(consoleErrorSpy).toHaveBeenCalled();
         consoleErrorSpy.mockRestore();
     });

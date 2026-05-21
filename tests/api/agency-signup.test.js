@@ -24,10 +24,12 @@ jest.mock('nanoid', () => {
     const mockNanoid = jest.fn(() => `mock-id-${++idCounter}`);
     mockNanoid.__reset = () => idCounter = 0;
     return {
+        nanoid: mockNanoid,
         customAlphabet: jest.fn(() => mockNanoid),
     };
 });
 import { customAlphabet } from 'nanoid';
+import { logError } from '../../lib/logger';
 
 // Import the handler
 import agencySignupHandler from '../../api/agency-signup';
@@ -239,7 +241,7 @@ describe('agency-signup API', () => {
             ...mockKv,
             set: jest.fn().mockRejectedValue(error),
         };
-        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        logError.mockClear();
 
         const reqBody = {
             agencyName: 'Test Agency',
@@ -254,9 +256,7 @@ describe('agency-signup API', () => {
 
         expect(res._status).toBe(500);
         expect(res._json.message).toBe('Failed to submit inquiry due to a server error. Please try again later.');
-        expect(consoleSpy).toHaveBeenCalled();
-
-        consoleSpy.mockRestore();
+        expect(logError).toHaveBeenCalled();
     });
 
 });

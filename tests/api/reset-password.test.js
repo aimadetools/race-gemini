@@ -1,11 +1,12 @@
 // tests/api/reset-password.test.js
 import resetPasswordHandler from '../../api/reset-password';
 import signupHandler from '../../api/signup'; // Needed for user creation in setup
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { jest } from '@jest/globals';
+import { clearMockUsers, getMockUsers } from '../../db/mockDb';
 
-// Mock the bcrypt module explicitly for predictable hashing and comparison
-jest.mock('bcrypt', () => {
+// Mock the bcryptjs module explicitly for predictable hashing and comparison
+jest.mock('bcryptjs', () => {
     const { jest } = require('@jest/globals'); // Import jest inside the factory
     return {
         hash: jest.fn((password) => Promise.resolve(`mock-hashed-${password}`)),
@@ -82,6 +83,7 @@ describe('reset-password API', () => {
     beforeEach(async () => {
         jest.clearAllMocks();
         mockKvStore.clear(); // Clear KV store for each test
+        clearMockUsers(); // Clear mock users database
 
         testUserEmail = `reset-test-${Date.now()}@example.com`;
         initialPassword = 'initial-secure-password';
@@ -126,10 +128,11 @@ describe('reset-password API', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'Password reset successfully.' });
 
-        // Verify password actually changed
-        const userString = await mockKv.get(`user:${testUserEmail}`);
-        const user = JSON.parse(userString);
-        const passwordMatch = await bcrypt.compare(newPassword, user.hashedPassword); // Ensure using hashedPassword
+        // Verify password actually changed in PostgreSQL mockDb
+        const mockUsers = getMockUsers();
+        const user = mockUsers.find(u => u.email === testUserEmail);
+        expect(user).toBeDefined();
+        const passwordMatch = await bcrypt.compare(newPassword, user.password_hash || user.passwordHash || user.hashed_password);
         expect(passwordMatch).toBe(true);
 
         // Verify token was deleted

@@ -1,5 +1,6 @@
 import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
+import { query } from '../db/index.js';
 
 export default async function (request, response, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -26,20 +27,16 @@ export default async function (request, response, currentKvClient) {
             return response.status(400).json({ message: 'Invalid or expired token.' });
         }
 
-        const userKey = `user:${tokenData.email}`;
-        const userString = await currentKv.get(userKey);
+        const userResult = await query('SELECT id FROM users WHERE email = $1', [tokenData.email]);
 
-
-        if (!userString) {
+        if (userResult.rows.length === 0) {
             await currentKv.del(`password-reset:${token}`); // Invalidate token even if user not found
             return response.status(404).json({ message: 'User not found.' });
         }
-        const user = JSON.parse(userString);
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.hashedPassword = hashedPassword;
-
-        await currentKv.set(userKey, JSON.stringify(user));
+        
+        await query('UPDATE users SET password_hash = $1 WHERE email = $2', [hashedPassword, tokenData.email]);
         await currentKv.del(`password-reset:${token}`); // Invalidate token after use
 
         return response.status(200).json({ message: 'Password reset successfully.' });

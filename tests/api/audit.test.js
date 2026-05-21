@@ -16,7 +16,7 @@ describe('audit API', () => {
     beforeAll(() => {
         originalCwd = process.cwd;
         process.cwd = jest.fn(() => MOCK_CWD); // Mock process.cwd before handler import
-        handler = require('../../api/audit.js');
+        handler = require('../../api/audit.js').default || require('../../api/audit.js');
         mockSpawn = require('child_process').spawn;
     });
 

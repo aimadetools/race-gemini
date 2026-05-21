@@ -117,6 +117,16 @@ export const mockQuery = async (text, params) => {
                 return { rows: [{ credits: user.credits }] };
             }
         }
+        if (textLower.includes('password_hash = $1') && textLower.includes('email = $2')) {
+            const [passwordHash, email] = params;
+            const user = mockUsers.find(u => u.email === email);
+            if (user) {
+                user.password_hash = passwordHash;
+                user.hashed_password = passwordHash;
+                user.passwordHash = passwordHash;
+                return { rows: [user] };
+            }
+        }
     }
 
     // Default mock behavior
