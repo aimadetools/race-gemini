@@ -13,18 +13,6 @@ jest.mock('../../lib/logger'); // Mock the logger module
 // Define mock functions for stripe outside beforeAll
 const mockStripeCheckoutSessionsCreate = jest.fn();
 
-jest.mock('fs', () => ({
-    ...jest.requireActual('fs'), // Import and retain default behavior
-    existsSync: jest.fn(() => true), // Assume logs directory always exists for path.join
-    mkdirSync: jest.fn(),
-    appendFileSync: jest.fn(),
-}));
-
-jest.mock('path', () => ({
-    ...jest.requireActual('path'),
-    join: jest.fn((...args) => args.join('/')), // Simplify path.join for testing
-}));
-
 // MODULES UNDER TEST - Import handler dynamically within beforeEach
 let handler; // Declare handler here
 

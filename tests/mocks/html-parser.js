@@ -1,7 +1,3 @@
 // tests/mocks/html-parser.js
-
-const parseAddress = jest.fn();
-
-module.exports = {
-    parseAddress,
-};
+import { jest } from '@jest/globals';
+export const parseAddress = jest.fn();

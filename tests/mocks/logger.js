@@ -1,4 +1,4 @@
 // tests/mocks/logger.js
-module.exports = {
-  logError: jest.fn(),
-};
+import { jest } from '@jest/globals';
+export const logError = jest.fn();
+export const logInfo = jest.fn();
