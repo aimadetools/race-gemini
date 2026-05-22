@@ -18,6 +18,7 @@ export const originalMockQuery = async (text, params) => {
             if (user) {
                 const u = {
                     id: user.id,
+                    name: user.name || null,
                     email: user.email,
                     password_hash: user.password_hash || user.passwordHash || user.hashed_password,
                     passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
@@ -29,6 +30,7 @@ export const originalMockQuery = async (text, params) => {
                     stripe_subscription_id: user.stripe_subscription_id || null,
                     logo_url: user.logo_url || null,
                     primary_color: user.primary_color || null,
+                    agency_id: user.agency_id || null,
                 };
                 return { rows: [u] };
             }
@@ -41,6 +43,7 @@ export const originalMockQuery = async (text, params) => {
             if (user) {
                 const u = {
                     id: user.id,
+                    name: user.name || null,
                     email: user.email,
                     password_hash: user.password_hash || user.passwordHash || user.hashed_password,
                     passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
@@ -52,6 +55,7 @@ export const originalMockQuery = async (text, params) => {
                     stripe_subscription_id: user.stripe_subscription_id || null,
                     logo_url: user.logo_url || null,
                     primary_color: user.primary_color || null,
+                    agency_id: user.agency_id || null,
                 };
                 return { rows: [u] };
             }

@@ -36,11 +36,11 @@ async function handler(req, res, currentKvClient) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const userId = decoded.agencyId || decoded.userId; // agencyId is the userId
+        const userId = decoded.agencyId; // agencyId is the userId
 
-        if (!userId) { // This check might be redundant if decoded.userId is guaranteed, but harmless.
-            await logError(new Error('User ID missing after token decode.'), 'Agency Dashboard - User ID Missing', 'agency_dashboard_error.log');
-            return res.status(403).json({ message: 'Not an authenticated user' });
+        if (!userId) {
+            await logError(new Error('Agency ID missing after token decode.'), 'Agency Dashboard - Agency ID Missing', 'agency_dashboard_error.log');
+            return res.status(403).json({ message: 'Not an agency account' });
         }
 
         // Fetch user (agency) data from PostgreSQL
@@ -81,13 +81,13 @@ async function handler(req, res, currentKvClient) {
         
         // --- Client fetching logic (assuming clients are still managed via KV or another service for now) ---
         // For now, retaining KV logic for clients. In a fully PostgreSQL migration, this would change.
-        const agency = await kv.get(`agency:${userId}`); // Temporarily fetch agency data from KV for client relation
-        const clientIds = agency ? await kv.smembers(`agency:${userId}:clients`) : [];
+        const agency = await currentKv.get(`agency:${userId}`); // Temporarily fetch agency data from KV for client relation
+        const clientIds = agency ? await currentKv.smembers(`agency:${userId}:clients`) : [];
         const clients = [];
         for (const clientId of clientIds) {
-            const client = await kv.get(`user:${clientId}`);
+            const client = await currentKv.get(`user:${clientId}`);
             if(client) {
-                const pages = await kv.smembers(`user:${clientId}:pages`);
+                const pages = await currentKv.smembers(`user:${clientId}:pages`);
                 clients.push({ id: clientId, name: client.name, email: client.email, pagesGenerated: pages.length, credits: client.credits || 0 });
             }
         }

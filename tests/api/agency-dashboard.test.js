@@ -80,10 +80,14 @@ describe('agency-dashboard API', () => {
 
     // Mock process.env.JWT_SECRET for jwt.verify
     process.env.JWT_SECRET = 'test_secret';
+    process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN = 'price_BASIC_AGENCY_PLAN';
+    process.env.STRIPE_PRICE_PRO_AGENCY_PLAN = 'price_PRO_AGENCY_PLAN';
   });
 
   afterEach(() => {
     delete process.env.JWT_SECRET;
+    delete process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN;
+    delete process.env.STRIPE_PRICE_PRO_AGENCY_PLAN;
   });
 
   test('should return 405 for non-GET methods', async () => {
@@ -103,15 +107,15 @@ describe('agency-dashboard API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Not authenticated' });
   });
 
-  test('should return 403 if token is invalid', async () => {
+  test('should return 401 if token is invalid', async () => {
     cookie.parse.mockReturnValue({ token: 'invalid_token' });
     jwt.verify.mockImplementation(() => { throw new Error('invalid token'); });
 
     await handler(req, res, mockKv);
 
     expect(jwt.verify).toHaveBeenCalledWith('invalid_token', 'test_secret');
-    expect(res.status).toHaveBeenCalledWith(500); // 500 because the error is caught in the try/catch
-    expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
   });
 
   test('should return 403 if token does not contain agencyId', async () => {
@@ -128,13 +132,11 @@ describe('agency-dashboard API', () => {
     const agencyId = 'agency123';
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockResolvedValueOnce(null); // Agency not found
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`agency:${agencyId}`);
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Agency not found' });
+    expect(res.json).toHaveBeenCalledWith({ message: 'Agency user not found' });
   });
 
   test('should successfully retrieve agency and client data', async () => {
@@ -149,10 +151,21 @@ describe('agency-dashboard API', () => {
       primaryColor: '#FFF',
       credits: 100,
       subscriptionStatus: 'active',
-      planName: 'Premium',
-      monthlyCredits: 50,
-      renewalDate: '2026-06-01',
+      planName: 'Basic Agency Plan',
+      monthlyCredits: 100,
+      renewalDate: '2026-06-01T00:00:00.000Z',
     };
+
+    addMockUser({
+      id: agencyId,
+      name: agency.agencyName,
+      email: agency.email,
+      credits: agency.credits,
+      subscription_status: agency.subscriptionStatus,
+      stripe_subscription_id: 'sub_agency123',
+      logo_url: agency.logoUrl,
+      primary_color: agency.primaryColor,
+    });
 
     const client1 = { id: client1Id, name: 'Client One', email: 'client1@example.com', credits: 10 };
     const client2 = { id: client2Id, name: 'Client Two', email: 'client2@example.com', credits: 20 };
@@ -166,21 +179,14 @@ describe('agency-dashboard API', () => {
     mockKv.get.mockResolvedValueOnce(client2); // Get client 2
     mockKv.smembers.mockResolvedValueOnce(['page3']); // Get client 2 pages
 
-    // Mock Stripe customer and subscription data
-    Stripe.mockRetrieveCustomer.mockResolvedValueOnce({
-      subscriptions: {
+    // Mock Stripe subscription data
+    Stripe.mockRetrieveSubscription.mockResolvedValueOnce({
+      status: agency.subscriptionStatus,
+      current_period_end: new Date(agency.renewalDate).getTime() / 1000, // Convert date to Unix timestamp
+      items: {
         data: [{
-          status: agency.subscriptionStatus,
-          current_period_end: new Date(agency.renewalDate).getTime() / 1000, // Convert date to Unix timestamp
-          items: {
-            data: [{
-              price: {
-                metadata: {
-                  credits: String(agency.monthlyCredits), // Metadata stores as string
-                  planName: agency.planName,
-                },
-              },
-            }],
+          price: {
+            id: 'price_BASIC_AGENCY_PLAN',
           },
         }],
       },
@@ -217,6 +223,17 @@ describe('agency-dashboard API', () => {
 
   test('should return 500 for internal server error during KV operations', async () => {
     const agencyId = 'agency123';
+    addMockUser({
+      id: agencyId,
+      name: 'Test Agency',
+      email: 'agency@example.com',
+      credits: 100,
+      subscription_status: 'active',
+      stripe_subscription_id: 'sub_agency123',
+      logo_url: 'logo.png',
+      primary_color: '#FFF',
+    });
+
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
     mockKv.get.mockRejectedValueOnce(new Error('KV connection failed'));

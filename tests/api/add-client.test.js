@@ -25,6 +25,8 @@ jest.mock('jsonwebtoken', () => ({
     verify: jest.fn(),
 }));
 
+import { logError } from '../../lib/logger.js';
+
 // Dynamically import the handler after mocks are set up
 let handler;
 
@@ -196,14 +198,10 @@ describe('add-client API', () => {
             json: jest.fn(),
         };
 
-        // Suppress console.error for this test
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
         await handler(req, res, mockKv);
 
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
-        expect(consoleErrorSpy).toHaveBeenCalled();
-        consoleErrorSpy.mockRestore();
+        expect(logError).toHaveBeenCalled();
     });
 });
