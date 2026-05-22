@@ -24,6 +24,7 @@ import handler from '../../api/user-referral-data';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
+import { logError } from '../../lib/logger.js';
 import { setQueryDelegate } from '../../db/mockDb.js';
 
 describe('user-referral-data API', () => {
@@ -91,7 +92,7 @@ describe('user-referral-data API', () => {
     await handler(req, res);
 
     expect(jwt.verify).toHaveBeenCalledWith('invalid_token', 'test_secret');
-    expect(fs.appendFileSync).toHaveBeenCalled();
+    expect(logError).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Invalid token.' });
   });
@@ -142,7 +143,7 @@ describe('user-referral-data API', () => {
 
     await handler(req, res);
 
-    expect(fs.appendFileSync).toHaveBeenCalled();
+    expect(logError).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error.' });
   });

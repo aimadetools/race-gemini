@@ -46,6 +46,7 @@ import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import Stripe from 'stripe'; // Import Stripe to use its mock functions
+import { clearMockUsers, addMockUser } from '../../db/mockDb.js';
 
 describe('agency-dashboard API', () => {
   let req;
@@ -71,6 +72,7 @@ describe('agency-dashboard API', () => {
     };
 
     jest.clearAllMocks();
+    clearMockUsers();
     Stripe.mockRetrieveCustomer.mockReset();
     Stripe.mockRetrieveSubscription.mockReset();
     cookie.parse.mockReturnValue({ auth: 'valid_token' }); // Default mock for cookie.parse

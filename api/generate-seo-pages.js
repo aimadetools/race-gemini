@@ -168,6 +168,8 @@ export default async (req, res) => {
 
                     let aiContent = '';
                     let metaDescription = '';
+                    let ogDescription = '';
+                    let twitterDescription = '';
 
                     if (enableAICopy && geminiModel) {
                         try {
@@ -187,14 +189,14 @@ export default async (req, res) => {
 
                             // Generate AI-powered Open Graph Description
                             const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${businessName}'s ${service} services in ${town}". Focus on attracting clicks on social media.`;
-                            let ogDescription = await generateAIContent(ogPrompt, `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`);
+                            ogDescription = await generateAIContent(ogPrompt, `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`);
                             if (ogDescription.length > 200) {
                                 ogDescription = ogDescription.substring(0, 197) + '...';
                             }
 
                             // Generate AI-powered Twitter Description
                             const twitterPrompt = `Write a compelling Twitter card description (up to 200 characters) for a tweet promoting "${businessName}'s ${service} services in ${town}". Encourage retweets and engagement.`;
-                            let twitterDescription = await generateAIContent(twitterPrompt, `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`);
+                            twitterDescription = await generateAIContent(twitterPrompt, `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`);
                             if (twitterDescription.length > 200) {
                                 twitterDescription = twitterDescription.substring(0, 197) + '...';
                             }

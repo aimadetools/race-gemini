@@ -5,6 +5,7 @@ jest.mock('@vercel/kv', () => ({
     get: jest.fn(),
     smembers: jest.fn(),
     scard: jest.fn(),
+    lrange: jest.fn(),
   },
 }));
 
@@ -34,6 +35,7 @@ import jwt from 'jsonwebtoken';
 import { parse as parseCookie } from 'cookie';
 import fs from 'fs';
 import path from 'path';
+import { logError } from '../../lib/logger.js';
 
 describe('dashboard API', () => {
   let req;
@@ -45,6 +47,7 @@ describe('dashboard API', () => {
       get: jest.fn(),
       smembers: jest.fn(),
       scard: jest.fn(),
+      lrange: jest.fn(),
     };
 
     req = {
@@ -100,7 +103,7 @@ describe('dashboard API', () => {
     await handler(req, res, mockKv);
 
     expect(jwt.verify).toHaveBeenCalledWith('invalid_token', 'test_secret');
-    expect(fs.appendFileSync).toHaveBeenCalled();
+    expect(logError).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Invalid or expired token. Please log in again.' });
   });
@@ -156,6 +159,7 @@ describe('dashboard API', () => {
     mockKv.get.mockResolvedValueOnce(JSON.stringify(page2Data)); // pageId2 -> page2Data
     mockKv.get.mockResolvedValueOnce(20); // page:pageId2:views -> 20
     mockKv.scard.mockResolvedValueOnce(15); // page:pageId2:unique_visitors -> 15
+    mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
 
     await handler(req, res, mockKv);
 
@@ -168,6 +172,7 @@ describe('dashboard API', () => {
     expect(mockKv.get).toHaveBeenCalledWith(pageId2);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId2}:views`);
     expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId2}:unique_visitors`); // Corrected typo here
+    expect(mockKv.lrange).toHaveBeenCalledWith(`user:${userId}:credittransactions`, 0, 100);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -177,6 +182,7 @@ describe('dashboard API', () => {
         { ...page1Data, pageId: pageId1, views: 10, uniqueVisitors: 5 },
         { ...page2Data, pageId: pageId2, views: 20, uniqueVisitors: 15 },
       ],
+      creditTransactions: [],
     });
   });
 
@@ -191,7 +197,7 @@ describe('dashboard API', () => {
 
     await handler(req, res, mockKv);
 
-    expect(fs.appendFileSync).toHaveBeenCalled();
+    expect(logError).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error.' });
   });
@@ -210,6 +216,7 @@ describe('dashboard API', () => {
     mockKv.get.mockResolvedValueOnce(userEmail); // userId:user123 -> userEmail
     mockKv.get.mockResolvedValueOnce(JSON.stringify(user)); // user:userEmail -> user object
     mockKv.smembers.mockResolvedValueOnce([]); // user:userId:pages -> empty array
+    mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
 
     await handler(req, res, mockKv);
 
@@ -218,6 +225,7 @@ describe('dashboard API', () => {
       email: user.email,
       credits: user.credits,
       generatedPages: [],
+      creditTransactions: [],
     });
   });
 });
