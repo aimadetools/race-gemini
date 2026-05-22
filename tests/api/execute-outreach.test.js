@@ -1,13 +1,20 @@
 import { jest } from '@jest/globals';
 import httpMocks from 'node-mocks-http';
-import executeOutreach from '../../api/execute-outreach.cjs';
 import sgMail from '@sendgrid/mail';
-import micro from 'micro';
 import { logInfo, logError } from '../../lib/logger.js';
+
+// Mock micro's json function
+jest.mock('micro', () => ({
+  json: jest.fn(),
+}));
+import { json as mockMicroJson } from 'micro';
+
+import executeOutreach from '../../api/execute-outreach.cjs';
 
 let setApiKeySpy;
 let sendSpy;
-let jsonSpy;
+let consoleErrorSpy;
+let consoleLogSpy;
 
 describe('api/execute-outreach', () => {
   let req;
@@ -16,18 +23,18 @@ describe('api/execute-outreach', () => {
   beforeAll(() => {
     setApiKeySpy = jest.spyOn(sgMail, 'setApiKey').mockImplementation(() => {});
     sendSpy = jest.spyOn(sgMail, 'send').mockImplementation(() => Promise.resolve([{}]));
-    jsonSpy = jest.spyOn(micro, 'json').mockImplementation((req) => Promise.resolve(req.body));
+    mockMicroJson.mockImplementation((req) => Promise.resolve(req.body));
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
     setApiKeySpy.mockClear();
     sendSpy.mockClear();
-    jsonSpy.mockClear();
+    mockMicroJson.mockClear();
     logInfo.mockClear();
     logError.mockClear();
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
     // Set SendGrid API Key and From Email for testing
     process.env.SENDGRID_API_KEY = 'SG.test_api_key';
@@ -55,14 +62,13 @@ describe('api/execute-outreach', () => {
   afterEach(() => {
     delete process.env.SENDGRID_API_KEY;
     delete process.env.SENDGRID_FROM_EMAIL;
-    console.error.mockRestore();
-    console.log.mockRestore();
+    consoleErrorSpy.mockRestore();
+    consoleLogSpy.mockRestore();
   });
 
   afterAll(() => {
     setApiKeySpy.mockRestore();
     sendSpy.mockRestore();
-    jsonSpy.mockRestore();
   });
 
   test('should send emails successfully with valid input', async () => {
