@@ -23,3 +23,4 @@
 - [x] **Core Features & Referral Program (P1-P7, C1-C5)**: Implemented user dashboard, Stripe integration, credit packs, cold outreach backend, Product Hunt launch prep, and referral program with commission.
 - [x] **Content Marketing & SEO**: Created blog posts, case studies, announcement assets, video tutorial script, and finalized initial SEO configurations.
 - [x] **Maintenance**: Audited live site, resolved Stripe redirects/ES module syntax errors, updated dependencies, and monitored Vercel/system logs.
+- [x] **Production Stability**: Removed global `jest` reference in `lib/email.js` to prevent runtime crashes during import.
