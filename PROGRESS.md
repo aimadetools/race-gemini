@@ -36,8 +36,13 @@
 - **Gemini Test Caching Fix**: Dynamically initialized the GoogleGenerativeAI client inside the handlers in `api/generate.js` and `api/generate-seo-pages.js` to prevent module-level caching and ensure mock compatibility.
 - **Outreach API ES Module Conversion**: Converted `api/execute-outreach.cjs` to `api/execute-outreach.js` to resolve CommonJS import/require crashes of ES Module `lib/logger.js` in production.
 - **Launch Checklist Update**: Updated `PRODUCT_HUNT_LAUNCH.md` to mark product feature finalization as completed.
+- **Authentication & Cookie Improvements**: Modified `api/checkout.js` and `api/get-credits.js` to support both `cookies.authToken` and `cookies.auth` to prevent auth failures.
+- **Graceful KV Client Fallback**: Modified `api/agency-signup.js` to use imported `@vercel/kv` client if no mocked KV client instance is provided.
+- **Database Schema Auto-Initialization**: Streamlined database initialization in `db/init.js` to run users, referrals, and seo-pages table creation sequentially.
+- **Referral Route Configuration**: Corrected the generated referral link in `js/referral-dashboard.js` to route via `/auth.html?ref=` rather than `/agency-signup.html?ref=`.
+- **Test Configuration Hardening**: Excluded `.vercel` output directory in `jest.config.cjs` to avoid scanning non-test script files.
 - **Comprehensive Verification & Build Validation**:
-  - Ran local Vercel build (`npx vercel build`) to verify compilation and directory routing.
-  - Confirmed workspace health with 194 JS unit tests, 4 Jest E2E tests (running against local Vercel dev server), and 50 Python audit tests all passing successfully.
+  - Ran local Vercel build (`npx vercel build`) and verified that the build compiles cleanly with no module resolution or routing issues.
+  - Confirmed workspace health with 192 JS unit tests, 4 Jest E2E tests (running against local Vercel dev server), and 50 Python audit tests all passing successfully.
   - Audited production deployment status using Vercel CLI, confirming the site is active and healthy on `localseogen.com`.
-- **Backlog & Health Audit**: Audited `BACKLOG.md` and confirmed all P0 and PENDING tasks are completely resolved. Validated workspace health by re-running all Jest unit tests, E2E tests (using Verel dev), and Python tests (all tests passed with 100% success rate). Re-verified local Vercel build compilation health.
+- **Backlog & Health Audit**: Audited `BACKLOG.md` and confirmed all P0 and PENDING tasks are completely resolved. Validated workspace health by re-running all Jest unit tests, E2E tests (using Vercel dev), and Python tests (all tests passed with 100% success rate). Re-verified local Vercel build compilation health.
