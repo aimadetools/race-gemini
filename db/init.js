@@ -1,52 +1,22 @@
-import { pool, query } from './index.js';
-import { createTableUserEvents } from './migrations/create_user_events_table.js';
-import { createSeoPagesTable } from './migrations/create-seo-pages-table.js'; // New import
+import { createUsersTable } from './migrations/create_users_table.js';
+import { createReferralsAndAlterUsers } from './migrations/create_referrals_and_update_users.js';
+import { createSeoPagesTable } from './migrations/create-seo-pages-table.js';
 
 export async function initializeDatabase() {
-  let client;
   try {
-    client = await pool.connect();
-    // Create the users table if it doesn't exist
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS users (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          email VARCHAR(255) UNIQUE NOT NULL,
-          hashed_password VARCHAR(255) NOT NULL,
-          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-          credits INTEGER DEFAULT 0,
-          referrer_id TEXT DEFAULT NULL
-      );
-    `);
-    console.log('Users table created or already exists.');
+    console.log('Ensuring users table exists...');
+    await createUsersTable();
 
-    // Check if referrer_id column exists, if not, add it
-    await client.query(`
-      DO $$
-      BEGIN
-          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='referrer_id') THEN
-              ALTER TABLE users ADD COLUMN referrer_id TEXT;
-          END IF;
-      END
-      $$;
-    `);
-    console.log('Referrer ID column added to users table if it did not exist.');
+    console.log('Ensuring referrals table exists and users are altered...');
+    await createReferralsAndAlterUsers();
 
-    // Create the seo_pages table
-    await createSeoPagesTable(); // New call
+    console.log('Ensuring seo_pages table exists...');
+    await createSeoPagesTable();
 
-    // Add index to email for faster lookups
-    await client.query(`
-      CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
-    `);
-    console.log('Index on users.email created or already exists.');
-
+    console.log('Database initialization completed.');
   } catch (error) {
     console.error('Error initializing database:', error);
-    throw error; // Re-throw to be caught by the caller
-  } finally {
-    if (client) {
-      client.release();
-    }
+    throw error;
   }
 }
 

@@ -1,10 +1,12 @@
 import { customAlphabet } from 'nanoid';
 import trackEventHandler from './track.js'; // Import the event tracking handler
 import { logError } from '../lib/logger.js';
+import { kv } from '@vercel/kv';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
-export default async (req, res, kv) => {
+export default async (req, res, currentKvClient) => {
+    const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { agencyName, website, contactPerson, contactEmail, phoneNumber, clientVolume, message } = req.body;
 
@@ -42,7 +44,7 @@ export default async (req, res, kv) => {
         };
 
         try {
-            await kv.set(`agency-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
+            await currentKv.set(`agency-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
             console.log(`Agency inquiry stored in Vercel KV with ID: ${inquiryId}`);
             // Track the agency signup event
             // Mock req and res objects for trackEventHandler

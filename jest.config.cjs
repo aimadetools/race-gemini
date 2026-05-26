@@ -12,5 +12,9 @@ module.exports = {
     "^.*\\/lib\\/html-parser(\\.js)?$": "<rootDir>/tests/mocks/html-parser.cjs",
     "^.*\\/db\\/index(\\.js)?$": "<rootDir>/db/mockDb.js"
   },
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/.vercel/'
+  ],
   testTimeout: 30000,
 };

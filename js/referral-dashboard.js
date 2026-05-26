@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (response.ok) {
                 const baseUrl = window.location.origin; // Get the base URL
-                referralLinkInput.value = `${baseUrl}/agency-signup.html?ref=${data.referralCode}`;
+                referralLinkInput.value = `${baseUrl}/auth.html?ref=${data.referralCode}`;
                 clicksCountSpan.textContent = data.clicks;
                 signupsCountSpan.textContent = data.signups;
                 totalEarnedSpan.textContent = data.totalEarned.toFixed(2); // Format to 2 decimal places

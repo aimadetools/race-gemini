@@ -7,7 +7,7 @@ import { logError } from '../lib/logger.js';
 
 export default async (req, res) => {
     const cookies = parse(req.headers.cookie || '');
-    const token = cookies.auth;
+    const token = cookies.authToken || cookies.auth;
     let userId = null;
 
     if (token) {
