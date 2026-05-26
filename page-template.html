@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
+   {{service}} in {{town}} - {{businessName}}
+  </title>
+<meta content="{{metaDescription}}" name="description"/>
+<meta content="{{service}} in {{town}} - {{businessName}}" property="og:title"/>
+<meta content="{{ogDescription}}" property="og:description"/>
+<meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+<meta content="https://www.localseogen.com/{{service_slug}}-in-{{town_slug}}.html" property="og:url"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="{{service}} in {{town}} - {{businessName}}" name="twitter:title"/>
+<meta content="{{twitterDescription}}" name="twitter:description"/>
+<link href="/style.min.css" rel="stylesheet"/>
+<style>
+   :root {
+--primary-color: {{primaryColor}};
+}
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+<link href="https://www.localseogen.com/{{service_slug}}-in-{{town_slug}}.html" rel="canonical"/>
+{{localBusinessSchema}}
+</head>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<a class="logo" href="/">
+    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+</a>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1>
+     {{service}} in {{town}}
+    </h1>
+<p>
+     Your trusted provider for {{service}} in {{town}}.
+    </p>
+</section>
+<section class="content">
+<h2>
+     Why Choose {{businessName}} for {{service}} in {{town}}?
+    </h2>
+    {{ai_content}}
+   </section>
+</main>
+<footer>
+<div class="container">
+<p>
+     © 2026 {{businessName}}. All rights reserved.
+    </p>
+</div>
+</footer>
+<meta content="{{pageId}}" name="page-id"/>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+const pageId = document.querySelector('meta[name="page-id"]').content;
+if (pageId) {
+fetch('/api/track', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify({ pageId: pageId }),
+}).catch(error => console.error('Error sending tracking data:', error));
+}
+});
+  </script>
+<script src="/js/app.min.js">
+</script>
+</body>
+</html>
