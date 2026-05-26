@@ -11,15 +11,11 @@ import { logError } from '../lib/logger.js'; // Import centralized logger
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
 
-let geminiApiKey = process.env.GEMINI_API_KEY;
-let genAI;
-let geminiModel;
-
-if (geminiApiKey) {
-    genAI = new GoogleGenerativeAI(geminiApiKey);
-    geminiModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
-} else {
-    console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
+function getGeminiModel() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return null;
+    const genAI = new GoogleGenerativeAI(apiKey);
+    return genAI.getGenerativeModel({ model: 'gemini-pro' });
 }
 
 export default async (req, res) => {
@@ -114,17 +110,18 @@ export default async (req, res) => {
             };
 
             const escapedBusinessName = escapeHtml(businessName);
-            const escapedService = escapeHtml(service);
-            const escapedTown = escapeHtml(town);
 
             for (const town of townsArray) {
                 for (const service of servicesArray) {
+                    const escapedService = escapeHtml(service);
+                    const escapedTown = escapeHtml(town);
                     const pageId = `page:${Date.now()}${Math.random()}`; // Unique ID for each page
                     const serviceSlug = slugify(service, { lower: true, strict: true });
                     const townSlug = slugify(town, { lower: true, strict: true });
                     const fileName = `${serviceSlug}-in-${townSlug}.html`;
 
                     let aiContent = '';
+                    const geminiModel = getGeminiModel();
                     if (enableAICopy && geminiModel) {
                         try {
                             const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
@@ -162,7 +159,7 @@ export default async (req, res) => {
                     archive.append(pageContent, { name: fileName });
 
                     // Store page metadata
-                    await currentKv.set(pageId, JSON.stringify({
+                    await kv.set(pageId, JSON.stringify({
                         businessName: escapedBusinessName, // Store escaped values
                         service: escapedService,
                         town: escapedTown,
@@ -172,7 +169,7 @@ export default async (req, res) => {
                         aiStyle: aiStyle || null,
                         userId: user.id
                     }));
-                    await currentKv.sadd(`user:${userId}:pages`, pageId);
+                    await kv.sadd(`user:${userId}:pages`, pageId);
                 }
             }
 

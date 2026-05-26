@@ -1,6 +1,6 @@
-const micro = require('micro'); // Import micro to access json parser
-const { logError, logInfo } = require('../lib/logger');
-const sgMail = require('@sendgrid/mail'); // Moved to top
+import micro from 'micro';
+import { logError, logInfo } from '../lib/logger.js';
+import sgMail from '@sendgrid/mail';
 
 async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
 
@@ -53,7 +53,7 @@ async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
   return { sentCount, failedCount, details };
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   try {
     // Attempt to parse JSON body
     let requestBody;

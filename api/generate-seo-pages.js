@@ -12,18 +12,15 @@ import { parseOpeningHours } from '../lib/time-helpers.js';
 const templatePath = path.join(process.cwd(), 'page-template.html');
 const outputDir = path.join(process.cwd(), 'generated-seo-pages');
 
-let geminiApiKey = process.env.GEMINI_API_KEY;
-let genAI;
-let geminiModel;
-
-if (geminiApiKey) {
-    genAI = new GoogleGenerativeAI(geminiApiKey);
-    geminiModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
-} else {
-    console.warn('GEMINI_API_KEY is not set. AI copy generation will be skipped.');
+function getGeminiModel() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return null;
+    const genAI = new GoogleGenerativeAI(apiKey);
+    return genAI.getGenerativeModel({ model: 'gemini-pro' });
 }
 
 async function generateAIContent(prompt, defaultValue) {
+    const geminiModel = getGeminiModel();
     if (!geminiModel) {
         await logError(new Error('GEMINI_API_KEY is not set.'), 'AI Content Generation Skipped');
         return defaultValue;
@@ -116,6 +113,7 @@ export default async (req, res) => {
         const neededCredits = servicesArray.length * townsArray.length;
 
         try {
+            const geminiModel = getGeminiModel();
             // Fetch user's current credits
             const userCreditsResult = await query('SELECT credits FROM users WHERE id = $1', [userId]);
 

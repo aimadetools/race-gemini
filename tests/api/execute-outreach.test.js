@@ -9,7 +9,7 @@ jest.mock('micro', () => ({
 }));
 import { json as mockMicroJson } from 'micro';
 
-import executeOutreach from '../../api/execute-outreach.cjs';
+import executeOutreach from '../../api/execute-outreach.js';
 
 let setApiKeySpy;
 let sendSpy;
