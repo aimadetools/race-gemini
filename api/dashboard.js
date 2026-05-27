@@ -4,6 +4,7 @@ import { parse } from 'cookie';
 import fs from 'fs';
 import path from 'path';
 import { logError } from '../lib/logger.js';
+import { query } from '../db/index.js';
 
 
 
@@ -28,18 +29,12 @@ export default async function handler(req, res, currentKvClient) {
 
       const userId = decoded.userId;
 
-      // Retrieve user email from userId
-      const userEmail = await currentKv.get(`userId:${userId}`);
-      if (!userEmail) {
-          return res.status(404).json({ message: 'User not found. Please log in again.' });
+      // Fetch user from PostgreSQL
+      const userResult = await query('SELECT email, credits FROM users WHERE id = $1', [userId]);
+      if (userResult.rows.length === 0) {
+          return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
-
-      // Retrieve full user object
-      const userString = await currentKv.get(`user:${userEmail}`);
-      if (!userString) {
-          return res.status(404).json({ message: 'User profile not found.' });
-      }
-      const user = JSON.parse(userString);
+      const user = userResult.rows[0];
 
       // Retrieve generated pages for the user
       const pageIds = await currentKv.smembers(`user:${userId}:pages`);

@@ -1,6 +1,7 @@
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 import jwt from 'jsonwebtoken';
+import { parse } from 'cookie';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -8,7 +9,8 @@ export default async function handler(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  const { authToken } = req.cookies;
+  const cookies = parse(req.headers.cookie || '');
+  const authToken = cookies.authToken || req.cookies?.authToken;
 
   if (!authToken) {
     return res.status(401).json({ message: 'Not authenticated.' });

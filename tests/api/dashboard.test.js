@@ -36,6 +36,7 @@ import { parse as parseCookie } from 'cookie';
 import fs from 'fs';
 import path from 'path';
 import { logError } from '../../lib/logger.js';
+import { clearMockUsers, addMockUser, setQueryDelegate } from '../../db/mockDb.js';
 
 describe('dashboard API', () => {
   let req;
@@ -63,6 +64,8 @@ describe('dashboard API', () => {
     };
 
     jest.clearAllMocks();
+    clearMockUsers();
+    setQueryDelegate(null); // Reset query delegate
 
     // Mock process.env.JWT_SECRET
     process.env.JWT_SECRET = 'test_secret';
@@ -111,27 +114,11 @@ describe('dashboard API', () => {
   test('should return 404 if userId is not found from decoded token', async () => {
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId: 'user123' });
-    mockKv.get.mockResolvedValueOnce(null); // userEmail is null for userId:user123
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith('userId:user123');
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: 'User not found. Please log in again.' });
-  });
-
-  test('should return 404 if user profile is not found', async () => {
-    parseCookie.mockReturnValue({ authToken: 'valid_token' });
-    jwt.verify.mockReturnValue({ userId: 'user123' });
-    mockKv.get.mockResolvedValueOnce('test@example.com'); // user email found
-    mockKv.get.mockResolvedValueOnce(null); // user profile not found
-
-    await handler(req, res, mockKv);
-
-    expect(mockKv.get).toHaveBeenCalledWith('userId:user123');
-    expect(mockKv.get).toHaveBeenCalledWith('user:test@example.com');
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: 'User profile not found.' });
+    expect(res.json).toHaveBeenCalledWith({ message: 'User profile not found. Please log in again.' });
   });
 
   test('should successfully retrieve dashboard data with generated pages', async () => {
@@ -141,17 +128,17 @@ describe('dashboard API', () => {
     const pageId2 = 'page2';
 
     const user = {
+      id: userId,
       email: userEmail,
       credits: 50,
     };
+    addMockUser(user);
 
     const page1Data = { title: 'Page 1', url: 'http://example.com/page1' };
     const page2Data = { title: 'Page 2', url: 'http://example.com/page2' };
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockResolvedValueOnce(userEmail); // userId:user123 -> userEmail
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(user)); // user:userEmail -> user object
     mockKv.smembers.mockResolvedValueOnce([pageId1, pageId2]); // user:userId:pages -> pageIds
     mockKv.get.mockResolvedValueOnce(JSON.stringify(page1Data)); // pageId1 -> page1Data
     mockKv.get.mockResolvedValueOnce(10); // page:pageId1:views -> 10
@@ -163,15 +150,13 @@ describe('dashboard API', () => {
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`userId:${userId}`);
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${userEmail}`);
     expect(mockKv.smembers).toHaveBeenCalledWith(`user:${userId}:pages`);
     expect(mockKv.get).toHaveBeenCalledWith(pageId1);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId1}:views`);
     expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId1}:unique_visitors`);
     expect(mockKv.get).toHaveBeenCalledWith(pageId2);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId2}:views`);
-    expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId2}:unique_visitors`); // Corrected typo here
+    expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId2}:unique_visitors`);
     expect(mockKv.lrange).toHaveBeenCalledWith(`user:${userId}:credittransactions`, 0, 100);
 
     expect(res.status).toHaveBeenCalledWith(200);
@@ -186,14 +171,12 @@ describe('dashboard API', () => {
     });
   });
 
-  test('should return 500 for internal server error during KV operations', async () => {
+  test('should return 500 for internal server error during database operations', async () => {
     const userId = 'user123';
-    const userEmail = 'test@example.com';
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockResolvedValueOnce(userEmail); // userId:user123 -> userEmail
-    mockKv.get.mockRejectedValueOnce(new Error('KV connection failed')); // Error on getting user profile
+    setQueryDelegate(() => { throw new Error('DB connection failed'); });
 
     await handler(req, res, mockKv);
 
@@ -207,14 +190,14 @@ describe('dashboard API', () => {
     const userEmail = 'test@example.com';
 
     const user = {
+      id: userId,
       email: userEmail,
       credits: 50,
     };
+    addMockUser(user);
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
-    mockKv.get.mockResolvedValueOnce(userEmail); // userId:user123 -> userEmail
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(user)); // user:userEmail -> user object
     mockKv.smembers.mockResolvedValueOnce([]); // user:userId:pages -> empty array
     mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
 
