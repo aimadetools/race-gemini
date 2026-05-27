@@ -139,7 +139,7 @@ describe('Checkout API', () => {
                     price_data: {
                         currency: 'usd',
                         product_data: { name: 'Pro Pack (200 Credits)' },
-                        unit_amount: 18000,
+                        unit_amount: 9900,
                     },
                     quantity: 1,
                 },
@@ -161,7 +161,7 @@ describe('Checkout API', () => {
 
     // Test for successful custom credit pack creation (tier 1: <200)
     test('should create a Stripe checkout session for custom credits (tier 1: <200)', async () => {
-        mockReq.body = { creditPackId: 'pack_custom', customAmount: 5000, customCredits: 50 }; // 50 credits * $1.00/credit = $50.00
+        mockReq.body = { creditPackId: 'pack_custom', customAmount: 4900, customCredits: 50 }; // 50 credits at progressive pricing = $49.00
         await handler(mockReq, mockRes);
 
         expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledTimes(1);
@@ -172,7 +172,7 @@ describe('Checkout API', () => {
                     price_data: {
                         currency: 'usd',
                         product_data: { name: 'Custom Credit Pack (50 Credits)' },
-                        unit_amount: 5000,
+                        unit_amount: 4900,
                     },
                     quantity: 1,
                 },
@@ -194,7 +194,7 @@ describe('Checkout API', () => {
 
     // Test for successful custom credit pack creation (tier 2: 200-999)
     test('should create a Stripe checkout session for custom credits (tier 2: 200-999)', async () => {
-        mockReq.body = { creditPackId: 'pack_custom', customAmount: 18000, customCredits: 200 }; // 200 credits * $0.90/credit = $180.00
+        mockReq.body = { creditPackId: 'pack_custom', customAmount: 9900, customCredits: 200 }; // 200 credits at progressive pricing = $99.00
         await handler(mockReq, mockRes);
 
         expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledTimes(1);
@@ -205,7 +205,7 @@ describe('Checkout API', () => {
                     price_data: {
                         currency: 'usd',
                         product_data: { name: 'Custom Credit Pack (200 Credits)' },
-                        unit_amount: 18000,
+                        unit_amount: 9900,
                     },
                     quantity: 1,
                 },
@@ -227,7 +227,7 @@ describe('Checkout API', () => {
 
     // Test for successful custom credit pack creation (tier 3: >=1000)
     test('should create a Stripe checkout session for custom credits (tier 3: >=1000)', async () => {
-        mockReq.body = { creditPackId: 'pack_custom', customAmount: 80000, customCredits: 1000 }; // 1000 credits * $0.80/credit = $800.00
+        mockReq.body = { creditPackId: 'pack_custom', customAmount: 24900, customCredits: 1000 }; // 1000 credits at progressive pricing = $249.00
         await handler(mockReq, mockRes);
 
         expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledTimes(1);
@@ -238,7 +238,7 @@ describe('Checkout API', () => {
                     price_data: {
                         currency: 'usd',
                         product_data: { name: 'Custom Credit Pack (1000 Credits)' },
-                        unit_amount: 80000,
+                        unit_amount: 24900,
                     },
                     quantity: 1,
                 },
@@ -256,6 +256,16 @@ describe('Checkout API', () => {
         expect(mockRes.statusCode).toBe(200); // Expect 200 OK with session ID
         expect(mockRes._getJSONData()).toEqual({ sessionId: 'mockSessionId' });
         expect(logError).not.toHaveBeenCalled(); // No error logging for success
+    });
+
+    // Test for price tampering detection
+    test('should return 400 if customAmount does not match expected progressive price', async () => {
+        mockReq.body = { creditPackId: 'pack_custom', customAmount: 100, customCredits: 1000 }; // 1000 credits for $1.00 instead of $249.00
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(400);
+        expect(mockRes._getJSONData()).toEqual({ message: 'Invalid custom amount or credits for custom pack.' });
+        expect(logError).toHaveBeenCalled(); // Should log the price mismatch error
     });
 
     // Test for missing customAmount

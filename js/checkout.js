@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const body = {};
                 if (creditPackId) {
                     body.creditPackId = creditPackId;
+                    if (creditPackId === 'pack_custom') {
+                        body.customAmount = form.querySelector('input[name="customAmount"]')?.value;
+                        body.customCredits = form.querySelector('input[name="customCredits"]')?.value;
+                    }
                 } else if (agencyPlanId) {
                     body.agencyPlanId = agencyPlanId;
                 } else {

@@ -142,12 +142,12 @@
 </div>
 <div id="credit-packs">
     <div class="price-cards">
-        <div class="card" data-credits="50" data-price="50" data-stripe-price-id="price_SMALL_BUSINESS_PACK">
+        <div class="card" data-credits="50" data-price="49" data-stripe-price-id="price_SMALL_BUSINESS_PACK">
             <h2 data-i18n-key="pricing_plan_small_business_title">
                 Small Business Pack
             </h2>
             <p class="price">
-                $50
+                $49
             </p>
             <p data-i18n-key="pricing_one_time_fee">
                 One-Time Fee
@@ -226,12 +226,12 @@
                 </button>
             </form>
         </div>
-        <div class="card" data-credits="1000" data-price="800" data-stripe-price-id="price_AGENCY_PACK">
+        <div class="card" data-credits="1000" data-price="249" data-stripe-price-id="price_AGENCY_PACK">
             <h2 data-i18n-key="pricing_plan_agency_title">
                 Agency Pack
             </h2>
             <p class="price">
-                $800
+                $249
             </p>
             <p data-i18n-key="pricing_one_time_fee">
                 One-Time Fee
@@ -560,18 +560,20 @@
             customCreditsInput.value = 100000;
         }
 
-        let pricePerCredit;
-        if (credits < 200) {
-            pricePerCredit = 1.00; // $1.00/credit
-        } else if (credits >= 200 && credits < 1000) {
-            pricePerCredit = 0.90; // $0.90/credit
-        } else { // credits >= 1000
-            pricePerCredit = 0.80; // $0.80/credit
+        let totalPrice;
+        if (credits <= 50) {
+            totalPrice = credits * 0.98;
+        } else if (credits <= 200) {
+            totalPrice = 49 + (credits - 50) * (50 / 150);
+        } else if (credits <= 1000) {
+            totalPrice = 99 + (credits - 200) * (150 / 800);
+        } else {
+            totalPrice = 249 + (credits - 1000) * 0.249;
         }
 
-        const totalPrice = (credits * pricePerCredit).toFixed(2);
-        calculatedPriceSpan.textContent = totalPrice;
-        customAmountInput.value = (parseFloat(totalPrice) * 100).toFixed(0); // Price in cents
+        const totalPriceFormatted = totalPrice.toFixed(2);
+        calculatedPriceSpan.textContent = totalPriceFormatted;
+        customAmountInput.value = Math.round(totalPrice * 100); // Price in cents
         customCreditsFormInput.value = credits; // Actual number of credits
     }
 

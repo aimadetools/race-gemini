@@ -45,9 +45,9 @@ export default async (req, res) => {
         if (creditPackId) {
             // Logic for one-time credit pack purchase
             const creditPackDetails = {
-                'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 5000 },    // $50.00
-                'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 18000 },  // $180.00
-                'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 24900 }, // $800.00
+                'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 4900 },    // $49.00
+                'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 9900 },  // $99.00
+                'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 24900 }, // $249.00
             };
 
             let selectedPack;
@@ -59,6 +59,26 @@ export default async (req, res) => {
 
                 if (isNaN(parsedCustomAmount) || parsedCustomAmount <= 0 || isNaN(parsedCustomCredits) || parsedCustomCredits <= 0) {
                     await logError(new Error(`Invalid custom amount or credits provided: amount=${customAmount}, credits=${customCredits}`), 'Checkout Product Selection - Custom Pack Validation');
+                    return res.status(400).json({ message: 'Invalid custom amount or credits for custom pack.' });
+                }
+
+                // Server-side validation of price to prevent price tampering
+                const calculateExpectedPrice = (credits) => {
+                    if (credits <= 50) {
+                        return credits * 0.98;
+                    } else if (credits <= 200) {
+                        return 49 + (credits - 50) * (50 / 150);
+                    } else if (credits <= 1000) {
+                        return 99 + (credits - 200) * (150 / 800);
+                    } else {
+                        return 249 + (credits - 1000) * 0.249;
+                    }
+                };
+
+                const expectedAmount = Math.round(calculateExpectedPrice(parsedCustomCredits) * 100);
+
+                if (parsedCustomAmount !== expectedAmount) {
+                    await logError(new Error(`Price tampering detected: amount=${parsedCustomAmount}, credits=${parsedCustomCredits}, expected=${expectedAmount}`), 'Checkout Product Selection - Custom Pack Price Mismatch');
                     return res.status(400).json({ message: 'Invalid custom amount or credits for custom pack.' });
                 }
 
