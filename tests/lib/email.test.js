@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals';
-import path from 'path';
-const { sendEmail } = jest.requireActual(path.resolve(process.cwd(), 'lib/email.js'));
+const { sendEmail } = jest.requireActual('../../lib/email.js');
 
 const mockSend = jest.fn();
 
