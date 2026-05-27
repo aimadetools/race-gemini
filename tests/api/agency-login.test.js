@@ -27,7 +27,7 @@ jest.mock('jsonwebtoken', () => {
 import handler from '../../api/agency-login';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import { clearMockUsers, addMockUser } from '../../db/mockDb.js';
 
 describe('agency-login API', () => {
   let req;
@@ -37,6 +37,7 @@ describe('agency-login API', () => {
   beforeEach(() => {
     mockKv = {
       get: jest.fn(),
+      set: jest.fn(),
     };
 
     req = {
@@ -51,8 +52,9 @@ describe('agency-login API', () => {
       end: jest.fn(),
     };
 
-    // Reset all mocks before each test
+    // Reset all mocks and database before each test
     jest.clearAllMocks();
+    clearMockUsers();
   });
 
   test('should return 405 for non-POST methods', async () => {
@@ -82,11 +84,10 @@ describe('agency-login API', () => {
 
   test('should return 401 for non-existent agency email', async () => {
     req.body = { email: 'nonexistent@example.com', password: 'password123' };
-    mockKv.get.mockResolvedValueOnce(null); // agencyId is null
+    mockKv.get.mockResolvedValueOnce(null); // legacy agencyId is null
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith('agency:nonexistent@example.com');
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Invalid credentials.' });
   });
@@ -97,32 +98,34 @@ describe('agency-login API', () => {
       id: agencyId,
       email: 'test@example.com',
       passwordHash: 'hashedpasswordfromdb',
+      is_agency: true,
     };
 
     req.body = { email: 'test@example.com', password: 'wrongpassword' };
-    mockKv.get
-      .mockResolvedValueOnce(agencyId) // first get for agencyId
-      .mockResolvedValueOnce(agency); // second get for agency object
+    addMockUser(agency);
 
     bcrypt.compare.mockResolvedValueOnce(false); // Incorrect password
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith('agency:test@example.com');
-    expect(mockKv.get).toHaveBeenCalledWith(`agency:${agencyId}`);
     expect(bcrypt.compare).toHaveBeenCalledWith('wrongpassword', 'hashedpasswordfromdb');
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Invalid credentials.' });
   });
 
-  test('should return 500 for internal server error during KV operations', async () => {
+  test('should return 500 for internal server error during database operations', async () => {
+    // Inject query delegate to throw error to test 500 handler
+    const { setQueryDelegate } = await import('../../db/mockDb.js');
+    setQueryDelegate(() => { throw new Error('Database connection failed'); });
+
     req.body = { email: 'test@example.com', password: 'password123' };
-    mockKv.get.mockRejectedValueOnce(new Error('KV connection failed'));
 
     await handler(req, res, mockKv);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error.' });
+
+    setQueryDelegate(null);
   });
 
   test('should successfully log in an agency and set a cookie', async () => {
@@ -131,26 +134,23 @@ describe('agency-login API', () => {
       id: agencyId,
       email: 'test@example.com',
       passwordHash: 'hashedpasswordfromdb',
+      is_agency: true,
     };
     const token = 'mocked_jwt_token';
 
     req.body = { email: 'test@example.com', password: 'correctpassword' };
-    mockKv.get
-      .mockResolvedValueOnce(agencyId) // first get for agencyId
-      .mockResolvedValueOnce(agency); // second get for agency object
+    addMockUser(agency);
 
     bcrypt.compare.mockResolvedValueOnce(true); // Correct password
     jwt.sign.mockReturnValueOnce(token);
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith('agency:test@example.com');
-    expect(mockKv.get).toHaveBeenCalledWith(`agency:${agencyId}`);
     expect(bcrypt.compare).toHaveBeenCalledWith('correctpassword', 'hashedpasswordfromdb');
-    expect(jwt.sign).toHaveBeenCalledWith({ agencyId: agency.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    expect(jwt.sign).toHaveBeenCalledWith({ userId: agency.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     expect(res.setHeader).toHaveBeenCalledWith(
       'Set-Cookie',
-      expect.stringContaining(`token=${token}`)
+      expect.stringContaining(`authToken=${token}`)
     );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ message: 'Agency logged in successfully!', agencyId: agency.id });

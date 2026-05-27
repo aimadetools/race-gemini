@@ -31,6 +31,7 @@ export const originalMockQuery = async (text, params) => {
                     logo_url: user.logo_url || null,
                     primary_color: user.primary_color || null,
                     agency_id: user.agency_id || null,
+                    is_agency: user.is_agency || false,
                 };
                 return { rows: [u] };
             }
@@ -56,6 +57,7 @@ export const originalMockQuery = async (text, params) => {
                     logo_url: user.logo_url || null,
                     primary_color: user.primary_color || null,
                     agency_id: user.agency_id || null,
+                    is_agency: user.is_agency || false,
                 };
                 return { rows: [u] };
             }
@@ -79,6 +81,29 @@ export const originalMockQuery = async (text, params) => {
                 return { rows: [u] };
             }
             return { rows: [] };
+        }
+
+        if (textLower.includes('where agency_id = $1')) {
+            const agencyId = params[0]?.toString();
+            const clients = mockUsers.filter(u => u.agency_id?.toString() === agencyId);
+            const rows = clients.map(user => ({
+                id: user.id,
+                name: user.name || null,
+                email: user.email,
+                password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                passwordHash: user.password_hash || user.passwordHash || user.hashed_password,
+                hashed_password: user.password_hash || user.passwordHash || user.hashed_password,
+                credits: user.credits || 0,
+                referral_code: user.referral_code,
+                referrer_id: user.referrer_id,
+                subscription_status: user.subscription_status || 'inactive',
+                stripe_subscription_id: user.stripe_subscription_id || null,
+                logo_url: user.logo_url || null,
+                primary_color: user.primary_color || null,
+                agency_id: user.agency_id || null,
+                is_agency: user.is_agency || false,
+            }));
+            return { rows };
         }
     }
 

@@ -22,6 +22,7 @@ import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import slugify from 'slugify';
+import { clearMockUsers, addMockUser } from '../../db/mockDb.js';
 
 describe('client-details API', () => {
   let req;
@@ -46,6 +47,7 @@ describe('client-details API', () => {
     };
 
     jest.clearAllMocks();
+    clearMockUsers();
 
     process.env.JWT_SECRET = 'test_secret';
   });
@@ -93,10 +95,10 @@ describe('client-details API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
   });
 
-  test('should return 403 if token does not contain agencyId', async () => {
+  test('should return 403 if token does not contain userId or agencyId', async () => {
     req.query.id = 'client123';
     cookie.parse.mockReturnValue({ token: 'valid_token' });
-    jwt.verify.mockReturnValue({ userId: 'user123' }); // Missing agencyId
+    jwt.verify.mockReturnValue({}); // Missing both userId and agencyId
 
     await handler(req, res, mockKv);
 
@@ -104,30 +106,45 @@ describe('client-details API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Not an agency account' });
   });
 
-  test('should return 404 if client not found or does not belong to agency', async () => {
+  test('should return 404 if client not found or 403 if does not belong to agency', async () => {
     const agencyId = 'agency123';
     const clientId = 'client123';
+    
+    // Set up agency user in database
+    addMockUser({
+      id: agencyId,
+      email: 'agency@example.com',
+      is_agency: true,
+    });
+
     req.query.id = clientId;
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockResolvedValueOnce(null); // Client not found
 
+    // Client not found in DB
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${clientId}`);
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ message: 'Client not found' });
 
+    // Client found but belongs to wrong agency
     jest.clearAllMocks();
-    mockKv.get.mockResolvedValueOnce({ agencyId: 'anotherAgency' }); // Client found but wrong agency
-    jwt.verify.mockReturnValue({ agencyId }); // Reset mock for JWT
-    cookie.parse.mockReturnValue({ token: 'valid_token' }); // Reset mock for cookie
+    addMockUser({
+      id: clientId,
+      name: 'Another Client',
+      email: 'another@example.com',
+      credits: 10,
+      agency_id: 'different_agency',
+      is_agency: false,
+    });
+    
+    jwt.verify.mockReturnValue({ agencyId });
+    cookie.parse.mockReturnValue({ token: 'valid_token' });
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${clientId}`);
-    expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Client not found' });
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Client does not belong to this agency.' });
   });
 
   test('should successfully retrieve client details and pages', async () => {
@@ -136,13 +153,22 @@ describe('client-details API', () => {
     const pageId1 = 'page1';
     const pageId2 = 'page2';
 
+    // Set up agency and client in database
+    addMockUser({
+      id: agencyId,
+      email: 'agency@example.com',
+      is_agency: true,
+    });
+
     const client = {
       id: clientId,
       name: 'Test Client',
       email: 'client@example.com',
       credits: 200,
-      agencyId: agencyId,
+      agency_id: agencyId,
+      is_agency: false,
     };
+    addMockUser(client);
 
     const page1 = { service: 'SEO', town: 'London', url: 'http://example.com/london-seo' };
     const page2 = { service: 'PPC', town: 'Paris', url: 'http://example.com/paris-ppc' };
@@ -150,14 +176,16 @@ describe('client-details API', () => {
     req.query.id = clientId;
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockResolvedValueOnce(client); // Get client
+    
     mockKv.smembers.mockResolvedValueOnce([pageId1, pageId2]); // Get page IDs
-    mockKv.get.mockResolvedValueOnce(page1); // Get page 1 details
-    mockKv.get.mockResolvedValueOnce(page2); // Get page 2 details
+    mockKv.get.mockImplementation((key) => {
+      if (key === `page:${pageId1}`) return Promise.resolve(page1);
+      if (key === `page:${pageId2}`) return Promise.resolve(page2);
+      return Promise.resolve(null);
+    });
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${clientId}`);
     expect(mockKv.smembers).toHaveBeenCalledWith(`user:${clientId}:pages`);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId1}`);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId2}`);
@@ -165,7 +193,6 @@ describe('client-details API', () => {
     expect(slugify).toHaveBeenCalledWith(page1.town, { lower: true, strict: true });
     expect(slugify).toHaveBeenCalledWith(page2.service, { lower: true, strict: true });
     expect(slugify).toHaveBeenCalledWith(page2.town, { lower: true, strict: true });
-
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -180,17 +207,21 @@ describe('client-details API', () => {
     });
   });
 
-  test('should return 500 for internal server error during KV operations', async () => {
+  test('should return 500 for internal server error during database operations', async () => {
     const agencyId = 'agency123';
     const clientId = 'client123';
     req.query.id = clientId;
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockRejectedValueOnce(new Error('KV connection failed'));
+    
+    const { setQueryDelegate } = await import('../../db/mockDb.js');
+    setQueryDelegate(() => { throw new Error('Database connection failed'); });
 
     await handler(req, res, mockKv);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+
+    setQueryDelegate(null);
   });
 });

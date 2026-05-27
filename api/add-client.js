@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js'; // Import centralized logger
 
 async function handler(req, res, currentKvClient) {
@@ -67,8 +68,8 @@ async function handler(req, res, currentKvClient) {
 
         // Insert client into PostgreSQL users table
         const pgResult = await query(
-            'INSERT INTO users (email, password_hash, credits, agency_id, name) VALUES ($1, $2, 0, $3, $4) RETURNING id',
-            [clientEmail, passwordHash, agencyId, clientName]
+            'INSERT INTO users (email, password_hash, credits, agency_id, name) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            [clientEmail, passwordHash, 0, agencyId, clientName]
         );
         const userId = pgResult.rows[0].id;
 

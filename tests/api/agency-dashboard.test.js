@@ -118,9 +118,9 @@ describe('agency-dashboard API', () => {
     expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
   });
 
-  test('should return 403 if token does not contain agencyId', async () => {
+  test('should return 403 if token does not contain userId or agencyId', async () => {
     cookie.parse.mockReturnValue({ token: 'valid_token' });
-    jwt.verify.mockReturnValue({ userId: 'user123' }); // Missing agencyId
+    jwt.verify.mockReturnValue({}); // Missing both userId and agencyId
 
     await handler(req, res, mockKv);
 
@@ -165,19 +165,23 @@ describe('agency-dashboard API', () => {
       stripe_subscription_id: 'sub_agency123',
       logo_url: agency.logoUrl,
       primary_color: agency.primaryColor,
+      is_agency: true,
     });
 
-    const client1 = { id: client1Id, name: 'Client One', email: 'client1@example.com', credits: 10 };
-    const client2 = { id: client2Id, name: 'Client Two', email: 'client2@example.com', credits: 20 };
+    const client1 = { id: client1Id, name: 'Client One', email: 'client1@example.com', credits: 10, agency_id: agencyId, is_agency: false };
+    const client2 = { id: client2Id, name: 'Client Two', email: 'client2@example.com', credits: 20, agency_id: agencyId, is_agency: false };
+
+    addMockUser(client1);
+    addMockUser(client2);
 
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockResolvedValueOnce(agency); // Get agency
-    mockKv.smembers.mockResolvedValueOnce([client1Id, client2Id]); // Get client IDs
-    mockKv.get.mockResolvedValueOnce(client1); // Get client 1
-    mockKv.smembers.mockResolvedValueOnce(['page1', 'page2']); // Get client 1 pages
-    mockKv.get.mockResolvedValueOnce(client2); // Get client 2
-    mockKv.smembers.mockResolvedValueOnce(['page3']); // Get client 2 pages
+    
+    mockKv.smembers.mockImplementation((key) => {
+      if (key === `user:${client1Id}:pages`) return Promise.resolve(['page1', 'page2']);
+      if (key === `user:${client2Id}:pages`) return Promise.resolve(['page3']);
+      return Promise.resolve([]);
+    });
 
     // Mock Stripe subscription data
     Stripe.mockRetrieveSubscription.mockResolvedValueOnce({
@@ -194,11 +198,7 @@ describe('agency-dashboard API', () => {
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.get).toHaveBeenCalledWith(`agency:${agencyId}`);
-    expect(mockKv.smembers).toHaveBeenCalledWith(`agency:${agencyId}:clients`);
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${client1Id}`);
     expect(mockKv.smembers).toHaveBeenCalledWith(`user:${client1Id}:pages`);
-    expect(mockKv.get).toHaveBeenCalledWith(`user:${client2Id}`);
     expect(mockKv.smembers).toHaveBeenCalledWith(`user:${client2Id}:pages`);
 
     expect(res.status).toHaveBeenCalledWith(200);
@@ -221,7 +221,7 @@ describe('agency-dashboard API', () => {
     });
   });
 
-  test('should return 500 for internal server error during KV operations', async () => {
+  test('should return 500 for internal server error during database operations', async () => {
     const agencyId = 'agency123';
     addMockUser({
       id: agencyId,
@@ -232,16 +232,21 @@ describe('agency-dashboard API', () => {
       stripe_subscription_id: 'sub_agency123',
       logo_url: 'logo.png',
       primary_color: '#FFF',
+      is_agency: true,
     });
 
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    mockKv.get.mockRejectedValueOnce(new Error('KV connection failed'));
+    
+    const { setQueryDelegate } = await import('../../db/mockDb.js');
+    setQueryDelegate(() => { throw new Error('Database connection failed'); });
 
     await handler(req, res, mockKv);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+
+    setQueryDelegate(null);
   });
 
   test('should return 401 for invalid JWT verification', async () => {
