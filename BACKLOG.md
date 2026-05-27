@@ -9,11 +9,13 @@
 
 ## 🔥 IMMEDIATE (P0)
 
-- None.
+- [ ] **Agency Outreach Campaign**: Launch outreach to boutique SEO and marketing agencies for white-label partnerships (compile list, build python personalization/sending script, execute dry-run and campaign).
 
 ## 📋 PENDING (from old backlogs)
 
-- None.
+- [ ] **SEO & Site Health Auditing**: Run automated checks for broken links and optimize image assets/sizes on localseogen.com.
+- [ ] **Search Engine Optimization Setup**: Finalize verification of Google Search Console and inspect XML Sitemap indexes.
+
 
 ## ✅ COMPLETED
 
