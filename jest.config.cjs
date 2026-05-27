@@ -13,10 +13,8 @@ module.exports = {
     "^.*\\/db\\/index(\\.js)?$": "<rootDir>/db/mockDb.js"
   },
   testPathIgnorePatterns: [
-    '/node_modules/',
-    '\\.vercel/',
-    'static/',
-    'output/'
+    'node_modules',
+    '\\.vercel'
   ],
   testTimeout: 30000,
 };
