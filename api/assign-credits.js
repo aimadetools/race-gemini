@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
+import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 
 async function handler(req, res, currentKvClient) {
@@ -18,7 +19,7 @@ async function handler(req, res, currentKvClient) {
     }
 
     const cookies = cookie.parse(req.headers.cookie || '');
-    const token = cookies.token;
+    const token = cookies.authToken || cookies.token || cookies.auth;
 
     if (!token) {
         await logError(new Error('Authentication token missing.'), 'Assign Credits - Authentication Error', 'assign_credits_error.log');
@@ -41,42 +42,52 @@ async function handler(req, res, currentKvClient) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const agencyId = decoded.agencyId;
+        const agencyId = decoded.userId || decoded.agencyId;
 
         if (!agencyId) {
             await logError(new Error('User is not an agency account.'), 'Assign Credits - Not Agency Account', 'assign_credits_error.log');
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const agency = await currentKv.get(`agency:${agencyId}`);
-        if (!agency) {
+        // Verify agency credits in PostgreSQL
+        const agencyResult = await query('SELECT id, credits, is_agency FROM users WHERE id = $1', [agencyId]);
+        if (agencyResult.rows.length === 0 || !agencyResult.rows[0].is_agency) {
             await logError(new Error(`Agency not found for agencyId: ${agencyId}`), 'Assign Credits - Agency Not Found', 'assign_credits_error.log');
             return res.status(404).json({ message: 'Agency not found' });
         }
+        const agencyCredits = agencyResult.rows[0].credits || 0;
 
-        if ((agency.credits || 0) < creditsToAssign) {
-            await logError(new Error(`Agency ${agencyId} has insufficient credits to assign ${creditsToAssign}. Available: ${agency.credits || 0}`), 'Assign Credits - Insufficient Agency Credits', 'assign_credits_error.log');
+        if (agencyCredits < creditsToAssign) {
+            await logError(new Error(`Agency ${agencyId} has insufficient credits to assign ${creditsToAssign}. Available: ${agencyCredits}`), 'Assign Credits - Insufficient Agency Credits', 'assign_credits_error.log');
             return res.status(400).json({ message: 'Insufficient credits.' });
         }
 
-        const client = await currentKv.get(`user:${clientId}`);
-        if (!client) {
-            await logError(new Error(`Client not found for clientId: ${clientId}`), 'Assign Credits - Client Not Found', 'assign_credits_error.log');
-            return res.status(404).json({ message: 'Client not found.' });
+        // Verify client belongs to this agency in PostgreSQL
+        const clientResult = await query('SELECT id, name, email, credits FROM users WHERE id = $1 AND agency_id = $2', [clientId, agencyId]);
+        if (clientResult.rows.length === 0) {
+            await logError(new Error(`Client not found or does not belong to agency ${agencyId} for clientId: ${clientId}`), 'Assign Credits - Client Not Found', 'assign_credits_error.log');
+            return res.status(404).json({ message: 'Client not found or does not belong to this agency.' });
         }
-        
-        // Ensure client belongs to the agency
-        const agencyClientIds = await currentKv.smembers(`agency:${agencyId}:clients`);
-        if (!agencyClientIds.includes(clientId)) {
-            await logError(new Error(`Client ${clientId} does not belong to agency ${agencyId}.`), 'Assign Credits - Client Not Agency Member', 'assign_credits_error.log');
-            return res.status(403).json({ message: 'Client does not belong to this agency.' });
+        const client = clientResult.rows[0];
+
+        // Deduct from agency and add to client in PostgreSQL
+        await query('UPDATE users SET credits = credits - $1 WHERE id = $2', [creditsToAssign, agencyId]);
+        await query('UPDATE users SET credits = credits + $1 WHERE id = $2', [creditsToAssign, clientId]);
+
+        // Synchronize legacy Vercel KV structures
+        const legacyAgency = await currentKv.get(`agency:${agencyId}`);
+        if (legacyAgency) {
+            legacyAgency.credits = (legacyAgency.credits || 0) - creditsToAssign;
+            await currentKv.set(`agency:${agencyId}`, legacyAgency);
         }
 
-        agency.credits -= creditsToAssign;
-        client.credits = (client.credits || 0) + creditsToAssign;
-
-        await currentKv.set(`agency:${agencyId}`, agency);
-        await currentKv.set(`user:${client.email}`, client);
+        const legacyClient = await currentKv.get(`user:${clientId}`);
+        if (legacyClient) {
+            legacyClient.credits = (legacyClient.credits || 0) + creditsToAssign;
+            await currentKv.set(`user:${clientId}`, legacyClient);
+            // CRITICAL BUG FIX: Ensure user:email correctly maps to the integer ID as a string, not the full client object!
+            await currentKv.set(`user:${client.email}`, clientId.toString());
+        }
 
         const historyEntry = {
             clientId,

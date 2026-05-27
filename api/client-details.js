@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import slugify from 'slugify';
+import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 
 async function handler(req, res, currentKvClient) {
@@ -11,7 +12,7 @@ async function handler(req, res, currentKvClient) {
     }
 
     const cookies = cookie.parse(req.headers.cookie || '');
-    const token = cookies.token;
+    const token = cookies.authToken || cookies.token || cookies.auth;
 
     if (!token) {
         await logError(new Error('Authentication token missing.'), 'Client Details - Authentication Error', 'client_details_error.log');
@@ -41,17 +42,31 @@ async function handler(req, res, currentKvClient) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const agencyId = decoded.agencyId;
+        const agencyId = decoded.userId || decoded.agencyId;
 
         if (!agencyId) {
             await logError(new Error('User is not an agency account.'), 'Client Details - Not Agency Account', 'client_details_error.log');
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const client = await currentKv.get(`user:${id}`);
-        if (!client || client.agencyId !== agencyId) {
-            await logError(new Error(`Client with ID ${id} not found or does not belong to agency ${agencyId}.`), 'Client Details - Client Not Found/Unauthorized', 'client_details_error.log');
+        // Verify agency in PostgreSQL
+        const agencyResult = await query('SELECT id, is_agency FROM users WHERE id = $1', [agencyId]);
+        if (agencyResult.rows.length === 0 || !agencyResult.rows[0].is_agency) {
+            await logError(new Error(`User ${agencyId} is not a valid agency`), 'Client Details - Not Agency Account', 'client_details_error.log');
+            return res.status(403).json({ message: 'Not an agency account' });
+        }
+
+        // Fetch client details from PostgreSQL
+        const clientResult = await query('SELECT id, name, email, credits, agency_id FROM users WHERE id = $1', [id]);
+        if (clientResult.rows.length === 0) {
+            await logError(new Error(`Client with ID ${id} not found.`), 'Client Details - Client Not Found', 'client_details_error.log');
             return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const client = clientResult.rows[0];
+        if (client.agency_id !== agencyId) {
+            await logError(new Error(`Client ${id} does not belong to agency ${agencyId}.`), 'Client Details - Unauthorized Access', 'client_details_error.log');
+            return res.status(403).json({ message: 'Client does not belong to this agency.' });
         }
 
         const pageIds = await currentKv.smembers(`user:${id}:pages`);

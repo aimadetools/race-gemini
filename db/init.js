@@ -1,6 +1,7 @@
 import { createUsersTable } from './migrations/create_users_table.js';
 import { createReferralsAndAlterUsers } from './migrations/create_referrals_and_update_users.js';
 import { createSeoPagesTable } from './migrations/create-seo-pages-table.js';
+import { addAgencyColumnsToUsers } from './migrations/add_agency_columns_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -12,6 +13,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring seo_pages table exists...');
     await createSeoPagesTable();
+
+    console.log('Ensuring agency-related columns exist in users table...');
+    await addAgencyColumnsToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

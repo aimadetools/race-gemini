@@ -36,7 +36,7 @@ async function handler(req, res, currentKvClient) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const userId = decoded.agencyId; // agencyId is the userId
+        const userId = decoded.userId || decoded.agencyId; // Support both unified and legacy token payloads
 
         if (!userId) {
             await logError(new Error('Agency ID missing after token decode.'), 'Agency Dashboard - Agency ID Missing', 'agency_dashboard_error.log');
@@ -45,7 +45,7 @@ async function handler(req, res, currentKvClient) {
 
         // Fetch user (agency) data from PostgreSQL
         const userResult = await query(
-            'SELECT id, name, email, credits, subscription_status, stripe_subscription_id, logo_url, primary_color FROM users WHERE id = $1',
+            'SELECT id, name, email, credits, subscription_status, stripe_subscription_id, logo_url, primary_color, is_agency FROM users WHERE id = $1',
             [userId]
         );
 
@@ -55,6 +55,11 @@ async function handler(req, res, currentKvClient) {
         }
 
         const agencyUser = userResult.rows[0];
+        if (!agencyUser.is_agency) {
+            await logError(new Error(`User ${userId} is not an agency account.`), 'Agency Dashboard - Not Agency Account', 'agency_dashboard_error.log');
+            return res.status(403).json({ message: 'Not an agency account' });
+        }
+
         let planName = 'N/A';
         let monthlyCredits = 'N/A';
         let renewalDate = null;
@@ -79,24 +84,29 @@ async function handler(req, res, currentKvClient) {
             }
         }
         
-        // --- Client fetching logic (assuming clients are still managed via KV or another service for now) ---
-        // For now, retaining KV logic for clients. In a fully PostgreSQL migration, this would change.
-        const agency = await currentKv.get(`agency:${userId}`); // Temporarily fetch agency data from KV for client relation
-        const clientIds = agency ? await currentKv.smembers(`agency:${userId}:clients`) : [];
+        // Fetch clients from PostgreSQL associated with this agency
+        const clientsResult = await query(
+            'SELECT id, name, email, credits FROM users WHERE agency_id = $1',
+            [userId]
+        );
+        
         const clients = [];
-        for (const clientId of clientIds) {
-            const client = await currentKv.get(`user:${clientId}`);
-            if(client) {
-                const pages = await currentKv.smembers(`user:${clientId}:pages`);
-                clients.push({ id: clientId, name: client.name, email: client.email, pagesGenerated: pages.length, credits: client.credits || 0 });
-            }
+        for (const row of clientsResult.rows) {
+            const pages = await currentKv.smembers(`user:${row.id}:pages`);
+            clients.push({
+                id: row.id,
+                name: row.name,
+                email: row.email,
+                pagesGenerated: pages ? pages.length : 0,
+                credits: row.credits || 0
+            });
         }
 
         const totalClients = clients.length;
         const totalPagesGenerated = clients.reduce((total, client) => total + client.pagesGenerated, 0);
 
         return res.status(200).json({
-            agencyName: agencyUser.name, // Assuming 'name' column for agency name
+            agencyName: agencyUser.name,
             email: agencyUser.email,
             clients,
             logoUrl: agencyUser.logo_url,

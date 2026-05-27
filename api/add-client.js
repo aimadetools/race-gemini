@@ -18,7 +18,7 @@ async function handler(req, res, currentKvClient) {
     }
 
     const cookies = cookie.parse(req.headers.cookie || '');
-    const token = cookies.token;
+    const token = cookies.authToken || cookies.token || cookies.auth;
 
     if (!token) {
         await logError(new Error('Authentication token missing'), 'Add Client - Authentication Error', 'add_client_error.log');
@@ -41,15 +41,23 @@ async function handler(req, res, currentKvClient) {
             return res.status(401).json({ message: 'Authentication failed: Please log in again.' });
         }
         
-        const agencyId = decoded.agencyId;
+        const agencyId = decoded.userId || decoded.agencyId;
 
         if (!agencyId) {
             await logError(new Error('User is not an agency account'), 'Add Client - Not Agency Account', 'add_client_error.log');
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const existingUser = await currentKv.get(`user:${clientEmail}`);
-        if (existingUser) {
+        // Verify agency exists and is an agency in PostgreSQL
+        const agencyResult = await query('SELECT id, is_agency FROM users WHERE id = $1', [agencyId]);
+        if (agencyResult.rows.length === 0 || !agencyResult.rows[0].is_agency) {
+            await logError(new Error(`User ${agencyId} is not a valid agency`), 'Add Client - Not Agency Account', 'add_client_error.log');
+            return res.status(403).json({ message: 'Not an agency account' });
+        }
+
+        // Check if user already exists in PostgreSQL
+        const existingUserPg = await query('SELECT id FROM users WHERE email = $1', [clientEmail]);
+        if (existingUserPg.rows.length > 0) {
             await logError(new Error(`Client with email ${clientEmail} already exists`), 'Add Client - Existing Client', 'add_client_error.log');
             return res.status(409).json({ message: 'User with this email already exists' });
         }
@@ -57,6 +65,14 @@ async function handler(req, res, currentKvClient) {
         const password = Math.random().toString(36).slice(-8);
         const passwordHash = await bcrypt.hash(password, 10);
 
+        // Insert client into PostgreSQL users table
+        const pgResult = await query(
+            'INSERT INTO users (email, password_hash, credits, agency_id, name) VALUES ($1, $2, 0, $3, $4) RETURNING id',
+            [clientEmail, passwordHash, agencyId, clientName]
+        );
+        const userId = pgResult.rows[0].id;
+
+        // Synchronize with Vercel KV for legacy code compatibility
         const newUser = {
             name: clientName,
             email: clientEmail,
@@ -66,10 +82,8 @@ async function handler(req, res, currentKvClient) {
             credits: 0
         };
         
-        const userId = await currentKv.incr('next_user_id');
         await currentKv.set(`user:${userId}`, newUser);
         await currentKv.set(`user:${clientEmail}`, userId);
-
         await currentKv.sadd(`agency:${agencyId}:clients`, userId);
 
         // In a real application, you would email the user their password
