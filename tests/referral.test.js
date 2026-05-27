@@ -2,7 +2,8 @@ import { jest } from '@jest/globals';
 import fetch from 'node-fetch';
 
 describe('Referral Program E2E Test', () => {
-  const API_URL = 'http://localhost:3000';
+  const API_URL = process.env.API_URL || 'http://localhost:3000';
+
 
   let mockUsers = [];
   let mockReferrals = [];
