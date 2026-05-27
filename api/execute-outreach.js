@@ -54,6 +54,14 @@ async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
 }
 
 export default async (req, res) => {
+  const secret = req.headers['x-outreach-secret'] || req.headers['authorization'];
+  if (!process.env.MIGRATION_SECRET) {
+    return res.status(401).json({ message: 'Unauthorized: MIGRATION_SECRET not configured.' });
+  }
+  if (secret !== process.env.MIGRATION_SECRET) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+
   try {
     // Attempt to parse JSON body
     let requestBody;

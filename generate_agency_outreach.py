@@ -108,6 +108,14 @@ if __name__ == "__main__":
         print(f"Outreach API URL: {api_url}")
         print(f"Prepared {len(emails_to_send)} emails.")
 
+        outreach_secret = os.environ.get("MIGRATION_SECRET")
+        if not outreach_secret:
+            print("WARNING: MIGRATION_SECRET environment variable is not set. The API request might fail.")
+
+        headers = {"Content-Type": "application/json"}
+        if outreach_secret:
+            headers["x-outreach-secret"] = outreach_secret
+
         chunk_size = 10
         for i in range(0, len(emails_to_send), chunk_size):
             chunk = emails_to_send[i : i + chunk_size]
@@ -115,7 +123,7 @@ if __name__ == "__main__":
 
             try:
                 response = requests.post(
-                    api_url, data=payload, headers={"Content-Type": "application/json"}
+                    api_url, data=payload, headers=headers
                 )
                 response.raise_for_status()  # Raise an exception for bad status codes
                 print(f"Successfully sent chunk of {len(chunk)} emails.")

@@ -1,6 +1,14 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res, currentKvClient) {
+  const secret = req.query.secret || req.headers['x-admin-secret'];
+  if (!process.env.MIGRATION_SECRET) {
+    return res.status(401).json({ message: 'Unauthorized: MIGRATION_SECRET not configured.' });
+  }
+  if (secret !== process.env.MIGRATION_SECRET) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+
   const currentKv = currentKvClient || kv;
   if (req.method === 'GET') {
     try {

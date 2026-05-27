@@ -39,6 +39,7 @@ describe('api/execute-outreach', () => {
     // Set SendGrid API Key and From Email for testing
     process.env.SENDGRID_API_KEY = 'SG.test_api_key';
     process.env.SENDGRID_FROM_EMAIL = 'test@example.com';
+    process.env.MIGRATION_SECRET = 'mock_outreach_secret_for_tests';
 
     // Initialize mock request and response
     req = httpMocks.createRequest({
@@ -46,6 +47,7 @@ describe('api/execute-outreach', () => {
       url: '/api/execute-outreach',
       headers: {
         'Content-Type': 'application/json',
+        'x-outreach-secret': 'mock_outreach_secret_for_tests',
       },
       body: {
         emails: [{
@@ -62,6 +64,7 @@ describe('api/execute-outreach', () => {
   afterEach(() => {
     delete process.env.SENDGRID_API_KEY;
     delete process.env.SENDGRID_FROM_EMAIL;
+    delete process.env.MIGRATION_SECRET;
     consoleErrorSpy.mockRestore();
     consoleLogSpy.mockRestore();
   });
@@ -232,5 +235,17 @@ describe('api/execute-outreach', () => {
     );
     expect(sendSpy).toHaveBeenCalledTimes(3);
     expect(logError).toHaveBeenCalledWith(expect.any(Error), 'Error sending email to invalid-recipient. Response: N/A');
+  });
+
+  test('should return 401 if x-outreach-secret header is missing or incorrect', async () => {
+    req.headers['x-outreach-secret'] = 'wrong_secret';
+
+    await executeOutreach(req, res);
+
+    expect(res._getStatusCode()).toBe(401);
+    expect(JSON.parse(res._getData())).toEqual({
+      message: 'Unauthorized.',
+    });
+    expect(sendSpy).not.toHaveBeenCalled();
   });
 });

@@ -6,6 +6,14 @@ import { logError } from '../lib/logger.js';
 // This is a temporary admin script to create an agency from an inquiry
 // In the future, this should be replaced with a proper admin panel
 export default async (req, res, currentKvClient) => {
+    const secret = req.query.secret || req.headers['x-admin-secret'];
+    if (!process.env.MIGRATION_SECRET) {
+        return res.status(401).json({ message: 'Unauthorized: MIGRATION_SECRET not configured.' });
+    }
+    if (secret !== process.env.MIGRATION_SECRET) {
+        return res.status(401).json({ message: 'Unauthorized.' });
+    }
+
     const currentKv = currentKvClient || kv;
     if (req.method === 'POST') {
         const { inquiryId } = req.body;

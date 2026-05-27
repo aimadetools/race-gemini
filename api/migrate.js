@@ -9,11 +9,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  // Basic security check: require a secret token in the environment variables
-  // This is a minimal security measure for deployment environments like Vercel
-  // Security check: require a secret token in the environment variables
-  // The MIGRATION_SECRET environment variable must be set to a strong, randomly generated token.
-  // This token will be used to secure access to this migration endpoint.
+  const secret = req.query.secret || req.headers['x-migration-secret'];
   if (!process.env.MIGRATION_SECRET) {
     console.warn(
       'MIGRATION_SECRET environment variable is not set. Unauthorized access attempt to migration endpoint.'
@@ -21,6 +17,13 @@ export default async function handler(req, res) {
     return res
       .status(401)
       .json({ message: 'Unauthorized: MIGRATION_SECRET not configured' });
+  }
+
+  if (secret !== process.env.MIGRATION_SECRET) {
+    console.warn(
+      'Unauthorized access attempt to migration endpoint: invalid token provided.'
+    );
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 
   try {

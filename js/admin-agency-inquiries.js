@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch('/api/get-agency-inquiries');
+        const urlParams = new URLSearchParams(window.location.search);
+        const secret = urlParams.get('secret') || '';
+        const response = await fetch(`/api/get-agency-inquiries?secret=${encodeURIComponent(secret)}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch agency inquiries: ${response.statusText}`);
         }
