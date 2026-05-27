@@ -31,6 +31,7 @@ def audit(target_content, target_type="html_content", timeout=10, **kwargs):
         return {"audit_type": "broken_links", "issues": issues}
 
     # Original broken link audit logic
+    links_to_check = set()
     soup = BeautifulSoup(html_content, "html.parser")
     for a_tag in soup.find_all("a", href=True):
         link = a_tag["href"]
@@ -53,21 +54,43 @@ def audit(target_content, target_type="html_content", timeout=10, **kwargs):
     session = requests.Session()
     session.headers.update(
         {
-            "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
     )
 
     for link in links_to_check:
         try:
             check = session.head(link, allow_redirects=True, timeout=timeout)
-            if 400 <= check.status_code < 600:
+            status_code = check.status_code
+            if status_code in [403, 404, 405, 501]:
+                try:
+                    check_get = session.get(link, allow_redirects=True, timeout=timeout, stream=True)
+                    status_code = check_get.status_code
+                    check_get.close()
+                except requests.exceptions.RequestException:
+                    pass
+            if 400 <= status_code < 600:
+                is_social = any(domain in link for domain in ["facebook.com", "linkedin.com", "twitter.com", "instagram.com", "x.com"])
+                if is_social:
+                    import subprocess
+                    try:
+                        res = subprocess.run(
+                            ["curl", "-o", "/dev/null", "-s", "-w", "%{http_code}", "-I", "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", link],
+                            capture_output=True, text=True, timeout=5
+                        )
+                        curl_code = int(res.stdout.strip())
+                        if 200 <= curl_code < 400:
+                            status_code = curl_code
+                    except Exception:
+                        pass
+            if 400 <= status_code < 600:
                 issues.append(
                     {
                         "type": "Broken Link",
-                        "description": f"Link returned status code {check.status_code}",
+                        "description": f"Link returned status code {status_code}",
                         "source": source_identifier,
                         "link": link,
-                        "status_code": check.status_code,
+                        "status_code": status_code,
                     }
                 )
         except requests.exceptions.RequestException as e:
