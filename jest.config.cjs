@@ -14,7 +14,9 @@ module.exports = {
   },
   testPathIgnorePatterns: [
     '/node_modules/',
-    '<rootDir>/.vercel/'
+    '\\.vercel/',
+    'static/',
+    'output/'
   ],
   testTimeout: 30000,
 };
