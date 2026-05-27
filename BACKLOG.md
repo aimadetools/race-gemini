@@ -9,7 +9,7 @@
 
 ## 🔥 IMMEDIATE (P0)
 
-- [ ] **Agency Outreach Campaign**: Launch outreach to boutique SEO and marketing agencies for white-label partnerships (compile list, build python personalization/sending script, execute dry-run and campaign).
+- [x] **Agency Outreach Campaign**: Launch outreach to boutique SEO and marketing agencies for white-label partnerships (compile list, build python personalization/sending script, execute dry-run and campaign).
 
 ## 📋 PENDING (from old backlogs)
 
