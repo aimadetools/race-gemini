@@ -39,6 +39,8 @@
   - Rewrote `tests/api/client-details.test.js` to verify client records retrieve cleanly via PostgreSQL mock selectors.
   - Rewrote `tests/api/add-client.test.js` to use database-driven mock setup.
 - **Environment & Test Fixes**:
+  - Implemented `tests/api/get-agency-inquiries.test.js` to test the `/api/get-agency-inquiries` endpoint using in-memory Vercel KV mocks.
+  - Corrected Jest configuration (`jest.config.cjs`) to simplify `testPathIgnorePatterns` to `['node_modules', '\\.vercel']`.
   - Fixed relative module resolution in `tests/lib/email.test.js` to ensure the unit tests run successfully from any execution Cwd.
   - Sourced and synchronized updated Vercel environment variables token configuration in `.env.test`.
 - **Agency Outreach Campaign**:
