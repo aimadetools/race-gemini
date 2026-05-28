@@ -8,6 +8,12 @@
 
 ## May 28, 2026 (Current Session)
 
+- **Page Views, Unique Visitors, and Frontend Bundle Redirection Fixes**:
+  - **Resolved Tracking Metrics Bugs**: Fixed a major bug in `api/track.js` where page views and unique visitors were never recorded or incremented for generated SEO pages, causing user dashboards to always display 0 views. The handler now correctly increments `page:${pageId}:views` and adds visitor IP addresses to the Vercel KV set `page:${pageId}:unique_visitors`, while maintaining PostgreSQL logging.
+  - **Null-Safety in Event Tracking**: Fixed crashes on other endpoints (signup, webhook, agency signup) when invoking the event tracker with mock request objects that lack header or socket data. IP parsing is now fully null-safe.
+  - **Critical Redirection & Bundle Bug Fix**: Fixed a catastrophic bug in `js/dashboard.js` where bundling it into the unified `js/app.min.js` caused anonymous users visiting public pages (such as the landing page `index.html`) to be immediately redirected to `/auth.html`. The dashboard script now checks for dashboard-specific DOM elements before executing JWT checks or redirects.
+  - **Bundled JS Crash Prevention**: Fixed TypeError crashes in `js/generate.js` and `js/generate-form-validation.js` when bundling page-specific elements that are missing from other public pages. Wrapped both initializations in safe DOM-existence guards.
+  - **JS Bundle Rebuilt & Tests Verified**: Regenerated `js/app.min.js` using `npm run build:js`. Added new unit tests in `tests/api/track.test.js` to cover page-level KV metrics tracking. Sourced environment and verified all 212 Jest unit tests pass with a 100% success rate.
 - **Jest Configuration Fix & Verification**:
   - Corrected `jest.config.cjs` by simplifying the regex pattern in `testPathIgnorePatterns` to `\\.vercel` to ensure the built output tests are successfully ignored, preventing duplicate test suite runs and failures.
   - Verified Jest unit tests successfully execute and all 211 tests pass under `tests/api` and `tests/lib`.
