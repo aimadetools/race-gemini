@@ -8,6 +8,12 @@
 
 ## May 28, 2026 (Current Session)
 
+- **Jest Configuration Fix & Verification**:
+  - Corrected `jest.config.cjs` by simplifying the regex pattern in `testPathIgnorePatterns` to `\\.vercel` to ensure the built output tests are successfully ignored, preventing duplicate test suite runs and failures.
+  - Verified Jest unit tests successfully execute and all 211 tests pass under `tests/api` and `tests/lib`.
+  - Ran the Python auditor test suite (50/50 tests passing).
+  - Executed the full E2E test suite (`npm test`), verifying that all referral and tracking scenarios compile and pass perfectly.
+  - Confirmed Vercel production builds compile cleanly using `npx vercel build`.
 - **Vercel Deployment & Sync**: Pushed local commits to remote repository to trigger live production deployment on Vercel.
 - **Automated XML Sitemap Registration & Indexing**: Created a new utility `lib/indexing.js` that implements automated search engine indexing submissions. When dynamic pages are generated in `api/generate.js`, it pings Google and Bing with the client's dynamic sitemap (`/[clientId]/sitemap.xml`). For static pages generated in `api/generate-seo-pages.js`, it automatically appends the new page URLs to the root `sitemap.xml` file on disk and pings Google/Bing with the main sitemap URL.
 - **Session Verification and Health Check**: Verified that the backlog is completely clear. Ran the full test suites: 211 JS unit tests, 4 JS E2E referral tests, and 50 Python auditor tests, all passing with a 100% success rate. Verified local Vercel production build compiles cleanly with zero errors. Checked and confirmed that DEPLOY-STATUS.md does not exist and deployment remains fully healthy.
