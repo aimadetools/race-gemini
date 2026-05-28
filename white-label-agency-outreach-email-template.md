@@ -4,7 +4,7 @@ Hi [Agency Contact Name],
 
 {{ai_personalization}}
 
-I'm reaching out from LocalLeads. We offer a powerful platform that generates dozens of professionally designed, search-optimized pages for local businesses across every town they serve. This helps them attract more local customers by significantly improving their online visibility.
+I'm reaching out from LocalLeads (https://www.localseogen.com). We offer a powerful platform that generates dozens of professionally designed, search-optimized pages for local businesses across every town they serve. This helps them attract more local customers by significantly improving their online visibility.
 
 We've found that marketing agencies like yours are perfectly positioned to leverage our technology as a white-label solution, allowing you to:
 
@@ -12,7 +12,10 @@ We've found that marketing agencies like yours are perfectly positioned to lever
 *   **Increase client results:** Deliver tangible, measurable improvements in local search rankings for your clients.
 *   **Boost your agency's revenue:** Offer a high-demand service under your own brand, enhancing your profitability and competitive edge.
 
-Would you be open to a brief discussion about how a white-label partnership with LocalLeads could benefit your agency and your clients?
+Would you be open to a brief discussion or checking out our white-label program details here: https://www.localseogen.com/agency-white-label.html ?
 
 Best regards,
-[Your Name/LocalLeads Team]
+
+The LocalLeads Team
+hello@localseogen.com
+https://www.localseogen.com
