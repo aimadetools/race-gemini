@@ -17,8 +17,7 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **Funnel Conversion Review**: Analyze Vercel Analytics event logs for drop-offs between `free-seo-audit.html` submission and `buy-credits.html`.
 - **Sitemap and Indexing Audit**: Periodically verify that static sitemap additions are correctly indexed on Google Search Console.
 
 ## ✅ COMPLETED
-- ✅ C1-C38: Core product features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, Product Hunt assets, B2B email tracking, and boutique agency cold outreach (May 2026).
+- ✅ C1-C39: Core product features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, Product Hunt assets, B2B email tracking, boutique agency cold outreach, and funnel conversion review (May 2026).
