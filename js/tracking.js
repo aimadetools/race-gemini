@@ -32,9 +32,43 @@ function trackEvent(eventName, eventData = {}, userId = null) {
     });
 }
 
-// Example: Track a page view on load
+// Track page-specific events on load and setup checkout initiation listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // You would typically get the userId from an authenticated session or a cookie
-  // For now, userId is null or hardcoded for demonstration
-  trackEvent('page_view', { path: window.location.pathname });
+  const path = window.location.pathname;
+  
+  // Track page view event (default)
+  trackEvent('page_view', { path });
+
+  // Phase 3: Monetization page view events
+  if (path.includes('pricing.html') || path === '/pricing') {
+    trackEvent('view_pricing', { path });
+  }
+
+  if (path.includes('buy-credits.html') || path === '/buy-credits') {
+    trackEvent('view_buy_credits', { path });
+  }
+});
+
+// Track checkout initiation globally on any form submission targeting checkout
+document.addEventListener('submit', (e) => {
+  const form = e.target;
+  if (form && form.action && form.action.includes('/api/checkout')) {
+    const creditPackIdInput = form.querySelector('input[name="creditPackId"]');
+    const creditPackId = creditPackIdInput ? creditPackIdInput.value : 'unknown';
+    const customCreditsInput = form.querySelector('input[name="customCredits"]');
+    const eventData = { creditPackId };
+    if (customCreditsInput) {
+      eventData.customCredits = customCreditsInput.value;
+    }
+    trackEvent('checkout_initiated', eventData);
+  }
+});
+
+// Track checkout initiation on buy button clicks globally
+document.addEventListener('click', (e) => {
+  const button = e.target.closest('.buy-button, .buy-wholesale-button');
+  if (button) {
+    const packId = button.dataset.packId || 'unknown';
+    trackEvent('checkout_initiated', { creditPackId: packId });
+  }
 });

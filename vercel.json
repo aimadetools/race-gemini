@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/free-seo-audit.html",
+      "destination": "/audit.html",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/low-balance-alert",

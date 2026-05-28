@@ -166,6 +166,26 @@ export default async (req, res) => { // Removed currentKvClient parameter
                         }, {
                             status: () => ({ json: () => {} }) // Mock response for tracking
                         });
+
+                        // Track purchase_completed event
+                        await trackEventHandler({
+                            method: 'POST',
+                            body: {
+                                eventName: 'purchase_completed',
+                                userId: userId,
+                                eventData: {
+                                    type: 'subscription',
+                                    planId: agencyPlanId,
+                                    creditsAdded: creditsToAdd,
+                                    stripePriceId: priceId,
+                                    stripeSubscriptionId: session.subscription,
+                                    amountTotal: amountTotal,
+                                    revenue: amountTotal / 100
+                                }
+                            }
+                        }, {
+                            status: () => ({ json: () => {} })
+                        });
                     } else {
                         await logError(new Error(`No credits defined for priceId: ${priceId} during subscription checkout.`), 'Stripe Webhook - No Credits Defined for Subscription');
                         return res.status(400).json({ message: 'No credits defined for subscription plan.' });
@@ -226,6 +246,23 @@ export default async (req, res) => { // Removed currentKvClient parameter
                         }
                     }, {
                         status: () => ({ json: () => {} }) // Mock response for tracking
+                    });
+
+                    // Track purchase_completed event
+                    await trackEventHandler({
+                        method: 'POST',
+                        body: {
+                            eventName: 'purchase_completed',
+                            userId: userId,
+                            eventData: {
+                                type: 'credit_pack',
+                                creditsPurchased: parsedCredits,
+                                amountTotal: amountTotal,
+                                revenue: amountTotal / 100
+                            }
+                        }
+                    }, {
+                        status: () => ({ json: () => {} })
                     });
                 }
             } catch (error) {

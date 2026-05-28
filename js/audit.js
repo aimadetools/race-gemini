@@ -472,10 +472,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Report Sent Successfully!</h4>
                     <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">We have sent a comprehensive analysis of your SEO opportunities and missing location keywords to your inbox.</p>
                     <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1.5rem 0 1rem; padding-top: 1.5rem;">
-                        <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">Ready to claim these missing customers?</p>
-                        <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.8rem 1.8rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 8px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
-                            Generate Landing Pages Now
-                        </a>
+                        <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">Ready to claim these missing customers? Choose your path:</p>
+                        <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                            <div style="flex: 1; min-width: 250px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                <h5 style="color: #e5e7eb; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">Option A: Start Free</h5>
+                                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 50 free signup credits to build your first local SEO pages.</p>
+                                <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); transition: transform 0.2s, box-shadow 0.2s;">
+                                    Generate 50 Pages Free
+                                </a>
+                            </div>
+                            <div style="flex: 1; min-width: 250px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                <h5 style="color: #34d399; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">🔥 Option B: Upgrade &amp; Dominate</h5>
+                                <p style="color: #a7f3d0; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Unlock 200 page credits to dominate your entire local service area.</p>
+                                <form action="/api/checkout" method="POST" style="margin: 0; display: inline-block;">
+                                    <input name="creditPackId" type="hidden" value="pack_pro"/>
+                                    <button type="submit" class="button" style="display: inline-block; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+                                        Get Pro Pack (200 pages) for $99
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;

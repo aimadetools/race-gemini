@@ -107,10 +107,10 @@ function buildAuditEmailHtml(auditedUrl, auditResults, branding) {
         ${summaryRowsHtml}
       </div>
 
-      <p>We found some areas of improvement that could help your business rank higher and attract more local customers.</p>
-      
-      <div style="text-align: center; margin-top: 25px;">
-        <a href="https://www.localseogen.com" class="btn" style="background-color: ${primaryColor}; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center;">Generate Optimized SEO Pages</a>
+      <p style="text-align: center; font-weight: bold; margin-top: 25px; margin-bottom: 5px;">Ready to claim these missing customers? Choose your path:</p>
+      <div style="text-align: center; margin-top: 15px; margin-bottom: 25px;">
+        <a href="https://www.localseogen.com/generate.html" class="btn" style="background-color: ${primaryColor}; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; margin: 5px;">Generate 50 Pages Free</a>
+        <a href="https://www.localseogen.com/pricing.html" class="btn" style="background-color: #10b981; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; margin: 5px;">Get Pro Pack (200 pages) for $99</a>
       </div>
     </div>
     <div class="footer" style="background: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #e0e0e0;">
