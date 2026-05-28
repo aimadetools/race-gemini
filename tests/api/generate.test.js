@@ -57,6 +57,9 @@ jest.mock('@vercel/kv', () => ({
         lpush: jest.fn()
     }
 }));
+jest.mock('../../lib/indexing.js', () => ({
+    submitSitemapToSearchEngines: jest.fn()
+}));
 
 const { createRequest, createResponse } = require('node-mocks-http');
 const fs = require('fs');

@@ -6,6 +6,7 @@ import { parse } from 'cookie';
 import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js';
 import { logError, logInfo } from '../lib/logger.js';
+import { updateStaticSitemapAndPing } from '../lib/indexing.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 
 // Define the path to the page template
@@ -246,6 +247,13 @@ export default async (req, res) => {
                     generatedPages.push({ fileName, path: filePath, url: `/generated-seo-pages/${fileName}` });
                 }
             }
+
+            // Construct absolute URLs for sitemap update
+            const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
+            const absoluteUrls = generatedPages.map(p => `${domain}${p.url}`);
+
+            // Trigger automated search engine sitemap registration and indexing pings
+            await updateStaticSitemapAndPing(absoluteUrls, req);
 
             res.status(200).json({
                 message: 'SEO pages generated successfully!',

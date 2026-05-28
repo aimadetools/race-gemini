@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import slugify from 'slugify';
 import { logError } from '../lib/logger.js'; // Import centralized logger
+import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -183,6 +184,9 @@ export default async (req, res) => {
                 amount: -pagesToGenerate
             };
             await kv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+
+            // Trigger automated search engine sitemap registration and indexing pings
+            await submitSitemapToSearchEngines(userId, req);
 
             archive.finalize();
 

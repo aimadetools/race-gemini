@@ -27,6 +27,9 @@ jest.mock('fs', () => ({
     }
 }));
 jest.mock('slugify', () => jest.fn((text) => text.toLowerCase().replace(/\s/g, '-')));
+jest.mock('../../lib/indexing.js', () => ({
+    updateStaticSitemapAndPing: jest.fn()
+}));
 
 // Mock GoogleGenerativeAI
 jest.mock('@google/generative-ai', () => {
