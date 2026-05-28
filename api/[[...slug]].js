@@ -15,6 +15,39 @@ export default async (req, res, currentKvClient) => {
         }
 
         const [clientId, fileName] = slug;
+
+        if (fileName === 'sitemap.xml') {
+            const clientResult = await query('SELECT id, name, email FROM users WHERE id = $1', [clientId]);
+            if (clientResult.rows.length === 0) {
+                return res.status(404).send('Not Found');
+            }
+
+            const pageIds = await currentKv.smembers(`user:${clientId}:pages`);
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+            const host = req.headers.host || 'localseogen.com';
+            const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+            const baseUrl = `${protocol}://${host}`;
+
+            if (pageIds && pageIds.length > 0) {
+                for (const pageId of pageIds) {
+                    const pageData = await currentKv.get(pageId);
+                    if (pageData) {
+                        const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
+                        const resolvedServiceSlug = slugify(page.service, { lower: true, strict: true });
+                        const resolvedTownSlug = slugify(page.town, { lower: true, strict: true });
+                        const locUrl = `${baseUrl}/${clientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html`;
+                        const lastmod = page.createdAt ? page.createdAt.substring(0, 10) : new Date().toISOString().substring(0, 10);
+                        xml += `  <url>\n    <loc>${locUrl}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+                    }
+                }
+            }
+
+            xml += '</urlset>';
+            res.setHeader('Content-Type', 'application/xml');
+            return res.status(200).send(xml);
+        }
+
         const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
         // Fetch client and their parent agency from PostgreSQL
@@ -46,10 +79,13 @@ export default async (req, res, currentKvClient) => {
 
         let pageIdToFind = null;
         for (const pageId of pageIds) {
-            const page = await currentKv.hgetall(pageId);
-            if (page && slugify(page.service, { lower: true, strict: true }) === serviceSlug && slugify(page.town, { lower: true, strict: true }) === townSlug) {
-                pageIdToFind = pageId;
-                break;
+            const pageData = await currentKv.get(pageId);
+            if (pageData) {
+                const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
+                if (page && slugify(page.service, { lower: true, strict: true }) === serviceSlug && slugify(page.town, { lower: true, strict: true }) === townSlug) {
+                    pageIdToFind = pageId;
+                    break;
+                }
             }
         }
 
@@ -58,12 +94,14 @@ export default async (req, res, currentKvClient) => {
             return res.status(404).send('Not Found');
         }
 
-        const page = await currentKv.hgetall(pageIdToFind);
+        const pageData = await currentKv.get(pageIdToFind);
 
-        if (!page) {
+        if (!pageData) {
             await logError(new Error(`Page data not found for pageId: ${pageIdToFind}`), 'Slug Handler - Page Data Not Found', 'slug_error.log');
             return res.status(404).send('Not Found');
         }
+
+        const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
 
         let template;
         try {

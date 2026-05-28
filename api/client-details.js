@@ -72,8 +72,12 @@ async function handler(req, res, currentKvClient) {
         const pageIds = await currentKv.smembers(`user:${id}:pages`);
         const pages = [];
         for (const pageId of pageIds) {
-            const page = await currentKv.get(`page:${pageId}`);
-            if (page) {
+            let pageData = await currentKv.get(pageId);
+            if (!pageData && !pageId.startsWith('page:')) {
+                pageData = await currentKv.get(`page:${pageId}`);
+            }
+            if (pageData) {
+                const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
                 const serviceSlug = slugify(page.service, { lower: true, strict: true });
                 const townSlug = slugify(page.town, { lower: true, strict: true });
                 const fileName = `${serviceSlug}-in-${townSlug}.html`;

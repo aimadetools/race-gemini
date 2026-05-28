@@ -119,6 +119,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Make handlePlanChange globally accessible for onclick attributes
     window.handlePlanChange = handlePlanChange;
 
+    // Stripe integration for wholesale credit pack purchases
+    let stripe;
+    let publicKey;
+
+    async function initStripe() {
+        try {
+            const response = await fetch('/api/stripe-public-key');
+            const data = await response.json();
+            publicKey = data.publicKey;
+            stripe = Stripe(publicKey);
+        } catch (error) {
+            console.error('Error fetching Stripe public key:', error);
+        }
+    }
+
+    async function handleWholesalePurchase(packId, button) {
+        if (!stripe) {
+            alert('Payment system is not initialized. Please try again later.');
+            return;
+        }
+
+        button.disabled = true;
+        const originalText = button.textContent;
+        button.textContent = 'Processing...';
+
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ creditPackId: packId }),
+            });
+
+            const session = await response.json();
+            if (session.sessionId) {
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.sessionId,
+                });
+                if (result.error) {
+                    console.error('Stripe checkout error:', result.error.message);
+                    alert('Payment failed: ' + result.error.message);
+                }
+            } else if (session.message) {
+                alert(session.message);
+            } else {
+                alert('An unexpected error occurred during checkout.');
+            }
+        } catch (error) {
+            console.error('Error during checkout:', error);
+            alert('An error occurred during checkout. Please try again.');
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    }
+
+    const wholesaleButtons = document.querySelectorAll('.buy-wholesale-button');
+    wholesaleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const packId = button.dataset.packId;
+            handleWholesalePurchase(packId, button);
+        });
+    });
+
+    initStripe();
+
     fetchAgencySubscription();
     fetchCreditHistory();
 });
