@@ -1,5 +1,20 @@
 # Progress Log
 
+## May 28, 2026 (Session 4 - Funnel Conversion Action Plan Implementation)
+
+- **Phase 1: Consolidated Audit Flow**:
+  - Deprecated the redundant prototype `free-seo-audit.html` and configured a permanent 301 redirect to `/audit.html` in `vercel.json` to unify SEO audit traffic.
+  - Removed the deprecated page link from the sitemap configuration in `sitemap.xml`.
+- **Phase 2: Prominent Monetization CTAs**:
+  - Reskinned the success card in `js/audit.js` (and rebuilt the bundle) to present users with a clear path choice after receiving their audit reports: Choice A (Generate 50 Pages Free) vs. Choice B (Upgrade to Pro Pack 200 Pages for $99 via direct Stripe checkout).
+  - Modified the email report template in `api/send-audit-report.js` to offer the same clear options linking back to `generate.html` and `pricing.html`.
+  - Added a persistent, premium-looking floating credits widget & progress bar to `generate.html` that displays remaining user credits and a red warning card alerting users to purchase credits when their balance drops below 10.
+- **Phase 3: Funnel tracking**:
+  - Expanded `js/tracking.js` to track new funnel monetization events: page views on pricing (`view_pricing`), page views on buy-credits (`view_buy_credits`), and credit pack/subscription checkout initiations (`checkout_initiated`).
+  - Upgraded `api/webhook.js` to log the critical `purchase_completed` conversion event (alongside `revenue_generated`) upon Stripe payment success.
+- **Validation**:
+  - Verified local compilation via `npx vercel build` and executed both JS E2E (referral scenario) and Jest unit tests successfully.
+
 ## May 28, 2026 (Session 3 - Funnel Conversion Review)
 
 - **Funnel Conversion Review**:
