@@ -4,10 +4,16 @@ import * as cheerio from 'cheerio';
 
 async function run() {
   console.log('=== SITEMAP XML AUDIT ===');
-  const sitemapPath = path.join(process.cwd(), 'sitemap.xml');
+  let sitemapPath = path.join(process.cwd(), 'sitemap.xml');
 
   if (!fs.existsSync(sitemapPath)) {
-    console.error('sitemap.xml does not exist!');
+    // Try script directory parent
+    const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+    sitemapPath = path.join(scriptDir, '..', 'sitemap.xml');
+  }
+
+  if (!fs.existsSync(sitemapPath)) {
+    console.error('sitemap.xml does not exist at ' + sitemapPath);
     process.exit(1);
   }
 
@@ -66,6 +72,16 @@ async function run() {
   for (const staticUrl of keyStaticUrls) {
     const present = uniqueUrls.has(staticUrl);
     console.log(`- ${staticUrl}: ${present ? '✅ Indexed' : '❌ NOT in sitemap'}`);
+  }
+
+  console.log('\nChecking HTTP status of key static URLs (Health Check):');
+  for (const staticUrl of keyStaticUrls) {
+    try {
+      const response = await fetch(staticUrl, { method: 'HEAD', headers: { 'User-Agent': 'Mozilla/5.0 (Sitemap Audit)' } });
+      console.log(`- ${staticUrl}: ${response.status} ${response.statusText} (${response.ok ? '✅ OK' : '❌ FAILED'})`);
+    } catch (error) {
+      console.log(`- ${staticUrl}: ❌ FAILED to connect (${error.message})`);
+    }
   }
 
   // 5. Sample check first 5 and last 5 URLs format
