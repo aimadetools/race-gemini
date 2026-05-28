@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/send-audit-report', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, auditResults: currentAuditResults }),
+                body: JSON.stringify({ email, auditResults: currentAuditResults, url: auditUrlInput.value }),
             });
 
             if (!response.ok) {

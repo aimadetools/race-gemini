@@ -1,4 +1,5 @@
 import { logInfo, logError } from '../lib/logger.js';
+import trackEventHandler from './track.js';
 
 // 1x1 transparent GIF (base64 encoded)
 const GIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
@@ -9,8 +10,19 @@ export default async (req, res) => {
 
     if (id) {
       await logInfo(`Email opened: ${id}`, 'track-email-open');
-      // In a real application, you would store this `id` in a database
-      // along with a timestamp and possibly IP address, user agent, etc.
+      
+      // Track the email open event in the user_events table
+      await trackEventHandler({
+        method: 'POST',
+        headers: req.headers,
+        socket: req.socket,
+        body: {
+          eventName: 'email_opened',
+          eventData: { messageId: id }
+        }
+      }, {
+        status: () => ({ json: () => {} })
+      });
     } else {
       await logInfo('Tracking pixel hit without an ID.', 'track-email-open');
     }
