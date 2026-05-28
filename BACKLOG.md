@@ -17,7 +17,7 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **Sitemap and Indexing Audit**: Periodically verify that static sitemap additions are correctly indexed on Google Search Console.
+- None.
 
 ## ✅ COMPLETED
-- ✅ C1-C40: Core product features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, Product Hunt assets, B2B email tracking, boutique agency cold outreach, funnel conversion review, sitemap audit, and funnel conversion action plan implementation (May 2026).
+- ✅ C1-C41: Core product features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, Product Hunt assets, B2B email tracking, boutique agency cold outreach, funnel conversion review, sitemap audit script with HTTP health checks, sitemap homepage addition, and funnel conversion action plan implementation (May 2026).
