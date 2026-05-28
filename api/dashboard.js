@@ -56,14 +56,19 @@ export default async function handler(req, res, currentKvClient) {
       }
 
       // Retrieve credit transaction history
-      const transactionStrings = await currentKv.lrange(`user:${userId}:credittransactions`, 0, 100);
+      const transactionStrings = await currentKv.lrange(`user:${userId}:credittransactions`, 0, 100) || [];
       const creditTransactions = transactionStrings.map(t => JSON.parse(t));
+
+      // Retrieve indexing notifications
+      const notificationStrings = await currentKv.lrange(`user:${userId}:notifications`, 0, 49) || [];
+      const indexingNotifications = notificationStrings.map(n => JSON.parse(n));
 
       return res.status(200).json({
         email: user.email,
         credits: user.credits,
         generatedPages,
         creditTransactions,
+        indexingNotifications,
       });
 
     } catch (error) {

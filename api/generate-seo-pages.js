@@ -253,7 +253,7 @@ export default async (req, res) => {
             const absoluteUrls = generatedPages.map(p => `${domain}${p.url}`);
 
             // Trigger automated search engine sitemap registration and indexing pings
-            await updateStaticSitemapAndPing(absoluteUrls, req);
+            await updateStaticSitemapAndPing(absoluteUrls, req, userId);
 
             res.status(200).json({
                 message: 'SEO pages generated successfully!',
