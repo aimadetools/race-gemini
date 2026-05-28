@@ -137,4 +137,47 @@ describe('api/track', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
   });
+
+  it('should track page view using pageId and update KV stats', async () => {
+    const mockIncr = jest.fn();
+    const mockSadd = jest.fn();
+    const mockKvClient = {
+      incr: mockIncr,
+      sadd: mockSadd,
+    };
+
+    const req = {
+      method: 'POST',
+      headers: {
+        'x-forwarded-for': '192.168.1.1, 10.0.0.1',
+      },
+      body: {
+        pageId: 'page123',
+      },
+      socket: {},
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    mockQuery.mockResolvedValueOnce({ rows: [{ id: 3, event_name: 'page_view' }] });
+
+    await handler(req, res, mockKvClient);
+
+    expect(mockIncr).toHaveBeenCalledWith('page:page123:views');
+    expect(mockSadd).toHaveBeenCalledWith('page:page123:unique_visitors', '192.168.1.1');
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO user_events'),
+      [
+        'page_view',
+        null,
+        { pageId: 'page123', ip: '192.168.1.1' },
+      ]
+    );
+    expect(mockRelease).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Event tracked successfully.' });
+  });
 });

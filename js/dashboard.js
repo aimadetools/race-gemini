@@ -1,13 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const userEmailSpan = document.getElementById('user-email');
+    const userCreditsSpan = document.getElementById('user-credits');
+    const generatedPagesTableBody = document.querySelector('#generated-pages tbody');
+
+    // Only run this on the user dashboard page
+    if (!userEmailSpan && !userCreditsSpan && !generatedPagesTableBody) {
+        return;
+    }
+
     const jwtToken = localStorage.getItem('token');
     if (!jwtToken) {
         window.location.href = '/auth.html';
         return;
     }
 
-    const userEmailSpan = document.getElementById('user-email');
-    const userCreditsSpan = document.getElementById('user-credits');
-    const generatedPagesTableBody = document.querySelector('#generated-pages tbody');
     const onboardingMessage = document.getElementById('dashboard-onboarding-message');
     const dismissOnboardingButton = document.getElementById('dismiss-dashboard-onboarding');
 

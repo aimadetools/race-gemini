@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const generateForm = document.getElementById('generate-form');
+    if (!generateForm) {
+        return;
+    }
     const formErrorDisplay = document.getElementById('form-error-message');
 
     const inputErrors = {

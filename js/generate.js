@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const generateForm = document.getElementById('generate-form');
+    if (!generateForm) {
+        return;
+    }
+
     const enableAICopyCheckbox = document.getElementById('enableAICopy');
     const aiStyleGroup = document.getElementById('ai-style-group');
-    const generateForm = document.getElementById('generate-form');
     const submitButton = generateForm.querySelector('button[type="submit"]'); // Get submit button
     const loadingIndicator = document.getElementById('loading-indicator');
     const formErrorMessageDiv = document.getElementById('form-error-message');
