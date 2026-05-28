@@ -1,5 +1,16 @@
 # Progress Log
 
+## May 28, 2026 (Session 5 - Sitemap and Indexing Audit)
+
+- **Sitemap and Indexing Audit**:
+  - Improved the custom sitemap audit script `scratch/audit_sitemap.js` by making its sitemap file path resolution relative to the script directory, ensuring it can be executed from any workspace directory.
+  - Implemented live HTTP status health checks for all key static URLs in the sitemap audit script using native `fetch` requests to verify they are live and return `200 OK`.
+  - Added the missing canonical root URL (`https://www.localseogen.com/`) to the static `sitemap.xml` file, satisfying a critical local SEO indexing requirement.
+  - Verified all static sitemap additions are correctly indexed (listed in sitemap.xml) and healthy (returning 200 OK) on the live production site.
+- **Validation**:
+  - Ran the Python audit and discovery tests successfully (50/50 passing).
+  - Cleaned up the project backlog by moving the completed Sitemap and Indexing Audit task to the completed list.
+
 ## May 28, 2026 (Session 4 - Funnel Conversion Action Plan Implementation)
 
 - **Phase 1: Consolidated Audit Flow**:
