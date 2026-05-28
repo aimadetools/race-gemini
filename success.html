@@ -47,6 +47,23 @@
     </p>
 </div>
 </footer>
-<script src="/js/app.min.js"></script> <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<script src="/js/app.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/get-agency-subscription');
+            if (response.ok) {
+                const dashboardBtn = document.querySelector('a[href="/dashboard.html"]');
+                if (dashboardBtn) {
+                    dashboardBtn.href = '/agency-dashboard.html';
+                    dashboardBtn.textContent = 'Go to Agency Dashboard';
+                }
+            }
+        } catch (e) {
+            console.error('Error checking agency status:', e);
+        }
+    });
+</script>
+<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 </body>
 </html>

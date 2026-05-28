@@ -13,14 +13,14 @@ export default async function handler(request, response, currentKvClient) {
 
         try {
             const cookies = cookie.parse(request.headers.cookie || '');
-            const token = cookies.token;
+            const token = cookies.authToken || cookies.token || cookies.auth;
 
             if (!token) {
                 return response.status(401).json({ message: 'Not authenticated.' });
             }
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const agencyId = decoded.agencyId;
+            const agencyId = decoded.userId || decoded.agencyId;
 
             if (!agencyId) {
                 return response.status(403).json({ message: 'Not an agency account.' });

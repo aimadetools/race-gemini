@@ -48,6 +48,9 @@ export default async (req, res) => {
                 'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 4900 },    // $49.00
                 'pack_pro': { name: 'Pro Pack (200 Credits)', credits: 200, amount: 9900 },  // $99.00
                 'pack_agency': { name: 'Agency Pack (1000 Credits)', credits: 1000, amount: 24900 }, // $249.00
+                'pack_wholesale_500': { name: 'Wholesale Credits 500 Pack', credits: 500, amount: 10000 }, // $100.00
+                'pack_wholesale_1000': { name: 'Wholesale Credits 1000 Pack', credits: 1000, amount: 18000 }, // $180.00
+                'pack_wholesale_5000': { name: 'Wholesale Credits 5000 Pack', credits: 5000, amount: 75000 }, // $750.00
             };
 
             let selectedPack;

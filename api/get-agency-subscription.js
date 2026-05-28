@@ -9,7 +9,7 @@ async function handler(req, res, currentKvClient) {
     }
 
     const cookies = cookie.parse(req.headers.cookie || '');
-    const token = cookies.token;
+    const token = cookies.authToken || cookies.token || cookies.auth;
 
     if (!token) {
         return res.status(401).json({ message: 'Not authenticated' });
@@ -17,15 +17,24 @@ async function handler(req, res, currentKvClient) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const agencyId = decoded.agencyId;
+        const agencyId = decoded.userId || decoded.agencyId;
 
         if (!agencyId) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
-        const subscription = await currentKv.get(`agency:${agencyId}:subscription`);
+        const agency = await currentKv.get(`agency:${agencyId}`);
+        if (!agency) {
+            return res.status(404).json({ message: 'Agency not found.' });
+        }
 
-        return res.status(200).json(subscription || { status: 'inactive' });
+        return res.status(200).json({
+            status: agency.subscriptionStatus || 'inactive',
+            plan: agency.planName || null,
+            creditsPerMonth: agency.monthlyCredits || 0,
+            renewsOn: agency.renewalDate || null,
+            nextInvoiceAmount: agency.nextInvoiceAmount || null
+        });
 
     } catch (error) {
         console.error(error);

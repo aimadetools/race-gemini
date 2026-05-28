@@ -7,7 +7,7 @@ export default async function handler(request, response) {
     if (request.method === 'POST') {
         try {
             const cookies = cookie.parse(request.headers.cookie || '');
-            const token = cookies.token;
+            const token = cookies.authToken || cookies.token || cookies.auth;
 
             if (!token) {
                 await logError(new Error('Authentication token missing.'), 'Cancel Subscription - Authentication Error', 'cancel_subscription_error.log');
@@ -15,7 +15,7 @@ export default async function handler(request, response) {
             }
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const agencyId = decoded.agencyId;
+            const agencyId = decoded.userId || decoded.agencyId;
 
             if (!agencyId) {
                 await logError(new Error('User is not an agency account.'), 'Cancel Subscription - Not Agency Account', 'cancel_subscription_error.log');
