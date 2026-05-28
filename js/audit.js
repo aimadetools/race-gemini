@@ -466,8 +466,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || 'Failed to send report.');
             }
 
-            emailMessageDiv.textContent = 'Report sent successfully!';
-            emailMessageDiv.style.color = 'green';
+            emailMessageDiv.innerHTML = `
+                <div class="success-card" style="margin-top: 1.5rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); animation: fadeIn 0.5s ease-out;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
+                    <h4 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Report Sent Successfully!</h4>
+                    <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">We have sent a comprehensive analysis of your SEO opportunities and missing location keywords to your inbox.</p>
+                    <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1.5rem 0 1rem; padding-top: 1.5rem;">
+                        <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">Ready to claim these missing customers?</p>
+                        <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.8rem 1.8rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 8px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;">
+                            Generate Landing Pages Now
+                        </a>
+                    </div>
+                </div>
+            `;
+            emailMessageDiv.style.color = '';
             reportEmailInput.value = '';
             trackEvent('email_report_sent', { email: email, success: true });
         } catch (error) {
