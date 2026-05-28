@@ -28,8 +28,12 @@ jest.mock('nanoid', () => {
         customAlphabet: jest.fn(() => mockNanoid),
     };
 });
+jest.mock('../../lib/email.js', () => ({
+    sendEmail: jest.fn().mockResolvedValue(true),
+}));
 import { customAlphabet } from 'nanoid';
 import { logError } from '../../lib/logger';
+import { sendEmail } from '../../lib/email.js';
 
 // Import the handler
 import agencySignupHandler from '../../api/agency-signup';
@@ -102,6 +106,20 @@ describe('agency-signup API', () => {
             message: 'Looking for a partnership opportunity.'
         });
         expect(storedData.timestamp).toBeDefined();
+
+        expect(sendEmail).toHaveBeenCalledTimes(1);
+        expect(sendEmail).toHaveBeenCalledWith(
+            'hello@localseogen.com',
+            'New Agency Inquiry: Test Agency',
+            expect.stringContaining('Test Agency')
+        );
+        const emailBody = sendEmail.mock.calls[0][2];
+        expect(emailBody).toContain('https://testagency.com');
+        expect(emailBody).toContain('John Doe');
+        expect(emailBody).toContain('john.doe@testagency.com');
+        expect(emailBody).toContain('123-456-7890');
+        expect(emailBody).toContain('50-100');
+        expect(emailBody).toContain('Looking for a partnership opportunity.');
     });
 
     it('should successfully submit an agency inquiry with only required fields', async () => {
@@ -131,6 +149,19 @@ describe('agency-signup API', () => {
             clientVolume: null,
             message: null,
         });
+
+        expect(sendEmail).toHaveBeenCalledTimes(1);
+        expect(sendEmail).toHaveBeenLastCalledWith(
+            'hello@localseogen.com',
+            'New Agency Inquiry: Another Agency',
+            expect.stringContaining('Another Agency')
+        );
+        const emailBody = sendEmail.mock.calls[0][2];
+        expect(emailBody).toContain('https://anotheragency.com');
+        expect(emailBody).toContain('Jane Smith');
+        expect(emailBody).toContain('jane.smith@anotheragency.com');
+        expect(emailBody).toContain('N/A');
+        expect(emailBody).toContain('No message provided.');
     });
 
     it('should return 400 if agencyName is missing', async () => {

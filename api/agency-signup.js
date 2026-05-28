@@ -2,6 +2,7 @@ import { customAlphabet } from 'nanoid';
 import trackEventHandler from './track.js'; // Import the event tracking handler
 import { logError } from '../lib/logger.js';
 import { kv } from '@vercel/kv';
+import { sendEmail } from '../lib/email.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
@@ -63,6 +64,21 @@ export default async (req, res, currentKvClient) => {
             }, {
                 status: () => ({ json: () => {} }) // Mock response for tracking
             });
+
+            // Send email notification to hello@localseogen.com
+            const emailSubject = `New Agency Inquiry: ${agencyName}`;
+            const emailHtml = `
+                <h2>New White-Label Agency Inquiry</h2>
+                <p><strong>Agency Name:</strong> ${agencyName}</p>
+                <p><strong>Website:</strong> <a href="${website}">${website}</a></p>
+                <p><strong>Contact Person:</strong> ${contactPerson}</p>
+                <p><strong>Contact Email:</strong> <a href="mailto:${contactEmail}">${contactEmail}</a></p>
+                <p><strong>Phone Number:</strong> ${phoneNumber || 'N/A'}</p>
+                <p><strong>Client Volume:</strong> ${clientVolume || 'N/A'}</p>
+                <p><strong>Message:</strong></p>
+                <p>${message || 'No message provided.'}</p>
+            `;
+            await sendEmail('hello@localseogen.com', emailSubject, emailHtml);
 
             res.status(200).json({ message: 'Inquiry submitted successfully. We will get back to you shortly.', inquiryId });
         } catch (error) {
