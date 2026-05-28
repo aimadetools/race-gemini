@@ -20,6 +20,27 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
+def mark_emails_as_sent(sent_email_addresses):
+    if not sent_email_addresses:
+        return
+    
+    rows = []
+    fieldnames = []
+    with open(AGENCY_TARGETS_CSV, "r") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames
+        for row in reader:
+            if row.get("Email", "").strip() in sent_email_addresses:
+                row["Sent"] = "true"
+            rows.append(row)
+            
+    with open(AGENCY_TARGETS_CSV, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"Updated CSV: marked {len(sent_email_addresses)} emails as sent.")
+    logging.info(f"Updated CSV: marked {len(sent_email_addresses)} emails as sent.")
+
 def generate_agency_emails(dry_run_email=None):
     emails_to_send = []
 
@@ -39,6 +60,10 @@ def generate_agency_emails(dry_run_email=None):
     with open(AGENCY_TARGETS_CSV, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            # Skip if already sent
+            if row.get("Sent", "").strip().lower() == "true":
+                continue
+
             recipient_email = row.get("Email", "").strip()
             if not recipient_email:
                 continue
@@ -84,6 +109,7 @@ def generate_agency_emails(dry_run_email=None):
                     "subject": subject_line,
                     "html": body_with_tracking,
                     "message_id": message_id,
+                    "original_email": recipient_email, # Keep track of original email to mark as sent
                 }
             )
     return emails_to_send
@@ -116,10 +142,14 @@ if __name__ == "__main__":
         if outreach_secret:
             headers["x-outreach-secret"] = outreach_secret
 
+        sent_emails = []
         chunk_size = 10
         for i in range(0, len(emails_to_send), chunk_size):
             chunk = emails_to_send[i : i + chunk_size]
-            payload = json.dumps({"emails": chunk})
+            payload = json.dumps({"emails": [
+                {k: v for k, v in email.items() if k != "original_email"}
+                for email in chunk
+            ]})
 
             try:
                 response = requests.post(
@@ -128,10 +158,18 @@ if __name__ == "__main__":
                 response.raise_for_status()  # Raise an exception for bad status codes
                 print(f"Successfully sent chunk of {len(chunk)} emails.")
                 logging.info(f"Successfully sent {len(chunk)} emails.")
+                
+                # Store the successfully sent email addresses
+                for email in chunk:
+                    sent_emails.append(email["original_email"])
             except requests.exceptions.RequestException as e:
                 print(f"Error sending emails: {e}")
                 logging.error(f"Failed to send emails: {e}")
 
+        # Update CSV status if this is not a dry-run
+        if not dry_run_email:
+            mark_emails_as_sent(sent_emails)
+
         print(f"Processed {len(emails_to_send)} emails.")
     else:
-        print("No emails were parsed to send.")
+        print("No emails were parsed to send (all might have been already sent).")

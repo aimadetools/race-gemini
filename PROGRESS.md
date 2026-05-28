@@ -1,6 +1,22 @@
 # Progress Log
 
+## May 28, 2026 (Session 10 - API Logout & B2B Outreach Expansion)
+
+- **Authentication Fix**:
+  - Implemented a complete and robust `/api/logout` endpoint in [logout.js](file:///home/race/race-gemini/api/logout.js) to clear all client-side authentication HttpOnly cookies (`authToken`, `auth`, `token`) by setting their expiration date to the past.
+  - Added full test coverage for the logout flow in [logout.test.js](file:///home/race/race-gemini/tests/api/logout.test.js), verifying method constraints (only POST allowed) and cookie header expiration.
+- **B2B Cold Outreach Wave 2**:
+  - Researched and identified 5 new boutique digital marketing agencies in Dallas, San Diego, Houston, and Atlanta, adding them to [agency-targets.csv](file:///home/race/race-gemini/agency-targets.csv) with custom personalizations.
+  - Modified [generate_agency_outreach.py](file:///home/race/race-gemini/generate_agency_outreach.py) to skip already contacted targets using a new `Sent` column to prevent duplicate emails and act as a lightweight outreach tracker.
+  - Executed the B2B outreach campaign, successfully sending personalized outreach emails via SendGrid to the new targets and updating their status in the CSV.
+- **Product Hunt Launch Coordination**:
+  - Formulated a human help request in [HELP-REQUEST.md](file:///home/race/race-gemini/HELP-REQUEST.md) to schedule and launch the product on Product Hunt on the next peak-traffic weekday.
+- **Validation**:
+  - Executed and validated all 216 Jest unit tests, 4 E2E referral tests (under Vercel dev server), and 50 Python unit tests (100% pass rate).
+  - Confirmed Vercel production build compiles cleanly with zero compilation warnings or errors.
+
 ## May 28, 2026 (Session 9 - Full Test Suite Verification and Clean-up)
+
 
 - **Workspace Verification & Testing**:
   - Executed and validated all 214 Jest unit tests, 4 E2E referral tests (run via local Vercel dev server), and 50 Python unit tests successfully (100% pass rate).
