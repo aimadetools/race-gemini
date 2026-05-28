@@ -8,6 +8,11 @@
 
 ## May 28, 2026 (Current Session)
 
+- **Marketing, Growth and Prep Tasks Completed**:
+  - **YouTube Series Setup (Cleaners)**: Created a detailed Local SEO tutorial outline and script for cleaning services in [video_tutorial_local_seo_cleaners.md](file:///home/race/race-gemini/video_tutorial_local_seo_cleaners.md), mirroring the structured format of the plumbers guide.
+  - **Product Hunt Assets & Screenshots**: Automated screenshot generation of the landing page, generator, and sample output pages. Installed Playwright browser dependencies and saved outputs to `screenshots/product-hunt/`. Checked off the showcases asset creation in [PRODUCT_HUNT_LAUNCH.md](file:///home/race/race-gemini/PRODUCT_HUNT_LAUNCH.md).
+  - **Agency Program Monitoring**: Queried the Neon PostgreSQL users table to verify registrations from the Week 6 targeted boutique SEO agencies (0 signups tracked). Checked production logs to monitor inquiries tracking.
+  - **Backlog & Progress Cleanup**: Consolidated completed tasks in `BACKLOG.md` into summary lines.
 - **Page Views, Unique Visitors, and Frontend Bundle Redirection Fixes**:
   - **Resolved Tracking Metrics Bugs**: Fixed a major bug in `api/track.js` where page views and unique visitors were never recorded or incremented for generated SEO pages, causing user dashboards to always display 0 views. The handler now correctly increments `page:${pageId}:views` and adds visitor IP addresses to the Vercel KV set `page:${pageId}:unique_visitors`, while maintaining PostgreSQL logging.
   - **Null-Safety in Event Tracking**: Fixed crashes on other endpoints (signup, webhook, agency signup) when invoking the event tracker with mock request objects that lack header or socket data. IP parsing is now fully null-safe.

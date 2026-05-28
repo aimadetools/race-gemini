@@ -16,7 +16,7 @@ Successfully launch on Product Hunt to drive user acquisition and gather feedbac
 
 ## Launch Checklist
 - [x] Finalize product features for launch. (Core features stabilized, API generate/webhook errors resolved, and Neon database tracking tables/migration configured.)
-- [ ] Create a compelling video/GIF showcasing the product. (User to provide screenshots of key product pages.)
+- [x] Create a compelling video/GIF showcasing the product. (Screenshots of key product pages generated under `screenshots/product-hunt/` using Playwright.)
 - [x] Design a high-quality product icon. (Agent has created `images/product-icon-large.svg`.)
 - [x] Write a clear and concise tagline.
 - [x] Craft a compelling first comment to kick off the discussion.
