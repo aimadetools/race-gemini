@@ -244,6 +244,16 @@ export default async (req, res) => {
 
 
                     await fs.writeFile(filePath, pageContent, 'utf8');
+
+                    // Save to database as well so it can be served dynamically in production Vercel
+                    const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
+                    await query(
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id)
+                         VALUES ($1, $2, $3, $4)
+                         ON CONFLICT (slug) DO UPDATE SET content = EXCLUDED.content, updated_at = CURRENT_TIMESTAMP`,
+                        [fileName, pageSlug, pageContent, userId]
+                    );
+
                     generatedPages.push({ fileName, path: filePath, url: `/generated-seo-pages/${fileName}` });
                 }
             }

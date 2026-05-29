@@ -12,6 +12,16 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/generated-seo-pages/:fileName",
+      "destination": "/api/serve-static-page?fileName=:fileName"
+    },
+    {
+      "source": "/:clientId(\\d+)/:fileName",
+      "destination": "/api/[[...slug]]?slug=:clientId&slug=:fileName"
+    }
+  ],
   "crons": [
     {
       "path": "/api/low-balance-alert",

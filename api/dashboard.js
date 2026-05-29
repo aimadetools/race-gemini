@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { logError } from '../lib/logger.js';
 import { query } from '../db/index.js';
+import slugify from 'slugify';
 
 
 
@@ -46,9 +47,14 @@ export default async function handler(req, res, currentKvClient) {
           const pageData = JSON.parse(pageDataString);
           const views = await currentKv.get(`page:${pageId}:views`) || 0;
           const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
+          const serviceSlug = slugify(pageData.service || '', { lower: true, strict: true });
+          const townSlug = slugify(pageData.town || '', { lower: true, strict: true });
+          const url = `/${userId}/${serviceSlug}-in-${townSlug}.html`;
+
           generatedPages.push({
             pageId,
             ...pageData,
+            url,
             views: parseInt(views),
             uniqueVisitors: parseInt(uniqueVisitors),
           });
