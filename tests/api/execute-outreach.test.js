@@ -1,4 +1,12 @@
 import { jest } from '@jest/globals';
+
+jest.mock('@vercel/kv', () => ({
+  kv: {
+    set: jest.fn(),
+  },
+}));
+import { kv } from '@vercel/kv';
+
 import httpMocks from 'node-mocks-http';
 import sgMail from '@sendgrid/mail';
 import { logInfo, logError } from '../../lib/logger.js';
@@ -33,6 +41,7 @@ describe('api/execute-outreach', () => {
     mockMicroJson.mockClear();
     logInfo.mockClear();
     logError.mockClear();
+    kv.set.mockReset();
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
@@ -76,6 +85,7 @@ describe('api/execute-outreach', () => {
 
   test('should send emails successfully with valid input', async () => {
     sendSpy.mockResolvedValueOnce([{}]);
+    kv.set.mockResolvedValueOnce('OK');
 
     await executeOutreach(req, res);
 
@@ -95,6 +105,7 @@ describe('api/execute-outreach', () => {
       html: '<p>Test HTML</p>',
       message_id: 'test-message-id',
     });
+    expect(kv.set).toHaveBeenCalledWith('outreach:email:test-message-id', 'recipient@example.com');
     expect(logInfo).toHaveBeenCalledWith('Email sent successfully to recipient@example.com', 'sendEmails');
     expect(logError).not.toHaveBeenCalled();
   });

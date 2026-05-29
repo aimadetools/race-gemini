@@ -1,6 +1,7 @@
 import micro from 'micro';
 import { logError, logInfo } from '../lib/logger.js';
 import sgMail from '@sendgrid/mail';
+import { kv } from '@vercel/kv';
 
 async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
 
@@ -26,6 +27,13 @@ async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
     try {
       await sgMail.send(msg);
       logInfo(`Email sent successfully to ${email.to}`, 'sendEmails'); // Log successful send
+      if (email.message_id) {
+        try {
+          await kv.set(`outreach:email:${email.message_id}`, email.to);
+        } catch (kvError) {
+          logError(kvError, 'sendEmails - Vercel KV store error');
+        }
+      }
       return email; // Return the original email object on success
     } catch (error) {
       if (error.code === 401) {

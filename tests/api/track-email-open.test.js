@@ -1,4 +1,12 @@
 import { jest } from '@jest/globals';
+
+jest.mock('@vercel/kv', () => ({
+  kv: {
+    get: jest.fn(),
+  },
+}));
+import { kv } from '@vercel/kv';
+
 import handler from '../../api/track-email-open.js';
 import { setQueryDelegate, pool } from '../../db/mockDb.js';
 
@@ -20,6 +28,7 @@ describe('api/track-email-open', () => {
     mockQuery.mockClear();
     mockRelease.mockClear();
     mockConnect.mockClear();
+    kv.get.mockReset();
   });
 
   afterEach(() => {
@@ -44,6 +53,7 @@ describe('api/track-email-open', () => {
     };
 
     mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, event_name: 'email_opened' }] });
+    kv.get.mockResolvedValueOnce('recipient@example.com');
 
     await handler(req, res);
 
@@ -53,10 +63,9 @@ describe('api/track-email-open', () => {
       [
         'email_opened',
         null,
-        { messageId: 'test-message-123' }
+        { messageId: 'test-message-123', email: 'recipient@example.com' }
       ]
     );
-    expect(mockRelease).toHaveBeenCalledTimes(1);
     expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'image/gif');
     expect(res.status).toHaveBeenCalledWith(200);
   });

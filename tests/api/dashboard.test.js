@@ -147,6 +147,7 @@ describe('dashboard API', () => {
     mockKv.get.mockResolvedValueOnce(20); // page:pageId2:views -> 20
     mockKv.scard.mockResolvedValueOnce(15); // page:pageId2:unique_visitors -> 15
     mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
+    mockKv.lrange.mockResolvedValueOnce([]); // Mock notification list
 
     await handler(req, res, mockKv);
 
@@ -158,6 +159,7 @@ describe('dashboard API', () => {
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId2}:views`);
     expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId2}:unique_visitors`);
     expect(mockKv.lrange).toHaveBeenCalledWith(`user:${userId}:credittransactions`, 0, 100);
+    expect(mockKv.lrange).toHaveBeenCalledWith(`user:${userId}:notifications`, 0, 49);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -168,6 +170,7 @@ describe('dashboard API', () => {
         { ...page2Data, pageId: pageId2, views: 20, uniqueVisitors: 15 },
       ],
       creditTransactions: [],
+      indexingNotifications: [],
     });
   });
 
@@ -200,6 +203,7 @@ describe('dashboard API', () => {
     jwt.verify.mockReturnValue({ userId });
     mockKv.smembers.mockResolvedValueOnce([]); // user:userId:pages -> empty array
     mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
+    mockKv.lrange.mockResolvedValueOnce([]); // Mock notification list
 
     await handler(req, res, mockKv);
 
@@ -209,6 +213,7 @@ describe('dashboard API', () => {
       credits: user.credits,
       generatedPages: [],
       creditTransactions: [],
+      indexingNotifications: [],
     });
   });
 });

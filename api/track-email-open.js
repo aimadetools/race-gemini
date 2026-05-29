@@ -1,5 +1,6 @@
 import { logInfo, logError } from '../lib/logger.js';
 import trackEventHandler from './track.js';
+import { kv } from '@vercel/kv';
 
 // 1x1 transparent GIF (base64 encoded)
 const GIF = 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
@@ -9,7 +10,14 @@ export default async (req, res) => {
     const { id } = req.query;
 
     if (id) {
-      await logInfo(`Email opened: ${id}`, 'track-email-open');
+      let email = 'unknown';
+      try {
+        email = await kv.get(`outreach:email:${id}`) || 'unknown';
+      } catch (kvError) {
+        await logError(kvError, 'track-email-open - Vercel KV read error');
+      }
+
+      await logInfo(`Email opened: ${id} (recipient: ${email})`, 'track-email-open');
       
       // Track the email open event in the user_events table
       await trackEventHandler({
@@ -18,7 +26,7 @@ export default async (req, res) => {
         socket: req.socket,
         body: {
           eventName: 'email_opened',
-          eventData: { messageId: id }
+          eventData: { messageId: id, email }
         }
       }, {
         status: () => ({ json: () => {} })
