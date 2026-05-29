@@ -1,5 +1,18 @@
 # Progress Log
 
+## May 29, 2026 (Session 11 - Indexing Notifications & B2B Wave 3 / Follow-ups)
+
+- **Search Engine Indexing Notifications**:
+  - Implemented the front-end user interface card in [dashboard.html](file:///home/race/race-gemini/dashboard.html) to display Search Engine Indexing Notifications.
+  - Updated [js/dashboard.js](file:///home/race/race-gemini/js/dashboard.js) to retrieve `indexingNotifications` from the dashboard API response and render them dynamically, with status indicators mapped to success/error.
+  - Re-compiled the JavaScript bundle using `npm run build:js` to generate the updated `js/app.min.js`.
+- **B2B Outreach Campaign Execution**:
+  - Fixed a domain case-sensitivity bug in [generate_agency_outreach.py](file:///home/race/race-gemini/generate_agency_outreach.py) to prevent case mismatches from blocking CSV status updates.
+  - Executed B2B Wave 3 outreach, sending personalized emails to 26 boutique agency targets and marking them as sent in the database.
+  - Created and executed a follow-up outreach campaign [scratch/send_agency_followup.py](file:///home/race/race-gemini/scratch/send_agency_followup.py) to send follow-up emails to the 25 Wave 2 boutique agencies.
+- **Validation**:
+  - Validated all 216 Jest unit tests, 4 E2E referral tests, and 50 Python unit tests successfully (100% pass rate).
+
 ## May 28, 2026 (Session 10 - API Logout & B2B Outreach Expansion)
 
 - **Authentication Fix**:
@@ -88,6 +101,7 @@
   - Updated `BACKLOG.md` to mark the Funnel Conversion Review task as completed and update the completed tasks list.
 
 ## Key Milestones (Summary of Older Progress)
+- **May 26, 2026:** Fixed API generator errors, resolved ESM module imports, improved authentication cookie support, automated sequential database init, streamlined referral route link, hardened Jest config, and verified all 192 JS unit tests, 4 E2E, and 50 Python audits.
 - **Prior to May 26, 2026:** Launched core features, stabilized APIs, credit system V2, resolved Jest/Babel issues, configured cold outreach, prep for Product Hunt launch, completed initial SEO optimizations, implemented referral program backend, integrated Vercel Analytics, added blog posts & case studies, updated npm dependencies, and verified `referrerId` integration in checkout/API. Resolved Neon database schema constraint issues and verified schema structure. Fixed global domain redirects from `localleads.pro` to `localseogen.com` in code and schemas. Resolved ES Module / CommonJS syntax crashes on Vercel webhook/generator endpoints, and configured a delegation hook (`setQueryDelegate`) in `db/mockDb.js` for Jest ESM unit test compatibility. Fixed global Jest reference crash in `lib/email.js`, verified all test suites, resolved local Jest ESM compatibility, and pushed all commits.
 
 ## May 28, 2026 (Session 2 - Founder Expansion & B2B Cold Outreach)
@@ -176,20 +190,3 @@
   - Verified local Vercel production build compilation using `npx vercel build`, completing with zero build errors.
   - Audited `BACKLOG.md` and confirmed all P0/Pending items are completed and clean.
 
-## May 26, 2026
-
-- **Fixed API Generate Errors**: Resolved `ReferenceError: service is not defined` inside `api/generate.js` by defining escaped service and town variables in the nested loop.
-- **Vercel KV Fix**: Resolved undefined `currentKv` error in `api/generate.js` by using the imported `kv` reference from `@vercel/kv`.
-- **Gemini Test Caching Fix**: Dynamically initialized the GoogleGenerativeAI client inside the handlers in `api/generate.js` and `api/generate-seo-pages.js` to prevent module-level caching and ensure mock compatibility.
-- **Outreach API ES Module Conversion**: Converted `api/execute-outreach.cjs` to `api/execute-outreach.js` to resolve CommonJS import/require crashes of ES Module `lib/logger.js` in production.
-- **Launch Checklist Update**: Updated `PRODUCT_HUNT_LAUNCH.md` to mark product feature finalization as completed.
-- **Authentication & Cookie Improvements**: Modified `api/checkout.js` and `api/get-credits.js` to support both `cookies.authToken` and `cookies.auth` to prevent auth failures.
-- **Graceful KV Client Fallback**: Modified `api/agency-signup.js` to use imported `@vercel/kv` client if no mocked KV client instance is provided.
-- **Database Schema Auto-Initialization**: Streamlined database initialization in `db/init.js` to run users, referrals, and seo-pages table creation sequentially.
-- **Referral Route Configuration**: Corrected the generated referral link in `js/referral-dashboard.js` to route via `/auth.html?ref=` rather than `/agency-signup.html?ref=`.
-- **Test Configuration Hardening**: Excluded `.vercel` output directory in `jest.config.cjs` to avoid scanning non-test script files.
-- **Jest Configuration Fix**: Corrected Jest configuration (`jest.config.cjs`) to use `<rootDir>/.vercel/` in `testPathIgnorePatterns` instead of `/.vercel/`. This resolves module resolution errors during test runs by properly ignoring files copied into the `.vercel/` output directory.
-- **Workspace Health & Build Verification**:
-  - Ran local Vercel build (`npx vercel build`) and verified that the build compiles cleanly with no module resolution or routing issues.
-  - Confirmed workspace health with 192 JS unit tests, 4 Jest E2E tests (running against local Vercel dev server), and 50 Python audit tests all passing successfully.
-  - Audited production deployment status using Vercel CLI, confirming the site is active and healthy on `localseogen.com`.
