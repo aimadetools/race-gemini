@@ -273,7 +273,8 @@
             if (response.ok) {
                 displayMessage(signupMessage, data.message, false); // false for success
                 signupForm.reset();
-                window.location.href = '/dashboard.html'; // Redirect to dashboard
+                const redirectUrl = urlParams.get('redirect') || '/dashboard.html';
+                window.location.href = redirectUrl;
             } else {
                 displayMessage(signupMessage, data.message || 'Signup failed.');
             }
@@ -329,7 +330,9 @@
                 // Assuming successful login redirects to dashboard or similar
                 displayMessage(loginMessage, data.message, false);
                 loginForm.reset();
-                window.location.href = '/dashboard.html'; // Redirect to dashboard
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectUrl = urlParams.get('redirect') || '/dashboard.html';
+                window.location.href = redirectUrl;
             } else {
                 displayMessage(loginMessage, data.message || 'Login failed.');
             }

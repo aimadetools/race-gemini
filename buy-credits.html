@@ -151,6 +151,9 @@
                             }
                         } else if (session.message) {
                             alert(session.message); // Display messages like 'User not authenticated.'
+                            if (response.status === 401) {
+                                window.location.href = `/auth.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                            }
                         } else {
                             alert('An unexpected error occurred during checkout.');
                         }

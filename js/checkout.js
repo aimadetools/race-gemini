@@ -56,7 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         const { message } = await response.json();
                         console.error('Checkout error:', message);
-                        // Display an error message to the user
+                        if (response.status === 401) {
+                            alert('Please login or signup to purchase credits or subscriptions.');
+                            window.location.href = `/auth.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                        } else {
+                            alert(`Checkout failed: ${message || 'Unknown error'}`);
+                        }
                     }
                 } catch (error) {
                     console.error('Error:', error);

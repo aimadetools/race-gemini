@@ -292,7 +292,7 @@ describe('Webhook API', () => {
 
         expect(mockRes.statusCode).toBe(200);
         expect(mockQuery).toHaveBeenCalledWith(
-            'UPDATE users SET credits = credits + $1, subscription_status = $2 WHERE id = $3 RETURNING credits',
+            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
             [100, 'active', 'agency123']
         );
         expect(getMockUsers()[0].credits).toBe(100);
@@ -323,7 +323,7 @@ describe('Webhook API', () => {
 
         expect(mockRes.statusCode).toBe(200);
         expect(mockQuery).toHaveBeenCalledWith(
-            'UPDATE users SET credits = credits + $1, subscription_status = $2 WHERE id = $3 RETURNING credits',
+            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
             [250, 'active', 'agency123']
         );
         expect(getMockUsers()[0].credits).toBe(300);

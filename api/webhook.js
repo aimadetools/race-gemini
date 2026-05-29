@@ -121,7 +121,7 @@ export default async (req, res) => { // Removed currentKvClient parameter
                     const creditsToAdd = getCreditsToAdd(priceId);
                     if (creditsToAdd > 0) {
                         const result = await query(
-                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_subscription_id = $3 WHERE id = $4 RETURNING credits',
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_subscription_id = $3, is_agency = true WHERE id = $4 RETURNING credits',
                             [creditsToAdd, 'active', session.subscription, userId]
                         );
 
@@ -283,7 +283,7 @@ export default async (req, res) => { // Removed currentKvClient parameter
                 if (creditsToAdd > 0) {
                     try {
                         const result = await query(
-                            'UPDATE users SET credits = credits + $1, subscription_status = $2 WHERE id = $3 RETURNING credits',
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
                             [creditsToAdd, 'active', userId]
                         );
 

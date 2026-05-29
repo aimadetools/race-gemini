@@ -5,6 +5,11 @@
       "source": "/free-seo-audit.html",
       "destination": "/audit.html",
       "permanent": true
+    },
+    {
+      "source": "/agency-signup.html",
+      "destination": "/agency-partnerships.html",
+      "permanent": true
     }
   ],
   "crons": [
