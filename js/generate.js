@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                currentCredits = data.user.credits || 0;
+                currentCredits = data.credits || 0;
                 currentCreditsSpan.textContent = currentCredits;
                 updateCreditEstimates(); // Update estimates after fetching credits
             } else {
