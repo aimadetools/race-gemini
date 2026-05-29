@@ -134,8 +134,8 @@ describe('dashboard API', () => {
     };
     addMockUser(user);
 
-    const page1Data = { title: 'Page 1', url: 'http://example.com/page1' };
-    const page2Data = { title: 'Page 2', url: 'http://example.com/page2' };
+    const page1Data = { title: 'Page 1', service: 'Plumbing', town: 'Dallas' };
+    const page2Data = { title: 'Page 2', service: 'Cleaning', town: 'Houston' };
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
@@ -166,8 +166,8 @@ describe('dashboard API', () => {
       email: user.email,
       credits: user.credits,
       generatedPages: [
-        { ...page1Data, pageId: pageId1, views: 10, uniqueVisitors: 5 },
-        { ...page2Data, pageId: pageId2, views: 20, uniqueVisitors: 15 },
+        { ...page1Data, pageId: pageId1, url: `/${userId}/plumbing-in-dallas.html`, views: 10, uniqueVisitors: 5 },
+        { ...page2Data, pageId: pageId2, url: `/${userId}/cleaning-in-houston.html`, views: 20, uniqueVisitors: 15 },
       ],
       creditTransactions: [],
       indexingNotifications: [],
