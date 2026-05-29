@@ -3,6 +3,7 @@ import trackEventHandler from './track.js'; // Import the event tracking handler
 import { logError } from '../lib/logger.js';
 import { kv } from '@vercel/kv';
 import { sendEmail } from '../lib/email.js';
+import { query } from '../db/index.js';
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
 
@@ -45,8 +46,32 @@ export default async (req, res, currentKvClient) => {
         };
 
         try {
-            await currentKv.set(`agency-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
-            console.log(`Agency inquiry stored in Vercel KV with ID: ${inquiryId}`);
+            // Store in PostgreSQL database
+            const insertQuery = `
+                INSERT INTO agency_inquiries (id, timestamp, agency_name, website, contact_person, contact_email, phone_number, client_volume, message)
+                VALUES ($1, NOW(), $2, $3, $4, $5, $6, $7, $8)
+            `;
+            await query(insertQuery, [
+                inquiryId,
+                agencyName,
+                website,
+                contactPerson,
+                contactEmail,
+                phoneNumber || null,
+                clientVolume || null,
+                message || null
+            ]);
+            console.log(`Agency inquiry stored in PostgreSQL database with ID: ${inquiryId}`);
+
+            // Store in Vercel KV as fallback/redundancy (will not block on failure)
+            try {
+                await currentKv.set(`agency-inquiry:${inquiryId}`, JSON.stringify(inquiryData));
+                console.log(`Agency inquiry stored in Vercel KV with ID: ${inquiryId}`);
+            } catch (kvError) {
+                console.error('Failed to store agency inquiry in Vercel KV:', kvError);
+                await logError(kvError, 'Agency Signup - KV Store Error (non-blocking)', 'agency_signup_error.log');
+            }
+
             // Track the agency signup event
             // Mock req and res objects for trackEventHandler
             await trackEventHandler({

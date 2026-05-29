@@ -1,4 +1,11 @@
 import { jest } from '@jest/globals';
+
+// Mock the db/index.js module to use our mockDbQuery
+const mockDbQuery = jest.fn(() => Promise.resolve({ rows: [] }));
+jest.mock('../../db/index.js', () => ({
+  query: (...args) => mockDbQuery(...args),
+}));
+
 import getAgencyInquiriesHandler from '../../api/get-agency-inquiries.js';
 
 // Mock KV store for in-memory testing
@@ -59,6 +66,8 @@ describe('get-agency-inquiries API', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockKvStore.clear();
+    mockDbQuery.mockClear();
+    mockDbQuery.mockImplementation(() => Promise.resolve({ rows: [] }));
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     process.env.MIGRATION_SECRET = 'test_secret';
   });
@@ -127,17 +136,15 @@ describe('get-agency-inquiries API', () => {
   });
 
   it('should return 500 if KV retrieval fails', async () => {
+    mockDbQuery.mockImplementationOnce(() => Promise.reject(new Error('DB Error')));
     const brokenKv = {
       async *scanIterator() {
         throw new Error('KV Error');
       },
     };
-
     const req = createMockReq({ secret: 'test_secret' });
     const res = createMockRes();
-
     await getAgencyInquiriesHandler(req, res, brokenKv);
-
     expect(res._status).toBe(500);
     expect(res._json.message).toBe('Failed to fetch agency inquiries.');
   });
