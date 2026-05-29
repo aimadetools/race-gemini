@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#generator-form form');
+    if (!form) {
+        return;
+    }
     const generatedOutputSection = document.getElementById('generated-pages-output');
     const generateButton = document.getElementById('generate-pages-button');
     const loadingSpinner = document.getElementById('loading-spinner');

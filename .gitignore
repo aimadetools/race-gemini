@@ -4,6 +4,7 @@ npm-debug.log*
 .vercel
 .env*.local
 .env.production
+.env.production.pulled
 cron.log
 logs/
 gemini_api_key.txt
