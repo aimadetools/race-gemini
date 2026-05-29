@@ -34,6 +34,7 @@ jest.mock('../../lib/email.js', () => ({
 import { customAlphabet } from 'nanoid';
 import { logError } from '../../lib/logger';
 import { sendEmail } from '../../lib/email.js';
+import { setQueryDelegate } from '../../db/mockDb.js';
 
 // Import the handler
 import agencySignupHandler from '../../api/agency-signup';
@@ -71,6 +72,11 @@ describe('agency-signup API', () => {
         jest.clearAllMocks();
         customAlphabet().__reset();
         mockKvStore.clear();
+        setQueryDelegate(null);
+    });
+
+    afterEach(() => {
+        setQueryDelegate(null);
     });
 
     // Test cases will go here
@@ -267,11 +273,9 @@ describe('agency-signup API', () => {
     });
 
     it('should handle internal server errors gracefully', async () => {
-        const error = new Error('KV is down!');
-        const faultyKv = {
-            ...mockKv,
-            set: jest.fn().mockRejectedValue(error),
-        };
+        setQueryDelegate(() => {
+            throw new Error('Database is down!');
+        });
         logError.mockClear();
 
         const reqBody = {
@@ -283,7 +287,7 @@ describe('agency-signup API', () => {
         const req = createMockReq(reqBody);
         const res = createMockRes();
 
-        await agencySignupHandler(req, res, faultyKv);
+        await agencySignupHandler(req, res, mockKv);
 
         expect(res._status).toBe(500);
         expect(res._json.message).toBe('Failed to submit inquiry due to a server error. Please try again later.');

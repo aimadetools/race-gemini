@@ -119,8 +119,8 @@ describe('get-agency-inquiries API', () => {
   });
 
   it('should successfully fetch, parse, and return inquiries', async () => {
-    const inquiry1 = { agencyName: 'Agency One', contactEmail: 'agency1@test.com' };
-    const inquiry2 = { agencyName: 'Agency Two', contactEmail: 'agency2@test.com' };
+    const inquiry1 = { id: '1', agencyName: 'Agency One', contactEmail: 'agency1@test.com' };
+    const inquiry2 = { id: '2', agencyName: 'Agency Two', contactEmail: 'agency2@test.com' };
     
     mockKvStore.set('agency-inquiry:1', JSON.stringify(inquiry1));
     mockKvStore.set('agency-inquiry:2', JSON.stringify(inquiry2));
