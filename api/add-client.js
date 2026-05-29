@@ -4,6 +4,8 @@ import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js'; // Import centralized logger
+import { sendEmail } from '../lib/email.js';
+
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -87,10 +89,27 @@ async function handler(req, res, currentKvClient) {
         await currentKv.set(`user:${clientEmail}`, userId);
         await currentKv.sadd(`agency:${agencyId}:clients`, userId);
 
-        // In a real application, you would email the user their password
-        // CRITICAL SECURITY FIX: Do not return plain text password. Mock email sending.
-        await logError(new Error(`New client ${clientEmail} created by agency ${agencyId}. Password was generated, should be emailed.`), 'Add Client - Password Generated (Mock Email)', 'add_client_error.log');
-        return res.status(201).json({ message: 'Client created successfully. Password sent via email (mocked).' });
+        // Send email to new client with their login credentials
+        const emailSubject = `Welcome to LocalLeads`;
+        const emailHtml = `
+            <h2>Welcome to LocalLeads!</h2>
+            <p>An account has been created for you by your agency.</p>
+            <p>You can now log in at <a href="https://www.localseogen.com/auth.html">https://www.localseogen.com/auth.html</a> using the following credentials:</p>
+            <p><strong>Email:</strong> ${clientEmail}</p>
+            <p><strong>Password:</strong> ${password}</p>
+            <br/>
+            <p>Please change your password after logging in by visiting the dashboard or using the forgot password option.</p>
+            <p>Best regards,<br/>The LocalLeads Team</p>
+        `;
+        
+        try {
+            await sendEmail(clientEmail, emailSubject, emailHtml);
+            await logError(null, `Welcome email sent to client: ${clientEmail}`, 'add_client_error.log');
+        } catch (emailError) {
+            await logError(emailError, `Failed to send welcome email to client: ${clientEmail}`, 'add_client_error.log');
+        }
+
+        return res.status(201).json({ message: 'Client created successfully. Password sent via email.' });
 
     } catch (error) {
         await logError(error, 'Add Client - General Error', 'add_client_error.log');

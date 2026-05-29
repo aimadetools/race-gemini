@@ -17,10 +17,13 @@ export default async function (request, response, currentKvClient) {
     try {
         let tokenData = await currentKv.get(`password-reset:${token}`);
 
-        if (!tokenData) { // Check if tokenData string itself is null/undefined
+        if (!tokenData) { // Check if tokenData itself is null/undefined
             return response.status(400).json({ message: 'Invalid or expired token.' });
         }
-        tokenData = JSON.parse(tokenData);
+
+        if (typeof tokenData === 'string') {
+            tokenData = JSON.parse(tokenData);
+        }
 
         if (Date.now() > tokenData.expiry) {
             await currentKv.del(`password-reset:${token}`); // Clean up expired token

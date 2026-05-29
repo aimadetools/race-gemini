@@ -1,6 +1,10 @@
 // tests/api/add-client.test.js
 import { jest } from '@jest/globals';
 
+jest.mock('../../lib/email.js', () => ({
+    sendEmail: jest.fn().mockResolvedValue(true),
+}));
+
 // Mock the Vercel KV client
 const mockKv = {
     get: jest.fn(),
@@ -196,7 +200,7 @@ describe('add-client API', () => {
 
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
-            message: 'Client created successfully. Password sent via email (mocked).'
+            message: 'Client created successfully. Password sent via email.'
         });
     });
 

@@ -1,4 +1,9 @@
 import { jest } from '@jest/globals';
+
+jest.mock('../../lib/email.js', () => ({
+    sendEmail: jest.fn().mockResolvedValue(true),
+}));
+
 import forgotPasswordRequestHandler from '../../api/forgot-password-request.js';
 import signupHandler from '../../api/signup.js';
 import { clearMockUsers, setQueryDelegate, originalMockQuery } from '../../db/mockDb.js';

@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
+import { sendEmail } from '../lib/email.js';
 
 // This is a temporary admin script to create an agency from an inquiry
 // In the future, this should be replaced with a proper admin panel
@@ -63,10 +64,27 @@ export default async (req, res, currentKvClient) => {
             await currentKv.set(`agency:${agencyId}`, newAgency);
             await currentKv.set(`agency:${contactEmail}`, agencyId);
 
-            // In a real application, you would email the agency their password
-            // CRITICAL SECURITY FIX: Do not return plain text password. Mock email sending.
-            await logError(new Error(`New agency ${contactEmail} created. Password was generated, should be emailed.`), 'Create Agency - Password Generated (Mock Email)', 'create_agency_error.log');
-            res.status(201).json({ message: 'Agency created successfully. Password sent via email (mocked).' });
+            // Send email to agency with their login credentials
+            const emailSubject = `Welcome to LocalLeads Agency Program`;
+            const emailHtml = `
+                <h2>Welcome to LocalLeads!</h2>
+                <p>Your agency account has been created successfully.</p>
+                <p>You can now log in at <a href="https://www.localseogen.com/agency-login.html">https://www.localseogen.com/agency-login.html</a> with the following credentials:</p>
+                <p><strong>Email:</strong> ${contactEmail}</p>
+                <p><strong>Password:</strong> ${password}</p>
+                <br/>
+                <p>Please change your password after logging in.</p>
+                <p>Best regards,<br/>The LocalLeads Team</p>
+            `;
+            
+            try {
+                await sendEmail(contactEmail, emailSubject, emailHtml);
+                await logError(null, `Welcome email sent to agency: ${contactEmail}`, 'create_agency_error.log');
+            } catch (emailError) {
+                await logError(emailError, `Failed to send welcome email to agency: ${contactEmail}`, 'create_agency_error.log');
+            }
+
+            res.status(201).json({ message: 'Agency created successfully. Password sent via email.' });
 
         } catch (error) {
             await logError(error, 'Create Agency - General Error', 'create_agency_error.log');
