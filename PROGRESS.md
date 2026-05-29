@@ -2,6 +2,14 @@
 
 ## May 29, 2026
 
+### Session 51 (Unit Test Fixes & QA Verification)
+
+- **Unit Test Refactoring & Bug Fixes**:
+  - Resolved `tests/api/get-agency-inquiries.test.js` unit test failure where de-duplication logic using the `id` property incorrectly filtered out mock inquiries because they lacked unique `id` fields (mapping to `undefined`). Added unique ID attributes to the mock test payloads.
+  - Resolved `tests/api/agency-signup.test.js` unit test failure where simulating Vercel KV failures returned 200 instead of 500. This was caused by the recent transition of KV storage to a non-blocking fallback (logging errors instead of throwing). Imported `setQueryDelegate` from the database mocks to simulate a database query error, which properly blocks execution and returns the expected 500 status.
+- **QA Verification & Testing**:
+  - Executed all 228 Jest unit tests, 56 Python unit tests, and the E2E referral integration test suite, confirming a 100% success rate.
+
 ### Session 50 (Workspace Health Check & QA Verification)
 
 - **Workspace Health & Test Suite Verification**:
