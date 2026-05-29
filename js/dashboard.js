@@ -73,6 +73,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     creditTransactionsTableBody.innerHTML = '<tr><td colspan="3">No transactions found.</td></tr>';
                 }
+
+                // Populate indexing notifications
+                const indexingNotificationsTableBody = document.querySelector('#indexing-notifications tbody');
+                if (indexingNotificationsTableBody) {
+                    if (data.indexingNotifications && data.indexingNotifications.length > 0) {
+                        data.indexingNotifications.forEach(notification => {
+                            const row = indexingNotificationsTableBody.insertRow();
+                            const formattedDate = new Date(notification.timestamp).toLocaleString();
+                            const statusClass = notification.status === 'success' ? 'credit-positive' : 'credit-negative';
+                            const statusText = notification.status === 'success' ? 'Completed' : 'Failed';
+                            row.innerHTML = `
+                                <td>${formattedDate}</td>
+                                <td>${notification.message}</td>
+                                <td class="${statusClass}">${statusText}</td>
+                            `;
+                        });
+                    } else {
+                        indexingNotificationsTableBody.innerHTML = '<tr><td colspan="3">No indexing notifications found.</td></tr>';
+                    }
+                }
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {

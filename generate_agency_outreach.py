@@ -30,7 +30,7 @@ def mark_emails_as_sent(sent_email_addresses):
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames
         for row in reader:
-            if row.get("Email", "").strip() in sent_email_addresses:
+            if row.get("Email", "").strip().lower() in (email.lower() for email in sent_email_addresses):
                 row["Sent"] = "true"
             rows.append(row)
             
