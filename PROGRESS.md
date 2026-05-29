@@ -2,6 +2,18 @@
 
 ## May 29, 2026
 
+### Session 40 (Referral Click Tracking & Persistence)
+
+- **Referral Click Tracking**:
+  - Created `/api/track-referral-click.js` serverless API endpoint to increment the new `referral_clicks` column in the `users` table.
+  - Implemented client-side capture in `js/tracking.js` that detects `ref` parameters on any page visit, stores it in `localStorage`, and pings the tracking endpoint once per session.
+  - Updated `auth.html` signup logic to fall back to `localStorage` for the referral code, ensuring tracking works even if the user navigates to other pages before signing up, and clears it upon registration.
+  - Updated `api/user-referral-data.js` to retrieve and return the actual `referral_clicks` count from the database.
+  - Created `tests/api/track-referral-click.test.js` (5 unit tests) and updated `tests/api/user-referral-data.test.js` (aligned assertions to actual clicks).
+  - Recompiled the client-side bundle via `npm run build` to update `js/app.min.js`.
+- **QA Verification & Testing**:
+  - Executed and validated all unit and integration tests successfully.
+
 ### Session 39 (Workspace Health & QA Verification)
 
 - **Workspace Health & Test Suite Verification**:

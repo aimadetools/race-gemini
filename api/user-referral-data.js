@@ -22,14 +22,14 @@ export default async function handler(req, res) {
     const userId = decoded.userId;
     console.log('User ID from token:', userId);
 
-    console.log('Fetching user referral code...');
-    const userResult = await query('SELECT referral_code FROM users WHERE id = $1', [userId]);
+    console.log('Fetching user referral code and clicks...');
+    const userResult = await query('SELECT referral_code, referral_clicks FROM users WHERE id = $1', [userId]);
     if (userResult.rows.length === 0) {
       console.log('User not found.');
       return res.status(404).json({ message: 'User not found.' });
     }
-    const referralCode = userResult.rows[0].referral_code;
-    console.log('User referral code:', referralCode);
+    const { referral_code: referralCode, referral_clicks: clicks } = userResult.rows[0];
+    console.log('User referral code:', referralCode, 'clicks:', clicks);
 
     console.log('Fetching referral stats...');
     const statsResult = await query(
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
     const referralData = {
       referralCode,
-      clicks: 0, // Clicks are not tracked yet
+      clicks: clicks || 0,
       signups: parseInt(signups, 10),
       totalEarned: parseFloat(totalearned),
       referredUsers,

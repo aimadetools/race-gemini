@@ -243,9 +243,9 @@
         const email = signupEmailInput.value;
         const password = signupPasswordInput.value;
 
-        // Extract referrerId from URL query parameters
+        // Extract referrerId from URL query parameters, fallback to localStorage
         const urlParams = new URLSearchParams(window.location.search);
-        const referrerId = urlParams.get('ref');
+        const referrerId = urlParams.get('ref') || localStorage.getItem('referralCode');
 
         const signupSubmitButton = signupForm.querySelector('button[type="submit"]'); // Get button reference
 
@@ -271,6 +271,8 @@
             });
             const data = await response.json();
             if (response.ok) {
+                // Clear the stored referral code once signup succeeds
+                localStorage.removeItem('referralCode');
                 displayMessage(signupMessage, data.message, false); // false for success
                 signupForm.reset();
                 const redirectUrl = urlParams.get('redirect') || '/dashboard.html';

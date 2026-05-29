@@ -104,8 +104,8 @@ describe('user-referral-data API', () => {
 
     // Mock PostgreSQL query returns
     mockQuery.mockImplementation(async (text, params) => {
-      if (text.includes('SELECT referral_code FROM users')) {
-        return { rows: [{ referral_code: 'REF123' }] };
+      if (text.includes('SELECT referral_code, referral_clicks FROM users')) {
+        return { rows: [{ referral_code: 'REF123', referral_clicks: 5 }] };
       }
       if (text.includes('COUNT(*) AS signups')) {
         return { rows: [{ signups: '2', totalearned: '50.00' }] };
@@ -125,7 +125,7 @@ describe('user-referral-data API', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       referralCode: 'REF123',
-      clicks: 0,
+      clicks: 5,
       signups: 2,
       totalEarned: 50.00,
       referredUsers: [

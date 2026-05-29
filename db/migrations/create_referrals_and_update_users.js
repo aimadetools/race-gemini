@@ -3,6 +3,7 @@ import { query } from '../index.js';
 export async function createReferralsAndAlterUsers() {
   const createReferralsQuery = `
     ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(255) UNIQUE;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_clicks INTEGER DEFAULT 0;
 
     CREATE TABLE IF NOT EXISTS referrals (
       id SERIAL PRIMARY KEY,
@@ -19,7 +20,7 @@ export async function createReferralsAndAlterUsers() {
 
   try {
     await query(createReferralsQuery);
-    console.log('Table referrals ensured to exist and users table altered with referral_code.');
+    console.log('Table referrals ensured to exist and users table altered with referral_code and referral_clicks.');
   } catch (error) {
     console.error('Error ensuring referrals table and altering users table:', error);
     throw error;

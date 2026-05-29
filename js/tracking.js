@@ -47,6 +47,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if (path.includes('buy-credits.html') || path === '/buy-credits') {
     trackEvent('view_buy_credits', { path });
   }
+
+  // Capture and track referral clicks
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if (refCode) {
+    // Store in localStorage for persistence across navigation until signup
+    localStorage.setItem('referralCode', refCode);
+
+    // Track click event once per session to prevent spamming click counts
+    const sessionKey = `ref_click_tracked_${refCode}`;
+    if (!sessionStorage.getItem(sessionKey)) {
+      sessionStorage.setItem(sessionKey, 'true');
+      fetch('/api/track-referral-click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ref: refCode }),
+      }).catch(err => console.error('Failed to track referral click:', err));
+    }
+  }
 });
 
 // Track checkout initiation globally on any form submission targeting checkout
