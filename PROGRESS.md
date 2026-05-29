@@ -2,6 +2,18 @@
 
 ## May 29, 2026
 
+### Session 42 (IndexNow Search Engine Submission Integration)
+
+- **IndexNow Integration**:
+  - Created `submitToIndexNow` helper in [lib/indexing.js](file:///home/race/race-gemini/lib/indexing.js) to bulk submit generated page URLs and static sitemap URLs to the IndexNow API (specifically, pinging `https://api.indexnow.org/indexnow`).
+  - Integrated `submitToIndexNow` into the main sitemap submission flows (`submitSitemapToSearchEngines` and `updateStaticSitemapAndPing`) using Bing IndexNow key verification parameters.
+  - Implemented unit tests in [tests/lib/indexing.test.js](file:///home/race/race-gemini/tests/lib/indexing.test.js) to mock/validate submission logic, ensuring proper environment-based controls (skipped on dev/localhost/staging/vercel.app domains) and successful production payload delivery.
+  - Corrected credit state retrieval logic in [js/generate.js](file:///home/race/race-gemini/js/generate.js) to correctly retrieve `data.credits` instead of nested `data.user.credits`.
+- **QA Verification & Testing**:
+  - Executed and validated all 228 Jest unit tests and 56 Python unit tests successfully (100% pass rate).
+  - Executed the full E2E referral integration test suite (`npm test`) on port 3005 under local Vercel dev server, confirming all 4 tests pass successfully.
+  - Confirmed Vercel production build compiles cleanly with zero errors using `npx vercel build`.
+
 ### Session 41 (Workspace Health & QA Verification)
 
 - **Workspace Health & Test Suite Verification**:
