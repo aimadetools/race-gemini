@@ -52,7 +52,7 @@ describe('Signup API', () => {
         // Verify that the user was inserted into the mock database with initial credits
         expect(mockQuery).toHaveBeenCalledWith(
             'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [email, expect.any(String), 50, expect.any(String), null]
+            [email, expect.any(String), 5, expect.any(String), null]
         );
 
     });
@@ -109,7 +109,7 @@ describe('Signup API', () => {
         expect(firstMockRes.status).toHaveBeenCalledWith(201);
         expect(mockQuery).toHaveBeenCalledWith(
             'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [email, expect.any(String), 50, expect.any(String), null]
+            [email, expect.any(String), 5, expect.any(String), null]
         );
 
         // Clear mock calls for the second attempt, and re-initialize mockRes for the second call

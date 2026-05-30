@@ -40,7 +40,7 @@ export default async function handler(req, res) {
       // Store user in PostgreSQL, including their own referral_code and referrer_id if provided
       const result = await query(
         'INSERT INTO users (email, password_hash, credits, referral_code, referrer_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-        [email, hashedPassword, 50, newReferralCode, actualReferrerId] // Initial credits set to 50
+        [email, hashedPassword, 5, newReferralCode, actualReferrerId] // Initial credits set to 5
       );
       const userId = result.rows[0].id;
 

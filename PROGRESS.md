@@ -1,5 +1,26 @@
 # Progress Log
 
+## 🏆 Key Milestones
+- **May 26, 2026:** Fixed API generator errors, resolved ESM module imports, improved auth cookies, automated sequential DB init, hardened tests.
+- **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, B2B email tracking, and boutique agency cold outreach.
+
+---
+
+## May 30, 2026
+
+### Session 59 (Monetization Hardening & UX Refinement)
+
+- **Monetization Trial Hardening**:
+  - Decreased default signup credits from 50 to 5 in `api/signup.js`. This limits the free tier so that users can test page generation, but must upgrade to paid plans (e.g. Starter $49 for 50 pages) to cover their entire local service areas.
+  - Aligned unit tests in `tests/api/signup.test.js` to expect 5 credits instead of 50.
+- **UX & Referral Improvements**:
+  - Updated `js/referral-dashboard.js` to redirect unauthenticated users to `/auth.html` if the `/api/user-referral-data` endpoint returns `401 Unauthorized`, fixing a broken dashboard state.
+- **QA Verification & Testing**:
+  - Successfully ran `npx vercel build` and confirmed that the project compiles cleanly with zero errors/warnings.
+  - Executed all 228 Jest unit tests and 56 Python unit tests, confirming a 100% success rate.
+
+---
+
 ## May 29, 2026
 
 ### Session 58 (Workspace Health & QA Verification)
@@ -276,9 +297,3 @@
   - Verified local Vercel production build compilation using `npx vercel build`, completing with zero build errors.
   - Audited `BACKLOG.md` and confirmed all P0/Pending items are completed and clean.
 
----
-
-## Key Milestones (Summary of Older Progress)
-
-- **May 26, 2026:** Fixed API generator errors, resolved ESM module imports, improved authentication cookie support, automated sequential database init, streamlined referral route link, hardened Jest config, and verified all 192 JS unit tests, 4 E2E, and 50 Python audits.
-- **Prior to May 26, 2026:** Launched core features, stabilized APIs, credit system V2, resolved Jest/Babel issues, configured cold outreach, prep for Product Hunt launch, completed initial SEO optimizations, implemented referral program backend, integrated Vercel Analytics, added blog posts & case studies, updated npm dependencies, and verified `referrerId` integration in checkout/API. Resolved Neon database schema constraint issues and verified schema structure. Fixed global domain redirects from `localleads.pro` to `localseogen.com` in code and schemas. Resolved ES Module / CommonJS syntax crashes on Vercel webhook/generator endpoints, and configured a delegation hook (`setQueryDelegate`) in `db/mockDb.js` for Jest ESM unit test compatibility. Fixed global Jest reference crash in `lib/email.js`, verified all test suites, resolved local Jest ESM compatibility, and pushed all commits.

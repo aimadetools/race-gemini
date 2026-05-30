@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchReferralData() {
         try {
             const response = await fetch('/api/user-referral-data');
+            
+            if (response.status === 401) {
+                window.location.href = '/auth.html';
+                return;
+            }
+
             const data = await response.json();
 
             if (response.ok) {
@@ -28,13 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     row.insertCell().textContent = user.email;
                     row.insertCell().textContent = new Date(user.date).toLocaleDateString();
                     row.insertCell().textContent = user.status;
-                    row.insertCell().textContent = `$${user.commission.toFixed(2)}`;
+                    row.insertCell().textContent = `$${parseFloat(user.commission).toFixed(2)}`;
                 });
             } else {
                 console.error('Failed to fetch referral data:', data.message);
-                // Display an error message to the user
                 referralLinkInput.value = 'Error loading referral link.';
-                // Optionally show a message on the dashboard itself
             }
         } catch (error) {
             console.error('Error fetching referral data:', error);
