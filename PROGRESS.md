@@ -1,8 +1,10 @@
 # Progress Log
 
 ## 🏆 Key Milestones
+- **May 27, 2026:** PostgreSQL migration test alignment, custom Progressive Credit Pack pricing and tampering checks, fixed broken links check script, replaced dead Twitter links, unified JWT auth/mock database selectors, and verified all 202 JS tests, 4 E2E, and 50 Python audits.
 - **May 26, 2026:** Fixed API generator errors, resolved ESM module imports, improved auth cookies, automated sequential DB init, hardened tests.
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, B2B email tracking, and boutique agency cold outreach.
+
 
 ---
 
@@ -262,38 +264,5 @@
 
 ---
 
-## May 27, 2026
 
-- **Import Bug Fix**: Fixed `ReferenceError: query is not defined` inside `api/add-client.js` by importing `query` from `../db/index.js`.
-- **SQL Parameter Alignment**: Parameterized the `credits` column in the user INSERT statement in `api/add-client.js` to fix column-to-value mismatch issues during parsing in unit test mock DB.
-- **Database Mock Enhancement**: Updated `db/mockDb.js` to return `is_agency` in select queries and handle filtering by `agency_id` (`where agency_id = $1`) to support database-driven mocks in unit tests.
-- **Test Alignment to PostgreSQL Migration**:
-  - Rewrote `tests/api/agency-login.test.js` to mock database records instead of obsolete Vercel KV keys, and verified new unified JWT payloads and cookies.
-  - Rewrote `tests/api/agency-dashboard.test.js` to set up mock PostgreSQL agency and client users and verify correct mapping.
-  - Rewrote `tests/api/client-details.test.js` to verify client records retrieve cleanly via PostgreSQL mock selectors.
-  - Rewrote `tests/api/add-client.test.js` to use database-driven mock setup.
-- **Environment & Test Fixes**:
-  - Implemented `tests/api/get-agency-inquiries.test.js` to test the `/api/get-agency-inquiries` endpoint using in-memory Vercel KV mocks.
-  - Corrected Jest configuration (`jest.config.cjs`) to simplify `testPathIgnorePatterns` to `['node_modules', '\\.vercel']`.
-  - Fixed relative module resolution in `tests/lib/email.test.js` to ensure the unit tests run successfully from any execution Cwd.
-  - Sourced and synchronized updated Vercel environment variables token configuration in `.env.test`.
-- **Agency Outreach Campaign**:
-  - Ran a dry-run of the boutique SEO agency outreach using `generate_agency_outreach.py` with the `--dry-run` flag, confirming successful API compilation and transmission.
-- **SEO & Site Health Auditing**:
-  - Found and fixed a syntax bug in `audits_v2/broken_links.py` where `links_to_check` set was not initialized.
-  - Resolved false-positive link checker issues with Twitter and other social media sites by updating the User-Agent to mimic Chrome, falling back from HEAD to GET for 403/404/405/501 errors, and fallback validation using a subprocess `curl` command.
-  - Replaced the dead `https://twitter.com/LocalLeadsApp` link with `https://twitter.com` in 26 files across the codebase.
-  - Audited the production site's key pages (index, about, pricing, faq, contact) for broken links and image optimizations, confirming zero broken links, all alt tags properly configured, and zero large or unoptimized images.
-- **Search Engine Optimization Setup**:
-  - Validated Google Search Console verification meta tag in `index.html`.
-  - Inspected and verified XML Sitemap (`sitemap.xml`) well-formedness and correctness.
-  - Confirmed both robots.txt and sitemap.xml audits are 100% healthy with no issues.
-- **Stripe & Credit Pack Alignment**:
-  - Aligned credit pack prices to $49 (Small Business Pack), $99 (Pro Pack), and $249 (Agency Pack) across `pricing.html`, `buy-credits.html`, and `api/checkout.js`.
-  - Implemented progressive custom credits pricing logic in `pricing.html` and secured the custom credits checkout route (`api/checkout.js`) with server-side validation to prevent client-side price tampering.
-  - Added new Jest unit tests in `tests/api/checkout.test.js` validating custom progressive pricing tiers and price tampering detection.
-- **Consolidated Workspace Health Verification**:
-  - Ran 202 Jest unit tests (100% success rate), 4 Jest E2E tests (100% success rate), and 50 Python audit/discovery tests (100% success rate) multiple times to verify codebase stability.
-  - Verified local Vercel production build compilation using `npx vercel build`, completing with zero build errors.
-  - Audited `BACKLOG.md` and confirmed all P0/Pending items are completed and clean.
 
