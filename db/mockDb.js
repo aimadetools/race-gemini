@@ -19,6 +19,11 @@ export const originalMockQuery = async (text, params) => {
     // 1. SELECT query
     if (textLower.startsWith('select')) {
         if (textLower.includes('from seo_pages')) {
+            if (textLower.includes('count(*)')) {
+                const userId = params[0]?.toString();
+                const count = mockSeoPages.filter(p => p.user_id?.toString() === userId).length;
+                return { rows: [{ count }] };
+            }
             if (textLower.includes('where id = $1 and file_name = $2') || textLower.includes('where user_id = $1 and file_name = $2')) {
                 const [userId, fileName] = params;
                 const page = mockSeoPages.find(p => p.user_id?.toString() === userId?.toString() && p.file_name === fileName);

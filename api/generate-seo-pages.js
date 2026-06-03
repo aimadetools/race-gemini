@@ -9,6 +9,7 @@ import { logError, logInfo } from '../lib/logger.js';
 import { updateStaticSitemapAndPing } from '../lib/indexing.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
+import { getSchemaType } from '../lib/schema.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -41,7 +42,7 @@ async function generateAIContent(prompt, defaultValue) {
 function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
     const schema = {
         "@context": "http://schema.org",
-        "@type": "LocalBusiness",
+        "@type": getSchemaType(service),
         "name": businessName,
         "address": {
             "@type": "PostalAddress",

@@ -17,7 +17,7 @@ import handler from '../../api/[[...slug]].js';
 import { kv } from '@vercel/kv';
 import slugify from 'slugify';
 import fs from 'fs';
-import { clearMockUsers, addMockUser } from '../../db/mockDb.js';
+import { clearMockUsers, addMockUser, addMockSeoPage } from '../../db/mockDb.js';
 
 describe('[[...slug]] API Wildcard Route', () => {
   let req;
@@ -79,14 +79,22 @@ describe('[[...slug]] API Wildcard Route', () => {
       is_agency: false,
     });
 
-    const page1 = { service: 'Plumbing', town: 'London', createdAt: '2026-05-28T14:00:00Z' };
-    const page2 = { service: 'Heating', town: 'Paris', createdAt: '2026-05-28T15:00:00Z' };
+    addMockSeoPage({
+      id: 'page1',
+      user_id: clientId,
+      service: 'Plumbing',
+      town: 'London',
+      file_name: 'plumbing-in-london.html',
+      created_at: new Date('2026-05-28T14:00:00Z'),
+    });
 
-    mockKv.smembers.mockResolvedValueOnce(['pageId1', 'pageId2']);
-    mockKv.get.mockImplementation((key) => {
-      if (key === 'pageId1') return Promise.resolve(JSON.stringify(page1));
-      if (key === 'pageId2') return Promise.resolve(JSON.stringify(page2));
-      return Promise.resolve(null);
+    addMockSeoPage({
+      id: 'page2',
+      user_id: clientId,
+      service: 'Heating',
+      town: 'Paris',
+      file_name: 'heating-in-paris.html',
+      created_at: new Date('2026-05-28T15:00:00Z'),
     });
 
     await handler(req, res, mockKv);
@@ -119,17 +127,14 @@ describe('[[...slug]] API Wildcard Route', () => {
       primary_color: '#ff5500',
     });
 
-    const pageData = {
-      businessName: 'Plumbers R Us',
+    addMockSeoPage({
+      id: 'page1',
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
       service: 'Plumbing',
       town: 'London',
-      createdAt: '2026-05-28T14:00:00Z',
-    };
-
-    mockKv.smembers.mockResolvedValueOnce(['pageId1']);
-    mockKv.get.mockImplementation((key) => {
-      if (key === 'pageId1') return Promise.resolve(JSON.stringify(pageData));
-      return Promise.resolve(null);
+      file_name: 'plumbing-in-london.html',
+      created_at: new Date('2026-05-28T14:00:00Z'),
     });
 
     await handler(req, res, mockKv);
@@ -152,14 +157,14 @@ describe('[[...slug]] API Wildcard Route', () => {
       is_agency: false,
     });
 
-    const pageData = {
-      businessName: 'Plumbers R Us',
+    addMockSeoPage({
+      id: 'page1',
+      user_id: 'different_user',
+      business_name: 'Plumbers R Us',
       service: 'Plumbing',
       town: 'London',
-    };
-
-    mockKv.smembers.mockResolvedValueOnce(['pageId1']);
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(pageData));
+      file_name: 'plumbing-in-london.html',
+    });
 
     await handler(req, res, mockKv);
 

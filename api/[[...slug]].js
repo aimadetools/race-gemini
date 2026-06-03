@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
+import { getSchemaType } from '../lib/schema.js';
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;

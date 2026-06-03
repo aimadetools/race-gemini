@@ -18,14 +18,14 @@ jest.mock('cookie', () => ({
 }));
 
 jest.mock('fs', () => ({
-  ...jest.requireActual('fs'), // Keep actual fs functionality for some parts if needed, otherwise mock completely
+  ...jest.requireActual('fs'),
   existsSync: jest.fn(),
   mkdirSync: jest.fn(),
   appendFileSync: jest.fn(),
 }));
 
 jest.mock('path', () => ({
-  ...jest.requireActual('path'), // Keep actual path functionality for some parts if needed
+  ...jest.requireActual('path'),
   join: jest.fn(),
 }));
 
@@ -36,7 +36,7 @@ import { parse as parseCookie } from 'cookie';
 import fs from 'fs';
 import path from 'path';
 import { logError } from '../../lib/logger.js';
-import { clearMockUsers, addMockUser, setQueryDelegate } from '../../db/mockDb.js';
+import { clearMockUsers, addMockUser, addMockSeoPage, setQueryDelegate } from '../../db/mockDb.js';
 
 describe('dashboard API', () => {
   let req;
@@ -65,16 +65,14 @@ describe('dashboard API', () => {
 
     jest.clearAllMocks();
     clearMockUsers();
-    setQueryDelegate(null); // Reset query delegate
+    setQueryDelegate(null);
 
-    // Mock process.env.JWT_SECRET
     process.env.JWT_SECRET = 'test_secret';
 
-    // Mock fs and path for logError function
     fs.existsSync.mockReturnValue(true);
     fs.mkdirSync.mockReturnValue(undefined);
     fs.appendFileSync.mockReturnValue(undefined);
-    path.join.mockImplementation((...args) => args.join('/')); // Simple join for testing log path
+    path.join.mockImplementation((...args) => args.join('/'));
   });
 
   afterEach(() => {
@@ -91,7 +89,7 @@ describe('dashboard API', () => {
   });
 
   test('should return 401 if no token is provided', async () => {
-    parseCookie.mockReturnValue({}); // No cookie header
+    parseCookie.mockReturnValue({});
 
     await handler(req, res, mockKv);
 
@@ -134,28 +132,60 @@ describe('dashboard API', () => {
     };
     addMockUser(user);
 
-    const page1Data = { title: 'Page 1', service: 'Plumbing', town: 'Dallas' };
-    const page2Data = { title: 'Page 2', service: 'Cleaning', town: 'Houston' };
+    const createdAtDate = new Date('2026-06-03T19:00:00.000Z');
+    addMockSeoPage({
+      id: pageId1,
+      user_id: userId,
+      business_name: 'Page 1',
+      service: 'Plumbing',
+      town: 'Dallas',
+      zip_code: '75001',
+      created_at: createdAtDate,
+      updated_at: createdAtDate,
+      telephone: null,
+      price_range: null,
+      opening_hours: null,
+      enable_ai_copy: null,
+      ai_style: null
+    });
+
+    addMockSeoPage({
+      id: pageId2,
+      user_id: userId,
+      business_name: 'Page 2',
+      service: 'Cleaning',
+      town: 'Houston',
+      zip_code: '77001',
+      created_at: createdAtDate,
+      updated_at: createdAtDate,
+      telephone: null,
+      price_range: null,
+      opening_hours: null,
+      enable_ai_copy: null,
+      ai_style: null
+    });
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
-    mockKv.smembers.mockResolvedValueOnce([pageId1, pageId2]); // user:userId:pages -> pageIds
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(page1Data)); // pageId1 -> page1Data
-    mockKv.get.mockResolvedValueOnce(10); // page:pageId1:views -> 10
-    mockKv.scard.mockResolvedValueOnce(5); // page:pageId1:unique_visitors -> 5
-    mockKv.get.mockResolvedValueOnce(JSON.stringify(page2Data)); // pageId2 -> page2Data
-    mockKv.get.mockResolvedValueOnce(20); // page:pageId2:views -> 20
-    mockKv.scard.mockResolvedValueOnce(15); // page:pageId2:unique_visitors -> 15
-    mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
-    mockKv.lrange.mockResolvedValueOnce([]); // Mock notification list
+
+    mockKv.get.mockImplementation((key) => {
+      if (key === `page:${pageId1}:views`) return Promise.resolve(10);
+      if (key === `page:${pageId2}:views`) return Promise.resolve(20);
+      return Promise.resolve(null);
+    });
+
+    mockKv.scard.mockImplementation((key) => {
+      if (key === `page:${pageId1}:unique_visitors`) return Promise.resolve(5);
+      if (key === `page:${pageId2}:unique_visitors`) return Promise.resolve(15);
+      return Promise.resolve(0);
+    });
+
+    mockKv.lrange.mockResolvedValue([]);
 
     await handler(req, res, mockKv);
 
-    expect(mockKv.smembers).toHaveBeenCalledWith(`user:${userId}:pages`);
-    expect(mockKv.get).toHaveBeenCalledWith(pageId1);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId1}:views`);
     expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId1}:unique_visitors`);
-    expect(mockKv.get).toHaveBeenCalledWith(pageId2);
     expect(mockKv.get).toHaveBeenCalledWith(`page:${pageId2}:views`);
     expect(mockKv.scard).toHaveBeenCalledWith(`page:${pageId2}:unique_visitors`);
     expect(mockKv.lrange).toHaveBeenCalledWith(`user:${userId}:credittransactions`, 0, 100);
@@ -166,8 +196,40 @@ describe('dashboard API', () => {
       email: user.email,
       credits: user.credits,
       generatedPages: [
-        { ...page1Data, pageId: pageId1, url: `/${userId}/plumbing-in-dallas.html`, views: 10, uniqueVisitors: 5 },
-        { ...page2Data, pageId: pageId2, url: `/${userId}/cleaning-in-houston.html`, views: 20, uniqueVisitors: 15 },
+        {
+          pageId: pageId1,
+          businessName: 'Page 1',
+          service: 'Plumbing',
+          town: 'Dallas',
+          zipCode: '75001',
+          createdAt: createdAtDate.toISOString(),
+          updatedAt: createdAtDate.toISOString(),
+          telephone: null,
+          priceRange: null,
+          openingHours: null,
+          enableAICopy: null,
+          aiStyle: null,
+          url: `/user123/plumbing-in-dallas.html`,
+          views: 10,
+          uniqueVisitors: 5
+        },
+        {
+          pageId: pageId2,
+          businessName: 'Page 2',
+          service: 'Cleaning',
+          town: 'Houston',
+          zipCode: '77001',
+          createdAt: createdAtDate.toISOString(),
+          updatedAt: createdAtDate.toISOString(),
+          telephone: null,
+          priceRange: null,
+          openingHours: null,
+          enableAICopy: null,
+          aiStyle: null,
+          url: `/user123/cleaning-in-houston.html`,
+          views: 20,
+          uniqueVisitors: 15
+        },
       ],
       creditTransactions: [],
       indexingNotifications: [],
@@ -203,9 +265,7 @@ describe('dashboard API', () => {
 
     parseCookie.mockReturnValue({ authToken: 'valid_token' });
     jwt.verify.mockReturnValue({ userId });
-    mockKv.smembers.mockResolvedValueOnce([]); // user:userId:pages -> empty array
-    mockKv.lrange.mockResolvedValueOnce([]); // Mock transaction list
-    mockKv.lrange.mockResolvedValueOnce([]); // Mock notification list
+    mockKv.lrange.mockResolvedValue([]);
 
     await handler(req, res, mockKv);
 

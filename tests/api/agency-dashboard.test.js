@@ -15,15 +15,10 @@ jest.mock('jsonwebtoken', () => ({
   verify: jest.fn(),
 }));
 
-// These need to be declared BEFORE jest.mock('stripe')
-// const mockStripeCustomerRetrieve = jest.fn(); // No longer needed here
-// const mockStripeSubscriptionsRetrieve = jest.fn(); // No longer needed here
-
 jest.mock('stripe', () => {
   const mockRetrieveCustomer = jest.fn();
   const mockRetrieveSubscription = jest.fn();
 
-  // The actual mock instance
   const StripeMock = jest.fn(() => ({
     customers: {
       retrieve: mockRetrieveCustomer,
@@ -33,8 +28,6 @@ jest.mock('stripe', () => {
     },
   }));
 
-  // Attach the mock functions as static properties so they can be accessed outside
-  // for setting mock return values and assertions.
   StripeMock.mockRetrieveCustomer = mockRetrieveCustomer;
   StripeMock.mockRetrieveSubscription = mockRetrieveSubscription;
 
@@ -45,8 +38,8 @@ import handler from '../../api/agency-dashboard';
 import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
-import Stripe from 'stripe'; // Import Stripe to use its mock functions
-import { clearMockUsers, addMockUser } from '../../db/mockDb.js';
+import Stripe from 'stripe';
+import { clearMockUsers, addMockUser, addMockSeoPage } from '../../db/mockDb.js';
 
 describe('agency-dashboard API', () => {
   let req;
@@ -62,7 +55,7 @@ describe('agency-dashboard API', () => {
     req = {
       method: 'GET',
       headers: {
-        cookie: 'auth=valid_token', // Default cookie for authenticated requests
+        cookie: 'auth=valid_token',
       },
     };
 
@@ -75,10 +68,9 @@ describe('agency-dashboard API', () => {
     clearMockUsers();
     Stripe.mockRetrieveCustomer.mockReset();
     Stripe.mockRetrieveSubscription.mockReset();
-    cookie.parse.mockReturnValue({ auth: 'valid_token' }); // Default mock for cookie.parse
-    jwt.verify.mockReturnValue({ agencyId: 'testAgencyId' }); // Default mock for jwt.verify
+    cookie.parse.mockReturnValue({ auth: 'valid_token' });
+    jwt.verify.mockReturnValue({ agencyId: 'testAgencyId' });
 
-    // Mock process.env.JWT_SECRET for jwt.verify
     process.env.JWT_SECRET = 'test_secret';
     process.env.STRIPE_PRICE_BASIC_AGENCY_PLAN = 'price_BASIC_AGENCY_PLAN';
     process.env.STRIPE_PRICE_PRO_AGENCY_PLAN = 'price_PRO_AGENCY_PLAN';
@@ -99,7 +91,7 @@ describe('agency-dashboard API', () => {
   });
 
   test('should return 401 if no token is provided', async () => {
-    cookie.parse.mockReturnValue({}); // No cookie header
+    cookie.parse.mockReturnValue({});
 
     await handler(req, res, mockKv);
 
@@ -120,7 +112,7 @@ describe('agency-dashboard API', () => {
 
   test('should return 403 if token does not contain userId or agencyId', async () => {
     cookie.parse.mockReturnValue({ token: 'valid_token' });
-    jwt.verify.mockReturnValue({}); // Missing both userId and agencyId
+    jwt.verify.mockReturnValue({});
 
     await handler(req, res, mockKv);
 
@@ -174,19 +166,16 @@ describe('agency-dashboard API', () => {
     addMockUser(client1);
     addMockUser(client2);
 
+    addMockSeoPage({ id: 'page1', user_id: client1Id });
+    addMockSeoPage({ id: 'page2', user_id: client1Id });
+    addMockSeoPage({ id: 'page3', user_id: client2Id });
+
     cookie.parse.mockReturnValue({ token: 'valid_token' });
     jwt.verify.mockReturnValue({ agencyId });
-    
-    mockKv.smembers.mockImplementation((key) => {
-      if (key === `user:${client1Id}:pages`) return Promise.resolve(['page1', 'page2']);
-      if (key === `user:${client2Id}:pages`) return Promise.resolve(['page3']);
-      return Promise.resolve([]);
-    });
 
-    // Mock Stripe subscription data
     Stripe.mockRetrieveSubscription.mockResolvedValueOnce({
       status: agency.subscriptionStatus,
-      current_period_end: new Date(agency.renewalDate).getTime() / 1000, // Convert date to Unix timestamp
+      current_period_end: new Date(agency.renewalDate).getTime() / 1000,
       items: {
         data: [{
           price: {
@@ -197,9 +186,6 @@ describe('agency-dashboard API', () => {
     });
 
     await handler(req, res, mockKv);
-
-    expect(mockKv.smembers).toHaveBeenCalledWith(`user:${client1Id}:pages`);
-    expect(mockKv.smembers).toHaveBeenCalledWith(`user:${client2Id}:pages`);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({

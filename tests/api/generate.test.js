@@ -1,6 +1,6 @@
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const { clearMockUsers, addMockUser } = require('../../db/mockDb.js');
+const { clearMockUsers, addMockUser, getMockSeoPages } = require('../../db/mockDb.js');
 
 jest.mock('jsonwebtoken', () => ({
     verify: jest.fn(() => ({ userId: 'testUserId123' }))
@@ -107,8 +107,7 @@ describe('POST /api/generate', () => {
 
         // Expect writeHead to be called with ZIP headers
         expect(res.writeHead).toHaveBeenCalledWith(200, expect.any(Object));
-        expect(kv.set).toHaveBeenCalled();
-        expect(kv.sadd).toHaveBeenCalled();
+        expect(getMockSeoPages().length).toBeGreaterThan(0);
     });
 
     test('should return 400 if fields are missing', async () => {

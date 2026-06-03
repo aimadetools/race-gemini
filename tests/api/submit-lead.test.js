@@ -71,18 +71,19 @@ describe('Submit Lead API', () => {
     });
 
     it('should successfully store lead and send full details to paid user', async () => {
-        // Mock KV mapping pageId to page details (with userId: 123)
-        mockKv.get.mockResolvedValue(JSON.stringify({
-            userId: 123,
-            businessName: 'Super Plumbing',
-            service: 'plumbing',
-            town: 'springfield'
-        }));
-
         // Mock SQL responses
-        // 1. Insert lead (returns lead ID)
+        // 1. Fetch page owner metadata
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                user_id: 123,
+                business_name: 'Super Plumbing',
+                service: 'plumbing',
+                town: 'springfield'
+            }]
+        });
+        // 2. Insert lead (returns lead ID)
         mockQuery.mockResolvedValueOnce({ rows: [{ id: 456 }] });
-        // 2. Fetch user owner profile (email, is_agency, subscription_status)
+        // 3. Fetch user owner profile (email, is_agency, subscription_status)
         mockQuery.mockResolvedValueOnce({
             rows: [{
                 email: 'owner@example.com',
@@ -93,8 +94,8 @@ describe('Submit Lead API', () => {
 
         await handler(mockReq, mockRes, mockKv);
 
-        // Verify lead insertion query
-        expect(mockQuery).toHaveBeenNthCalledWith(1,
+        // Verify lead insertion query (it's the 2nd call now)
+        expect(mockQuery).toHaveBeenNthCalledWith(2,
             expect.stringContaining('INSERT INTO leads'),
             ['Jane Doe', 'jane@example.com', '123-456-7890', 'Hello, I want a quote.', 123, 'page:12345', 'http://localhost:3000/123/plumbing-in-springfield.html', 'landing_page']
         );
@@ -111,16 +112,19 @@ describe('Submit Lead API', () => {
     });
 
     it('should successfully store lead and send obscured details to unpaid/trial user', async () => {
-        mockKv.get.mockResolvedValue(JSON.stringify({
-            userId: 789,
-            businessName: 'Budget Plumbing',
-            service: 'plumbing',
-            town: 'springfield'
-        }));
-
         // Mock SQL responses
+        // 1. Fetch page owner metadata
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                user_id: 789,
+                business_name: 'Budget Plumbing',
+                service: 'plumbing',
+                town: 'springfield'
+            }]
+        });
+        // 2. Insert lead (returns lead ID)
         mockQuery.mockResolvedValueOnce({ rows: [{ id: 457 }] });
-        // User profile: not agency, inactive subscription
+        // 3. User profile: not agency, inactive subscription
         mockQuery.mockResolvedValueOnce({
             rows: [{
                 email: 'trial-owner@example.com',

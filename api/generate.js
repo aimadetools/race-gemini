@@ -11,6 +11,7 @@ import { logError } from '../lib/logger.js'; // Import centralized logger
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
+import { getSchemaType } from '../lib/schema.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -37,7 +38,7 @@ async function generateAIContent(geminiModel, prompt, defaultValue) {
 function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
     const schema = {
         "@context": "http://schema.org",
-        "@type": "LocalBusiness",
+        "@type": getSchemaType(service),
         "name": businessName,
         "address": {
             "@type": "PostalAddress",
@@ -254,7 +255,7 @@ export default async (req, res) => {
                     const pageSlug = `${userId}-${serviceSlug}-in-${townSlug}`;
                     await query(
                         `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,

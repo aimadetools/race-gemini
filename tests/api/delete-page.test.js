@@ -24,6 +24,7 @@ import handler from '../../api/delete-page';
 import jwt from 'jsonwebtoken';
 import { parse as parseCookie } from 'cookie';
 import { submitSitemapToSearchEngines } from '../../lib/indexing.js';
+import { clearMockUsers, addMockSeoPage } from '../../db/mockDb.js';
 
 describe('Delete Page API', () => {
     let req;
@@ -51,6 +52,7 @@ describe('Delete Page API', () => {
         };
 
         jest.clearAllMocks();
+        clearMockUsers();
         process.env.JWT_SECRET = 'test_secret';
     });
 
@@ -97,7 +99,6 @@ describe('Delete Page API', () => {
     test('should return 404 if page not found in KV', async () => {
         parseCookie.mockReturnValue({ authToken: 'valid_token' });
         jwt.verify.mockReturnValue({ userId: 1 });
-        mockKv.get.mockResolvedValueOnce(null);
 
         await handler(req, res, mockKv);
 
@@ -108,7 +109,7 @@ describe('Delete Page API', () => {
     test('should return 403 if page does not belong to user', async () => {
         parseCookie.mockReturnValue({ authToken: 'valid_token' });
         jwt.verify.mockReturnValue({ userId: 1 });
-        mockKv.get.mockResolvedValueOnce(JSON.stringify({ userId: 2 }));
+        addMockSeoPage({ id: 'page_123', user_id: 2 });
 
         await handler(req, res, mockKv);
 
@@ -119,14 +120,12 @@ describe('Delete Page API', () => {
     test('should delete page, remove from user set, ping search engines, and return 200', async () => {
         parseCookie.mockReturnValue({ authToken: 'valid_token' });
         jwt.verify.mockReturnValue({ userId: 1 });
-        mockKv.get.mockResolvedValueOnce(JSON.stringify({ userId: 1, service: 'plumbing', town: 'Dallas' }));
+        addMockSeoPage({ id: 'page_123', user_id: 1, service: 'plumbing', town: 'Dallas' });
 
         await handler(req, res, mockKv);
 
-        expect(mockKv.del).toHaveBeenCalledWith('page_123');
         expect(mockKv.del).toHaveBeenCalledWith('page:page_123:views');
         expect(mockKv.del).toHaveBeenCalledWith('page:page_123:unique_visitors');
-        expect(mockKv.srem).toHaveBeenCalledWith('user:1:pages', 'page_123');
         expect(submitSitemapToSearchEngines).toHaveBeenCalledWith(1, req);
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'Page deleted successfully.' });

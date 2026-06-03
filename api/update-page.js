@@ -9,6 +9,7 @@ import { logError } from '../lib/logger.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { query } from '../db/index.js';
+import { getSchemaType } from '../lib/schema.js';
 
 function getGeminiModel() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -137,7 +138,7 @@ export default async function handler(req, res, currentKvClient) {
 <script type="application/ld+json">
 {
   "@context": "http://schema.org",
-  "@type": "LocalBusiness",
+  "@type": "${getSchemaType(escapedService)}",
   "name": "${escapedBusinessName}",
   "address": {
     "@type": "PostalAddress",
