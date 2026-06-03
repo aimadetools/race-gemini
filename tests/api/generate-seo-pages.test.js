@@ -196,7 +196,7 @@ describe('POST /api/generate-seo-pages', () => {
         );
         expect(fs.promises.writeFile).toHaveBeenCalledWith(
             expectedFilePath,
-            expect.stringContaining(`Contact us today for a free estimate!`), // Expect default content
+            expect.stringContaining(`Need a reliable plumber in New York? Look no further than Test Business.`), // Expect fallback content
             'utf8'
         );
         expect(mockGenAI.getGenerativeModel).not.toHaveBeenCalled(); // AI model should not be called
@@ -386,10 +386,10 @@ describe('POST /api/generate-seo-pages', () => {
         expect(fs.promises.writeFile).toHaveBeenCalledTimes(1);
         const expectedFileName = 'plumbing-in-new-york-test-business.html';
         const expectedFilePath = path.join(mockCwd, 'generated-seo-pages', expectedFileName);
-        // Expecting the "AI copy is unavailable due to missing API key." message
+        // Expecting the fallback marketing copy since AI is unavailable
         expect(fs.promises.writeFile).toHaveBeenCalledWith(
             expectedFilePath,
-            expect.stringContaining('AI copy is unavailable due to missing API key. Contact support.'),
+            expect.stringContaining('Need a reliable plumber in New York? Look no further than Test Business.'),
             'utf8'
         );
         expect(_getMockGeminiModel().generateContent).not.toHaveBeenCalled(); // generateContent should not be called
@@ -425,7 +425,7 @@ describe('POST /api/generate-seo-pages', () => {
         const expectedFilePath = path.join(mockCwd, 'generated-seo-pages', expectedFileName);
         expect(fs.promises.writeFile).toHaveBeenCalledWith(
             expectedFilePath,
-            expect.stringContaining('AI copy is unavailable due to missing API key. Contact support.'),
+            expect.stringContaining('Need a reliable plumber in New York? Look no further than Test Business.'),
             'utf8'
         );
         // The mock AI model should still be called to try and get the model, but it won't generate content
@@ -460,7 +460,7 @@ describe('POST /api/generate-seo-pages', () => {
         const expectedFilePath = path.join(mockCwd, 'generated-seo-pages', expectedFileName);
         expect(fs.promises.writeFile).toHaveBeenCalledWith(
             expectedFilePath,
-            expect.stringContaining('Contact us today for a free estimate!'),
+            expect.stringContaining('Need a reliable plumber in New York? Look no further than Test Business.'),
             'utf8'
         );
         expect(mockGenAI.getGenerativeModel).not.toHaveBeenCalled();
