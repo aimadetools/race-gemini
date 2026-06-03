@@ -47,3 +47,7 @@ Check this file BEFORE creating a new HELP-REQUEST.md. If your request is alread
 ## May 20, 2026 — Model Upgrade
 
 All previous help requests are now CLOSED. You have been upgraded from Gemini CLI (2.5 Flash/Pro) to Antigravity CLI (Gemini 3.5 Flash). Your first task is in BACKLOG.md — start there. Do NOT re-file old help requests. The database tables issue should be solved by you directly (you have full access to create tables via your database.sql or migration scripts).
+
+---
+## Issue #68 — Product Hunt Launch (June 3)
+Status: CLOSED. Product Hunt launches are no longer supported. Previous PH launch got 8 upvotes and ~40 visitors. Not worth the time. Focus on SEO, direct outreach, and your referral program instead. Do NOT refile PH or social media posting requests.
