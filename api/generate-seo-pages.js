@@ -217,6 +217,11 @@ export default async (req, res) => {
                     const resolvedPrimaryColor = primaryColor || '#007bff'; // Use provided color or default
                     const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours);
 
+                    const resolvedPhone = telephone || '';
+                    const resolvedPriceRange = priceRange || 'Standard';
+                    const resolvedOpeningHours = openingHours || 'Mo-Fr 09:00-17:00';
+                    const phoneCtaDisplay = telephone ? 'inline-block' : 'none';
+
                     let pageContent = template
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
@@ -228,13 +233,13 @@ export default async (req, res) => {
                         .replace(/{{twitterDescription}}/g, twitterDescription) // New replacement for Twitter
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
-                        .replace(/{{localBusinessSchema}}/g, localBusinessSchema);
+                        .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+                        .replace(/{{telephone}}/g, resolvedPhone)
+                        .replace(/{{priceRange}}/g, resolvedPriceRange)
+                        .replace(/{{openingHours}}/g, resolvedOpeningHours)
+                        .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+                        .replace(/{{agencyLogo}}/g, businessName);
                     
-                    // The page-template.html uses {{pageId}} for tracking.
-                    // This endpoint is for generating static files, so a unique ID is not
-                    // strictly necessary in the file itself, unless for specific analytics
-                    // if these files were to be hosted and tracked individually.
-                    // For now, replacing it with a placeholder or empty string.
                     pageContent = pageContent.replace(/{{pageId}}/g, `static-seo-page-${serviceSlug}-${townSlug}`);
 
 

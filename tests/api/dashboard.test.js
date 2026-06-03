@@ -171,6 +171,8 @@ describe('dashboard API', () => {
       ],
       creditTransactions: [],
       indexingNotifications: [],
+      leads: [],
+      isPaidUser: false
     });
   });
 
@@ -214,6 +216,8 @@ describe('dashboard API', () => {
       generatedPages: [],
       creditTransactions: [],
       indexingNotifications: [],
+      leads: [],
+      isPaidUser: false
     });
   });
 });

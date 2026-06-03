@@ -69,12 +69,51 @@ export default async function handler(req, res, currentKvClient) {
       const notificationStrings = await currentKv.lrange(`user:${userId}:notifications`, 0, 49) || [];
       const indexingNotifications = notificationStrings.map(n => JSON.parse(n));
 
+      // Retrieve captured leads for the user
+      const leadsResult = await query(
+          'SELECT id, name, email, phone, message, url, created_at FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
+          [userId]
+      );
+      const leads = leadsResult.rows;
+
+      // Check if user has paid
+      let isPaidUser = false;
+      const agencyResult = await query('SELECT is_agency, subscription_status FROM users WHERE id = $1', [userId]);
+      if (agencyResult.rows.length > 0) {
+          const u = agencyResult.rows[0];
+          if (u.is_agency || u.subscription_status === 'active') {
+              isPaidUser = true;
+          }
+      }
+      if (!isPaidUser) {
+          isPaidUser = creditTransactions.some(t => t.amount > 0);
+      }
+
+      // Securely format and obscure leads if unpaid
+      const formattedLeads = leads.map(lead => {
+          if (isPaidUser) {
+              return {
+                  ...lead,
+                  isLocked: false
+              };
+          } else {
+              return {
+                  ...lead,
+                  email: lead.email ? lead.email.replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => a + '*'.repeat(Math.min(b.length, 5)) + c) : '',
+                  phone: lead.phone ? lead.phone.slice(0, -4).replace(/\d/g, '*') + lead.phone.slice(-4) : '',
+                  isLocked: true
+              };
+          }
+      });
+
       return res.status(200).json({
         email: user.email,
         credits: user.credits,
         generatedPages,
         creditTransactions,
         indexingNotifications,
+        leads: formattedLeads,
+        isPaidUser
       });
 
     } catch (error) {

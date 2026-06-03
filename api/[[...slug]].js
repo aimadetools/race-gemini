@@ -140,6 +140,11 @@ export default async (req, res, currentKvClient) => {
         const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;">` : page.businessName;
         const aiContentValue = '<p>Contact us today for a free estimate!</p>';
 
+        const resolvedPhone = page.telephone || '';
+        const resolvedPriceRange = page.priceRange || 'Standard';
+        const resolvedOpeningHours = page.openingHours || 'Mo-Fr 09:00-17:00';
+        const phoneCtaDisplay = page.telephone ? 'inline-block' : 'none';
+
         let pageContent = template
             .replace(/{{businessName}}/g, page.businessName)
             .replace(/{{service}}/g, page.service)
@@ -153,6 +158,10 @@ export default async (req, res, currentKvClient) => {
             .replace(/{{service_slug}}/g, resolvedServiceSlug)
             .replace(/{{town_slug}}/g, resolvedTownSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+            .replace(/{{telephone}}/g, resolvedPhone)
+            .replace(/{{priceRange}}/g, resolvedPriceRange)
+            .replace(/{{openingHours}}/g, resolvedOpeningHours)
+            .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
             .replace(/{{pageId}}/g, pageIdToFind);
 
         res.setHeader('Content-Type', 'text/html');

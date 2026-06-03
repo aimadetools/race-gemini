@@ -3,9 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>
-   {{service}} in {{town}} - {{businessName}}
-  </title>
+<title>{{service}} in {{town}} - {{businessName}}</title>
 <meta content="{{metaDescription}}" name="description"/>
 <meta content="{{service}} in {{town}} - {{businessName}}" property="og:title"/>
 <meta content="{{ogDescription}}" property="og:description"/>
@@ -14,66 +12,553 @@
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="{{service}} in {{town}} - {{businessName}}" name="twitter:title"/>
 <meta content="{{twitterDescription}}" name="twitter:description"/>
-<link href="/style.min.css" rel="stylesheet"/>
-<style>
-   :root {
---primary-color: {{primaryColor}};
-}
-  </style>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
 <link href="/images/favicon.png" rel="icon" type="image/png"/>
 <link href="https://www.localseogen.com/{{service_slug}}-in-{{town_slug}}.html" rel="canonical"/>
 {{localBusinessSchema}}
+<style>
+  :root {
+    --primary-color: {{primaryColor}};
+    --text-color: #1f2937;
+    --text-muted: #4b5563;
+    --bg-color: #ffffff;
+    --bg-alt: #f9fafb;
+    --border-color: #e5e7eb;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border-color);
+    background-color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .logo-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .phone-cta {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+    color: #ffffff !important;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: {{phoneCtaDisplay}};
+  }
+
+  .phone-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+  }
+
+  .hero {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%), 
+                url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .hero-content {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #111827;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 5rem 0;
+  }
+
+  .feature-card {
+    background: var(--bg-alt);
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .feature-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.25rem;
+  }
+
+  .feature-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.35rem;
+    color: #111827;
+  }
+
+  .feature-card p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .main-content {
+    padding: 5rem 0;
+  }
+
+  .main-content h2 {
+    font-size: 2.25rem;
+    color: #111827;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .main-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+  }
+
+  .main-content p {
+    font-size: 1.1rem;
+    color: #374151;
+    margin-bottom: 1.5rem;
+  }
+
+  .details-section {
+    background-color: var(--bg-alt);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 6rem 0;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.25rem;
+    }
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .info-card {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+  }
+
+  .info-card h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #111827;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 0.75rem;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .info-row span:first-child {
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .info-row span:last-child {
+    color: var(--text-color);
+  }
+
+  .info-row a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .lead-form-container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+  }
+
+  .lead-form-container h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #111827;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  textarea.form-input {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: opacity 0.2s;
+  }
+
+  .btn-submit:hover {
+    opacity: 0.9;
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .success-message {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: none;
+    font-size: 0.95rem;
+  }
+
+  .error-message {
+    background-color: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: none;
+    font-size: 0.95rem;
+  }
+
+  footer {
+    background-color: #111827;
+    color: #9ca3af;
+    padding: 3rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid #1f2937;
+  }
+
+  footer p {
+    margin: 0;
+  }
+</style>
 </head>
 <body>
-<div id="mobile-nav-overlay">
-</div>
 <header>
-<nav>
-<a class="logo" href="/">
-    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
-</a>
-</nav>
+  <div class="container">
+    <nav>
+      <a class="logo-text" href="#">
+        <i class="fas fa-tools" style="color: var(--primary-color);"></i>
+        <span>{{businessName}}</span>
+      </a>
+      <a href="tel:{{telephone}}" class="phone-cta">📞 Call Now</a>
+    </nav>
+  </div>
 </header>
 <main>
-<section class="hero">
-<h1>
-     {{service}} in {{town}}
-    </h1>
-<p>
-     Your trusted provider for {{service}} in {{town}}.
-    </p>
-</section>
-<section class="content">
-<h2>
-     Why Choose {{businessName}} for {{service}} in {{town}}?
-    </h2>
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>{{service}} in {{town}}</h1>
+      <p>Need professional {{service}}? {{businessName}} is your premier local provider delivering top-quality results in {{town}} and surrounding areas.</p>
+      <a href="#quote-form-section" class="btn-primary">Request a Free Quote</a>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-check-circle"></i>
+        <h3>Guaranteed Quality</h3>
+        <p>We pride ourselves on providing the highest standard of work and customer satisfaction for every project.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-clock"></i>
+        <h3>Timely Service</h3>
+        <p>We value your time. Our local experts arrive on schedule and complete the job efficiently.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Fully Licensed &amp; Insured</h3>
+        <p>Have peace of mind knowing you're working with trained, certified, and fully insured local specialists.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container main-content">
+    <h2>Reliable {{service}} Services in {{town}}</h2>
     {{ai_content}}
-   </section>
+  </section>
+
+  <section class="details-section" id="quote-form-section">
+    <div class="container details-grid">
+      <div class="info-card">
+        <h3>Service Area &amp; Info</h3>
+        <div class="info-row">
+          <span>Offers:</span>
+          <span>{{service}}</span>
+        </div>
+        <div class="info-row">
+          <span>Area Served:</span>
+          <span>{{town}}</span>
+        </div>
+        <div class="info-row" style="display: {{phoneCtaDisplay}};">
+          <span>Phone:</span>
+          <span><a href="tel:{{telephone}}">{{telephone}}</a></span>
+        </div>
+        <div class="info-row">
+          <span>Price Range:</span>
+          <span>{{priceRange}}</span>
+        </div>
+        <div class="info-row">
+          <span>Opening Hours:</span>
+          <span>{{openingHours}}</span>
+        </div>
+      </div>
+      
+      <div class="lead-form-container">
+        <h3>Request a Free Quote</h3>
+        <div id="form-success-message" class="success-message"></div>
+        <div id="form-error-message" class="error-message"></div>
+        
+        <form id="lead-form">
+          <div class="form-group">
+            <label for="lead-name">Name</label>
+            <input type="text" id="lead-name" class="form-input" placeholder="Your full name" required/>
+          </div>
+          <div class="form-group">
+            <label for="lead-email">Email</label>
+            <input type="email" id="lead-email" class="form-input" placeholder="Your email address" required/>
+          </div>
+          <div class="form-group">
+            <label for="lead-phone">Phone Number</label>
+            <input type="tel" id="lead-phone" class="form-input" placeholder="Your phone number"/>
+          </div>
+          <div class="form-group">
+            <label for="lead-message">Details / Message</label>
+            <textarea id="lead-message" class="form-input" placeholder="Describe the services you need..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </section>
 </main>
 <footer>
-<div class="container">
-<p>
-     © 2026 {{businessName}}. All rights reserved.
-    </p>
-</div>
+  <div class="container">
+    <p>© 2026 {{businessName}}. All rights reserved. Powered by LocalLeads.</p>
+  </div>
 </footer>
 <meta content="{{pageId}}" name="page-id"/>
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-const pageId = document.querySelector('meta[name="page-id"]').content;
-if (pageId) {
-fetch('/api/track', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify({ pageId: pageId }),
-}).catch(error => console.error('Error sending tracking data:', error));
-}
-});
-  </script>
-<script src="/js/app.min.js">
+  document.addEventListener('DOMContentLoaded', function() {
+    const pageId = document.querySelector('meta[name="page-id"]').content;
+    
+    // 1. Track Page View
+    if (pageId) {
+      fetch('/api/track', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pageId: pageId }),
+      }).catch(error => console.error('Error sending tracking data:', error));
+    }
+
+    // 2. Handle Contact Form Submission
+    const leadForm = document.getElementById('lead-form');
+    if (leadForm) {
+      const submitBtn = leadForm.querySelector('button[type="submit"]');
+      const formSuccessMessage = document.getElementById('form-success-message');
+      const formErrorMessage = document.getElementById('form-error-message');
+
+      leadForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        formSuccessMessage.style.display = 'none';
+        formErrorMessage.style.display = 'none';
+
+        const name = document.getElementById('lead-name').value.trim();
+        const email = document.getElementById('lead-email').value.trim();
+        const phone = document.getElementById('lead-phone').value.trim();
+        const message = document.getElementById('lead-message').value.trim();
+
+        try {
+          const res = await fetch('/api/submit-lead', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              pageId: pageId,
+              name: name,
+              email: email,
+              phone: phone,
+              message: message,
+              url: window.location.origin + window.location.pathname
+            })
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            formSuccessMessage.textContent = 'Thank you! Your quote request has been received. We will contact you shortly.';
+            formSuccessMessage.style.display = 'block';
+            leadForm.reset();
+          } else {
+            formErrorMessage.textContent = data.message || 'Failed to submit quote request. Please try again.';
+            formErrorMessage.style.display = 'block';
+          }
+        } catch (err) {
+          console.error('Lead submission error:', err);
+          formErrorMessage.textContent = 'A network error occurred. Please try again later.';
+          formErrorMessage.style.display = 'block';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Request';
+        }
+      });
+    }
+  });
 </script>
 </body>
 </html>

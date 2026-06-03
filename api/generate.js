@@ -222,6 +222,11 @@ export default async (req, res) => {
                     const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
                     const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours);
 
+                    const resolvedPhone = escapeHtml(telephone || '');
+                    const resolvedPriceRange = escapeHtml(priceRange || 'Standard');
+                    const resolvedOpeningHours = escapeHtml(openingHours || 'Mo-Fr 09:00-17:00');
+                    const phoneCtaDisplay = telephone ? 'inline-block' : 'none';
+
                     let pageContent = template
                         .replace(/{{businessName}}/g, escapedBusinessName)
                         .replace(/{{service}}/g, escapedService)
@@ -235,6 +240,10 @@ export default async (req, res) => {
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+                        .replace(/{{telephone}}/g, resolvedPhone)
+                        .replace(/{{priceRange}}/g, resolvedPriceRange)
+                        .replace(/{{openingHours}}/g, resolvedOpeningHours)
+                        .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
                         .replace(/{{pageId}}/g, pageId);
 
 
@@ -249,7 +258,10 @@ export default async (req, res) => {
                         createdAt: new Date().toISOString(),
                         enableAICopy: enableAICopy || false,
                         aiStyle: aiStyle || null,
-                        userId: user.id
+                        userId: user.id,
+                        telephone: telephone || null,
+                        priceRange: priceRange || null,
+                        openingHours: openingHours || null
                     }));
                     await kv.sadd(`user:${userId}:pages`, pageId);
                 }
