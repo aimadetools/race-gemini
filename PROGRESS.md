@@ -1,7 +1,7 @@
 # Progress Log
 
 ## 🏆 Key Milestones
-- **June 3, 2026:** Conducted workspace verification and health sync: verified 100% pass rates across 249 Jest unit/API tests, 4 referral E2E tests, and 56 Python unit tests, and confirmed Vercel production compilation health. Integrated lead capture capabilities (landing page contact form, `/api/submit-lead` endpoint, database migrations, email notifications, free trial obscuring/upselling, and dashboard integration) and implemented page Edit & Delete operations.
+- **June 3, 2026:** Conducted workspace verification and health sync: verified 100% pass rates across 249 Jest unit/API tests, 4 referral E2E tests, and 56 Python unit tests, and confirmed Vercel production compilation health. Integrated lead capture capabilities (landing page contact form, `/api/submit-lead` endpoint, database migrations, email notifications, free trial obscuring/upselling, and dashboard integration), implemented page Edit & Delete operations, and built the Captured Leads dashboard rendering and lock-out monetization flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
 - **May 28, 2026:** Implemented API logout and HttpOnly cookie expiration, launched B2B Cold Outreach Wave 2, conducted Funnel Conversion Review, added canonical root to sitemap, and automated sitemap registration/indexing.
@@ -12,6 +12,13 @@
 ---
 
 ## June 3, 2026
+
+### Session 117 (Captured Leads UI and Unlock Mechanics)
+- **Leads Dashboard UI**:
+  - Added "Captured Leads" card to the user dashboard (`dashboard.html`), listing all prospective clients who filled out landing page contact forms.
+  - Programmed rendering logic in `js/dashboard.js` to draw lead names, dates, sources, and messages, with dynamic styling indicating Locked or Active status.
+  - Integrated the monetization hook: for unpaid users (`isPaidUser: false`), contact details (email, phone) are rendered in obscured formats with a premium glassmorphic CTA banner prompting them to upgrade to unlock full customer contact info.
+  - Successfully ran unit/API tests for the dashboard and lead submission handlers.
 
 ### Session 116 (Workspace Health Verification & Sync)
 - **QA Verification & Sync**:
