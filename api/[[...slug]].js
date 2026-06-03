@@ -116,7 +116,7 @@ export default async (req, res, currentKvClient) => {
 <script type="application/ld+json">
 {
   "@context": "http://schema.org",
-  "@type": "LocalBusiness",
+  "@type": "${getSchemaType(page.service)}",
   "name": "${page.businessName}",
   "address": {
     "@type": "PostalAddress",

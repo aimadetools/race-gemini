@@ -28,6 +28,7 @@ import { submitSitemapToSearchEngines, updateStaticSitemapAndPing } from '../../
 import { promises as fs } from 'fs';
 import { kv } from '@vercel/kv';
 import path from 'path';
+import { addMockSeoPage, clearMockSeoPages } from '../../db/mockDb.js';
 
 describe('Indexing Lib', () => {
   let mockFetch;
@@ -38,6 +39,7 @@ describe('Indexing Lib', () => {
     global.fetch = mockFetch;
     process.env.DOMAIN_URL = 'https://www.testdomain.com';
     kv.smembers.mockResolvedValue([]);
+    clearMockSeoPages();
   });
 
   afterEach(() => {
@@ -84,16 +86,8 @@ describe('Indexing Lib', () => {
         }
       };
 
-      kv.smembers.mockResolvedValue(['page1', 'page2']);
-      kv.get.mockImplementation(async (key) => {
-        if (key === 'page1') {
-          return JSON.stringify({ service: 'Plumbing Repair', town: 'Houston', createdAt: '2026-05-29' });
-        }
-        if (key === 'page2') {
-          return JSON.stringify({ service: 'Drain Cleaning', town: 'Houston', createdAt: '2026-05-29' });
-        }
-        return null;
-      });
+      addMockSeoPage({ user_id: userId, service: 'Plumbing Repair', town: 'Houston', createdAt: '2026-05-29' });
+      addMockSeoPage({ user_id: userId, service: 'Drain Cleaning', town: 'Houston', createdAt: '2026-05-29' });
 
       await submitSitemapToSearchEngines(userId, req);
 
@@ -120,8 +114,7 @@ describe('Indexing Lib', () => {
         }
       };
 
-      kv.smembers.mockResolvedValue(['page1']);
-      kv.get.mockResolvedValue(JSON.stringify({ service: 'Plumbing Repair', town: 'Houston' }));
+      addMockSeoPage({ user_id: userId, service: 'Plumbing Repair', town: 'Houston' });
 
       await submitSitemapToSearchEngines(userId, req);
 
