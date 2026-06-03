@@ -8,6 +8,7 @@ import path from 'path';
 import slugify from 'slugify';
 import { logError } from '../lib/logger.js'; // Import centralized logger
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
+import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -54,6 +55,7 @@ export default async (req, res) => {
         const servicesArray = services.split(',').map(s => s.trim());
         const townsArray = towns.split(',').map(t => t.trim());
         const pagesToGenerate = servicesArray.length * townsArray.length;
+        const geminiModel = getGeminiModel();
 
         try {
             // Retrieve user from PostgreSQL
@@ -122,7 +124,6 @@ export default async (req, res) => {
                     const fileName = `${serviceSlug}-in-${townSlug}.html`;
 
                     let aiContent = '';
-                    const geminiModel = getGeminiModel();
                     if (enableAICopy && geminiModel) {
                         try {
                             const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
@@ -132,12 +133,10 @@ export default async (req, res) => {
                         } catch (aiError) {
                             console.error('Error generating AI content:', aiError);
                             await logError(aiError, 'Generate API - AI Content Generation Error', 'generate_error.log'); // Add centralized logging
-                            aiContent = escapeHtml('<p>AI copy generation failed. Please try again later or contact support.</p>'); // Escape fallback
+                            aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
                         }
-                    } else if (enableAICopy && !geminiModel) {
-                        aiContent = escapeHtml('<p>AI copy is unavailable due to missing API key. Contact support.</p>'); // Escape fallback
                     } else {
-                        aiContent = escapeHtml('<p>Contact us today for a free estimate!</p>'); // Escape fallback
+                        aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
                     }
 
                     const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;">` : escapedBusinessName; // Escape agency data

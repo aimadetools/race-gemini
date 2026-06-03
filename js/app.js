@@ -22,3 +22,43 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const demoForm = document.getElementById("interactive-demo-form");
+    if (demoForm) {
+        demoForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const businessName = document.getElementById("demo-business-name").value.trim();
+            const service = document.getElementById("demo-service").value.trim();
+            const town = document.getElementById("demo-town").value.trim();
+            const errorMsg = document.getElementById("demo-form-error");
+
+            if (!businessName || !service || !town) {
+                if (errorMsg) {
+                    errorMsg.textContent = "Please fill in all fields.";
+                    errorMsg.style.display = "block";
+                }
+                return;
+            }
+
+            // Simple rate limit of 3 previews per user session via local storage
+            let previewCount = parseInt(localStorage.getItem("localleads_preview_count") || "0", 10);
+            if (previewCount >= 3) {
+                if (errorMsg) {
+                    errorMsg.innerHTML = 'You have reached the free preview limit. Please <a href="/auth.html" style="color: #60a5fa; text-decoration: underline;">sign up for a free account</a> to generate more pages.';
+                    errorMsg.style.display = "block";
+                }
+                return;
+            }
+
+            localStorage.setItem("localleads_preview_count", (previewCount + 1).toString());
+            if (errorMsg) {
+                errorMsg.style.display = "none";
+            }
+
+            // Open the preview in a new window/tab
+            const previewUrl = `/api/preview?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}`;
+            window.open(previewUrl, "_blank");
+        });
+    }
+});

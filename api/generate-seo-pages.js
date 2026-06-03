@@ -8,6 +8,7 @@ import { query } from '../db/index.js';
 import { logError, logInfo } from '../lib/logger.js';
 import { updateStaticSitemapAndPing } from '../lib/indexing.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
+import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -201,19 +202,13 @@ export default async (req, res) => {
                             }
                         } catch (aiContentError) {
                             await logError(aiContentError, `Error generating AI content for ${service} in ${town}.`);
-                            aiContent = '<p>AI copy generation failed. Please try again later or contact support.</p>';
+                            aiContent = getFallbackMarketingCopy(businessName, service, town);
                             metaDescription = `Find the best ${service} services in ${town} with ${businessName}. Quality service guaranteed.`;
                             ogDescription = `Discover ${businessName}'s top-rated ${service} services in ${town}. Click to learn more and get a free quote!`;
                             twitterDescription = `Need ${service} in ${town}? ${businessName} offers reliable service. Get a free quote today! #{{service_slug}} #{{town_slug}}`;
                         }
-                    } // Corrected: closing brace for the if block
-                    else if (enableAICopy && !geminiModel) {
-                        aiContent = '<p>AI copy is unavailable due to missing API key. Contact support.</p>';
-                        metaDescription = `Discover reliable ${service} services in ${town} from ${businessName}. Book your consultation today!`;
-                        ogDescription = `Discover ${businessName}'s reliable ${service} services in ${town}. Learn how we can help you today!`;
-                        twitterDescription = `Looking for ${service} in ${town}? Check out ${businessName} for quality and trusted service!`;
                     } else {
-                        aiContent = '<p>Contact us today for a free estimate!</p>';
+                        aiContent = getFallbackMarketingCopy(businessName, service, town);
                         metaDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
                         ogDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
                         twitterDescription = `Get expert ${service} in ${town} from ${businessName}. We provide top-quality ${service} with reliable service. Contact us today for a free quote!`;
