@@ -9,6 +9,7 @@ import slugify from 'slugify';
 import { logError } from '../lib/logger.js'; // Import centralized logger
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
+import { parseOpeningHours } from '../lib/time-helpers.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -20,9 +21,59 @@ function getGeminiModel() {
     return genAI.getGenerativeModel({ model: 'gemini-pro' });
 }
 
+async function generateAIContent(geminiModel, prompt, defaultValue) {
+    if (!geminiModel) return defaultValue;
+    try {
+        const result = await geminiModel.generateContent(prompt);
+        const response = await result.response;
+        return response.text();
+    } catch (aiError) {
+        await logError(aiError, `Error generating AI content for prompt: "${prompt.substring(0, 50)}..."`);
+        return defaultValue;
+    }
+}
+
+function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
+    const schema = {
+        "@context": "http://schema.org",
+        "@type": "LocalBusiness",
+        "name": businessName,
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": town,
+        },
+        "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ' ' + town)}`,
+        "url": `https://www.localseogen.com/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
+        "telephone": telephone || "",
+        "priceRange": priceRange || "",
+        "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "17:00"
+            }
+        ],
+        "servesCuisine": service,
+        "description": `Expert ${service} services in ${town} by ${businessName}.`,
+        "image": "https://www.localseogen.com/images/logo.svg",
+        "areaServed": {
+            "@type": "State",
+            "name": town
+        }
+    };
+    return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
+}
+
 export default async (req, res) => {
     if (req.method === 'POST') {
-        const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle } = req.body;
+        const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle, telephone, priceRange, openingHours, primaryColor } = req.body;
 
         if (!businessName || !services || !towns || !zipCode) {
             await logError(new Error('Missing required fields'), 'Generate API - Missing Fields', 'generate_error.log');
@@ -124,23 +175,52 @@ export default async (req, res) => {
                     const fileName = `${serviceSlug}-in-${townSlug}.html`;
 
                     let aiContent = '';
+                    let metaDescription = '';
+                    let ogDescription = '';
+                    let twitterDescription = '';
+
                     if (enableAICopy && geminiModel) {
                         try {
                             const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
-                            const result = await geminiModel.generateContent(prompt);
-                            const response = await result.response;
-                            aiContent = escapeHtml(response.text()); // Escape AI generated content
+                            aiContent = await generateAIContent(geminiModel, prompt, getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown));
+
+                            const metaPrompt = `Write a concise and compelling meta description (around 150-160 characters) for a business called "${escapedBusinessName}" that offers "${escapedService}" in "${escapedTown}". Highlight key benefits and encourage clicks.`;
+                            metaDescription = await generateAIContent(geminiModel, metaPrompt, `Find the best ${escapedService} services in ${escapedTown} with ${escapedBusinessName}. Quality service guaranteed.`);
+                            if (metaDescription.length > 160) {
+                                metaDescription = metaDescription.substring(0, 157) + '...';
+                            } else if (metaDescription.length < 50) {
+                                metaDescription = `Get expert ${escapedService} services in ${escapedTown} from ${escapedBusinessName}. Contact us today for a free quote!`;
+                            }
+
+                            const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${escapedBusinessName}'s ${escapedService} services in ${escapedTown}". Focus on attracting clicks on social media.`;
+                            ogDescription = await generateAIContent(geminiModel, ogPrompt, `Discover ${escapedBusinessName}'s top-rated ${escapedService} services in ${escapedTown}. Click to learn more and get a free quote!`);
+                            if (ogDescription.length > 200) {
+                                ogDescription = ogDescription.substring(0, 197) + '...';
+                            }
+
+                            const twitterPrompt = `Write a compelling Twitter card description (up to 200 characters) for a tweet promoting "${escapedBusinessName}'s ${escapedService} services in ${escapedTown}". Encourage retweets and engagement.`;
+                            twitterDescription = await generateAIContent(geminiModel, twitterPrompt, `Need ${escapedService} in ${escapedTown}? ${escapedBusinessName} offers reliable service. Get a free quote today! #${serviceSlug} #${townSlug}`);
+                            if (twitterDescription.length > 200) {
+                                twitterDescription = twitterDescription.substring(0, 197) + '...';
+                            }
                         } catch (aiError) {
                             console.error('Error generating AI content:', aiError);
-                            await logError(aiError, 'Generate API - AI Content Generation Error', 'generate_error.log'); // Add centralized logging
+                            await logError(aiError, 'Generate API - AI Content Generation Error', 'generate_error.log');
                             aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
+                            metaDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+                            ogDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+                            twitterDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
                         }
                     } else {
                         aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
+                        metaDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+                        ogDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+                        twitterDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
                     }
 
                     const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;">` : escapedBusinessName; // Escape agency data
-                    const primaryColorValue = (agency && agency.primaryColor) ? escapeHtml(agency.primaryColor) : '#007bff'; // Escape color if it can be user controlled
+                    const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
+                    const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours);
 
                     let pageContent = template
                         .replace(/{{businessName}}/g, escapedBusinessName)
@@ -149,11 +229,13 @@ export default async (req, res) => {
                         .replace(/{{agencyLogo}}/g, agencyLogoHtml)
                         .replace(/{{primaryColor}}/g, primaryColorValue)
                         .replace(/{{ai_content}}/g, aiContent)
+                        .replace(/{{metaDescription}}/g, metaDescription)
+                        .replace(/{{ogDescription}}/g, ogDescription)
+                        .replace(/{{twitterDescription}}/g, twitterDescription)
                         .replace(/{{service_slug}}/g, serviceSlug)
-                        .replace(/{{town_slug}}/g, townSlug);
-                    // pageId is used for tracking and should not be injected directly into the HTML
-                    // If it needs to be in the HTML, add a specific placeholder for it in the template
-                    // For now, removing direct replacement here to avoid unintended exposure.
+                        .replace(/{{town_slug}}/g, townSlug)
+                        .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+                        .replace(/{{pageId}}/g, pageId);
 
 
                     archive.append(pageContent, { name: fileName });
