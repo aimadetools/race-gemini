@@ -1,7 +1,7 @@
 # Progress Log
 
 ## 🏆 Key Milestones
-- **June 3, 2026:** Executed B2B Cold Outreach Wave 4 (20 high-value prospects), resolved indexing tests, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, and built an interactive dual-axis visual analytics chart for page views and lead conversions on the user dashboard. Also built Captured Leads dashboard and monetization lock-out flow.
+- **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
 - **May 28, 2026:** Implemented API logout and HttpOnly cookie expiration, launched B2B Cold Outreach Wave 2, conducted Funnel Conversion Review, added canonical root to sitemap, and automated sitemap registration/indexing.
@@ -12,6 +12,16 @@
 ---
 
 ## June 3, 2026
+
+### Session 119 (Custom White-Label Branding & Verification)
+- **White-Label configurations & Logo Upload**:
+  - Implemented a file upload option (`logo-file` input element) in the custom branding form of the agency dashboard (`agency-dashboard.html`).
+  - Added live preview functionality using the FileReader API to load files dynamically as Base64 Data URLs, automatically syncing with the preview and clearing the standard Logo URL field when files are uploaded.
+  - Hardened the form submission handler to convert the uploaded file to a Base64 string and transmit it to the `/api/update-agency-branding` serverless endpoint.
+- **Testing & DB Mocking**:
+  - Created a brand new Jest unit/API test suite `tests/api/update-agency-branding.test.js` to assert functionality of the branding endpoint under multiple conditions (HTTP method, authentication token, agency account type, database non-existence, and success state updates).
+  - Expanded `db/mockDb.js` to simulate SQL updates of `logo_url` and `primary_color` in the `users` table for tests.
+  - Successfully verified all 254 Jest tests, 56 Python tests, and asset builds.
 
 ### Session 118 (Outreach Execution, GBP Schema Matching & Analytics Chart)
 - **Outreach & Database Test Fixes**:
