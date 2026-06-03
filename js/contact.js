@@ -8,6 +8,16 @@ document.addEventListener("DOMContentLoaded",()=>{
     const contactForm=document.getElementById("contact-form");
     const messageDiv=document.getElementById("message"); // Using 'message' ID for consistency
 
+    // Check for query parameters to pre-fill form
+    const urlParams = new URLSearchParams(window.location.search);
+    const reason = urlParams.get('reason');
+    if (reason === 'demo') {
+        const messageTextarea = document.getElementById("message");
+        if (messageTextarea) {
+            messageTextarea.value = "Hi LocalLeads Team,\n\nI'd like to book a demo of LocalLeads to see how it can help generate local SEO pages for my business.";
+        }
+    }
+
     if(contactForm){
         contactForm.addEventListener("submit",async function(event){
             event.preventDefault();

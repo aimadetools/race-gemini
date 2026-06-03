@@ -10,6 +10,11 @@
       "source": "/agency-signup.html",
       "destination": "/agency-partnerships.html",
       "permanent": true
+    },
+    {
+      "source": "/book-a-demo",
+      "destination": "/contact.html?reason=demo",
+      "permanent": false
     }
   ],
   "rewrites": [

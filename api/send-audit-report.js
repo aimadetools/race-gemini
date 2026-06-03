@@ -109,7 +109,7 @@ function buildAuditEmailHtml(auditedUrl, auditResults, branding) {
 
       <p style="text-align: center; font-weight: bold; margin-top: 25px; margin-bottom: 5px;">Ready to claim these missing customers? Choose your path:</p>
       <div style="text-align: center; margin-top: 15px; margin-bottom: 25px;">
-        <a href="https://www.localseogen.com/generate.html" class="btn" style="background-color: ${primaryColor}; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; margin: 5px;">Generate 50 Pages Free</a>
+        <a href="https://www.localseogen.com/generate.html" class="btn" style="background-color: ${primaryColor}; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; margin: 5px;">Generate 5 Pages Free</a>
         <a href="https://www.localseogen.com/pricing.html" class="btn" style="background-color: #10b981; color: #ffffff !important; display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; margin: 5px;">Get Pro Pack (200 pages) for $99</a>
       </div>
     </div>

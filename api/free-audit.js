@@ -1,6 +1,6 @@
 const fetch = global.fetch;
 import { logError } from '../lib/logger.js';
-import { parseAddress } from '../../lib/html-parser.js';
+import { parseAddress } from '../lib/html-parser.js';
 import { exec } from 'child_process';
 
 export default async (req, res) => {

@@ -476,9 +476,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
                             <div style="flex: 1; min-width: 250px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
                                 <h5 style="color: #e5e7eb; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">Option A: Start Free</h5>
-                                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 50 free signup credits to build your first local SEO pages.</p>
+                                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 5 free signup credits to build your first local SEO pages.</p>
                                 <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); transition: transform 0.2s, box-shadow 0.2s;">
-                                    Generate 50 Pages Free
+                                    Generate 5 Pages Free
                                 </a>
                             </div>
                             <div style="flex: 1; min-width: 250px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
