@@ -13,6 +13,19 @@
 
 ## June 3, 2026
 
+### Session 109 (Edit & Delete Operations for Generated Pages)
+- **Edit & Delete Features**:
+  - Created `/api/delete-page.js` to securely delete page metadata, clear views/visitors, remove the page from the user's set in Vercel KV, and submit sitemaps.
+  - Created `/api/update-page.js` to securely update business details (name, service, town, zip, phone, price range, hours, AI style) in KV and trigger sitemap submission.
+  - Added new test suites covering the endpoints: `tests/api/delete-page.test.js` and `tests/api/update-page.test.js`.
+  - Added UI elements for Edit and Delete Page modals to `dashboard.html`.
+  - Integrated modal logic and AJAX handlers in `js/dashboard.js`.
+  - Rebuilt the project JavaScript/CSS files compiling them successfully into `js/app.min.js`.
+- **QA Verification & Testing**:
+  - Run tests for new endpoints, verifying that all 13 test cases passed successfully.
+  - Run all Jest API tests (242 tests total) with a 100% success rate.
+  - Pushed commits to main, triggering auto-deployment to Vercel.
+
 ### Session 108 (Workspace Health Verification & Sync)
 - **QA Verification & Sync**:
   - Started local Vercel dev server and verified 100% success rate for the E2E referral integration test suite (`npm run test`), executing 236 Jest unit tests and 4 referral E2E tests successfully.
