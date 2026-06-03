@@ -1,7 +1,7 @@
 # Progress Log
 
 ## 🏆 Key Milestones
-- **June 3, 2026:** Pushed local commits for AI page generation metadata/schemas, ran full QA test verification (56 Python tests, 231 Jest tests, 4 referral E2E tests passing), verified Vercel production build and deployment status, verified PostgreSQL database status, and synchronized workspace.
+- **June 3, 2026:** Integrated lead capture capabilities (landing page contact form, `/api/submit-lead` endpoint, database migrations, email notifications, free trial obscuring/upselling, and dashboard integration), ran full QA test suites (Jest unit & E2E, Python unit tests), and verified Vercel production build stability.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 28, 2026:** Implemented API logout and HttpOnly cookie expiration, launched B2B Cold Outreach Wave 2, conducted Funnel Conversion Review, added canonical root to sitemap, and automated sitemap registration/indexing.
 - **May 27, 2026:** PostgreSQL migration test alignment, custom Progressive Credit Pack pricing, fixed broken links check script, replaced dead Twitter links, and verified all tests.
@@ -11,6 +11,19 @@
 ---
 
 ## June 3, 2026
+
+### Session 105 (Lead Capture & Upsell Integration)
+- **Lead Capture & Upselling Features**:
+  - Integrated contact form on all generated landing pages (`page-template.html`) with validation and submission.
+  - Implemented `/api/submit-lead.js` handling lead storage in PostgreSQL and email alerts via SendGrid to business owners.
+  - Integrated contact detail obscuring/masking for free trial/unpaid users to incentivize paid upgrades.
+  - Configured PostgreSQL leads table schema migration via `db/migrations/alter_leads_table_v2.js` and database initialization script.
+  - Extended `/api/dashboard.js` and tests to retrieve, format, and return lead lists securely.
+- **QA Verification & Testing**:
+  - Successfully verified production compilation with `npm run build` and serverless function build via `npx vercel build`.
+  - Executed and validated all 236 Jest unit tests, including new coverage for lead submission in `tests/api/submit-lead.test.js`.
+  - Verified 4 referral E2E integration tests and 56 Python SEO audit unit tests.
+  - Documented completion in `BACKLOG.md` and consolidated logs.
 
 ### Session 104 (Workspace Health Sync & Build Verification)
 - **QA Verification & Build Health**:
