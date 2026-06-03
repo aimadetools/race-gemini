@@ -234,7 +234,8 @@ describe('dashboard API', () => {
       creditTransactions: [],
       indexingNotifications: [],
       leads: [],
-      isPaidUser: false
+      isPaidUser: false,
+      dailyStats: expect.any(Array)
     });
   });
 
@@ -277,7 +278,8 @@ describe('dashboard API', () => {
       creditTransactions: [],
       indexingNotifications: [],
       leads: [],
-      isPaidUser: false
+      isPaidUser: false,
+      dailyStats: expect.any(Array)
     });
   });
 });

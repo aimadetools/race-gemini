@@ -187,6 +187,115 @@ document.addEventListener('DOMContentLoaded', () => {
                         indexingNotificationsTableBody.innerHTML = '<tr><td colspan="3">No indexing notifications found.</td></tr>';
                     }
                 }
+
+                // Render visual chart of page views and lead conversions
+                const chartCanvas = document.getElementById('analyticsChart');
+                if (chartCanvas && data.dailyStats && data.dailyStats.length > 0) {
+                    const labels = data.dailyStats.map(s => {
+                        const parts = s.date.split('-');
+                        if (parts.length === 3) {
+                            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                            return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        }
+                        return s.date;
+                    });
+                    const viewsData = data.dailyStats.map(s => s.views);
+                    const leadsData = data.dailyStats.map(s => s.leads);
+
+                    if (window.analyticsChartInstance) {
+                        window.analyticsChartInstance.destroy();
+                    }
+
+                    const ctx = chartCanvas.getContext('2d');
+                    window.analyticsChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Page Views',
+                                    data: viewsData,
+                                    borderColor: '#3b82f6',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.3,
+                                    yAxisID: 'y'
+                                },
+                                {
+                                    label: 'Leads Captured',
+                                    data: leadsData,
+                                    borderColor: '#10b981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.3,
+                                    yAxisID: 'y1'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#f3f4f6',
+                                        font: {
+                                            family: "'Inter', sans-serif",
+                                            size: 12
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.05)'
+                                    },
+                                    ticks: {
+                                        color: '#9ca3af',
+                                        maxTicksLimit: 10
+                                    }
+                                },
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.05)'
+                                    },
+                                    ticks: {
+                                        color: '#9ca3af',
+                                        stepSize: 1
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Page Views',
+                                        color: '#3b82f6'
+                                    }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    grid: {
+                                        drawOnChartArea: false
+                                    },
+                                    ticks: {
+                                        color: '#9ca3af',
+                                        stepSize: 1
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Leads Captured',
+                                        color: '#10b981'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {

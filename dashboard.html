@@ -96,6 +96,13 @@
                 <p>You can use your credits to generate SEO-optimized pages for your business.</p>
                 <a href="generate.html" class="btn">Generate Pages</a>
             </div>
+            <div class="card" id="analytics-overview-card">
+                <h2>Analytics Overview</h2>
+                <p style="margin-bottom: 1.5rem; color: #9ca3af; font-size: 0.95rem;">Daily page views and lead conversions over the last 30 days.</p>
+                <div style="position: relative; height: 320px; width: 100%;">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
             <div class="card">
                 <h2>Your Generated Pages</h2>
                 <div id="generated-pages">
@@ -320,6 +327,7 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/app.min.js"></script>
     <button id="scrollToTopBtn" title="Go to top">
       <i class="fas fa-arrow-up"></i>

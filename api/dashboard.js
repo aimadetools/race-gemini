@@ -117,6 +117,57 @@ export default async function handler(req, res, currentKvClient) {
           }
       });
 
+      let dailyStats = [];
+      try {
+        const viewsAnalyticsResult = await query(
+          `SELECT DATE(timestamp) as date, COUNT(*) as count
+           FROM user_events
+           WHERE user_id = $1::text AND event_name = 'page_view' AND timestamp >= NOW() - INTERVAL '30 days'
+           GROUP BY DATE(timestamp)
+           ORDER BY DATE(timestamp) ASC`,
+          [userId]
+        );
+
+        const leadsAnalyticsResult = await query(
+          `SELECT DATE(created_at) as date, COUNT(*) as count
+           FROM leads
+           WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '30 days'
+           GROUP BY DATE(created_at)
+           ORDER BY DATE(created_at) ASC`,
+          [userId]
+        );
+
+        const now = new Date();
+        for (let i = 29; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(now.getDate() - i);
+          const dateStr = d.toISOString().split('T')[0];
+          dailyStats.push({
+            date: dateStr,
+            views: 0,
+            leads: 0
+          });
+        }
+
+        viewsAnalyticsResult.rows.forEach(row => {
+          const dStr = row.date instanceof Date ? row.date.toISOString().split('T')[0] : new Date(row.date).toISOString().split('T')[0];
+          const stat = dailyStats.find(s => s.date === dStr);
+          if (stat) {
+            stat.views = parseInt(row.count || 0);
+          }
+        });
+
+        leadsAnalyticsResult.rows.forEach(row => {
+          const dStr = row.date instanceof Date ? row.date.toISOString().split('T')[0] : new Date(row.date).toISOString().split('T')[0];
+          const stat = dailyStats.find(s => s.date === dStr);
+          if (stat) {
+            stat.leads = parseInt(row.count || 0);
+          }
+        });
+      } catch (err) {
+        console.error('Error fetching analytics data:', err);
+      }
+
       return res.status(200).json({
         email: user.email,
         credits: user.credits,
@@ -124,7 +175,8 @@ export default async function handler(req, res, currentKvClient) {
         creditTransactions,
         indexingNotifications,
         leads: formattedLeads,
-        isPaidUser
+        isPaidUser,
+        dailyStats
       });
 
     } catch (error) {
