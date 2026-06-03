@@ -67,7 +67,9 @@ describe('Serve Static Page API', () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(200);
         expect(mockRes.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
-        expect(mockRes.send).toHaveBeenCalledWith(mockHtml);
+        const sentContent = mockRes.send.mock.calls[0][0];
+        expect(sentContent).toContain('demo-banner');
+        expect(sentContent).toContain('Test Page Content');
     });
 
     it('should return 500 if database query throws error', async () => {
