@@ -37,28 +37,39 @@ export default async function handler(req, res, currentKvClient) {
       }
       const user = userResult.rows[0];
 
-      // Retrieve generated pages for the user
-      const pageIds = await currentKv.smembers(`user:${userId}:pages`);
+      // Retrieve generated pages for the user from PostgreSQL
+      const pagesResult = await query(
+        `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, updated_at, telephone, price_range, opening_hours, enable_ai_copy, ai_style 
+         FROM seo_pages WHERE user_id = $1`,
+        [userId]
+      );
       const generatedPages = [];
 
-      for (const pageId of pageIds) {
-        const pageDataString = await currentKv.get(pageId);
-        if (pageDataString) {
-          const pageData = JSON.parse(pageDataString);
-          const views = await currentKv.get(`page:${pageId}:views`) || 0;
-          const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
-          const serviceSlug = slugify(pageData.service || '', { lower: true, strict: true });
-          const townSlug = slugify(pageData.town || '', { lower: true, strict: true });
-          const url = `/${userId}/${serviceSlug}-in-${townSlug}.html`;
+      for (const row of pagesResult.rows) {
+        const pageId = row.id;
+        const views = await currentKv.get(`page:${pageId}:views`) || 0;
+        const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
+        const serviceSlug = slugify(row.service || '', { lower: true, strict: true });
+        const townSlug = slugify(row.town || '', { lower: true, strict: true });
+        const url = `/${userId}/${serviceSlug}-in-${townSlug}.html`;
 
-          generatedPages.push({
-            pageId,
-            ...pageData,
-            url,
-            views: parseInt(views),
-            uniqueVisitors: parseInt(uniqueVisitors),
-          });
-        }
+        generatedPages.push({
+          pageId,
+          businessName: row.business_name,
+          service: row.service,
+          town: row.town,
+          zipCode: row.zip_code,
+          createdAt: row.created_at ? row.created_at.toISOString() : new Date().toISOString(),
+          updatedAt: row.updated_at ? row.updated_at.toISOString() : new Date().toISOString(),
+          telephone: row.telephone,
+          priceRange: row.price_range,
+          openingHours: row.opening_hours,
+          enableAICopy: row.enable_ai_copy,
+          aiStyle: row.ai_style,
+          url,
+          views: parseInt(views),
+          uniqueVisitors: parseInt(uniqueVisitors),
+        });
       }
 
       // Retrieve credit transaction history

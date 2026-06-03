@@ -1,4 +1,7 @@
+import crypto from 'crypto';
+
 const mockUsers = [];
+const mockSeoPages = [];
 let nextId = 1;
 
 let queryDelegate = null;
@@ -6,12 +9,55 @@ export const setQueryDelegate = (fn) => {
     queryDelegate = fn;
 };
 
+export const getMockSeoPages = () => mockSeoPages;
+export const addMockSeoPage = (page) => mockSeoPages.push(page);
+export const clearMockSeoPages = () => { mockSeoPages.length = 0; };
+
 export const originalMockQuery = async (text, params) => {
     const textLower = text.toLowerCase();
 
     // 1. SELECT query
     if (textLower.startsWith('select')) {
-        // Check WHERE clauses
+        if (textLower.includes('from seo_pages')) {
+            if (textLower.includes('where id = $1 and file_name = $2') || textLower.includes('where user_id = $1 and file_name = $2')) {
+                const [userId, fileName] = params;
+                const page = mockSeoPages.find(p => p.user_id?.toString() === userId?.toString() && p.file_name === fileName);
+                return { rows: page ? [page] : [] };
+            }
+            if (textLower.includes('where id = $1')) {
+                const id = params[0];
+                const page = mockSeoPages.find(p => p.id === id);
+                return { rows: page ? [page] : [] };
+            }
+            if (textLower.includes('where slug = $1 or file_name = $2')) {
+                const [slug, fileName] = params;
+                const page = mockSeoPages.find(p => p.slug === slug || p.file_name === fileName);
+                return { rows: page ? [page] : [] };
+            }
+            if (textLower.includes('where user_id = $1')) {
+                const userId = params[0]?.toString();
+                let rows = mockSeoPages.filter(p => p.user_id?.toString() === userId);
+                if (textLower.includes('limit $2 offset $3')) {
+                    const limit = params[1];
+                    const offset = params[2];
+                    rows = rows.slice(offset, offset + limit);
+                }
+                return { rows };
+            }
+            if (textLower.includes('where file_name = $1')) {
+                const fileName = params[0];
+                const page = mockSeoPages.find(p => p.file_name === fileName);
+                return { rows: page ? [page] : [] };
+            }
+        }
+
+        if (textLower.includes('select count(*) from seo_pages where user_id = $1')) {
+            const userId = params[0]?.toString();
+            const count = mockSeoPages.filter(p => p.user_id?.toString() === userId).length;
+            return { rows: [{ count }] };
+        }
+
+        // Check WHERE clauses for users
         if (textLower.includes('where email = $1')) {
             const email = params[0];
             const user = mockUsers.find(u => u.email === email);
@@ -125,6 +171,35 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('insert into seo_pages')) {
+        const match = text.match(/insert\s+into\s+seo_pages\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newPage = { id: params[0] || crypto.randomUUID() };
+            cols.forEach((col, i) => {
+                let val = params[i];
+                if (col === 'business_name') newPage.business_name = val;
+                else if (col === 'zip_code') newPage.zip_code = val;
+                else if (col === 'price_range') newPage.price_range = val;
+                else if (col === 'opening_hours') newPage.opening_hours = val;
+                else if (col === 'enable_ai_copy') newPage.enable_ai_copy = val;
+                else if (col === 'ai_style') newPage.ai_style = val;
+                else newPage[col] = val;
+            });
+            
+            const existingIdx = mockSeoPages.findIndex(p => p.slug === newPage.slug);
+            if (existingIdx !== -1) {
+                mockSeoPages[existingIdx] = { ...mockSeoPages[existingIdx], ...newPage, updated_at: new Date() };
+                return { rows: [mockSeoPages[existingIdx]] };
+            }
+            
+            newPage.created_at = new Date();
+            newPage.updated_at = new Date();
+            mockSeoPages.push(newPage);
+            return { rows: [newPage] };
+        }
+    }
+
     // 3. UPDATE query
     if (textLower.includes('update users')) {
         if (textLower.includes('credits = credits + $1')) {
@@ -163,6 +238,60 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('update seo_pages')) {
+        if (textLower.includes('where id = $11')) {
+            const [
+                content,
+                business_name,
+                service,
+                town,
+                zip_code,
+                telephone,
+                price_range,
+                opening_hours,
+                enable_ai_copy,
+                ai_style,
+                id
+            ] = params;
+            const page = mockSeoPages.find(p => p.id === id);
+            if (page) {
+                page.content = content;
+                page.business_name = business_name;
+                page.service = service;
+                page.town = town;
+                page.zip_code = zip_code;
+                page.telephone = telephone;
+                page.price_range = price_range;
+                page.opening_hours = opening_hours;
+                page.enable_ai_copy = enable_ai_copy;
+                page.ai_style = ai_style;
+                page.updated_at = new Date();
+                return { rows: [page] };
+            }
+        }
+    }
+
+    // 4. DELETE query
+    if (textLower.includes('delete from seo_pages')) {
+        if (textLower.includes('where id = $1')) {
+            const id = params[0];
+            const idx = mockSeoPages.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                mockSeoPages.splice(idx, 1);
+            }
+            return { rows: [] };
+        }
+        if (textLower.includes('where user_id = $1')) {
+            const userId = params[0]?.toString();
+            for (let i = mockSeoPages.length - 1; i >= 0; i--) {
+                if (mockSeoPages[i].user_id?.toString() === userId) {
+                    mockSeoPages.splice(i, 1);
+                }
+            }
+            return { rows: [] };
+        }
+    }
+
     // Default mock behavior
     return { rows: [] };
 };
@@ -184,6 +313,7 @@ export const addMockUser = (user) => {
 
 export const clearMockUsers = () => {
     mockUsers.length = 0;
+    mockSeoPages.length = 0;
     nextId = 1;
 };
 

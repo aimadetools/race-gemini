@@ -69,20 +69,28 @@ async function handler(req, res, currentKvClient) {
             return res.status(403).json({ message: 'Client does not belong to this agency.' });
         }
 
-        const pageIds = await currentKv.smembers(`user:${id}:pages`);
+        // Retrieve client pages from PostgreSQL
+        const pagesResult = await query(
+            `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, telephone, price_range, opening_hours 
+             FROM seo_pages WHERE user_id = $1`,
+            [id]
+        );
         const pages = [];
-        for (const pageId of pageIds) {
-            let pageData = await currentKv.get(pageId);
-            if (!pageData && !pageId.startsWith('page:')) {
-                pageData = await currentKv.get(`page:${pageId}`);
-            }
-            if (pageData) {
-                const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
-                const serviceSlug = slugify(page.service, { lower: true, strict: true });
-                const townSlug = slugify(page.town, { lower: true, strict: true });
-                const fileName = `${serviceSlug}-in-${townSlug}.html`;
-                pages.push({ ...page, fileName });
-            }
+        for (const row of pagesResult.rows) {
+            const serviceSlug = slugify(row.service || '', { lower: true, strict: true });
+            const townSlug = slugify(row.town || '', { lower: true, strict: true });
+            const fileName = `${serviceSlug}-in-${townSlug}.html`;
+            pages.push({
+                businessName: row.business_name,
+                service: row.service,
+                town: row.town,
+                zipCode: row.zip_code,
+                createdAt: row.created_at ? row.created_at.toISOString() : null,
+                telephone: row.telephone,
+                priceRange: row.price_range,
+                openingHours: row.opening_hours,
+                fileName
+            });
         }
 
         return res.status(200).json({

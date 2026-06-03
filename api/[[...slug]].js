@@ -22,24 +22,23 @@ export default async (req, res, currentKvClient) => {
                 return res.status(404).send('Not Found');
             }
 
-            const pageIds = await currentKv.smembers(`user:${clientId}:pages`);
+            const pagesResult = await query(
+                'SELECT service, town, created_at FROM seo_pages WHERE user_id = $1',
+                [clientId]
+            );
             let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
             const host = req.headers.host || 'localseogen.com';
             const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
             const baseUrl = `${protocol}://${host}`;
 
-            if (pageIds && pageIds.length > 0) {
-                for (const pageId of pageIds) {
-                    const pageData = await currentKv.get(pageId);
-                    if (pageData) {
-                        const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
-                        const resolvedServiceSlug = slugify(page.service, { lower: true, strict: true });
-                        const resolvedTownSlug = slugify(page.town, { lower: true, strict: true });
-                        const locUrl = `${baseUrl}/${clientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html`;
-                        const lastmod = page.createdAt ? page.createdAt.substring(0, 10) : new Date().toISOString().substring(0, 10);
-                        xml += `  <url>\n    <loc>${locUrl}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
-                    }
+            for (const row of pagesResult.rows) {
+                if (row.service && row.town) {
+                    const resolvedServiceSlug = slugify(row.service, { lower: true, strict: true });
+                    const resolvedTownSlug = slugify(row.town, { lower: true, strict: true });
+                    const locUrl = `${baseUrl}/${clientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html`;
+                    const lastmod = row.created_at ? row.created_at.toISOString().substring(0, 10) : new Date().toISOString().substring(0, 10);
+                    xml += `  <url>\n    <loc>${locUrl}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
                 }
             }
 
@@ -71,37 +70,29 @@ export default async (req, res, currentKvClient) => {
             }
         }
 
-        const pageIds = await currentKv.smembers(`user:${clientId}:pages`);
-        if (!pageIds || pageIds.length === 0) {
-            await logError(new Error(`Page IDs not found for client: ${clientId}`), 'Slug Handler - Page IDs Not Found', 'slug_error.log');
-            return res.status(404).send('Not Found');
-        }
+        // Fetch the page from PostgreSQL where user_id = clientId and file_name = fileName
+        const pageResult = await query(
+            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content 
+             FROM seo_pages WHERE user_id = $1 AND file_name = $2`,
+            [clientId, fileName]
+        );
 
-        let pageIdToFind = null;
-        for (const pageId of pageIds) {
-            const pageData = await currentKv.get(pageId);
-            if (pageData) {
-                const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
-                if (page && slugify(page.service, { lower: true, strict: true }) === serviceSlug && slugify(page.town, { lower: true, strict: true }) === townSlug) {
-                    pageIdToFind = pageId;
-                    break;
-                }
-            }
-        }
-
-        if (!pageIdToFind) {
+        if (pageResult.rows.length === 0) {
             await logError(new Error(`Page not found for client: ${clientId}, file: ${fileName}`), 'Slug Handler - Specific Page Not Found', 'slug_error.log');
             return res.status(404).send('Not Found');
         }
 
-        const pageData = await currentKv.get(pageIdToFind);
+        const pageRow = pageResult.rows[0];
+        const pageIdToFind = pageRow.id;
 
-        if (!pageData) {
-            await logError(new Error(`Page data not found for pageId: ${pageIdToFind}`), 'Slug Handler - Page Data Not Found', 'slug_error.log');
-            return res.status(404).send('Not Found');
-        }
-
-        const page = typeof pageData === 'string' ? JSON.parse(pageData) : pageData;
+        const page = {
+            businessName: pageRow.business_name,
+            service: pageRow.service,
+            town: pageRow.town,
+            telephone: pageRow.telephone,
+            priceRange: pageRow.price_range,
+            openingHours: pageRow.opening_hours
+        };
 
         let template;
         try {

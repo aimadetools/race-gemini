@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv'; // Keep kv import for agency data
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import archiver from 'archiver';
 import fs from 'fs';
@@ -169,7 +170,7 @@ export default async (req, res) => {
                 for (const service of servicesArray) {
                     const escapedService = escapeHtml(service);
                     const escapedTown = escapeHtml(town);
-                    const pageId = `page:${Date.now()}${Math.random()}`; // Unique ID for each page
+                    const pageId = crypto.randomUUID();
                     const serviceSlug = slugify(service, { lower: true, strict: true });
                     const townSlug = slugify(town, { lower: true, strict: true });
                     const fileName = `${serviceSlug}-in-${townSlug}.html`;
@@ -192,7 +193,7 @@ export default async (req, res) => {
                                 metaDescription = `Get expert ${escapedService} services in ${escapedTown} from ${escapedBusinessName}. Contact us today for a free quote!`;
                             }
 
-                            const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${escapedBusinessName}'s ${escapedService} services in ${escapedTown}". Focus on attracting clicks on social media.`;
+                            const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${escapedBusinessName}'s ${escapedService} services in ${town}". Focus on attracting clicks on social media.`;
                             ogDescription = await generateAIContent(geminiModel, ogPrompt, `Discover ${escapedBusinessName}'s top-rated ${escapedService} services in ${escapedTown}. Click to learn more and get a free quote!`);
                             if (ogDescription.length > 200) {
                                 ogDescription = ogDescription.substring(0, 197) + '...';
@@ -249,21 +250,40 @@ export default async (req, res) => {
 
                     archive.append(pageContent, { name: fileName });
 
-                    // Store page metadata
-                    await kv.set(pageId, JSON.stringify({
-                        businessName: escapedBusinessName, // Store escaped values
-                        service: escapedService,
-                        town: escapedTown,
-                        zipCode, // Zip code is numeric, no escaping needed here
-                        createdAt: new Date().toISOString(),
-                        enableAICopy: enableAICopy || false,
-                        aiStyle: aiStyle || null,
-                        userId: user.id,
-                        telephone: telephone || null,
-                        priceRange: priceRange || null,
-                        openingHours: openingHours || null
-                    }));
-                    await kv.sadd(`user:${userId}:pages`, pageId);
+                    // Store page in database
+                    const pageSlug = `${userId}-${serviceSlug}-in-${townSlug}`;
+                    await query(
+                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+                         ON CONFLICT (slug) DO UPDATE SET 
+                           content = EXCLUDED.content,
+                           business_name = EXCLUDED.business_name,
+                           service = EXCLUDED.service,
+                           town = EXCLUDED.town,
+                           zip_code = EXCLUDED.zip_code,
+                           telephone = EXCLUDED.telephone,
+                           price_range = EXCLUDED.price_range,
+                           opening_hours = EXCLUDED.opening_hours,
+                           enable_ai_copy = EXCLUDED.enable_ai_copy,
+                           ai_style = EXCLUDED.ai_style,
+                           updated_at = CURRENT_TIMESTAMP`,
+                        [
+                            pageId,
+                            fileName,
+                            pageSlug,
+                            pageContent,
+                            userId,
+                            escapedBusinessName,
+                            escapedService,
+                            escapedTown,
+                            zipCode,
+                            telephone || null,
+                            priceRange || null,
+                            openingHours || null,
+                            enableAICopy || false,
+                            aiStyle || null
+                        ]
+                    );
                 }
             }
 

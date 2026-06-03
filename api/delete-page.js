@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { logError } from '../lib/logger.js';
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
+import { query } from '../db/index.js';
 
 export default async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -34,27 +35,27 @@ export default async function handler(req, res, currentKvClient) {
     }
 
     try {
-        const pageDataString = await currentKv.get(pageId);
-        if (!pageDataString) {
+        const pageResult = await query(
+            'SELECT id, user_id FROM seo_pages WHERE id = $1',
+            [pageId]
+        );
+        if (pageResult.rows.length === 0) {
             return res.status(404).json({ message: 'Page not found.' });
         }
 
-        const pageData = typeof pageDataString === 'string' ? JSON.parse(pageDataString) : pageDataString;
+        const pageRow = pageResult.rows[0];
         
         // Verify user owns the page
-        if (pageData.userId !== userId) {
+        if (pageRow.user_id !== userId) {
             return res.status(403).json({ message: 'Unauthorized. You do not own this page.' });
         }
 
-        // Delete page metadata from KV
-        await currentKv.del(pageId);
+        // Delete page from PostgreSQL
+        await query('DELETE FROM seo_pages WHERE id = $1', [pageId]);
 
         // Delete view counts and unique visitor sets
         await currentKv.del(`page:${pageId}:views`);
         await currentKv.del(`page:${pageId}:unique_visitors`);
-
-        // Remove pageId from user's pages set
-        await currentKv.srem(`user:${userId}:pages`, pageId);
 
         // Submit updated sitemap
         try {

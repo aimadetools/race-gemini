@@ -28,21 +28,26 @@ export default async (req, res, currentKvClient) => {
         let service = '';
         let town = '';
 
-        // 1. Try to find the page metadata in KV (if generated via api/generate.js)
-        const pageDataString = await currentKv.get(pageId);
-        if (pageDataString) {
+        // 1. Try to find the page metadata in PostgreSQL (seo_pages)
+        if (pageId) {
             try {
-                const pageData = typeof pageDataString === 'string' ? JSON.parse(pageDataString) : pageDataString;
-                userId = pageData.userId;
-                businessName = pageData.businessName;
-                service = pageData.service;
-                town = pageData.town;
+                const pageResult = await query(
+                    'SELECT user_id, business_name, service, town FROM seo_pages WHERE id = $1',
+                    [pageId]
+                );
+                if (pageResult.rows.length > 0) {
+                    const row = pageResult.rows[0];
+                    userId = row.user_id;
+                    businessName = row.business_name;
+                    service = row.service;
+                    town = row.town;
+                }
             } catch (err) {
-                await logError(err, 'Failed to parse page data from KV in submit-lead');
+                await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by pageId');
             }
         }
 
-        // 2. If not found in KV (or generated statically via api/generate-seo-pages.js), try to query PostgreSQL
+        // 2. If not found by ID (or generated statically via api/generate-seo-pages.js), try to query by slug/url
         if (!userId) {
             let slug = '';
             if (url) {
@@ -51,12 +56,20 @@ export default async (req, res, currentKvClient) => {
             }
 
             if (slug) {
-                const pageResult = await query(
-                    'SELECT user_id, content FROM seo_pages WHERE slug = $1 OR file_name = $2',
-                    [slug, `${slug}.html`]
-                );
-                if (pageResult.rows.length > 0) {
-                    userId = pageResult.rows[0].user_id;
+                try {
+                    const pageResult = await query(
+                        'SELECT user_id, business_name, service, town FROM seo_pages WHERE slug = $1 OR file_name = $2',
+                        [slug, `${slug}.html`]
+                    );
+                    if (pageResult.rows.length > 0) {
+                        const row = pageResult.rows[0];
+                        userId = row.user_id;
+                        businessName = row.business_name;
+                        service = row.service;
+                        town = row.town;
+                    }
+                } catch (err) {
+                    await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by slug');
                 }
             }
         }

@@ -56,15 +56,17 @@ export default async function handler(request, response, currentKvClient) {
         }
         const clientEmail = clientResult.rows[0].email;
 
-        // Retrieve generated pages associated with client from KV Set
-        const pageIds = await currentKv.smembers(`user:${clientId}:pages`);
-
-        // Delete all pages associated with the client in KV
-        if (pageIds && pageIds.length > 0) {
-            const pageKeysToDelete = pageIds.map(pId => `page:${pId}`);
-            await currentKv.del(...pageKeysToDelete);
+        // Retrieve generated pages associated with client from PostgreSQL
+        const pageResult = await query('SELECT id FROM seo_pages WHERE user_id = $1', [clientId]);
+        
+        // Delete view count keys and unique visitor sets from KV
+        for (const row of pageResult.rows) {
+            await currentKv.del(`page:${row.id}:views`);
+            await currentKv.del(`page:${row.id}:unique_visitors`);
         }
-        await currentKv.del(`user:${clientId}:pages`);
+
+        // Delete all pages from PostgreSQL
+        await query('DELETE FROM seo_pages WHERE user_id = $1', [clientId]);
 
         // Delete the client row from PostgreSQL users table
         await query('DELETE FROM users WHERE id = $1 AND agency_id = $2', [clientId, agencyId]);

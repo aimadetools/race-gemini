@@ -92,12 +92,13 @@ async function handler(req, res, currentKvClient) {
         
         const clients = [];
         for (const row of clientsResult.rows) {
-            const pages = await currentKv.smembers(`user:${row.id}:pages`);
+            const pagesResult = await query('SELECT COUNT(*) FROM seo_pages WHERE user_id = $1', [row.id]);
+            const pageCount = parseInt(pagesResult.rows[0].count, 10);
             clients.push({
                 id: row.id,
                 name: row.name,
                 email: row.email,
-                pagesGenerated: pages ? pages.length : 0,
+                pagesGenerated: pageCount,
                 credits: row.credits || 0
             });
         }
