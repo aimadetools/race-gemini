@@ -229,8 +229,14 @@
 <input autocomplete="url" id="logo-url" name="logo-url" type="url"/>
 </div>
 <div class="form-group">
+<label for="logo-file">
+       Or Upload Logo Image
+      </label>
+<input id="logo-file" name="logo-file" type="file" accept="image/*" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%;"/>
+</div>
+<div class="form-group">
 <label for="primary-color">
-       Primary Color
+       Primary Color (Brand Color)
       </label>
 <input id="primary-color" name="primary-color" type="color"/>
 </div>
@@ -288,6 +294,7 @@ const addClientForm = document.getElementById('add-client-form');
 const errorMessage = document.getElementById('error-message');
 const brandingForm = document.getElementById('branding-form');
 const logoUrlInput = document.getElementById('logo-url');
+const logoFileInput = document.getElementById('logo-file');
 const primaryColorInput = document.getElementById('primary-color');
 const agencyLogoPreview = document.getElementById('agency-logo-preview');
 const brandingSuccessMessage = document.getElementById('branding-success-message');
@@ -373,28 +380,71 @@ const { message } = await response.json();
 errorMessage.textContent = message;
 }
 });
-brandingForm.addEventListener('submit', async(e) => {
-e.preventDefault();
-brandingSuccessMessage.textContent = '';
-const logoUrl = logoUrlInput.value;
-const primaryColor = primaryColorInput.value;
-const response = await fetch('/api/update-agency-branding', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ logoUrl, primaryColor }),
+logoFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            agencyLogoPreview.src = event.target.result;
+            agencyLogoPreview.style.display = 'block';
+            logoUrlInput.value = '';
+        };
+        reader.readAsDataURL(file);
+    }
 });
-if (response.ok) {
-brandingSuccessMessage.textContent = "Branding updated successfully!";
-if (logoUrl) {
-agencyLogoPreview.src = logoUrl;
-agencyLogoPreview.style.display = 'block';
-} else {
-agencyLogoPreview.style.display = 'none';
-}
-} else {
-const { message } = await response.json();
-errorMessage.textContent = message;
-}
+
+logoUrlInput.addEventListener('input', (e) => {
+    const url = e.target.value;
+    if (url) {
+        agencyLogoPreview.src = url;
+        agencyLogoPreview.style.display = 'block';
+        logoFileInput.value = '';
+    } else {
+        agencyLogoPreview.style.display = 'none';
+    }
+});
+
+brandingForm.addEventListener('submit', async(e) => {
+    e.preventDefault();
+    brandingSuccessMessage.textContent = '';
+    errorMessage.textContent = '';
+    let logoUrl = logoUrlInput.value;
+    const primaryColor = primaryColorInput.value;
+    const file = logoFileInput.files[0];
+    if (file) {
+        try {
+            logoUrl = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => resolve(event.target.result);
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(file);
+            });
+        } catch (fileError) {
+            console.error("Error reading file:", fileError);
+            errorMessage.textContent = "Error reading selected image file.";
+            return;
+        }
+    }
+    const response = await fetch('/api/update-agency-branding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logoUrl, primaryColor }),
+    });
+    if (response.ok) {
+        brandingSuccessMessage.textContent = "Branding updated successfully!";
+        if (logoUrl) {
+            agencyLogoPreview.src = logoUrl;
+            agencyLogoPreview.style.display = 'block';
+            if (!file) {
+                logoFileInput.value = '';
+            }
+        } else {
+            agencyLogoPreview.style.display = 'none';
+        }
+    } else {
+        const { message } = await response.json();
+        errorMessage.textContent = message;
+    }
 });
 assignCreditsForm.addEventListener('submit', async(e) => {
 e.preventDefault();

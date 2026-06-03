@@ -207,6 +207,16 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('logo_url = $1') && textLower.includes('primary_color = $2')) {
+            const [logoUrl, primaryColor, agencyId] = params;
+            const user = mockUsers.find(u => u.id.toString() === agencyId.toString() && u.is_agency === true);
+            if (user) {
+                user.logo_url = logoUrl;
+                user.primary_color = primaryColor;
+                return { rows: [{ id: user.id }] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('credits = credits + $1')) {
             const [amount, userId] = params;
             const user = mockUsers.find(u => u.id.toString() === userId.toString());
