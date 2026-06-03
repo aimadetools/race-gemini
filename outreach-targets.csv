@@ -1,4 +1,21 @@
-Business Name,City,Service Type,Email
-Example Plumbing,Anytown,Plumbing,test@example.com
-Local SEO Experts,Sometown,SEO,info@localseo.com
-ACME Electric,Ourcity,Electrical,contact@acme.com
+Business Name,City,Service Type,Email,Sent
+Apex Plumbing Services,Boston,Plumbing,contact@apexplumbingboston.com,true
+Summit HVAC Pros,Denver,HVAC,info@summithvacdenver.com,true
+GreenLeaf Landscaping,Austin,Landscaping,office@greenleafaustin.net,true
+BlueSky House Cleaning,Seattle,Cleaning,hello@blueskyseattleclean.com,true
+Elite Roofing Solutions,Houston,Roofing,contact@eliteroofinghouston.com,true
+PowerVolt Electrical,Chicago,Electrical,service@powervoltchicago.com,true
+Sunstate Solar & Electrical,Phoenix,Solar,contact@sunstatephoenix.com,true
+OceanBreeze HVAC,San Diego,HVAC,service@oceanbreezesd.com,true
+Star Cleaners,Dallas,Cleaning,bookings@starcleanersdallas.com,true
+Peachtree Tree Services,Atlanta,Tree Service,contact@peachtreetrees.com,true
+Cascade Plumbers,Portland,Plumbing,hello@cascadeplumbingportland.com,true
+Pioneer Landscaping,Salt Lake City,Landscaping,info@pioneerlandscapeslc.com,true
+Valley Custom Roofing,Sacramento,Roofing,info@valleycustomroofing.com,true
+Liberty Painters,Philadelphia,Painting,contact@libertypaintersphilly.com,true
+Mile High Garage Doors,Denver,Garage Doors,service@milehighgaragedoors.com,true
+Windy City Carpet Cleaners,Chicago,Carpet Cleaning,hello@windycitycarpet.com,true
+Emerald City Pest Control,Seattle,Pest Control,info@emeraldcitypest.com,true
+Lone Star Home Renovations,Dallas,Home Renovation,contact@lonestarhomerenovations.com,true
+Golden Gate Electricians,San Francisco,Electrical,service@goldengateelectric.com,true
+Sunshine State Pool Service,Miami,Pool Service,contact@sunshinestatepools.com,true
