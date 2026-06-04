@@ -198,6 +198,55 @@
                     Your custom plugin zip includes your account settings so configuration is automatic! Just upload the zip file in your WordPress dashboard, activate it, and your pages will show up under your domain.
                 </p>
             </div>
+            <div class="card" id="embeddable-widget-card">
+                <h2>Embeddable Service Area Widget</h2>
+                <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">
+                    Showcase your local service areas directly on your main website with our beautiful, responsive widget. Linking your website to your generated pages helps search engines index them faster, while driving passive referrals!
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex-wrap: wrap; margin-bottom: 1rem;" id="widget-grid-container">
+                    <div>
+                        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Widget Configurations</h3>
+                        <form id="widget-config-form" style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="widget-layout-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Layout</label>
+                                <select id="widget-layout-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%;">
+                                    <option value="badge">Floating Badge (Recommended)</option>
+                                    <option value="grid">Modern Card Grid</option>
+                                    <option value="list">Pill/List Layout</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="widget-theme-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Theme</label>
+                                <select id="widget-theme-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%;">
+                                    <option value="glassmorphic">Glassmorphic</option>
+                                    <option value="light">Light Theme</option>
+                                    <option value="dark">Dark Theme</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="widget-color-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Custom Brand Color</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input id="widget-color-input" type="color" value="#3b82f6" style="background: transparent; border: none; width: 40px; height: 35px; cursor: pointer; padding: 0;" />
+                                    <input id="widget-color-text" type="text" value="#3b82f6" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100px; text-align: center; font-family: monospace;" />
+                                </div>
+                            </div>
+                        </form>
+                        <div style="margin-top: 1.5rem;">
+                            <label style="display: block; font-weight: bold; font-size: 0.85rem; color: #ccc; margin-bottom: 5px;">Copy Embed Code</label>
+                            <textarea id="widget-embed-code" readonly style="width: 100%; height: 80px; background: rgba(17, 24, 39, 0.9); color: #60a5fa; border: 1px solid #3b82f6; padding: 0.5rem; border-radius: 6px; font-family: monospace; font-size: 0.8rem; resize: none; box-sizing: border-box;"></textarea>
+                            <button class="button button-small" id="copy-widget-code-btn" style="margin-top: 8px; font-size: 0.8rem; padding: 0.4rem 1rem;">
+                                <i class="far fa-copy" style="margin-right: 4px;"></i> Copy Code
+                            </button>
+                        </div>
+                    </div>
+                    <div style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; display: flex; flex-direction: column;" id="widget-preview-container">
+                        <h3 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Live Widget Preview</h3>
+                        <div id="widget-preview-box" style="flex: 1; border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 1.5rem; min-height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); position: relative; overflow: hidden;">
+                            <!-- Preview gets rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card" id="custom-domain-card">
                 <h2>Custom Domain Configuration</h2>
                 <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">

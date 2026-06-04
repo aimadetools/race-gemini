@@ -306,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }
+                initializeWidgetBuilder(data);
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {
@@ -621,5 +622,181 @@ document.addEventListener('DOMContentLoaded', () => {
             onboardingMessage.style.display = 'none';
             localStorage.setItem('dashboard-onboarding-dismissed', 'true');
         });
+    }
+
+    function initializeWidgetBuilder(data) {
+        const layoutSelect = document.getElementById('widget-layout-select');
+        const themeSelect = document.getElementById('widget-theme-select');
+        const colorInput = document.getElementById('widget-color-input');
+        const colorText = document.getElementById('widget-color-text');
+        const embedCodeTextarea = document.getElementById('widget-embed-code');
+        const copyBtn = document.getElementById('copy-widget-code-btn');
+        const previewBox = document.getElementById('widget-preview-box');
+
+        if (!layoutSelect || !themeSelect || !colorInput || !colorText || !embedCodeTextarea || !previewBox) {
+            return;
+        }
+
+        const clientId = data.clientId;
+        const pages = data.generatedPages || [];
+
+        // Keep color input and text in sync
+        colorInput.addEventListener('input', (e) => {
+            colorText.value = e.target.value.toUpperCase();
+            updateEmbedCodeAndPreview();
+        });
+
+        colorText.addEventListener('input', (e) => {
+            let val = e.target.value.trim();
+            if (val && !val.startsWith('#')) {
+                val = '#' + val;
+            }
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                colorInput.value = val;
+                updateEmbedCodeAndPreview();
+            }
+        });
+
+        layoutSelect.addEventListener('change', updateEmbedCodeAndPreview);
+        themeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+
+        function updateEmbedCodeAndPreview() {
+            const layout = layoutSelect.value;
+            const theme = themeSelect.value;
+            const color = colorInput.value.replace('#', '');
+            const origin = window.location.origin;
+
+            const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}`;
+            
+            let embedCode = '';
+            if (layout === 'badge') {
+                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<script src="${scriptUrl}"></script>`;
+            } else {
+                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+            }
+            embedCodeTextarea.value = embedCode;
+
+            // Render live preview
+            renderPreview(pages, theme, layout, colorInput.value);
+        }
+
+        function renderPreview(pagesList, theme, layout, baseColor) {
+            previewBox.innerHTML = '';
+            
+            if (theme === 'light') {
+                previewBox.style.background = '#ffffff';
+                previewBox.style.color = '#1f2937';
+            } else if (theme === 'dark') {
+                previewBox.style.background = '#1f2937';
+                previewBox.style.color = '#f3f4f6';
+            } else { // glassmorphic
+                previewBox.style.background = 'rgba(31, 41, 55, 0.4)';
+                previewBox.style.backdropFilter = 'blur(10px)';
+                previewBox.style.color = '#f3f4f6';
+            }
+
+            if (pagesList.length === 0) {
+                previewBox.innerHTML = '<p style="font-size: 0.85rem; color: #9ca3af; margin: 0; text-align: center;">Generate pages first to preview the widget.</p>';
+                return;
+            }
+
+            if (layout === 'badge') {
+                previewBox.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; width: 100%; font-family: sans-serif;">
+                        <div style="background: ${baseColor}; color: #fff; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;" id="preview-badge-trigger">
+                            📍 Serving ${pagesList.length} Areas
+                        </div>
+                        <p style="font-size: 0.75rem; color: #9ca3af; margin: 0; text-align: center;">Click the badge to preview the service area list.</p>
+                        
+                        <div id="preview-badge-modal" style="display: none; flex-direction: column; width: 90%; max-height: 180px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.2); overflow: hidden; font-size: 0.8rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2); background: ${theme === 'light' ? '#fff' : '#111827'}; color: ${theme === 'light' ? '#374151' : '#f3f4f6'}; text-align: left;">
+                            <div style="padding: 8px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; justify-content: space-between; font-weight: bold; align-items: center;">
+                                <span>Our Service Areas</span>
+                                <span id="preview-close-modal" style="cursor: pointer; font-weight: bold; font-size: 1rem; opacity: 0.7;">&times;</span>
+                            </div>
+                            <div style="padding: 8px; overflow-y: auto; flex: 1;">
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    ${pagesList.slice(0, 3).map(p => `<li style="margin-bottom: 4px;"><a href="#" onclick="return false;" style="display: block; padding: 6px 8px; border-radius: 4px; border: 1px solid rgba(128,128,128,0.15); text-decoration: none; color: inherit; font-size: 0.75rem; background: rgba(128,128,128,0.05); font-weight: 500;">${p.service} in ${p.town}</a></li>`).join('')}
+                                    ${pagesList.length > 3 ? `<li style="font-size: 0.7rem; color: #9ca3af; padding-left: 8px;">+ ${pagesList.length - 3} more areas...</li>` : ''}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const trigger = previewBox.querySelector('#preview-badge-trigger');
+                const modal = previewBox.querySelector('#preview-badge-modal');
+                const closeBtn = previewBox.querySelector('#preview-close-modal');
+
+                trigger.addEventListener('click', () => {
+                    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+                });
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    modal.style.display = 'none';
+                });
+            } else if (layout === 'grid') {
+                let gridItems = pagesList.slice(0, 4).map(p => `
+                    <div style="border: 1px solid rgba(128,128,128,0.2); border-radius: 6px; padding: 8px; font-size: 0.75rem; background: rgba(128,128,128,0.03); display: flex; flex-direction: column; cursor: pointer;">
+                        <div style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.town}</div>
+                        <div style="font-size: 0.65rem; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.service}</div>
+                    </div>
+                `).join('');
+                
+                if (pagesList.length > 4) {
+                    gridItems += `
+                        <div style="border: 1px dashed rgba(128,128,128,0.3); border-radius: 6px; padding: 8px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
+                            + ${pagesList.length - 4} more
+                        </div>
+                    `;
+                }
+
+                previewBox.innerHTML = `
+                    <div style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
+                        <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 8px;">📍 Areas We Serve</div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; flex: 1; overflow-y: auto;">
+                            ${gridItems}
+                        </div>
+                    </div>
+                `;
+            } else {
+                let listItems = pagesList.slice(0, 5).map(p => `
+                    <li style="display: inline-block;">
+                        <a href="#" onclick="return false;" style="display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; border: 1px solid rgba(128,128,128,0.2); text-decoration: none; color: inherit; background: rgba(128,128,128,0.05); font-weight: 500;">${p.service} in ${p.town}</a>
+                    </li>
+                `).join('');
+
+                if (pagesList.length > 5) {
+                    listItems += `<li style="font-size: 0.7rem; color: #9ca3af; padding: 4px 8px; display: inline-block;">+ dots</li>`;
+                }
+
+                previewBox.innerHTML = `
+                    <div style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
+                        <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 8px;">📍 Areas We Serve</div>
+                        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; overflow-y: auto; flex: 1;">
+                            ${listItems}
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // Copy Code Button handler
+        copyBtn.addEventListener('click', () => {
+            embedCodeTextarea.select();
+            embedCodeTextarea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(embedCodeTextarea.value).then(() => {
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy widget code:', err);
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        });
+
+        // First execution
+        updateEmbedCodeAndPreview();
     }
 });

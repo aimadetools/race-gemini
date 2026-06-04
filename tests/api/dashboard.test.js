@@ -237,7 +237,8 @@ describe('dashboard API', () => {
       isPaidUser: false,
       dailyStats: expect.any(Array),
       customDomain: null,
-      customDomainRedirect: null
+      customDomainRedirect: null,
+      clientId: 'user123'
     });
   });
 
@@ -283,7 +284,8 @@ describe('dashboard API', () => {
       isPaidUser: false,
       dailyStats: expect.any(Array),
       customDomain: null,
-      customDomainRedirect: null
+      customDomainRedirect: null,
+      clientId: 'user123'
     });
   });
 });

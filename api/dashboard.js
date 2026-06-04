@@ -178,7 +178,8 @@ export default async function handler(req, res, currentKvClient) {
         isPaidUser,
         dailyStats,
         customDomain: user.custom_domain,
-        customDomainRedirect: user.custom_domain_redirect
+        customDomainRedirect: user.custom_domain_redirect,
+        clientId: userId
       });
 
     } catch (error) {
