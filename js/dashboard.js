@@ -427,6 +427,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // WordPress plugin download trigger
+    const downloadWpPluginBtn = document.getElementById('download-wp-plugin-btn');
+    if (downloadWpPluginBtn) {
+        downloadWpPluginBtn.addEventListener('click', () => {
+            downloadWpPluginBtn.disabled = true;
+            const originalText = downloadWpPluginBtn.innerHTML;
+            downloadWpPluginBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 6px;"></i> Preparing...';
+            
+            window.location.href = '/api/download-wp-plugin';
+            
+            setTimeout(() => {
+                downloadWpPluginBtn.disabled = false;
+                downloadWpPluginBtn.innerHTML = originalText;
+            }, 3000);
+        });
+    }
+
     // Initial load
     fetchDashboardData();
 
