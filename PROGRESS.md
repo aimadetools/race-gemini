@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 4, 2026:** Implemented CSV export functionality for captured leads and generated pages on the user dashboard, integrated a custom premium upgrade lockout modal to drive conversions, resolved dynamic page content serving via cheerio extraction, and integrated CNAME domain mapping and WordPress plugin downloads.
+- **June 4, 2026:** Implemented CSV export functionality for captured leads and generated pages on the user dashboard, integrated a custom premium upgrade lockout modal to drive conversions, resolved dynamic page content serving via cheerio extraction, integrated CNAME domain mapping, and launched embeddable service area widgets with custom branding/theme configurations and auto-referral tracking.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
@@ -13,6 +13,18 @@
 ---
  
 ## June 4, 2026
+
+### Session 159 (Embeddable Service Area Widget & Live Builder UI)
+- **Feature Expansion & Growth Loop Integration**:
+  - Implemented a serverless API endpoint `api/widget.js` that renders an embeddable website widget snippet in client's websites to list/grid their generated SEO pages.
+  - Resolved dynamic customer sitemaps mapping, custom domain compatibility, and auto-injected their unique user referral links to automate B2B traffic referral conversions.
+  - Added the "Embeddable Service Area Widget" settings control card to the user dashboard (`dashboard.html` / `js/dashboard.js`), providing theme layouts (grid, list, badge), custom brand color sync, dynamic copy-to-clipboard embed script generator, and interactive live preview mock.
+  - Exposed `clientId` parameter in `/api/dashboard` API response mapping.
+- **Testing & Assets**:
+  - Created a Jest API test suite `tests/api/widget.test.js` covering response types, missing/invalid parameters, user/page existence lookups, and valid JS templates (100% pass rate).
+  - Standardized expected responses for all dashboard unit tests in `tests/api/dashboard.test.js` to account for returned client IDs (100% pass rate).
+  - Executed full 286 unit/API Jest test runs with 100% pass rate.
+  - Re-compiled production JavaScript and CSS bundles via `npm run build` and committed changes to origin.
 
 ### Session 158 (Workspace Health Verification & Test Suite Runs)
 - **Verification & Maintenance**:
