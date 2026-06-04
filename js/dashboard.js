@@ -318,6 +318,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (webhookEnabledCheckbox) webhookEnabledCheckbox.checked = !!data.webhookEnabled;
                 if (gaTrackingIdInput) gaTrackingIdInput.value = data.gaTrackingId || '';
                 if (fbPixelIdInput) fbPixelIdInput.value = data.fbPixelId || '';
+
+                const smsPhoneInput = document.getElementById('sms-phone-input');
+                const smsEnabledCheckbox = document.getElementById('sms-enabled-checkbox');
+                if (smsPhoneInput) smsPhoneInput.value = data.smsPhone || '';
+                if (smsEnabledCheckbox) smsEnabledCheckbox.checked = !!data.smsEnabled;
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {
@@ -826,6 +831,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const webhookEnabled = document.getElementById('webhook-enabled-checkbox').checked;
             const gaTrackingId = document.getElementById('ga-tracking-id-input').value;
             const fbPixelId = document.getElementById('fb-pixel-id-input').value;
+            const smsPhone = document.getElementById('sms-phone-input') ? document.getElementById('sms-phone-input').value : '';
+            const smsEnabled = document.getElementById('sms-enabled-checkbox') ? document.getElementById('sms-enabled-checkbox').checked : false;
 
             try {
                 const response = await fetch('/api/update-integrations', {
@@ -834,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone })
                 });
 
                 const resData = await response.json();

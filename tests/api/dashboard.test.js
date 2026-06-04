@@ -242,7 +242,9 @@ describe('dashboard API', () => {
       webhookUrl: null,
       webhookEnabled: false,
       gaTrackingId: null,
-      fbPixelId: null
+      fbPixelId: null,
+      smsEnabled: false,
+      smsPhone: null
     });
   });
 
@@ -293,7 +295,9 @@ describe('dashboard API', () => {
       webhookUrl: null,
       webhookEnabled: false,
       gaTrackingId: null,
-      fbPixelId: null
+      fbPixelId: null,
+      smsEnabled: false,
+      smsPhone: null
     });
   });
 });

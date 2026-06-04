@@ -27,13 +27,15 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId } = req.body;
+    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone } = req.body;
 
     // Validate inputs
     let cleanWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
     let isWebhookEnabled = !!webhookEnabled;
     let cleanGaTrackingId = gaTrackingId ? gaTrackingId.trim() : null;
     let cleanFbPixelId = fbPixelId ? fbPixelId.trim() : null;
+    let cleanSmsPhone = smsPhone ? smsPhone.trim() : null;
+    let isSmsEnabled = !!smsEnabled;
 
     if (isWebhookEnabled && cleanWebhookUrl) {
       try {
@@ -43,6 +45,16 @@ export default async function handler(req, res) {
         }
       } catch (e) {
         return res.status(400).json({ message: 'Invalid Webhook URL format.' });
+      }
+    }
+
+    if (isSmsEnabled) {
+      if (!cleanSmsPhone) {
+        return res.status(400).json({ message: 'Phone number is required when SMS alerts are enabled.' });
+      }
+      const phoneRegex = /^\+?[1-9]\d{1,14}$/; // Standard E.164 phone format check
+      if (!phoneRegex.test(cleanSmsPhone.replace(/[\s\-\(\)]/g, ''))) {
+        return res.status(400).json({ message: 'Invalid phone number format. Must include country code (e.g. +15551234567).' });
       }
     }
 
@@ -56,6 +68,9 @@ export default async function handler(req, res) {
     if (cleanFbPixelId && cleanFbPixelId.length > 100) {
       return res.status(400).json({ message: 'Facebook Pixel ID must be under 100 characters.' });
     }
+    if (cleanSmsPhone && cleanSmsPhone.length > 50) {
+      return res.status(400).json({ message: 'Phone number must be under 50 characters.' });
+    }
 
     // Update in PostgreSQL
     await query(
@@ -64,9 +79,11 @@ export default async function handler(req, res) {
            webhook_enabled = $2, 
            ga_tracking_id = $3, 
            fb_pixel_id = $4,
+           sms_enabled = $5,
+           sms_phone = $6,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $5`,
-      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, userId]
+       WHERE id = $7`,
+      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, userId]
     );
 
     return res.status(200).json({ message: 'Integration settings updated successfully.' });

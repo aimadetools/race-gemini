@@ -9,6 +9,7 @@ import { alterLeadsTableV2 } from './migrations/alter_leads_table_v2.js';
 import { createAgencyInquiriesTable } from './migrations/create_agency_inquiries_table.js';
 import { addCustomDomainToUsers } from './migrations/add_custom_domain_to_users.js';
 import { addWebhookAndTrackingColumnsToUsers } from './migrations/add_webhook_and_tracking_columns_to_users.js';
+import { addSmsColumnsToUsers } from './migrations/add_sms_columns_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -44,6 +45,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring webhook and tracking columns exist in users table...');
     await addWebhookAndTrackingColumnsToUsers();
+
+    console.log('Ensuring SMS notification columns exist in users table...');
+    await addSmsColumnsToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

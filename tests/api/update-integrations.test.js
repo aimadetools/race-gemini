@@ -131,6 +131,8 @@ describe('update-integrations API', () => {
     req.body.webhookEnabled = false;
     req.body.gaTrackingId = '';
     req.body.fbPixelId = '';
+    req.body.smsEnabled = false;
+    req.body.smsPhone = '';
 
     await handler(req, res);
 
@@ -141,5 +143,47 @@ describe('update-integrations API', () => {
     expect(updatedUser.webhook_enabled).toBe(false);
     expect(updatedUser.ga_tracking_id).toBeNull();
     expect(updatedUser.fb_pixel_id).toBeNull();
+    expect(updatedUser.sms_enabled).toBe(false);
+    expect(updatedUser.sms_phone).toBeNull();
+  });
+
+  test('should return 400 if SMS is enabled but phone number is empty', async () => {
+    req.body.smsEnabled = true;
+    req.body.smsPhone = '';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Phone number is required when SMS alerts are enabled.' });
+  });
+
+  test('should return 400 if SMS phone format is invalid', async () => {
+    req.body.smsEnabled = true;
+    req.body.smsPhone = 'abc-123-xyz';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid phone number format. Must include country code (e.g. +15551234567).' });
+  });
+
+  test('should update SMS settings and return 200 on success', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      sms_enabled: false,
+      sms_phone: null,
+    };
+    addMockUser(user);
+
+    req.body.smsEnabled = true;
+    req.body.smsPhone = '+15551234567';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const updatedUser = getMockUsers().find(u => u.id === '123');
+    expect(updatedUser.sms_enabled).toBe(true);
+    expect(updatedUser.sms_phone).toBe('+15551234567');
   });
 });

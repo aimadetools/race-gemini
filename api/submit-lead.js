@@ -3,6 +3,7 @@ import { kv } from '@vercel/kv';
 import { logError, logInfo } from '../lib/logger.js';
 import { sendEmail } from '../lib/email.js';
 import slugify from 'slugify';
+import { sendSmsNotification } from '../lib/sms.js';
 
 export default async (req, res, currentKvClient) => {
     if (req.method !== 'POST') {
@@ -89,7 +90,7 @@ export default async (req, res, currentKvClient) => {
         await logInfo(`Lead ${leadId} stored successfully for user ${userId}.`, 'Lead Submission');
 
         // 4. Retrieve user's email and package details to see if they are a paying customer
-        const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled FROM users WHERE id = $1', [userId]);
+        const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone FROM users WHERE id = $1', [userId]);
         if (userResult.rows.length === 0) {
             return res.status(200).json({ message: 'Lead submitted successfully.' }); 
         }
@@ -178,6 +179,18 @@ export default async (req, res, currentKvClient) => {
         }
 
         await sendEmail(ownerEmail, subject, htmlContent);
+
+        // 5b. Send SMS notification if configured, user is paid, and sms is enabled
+        if (isPaidUser && user.sms_enabled && user.sms_phone) {
+            try {
+                const smsBody = `LocalLeads: New lead from ${name}! Email: ${email}. Phone: ${phone || 'Not provided'}. Message: ${message || 'No message left.'}`;
+                sendSmsNotification(user.sms_phone, smsBody).catch(smsErr => {
+                    console.error('Error in SMS delivery:', smsErr);
+                });
+            } catch (smsErr) {
+                console.error('Error triggering SMS notification:', smsErr);
+            }
+        }
 
         // 6. Trigger webhook notification if configured and user is paid
         if (isPaidUser && user.webhook_enabled && user.webhook_url) {

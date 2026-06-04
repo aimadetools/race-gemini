@@ -89,6 +89,8 @@ export const originalMockQuery = async (text, params) => {
                     webhook_enabled: user.webhook_enabled || false,
                     ga_tracking_id: user.ga_tracking_id || null,
                     fb_pixel_id: user.fb_pixel_id || null,
+                    sms_enabled: user.sms_enabled || false,
+                    sms_phone: user.sms_phone || null,
                 };
                 return { rows: [u] };
             }
@@ -121,6 +123,8 @@ export const originalMockQuery = async (text, params) => {
                     webhook_enabled: user.webhook_enabled || false,
                     ga_tracking_id: user.ga_tracking_id || null,
                     fb_pixel_id: user.fb_pixel_id || null,
+                    sms_enabled: user.sms_enabled || false,
+                    sms_phone: user.sms_phone || null,
                 };
                 return { rows: [u] };
             }
@@ -302,14 +306,28 @@ export const originalMockQuery = async (text, params) => {
             }
         }
         if (textLower.includes('webhook_url = $1') && textLower.includes('webhook_enabled = $2')) {
-            const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, userId] = params;
-            const user = mockUsers.find(u => u.id.toString() === userId.toString());
-            if (user) {
-                user.webhook_url = webhookUrl;
-                user.webhook_enabled = webhookEnabled;
-                user.ga_tracking_id = gaTrackingId;
-                user.fb_pixel_id = fbPixelId;
-                return { rows: [user] };
+            if (textLower.includes('sms_enabled = $5')) {
+                const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, userId] = params;
+                const user = mockUsers.find(u => u.id.toString() === userId.toString());
+                if (user) {
+                    user.webhook_url = webhookUrl;
+                    user.webhook_enabled = webhookEnabled;
+                    user.ga_tracking_id = gaTrackingId;
+                    user.fb_pixel_id = fbPixelId;
+                    user.sms_enabled = smsEnabled;
+                    user.sms_phone = smsPhone;
+                    return { rows: [user] };
+                }
+            } else {
+                const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, userId] = params;
+                const user = mockUsers.find(u => u.id.toString() === userId.toString());
+                if (user) {
+                    user.webhook_url = webhookUrl;
+                    user.webhook_enabled = webhookEnabled;
+                    user.ga_tracking_id = gaTrackingId;
+                    user.fb_pixel_id = fbPixelId;
+                    return { rows: [user] };
+                }
             }
         }
     }
