@@ -251,6 +251,37 @@
 </section>
 <section class="dashboard">
 <h2>
+     Custom Domain Configuration
+    </h2>
+<p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">
+     White-label the generated page domain by mapping your own custom domain (e.g. <code>seo.youragency.com</code>) to your client pages.
+    </p>
+<form id="custom-domain-form">
+<div class="form-group">
+<label for="custom-domain-input">
+       Custom Domain Name
+      </label>
+<input id="custom-domain-input" placeholder="e.g. seo.youragency.com" type="text" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; box-sizing: border-box;"/>
+<span style="font-size: 0.8rem; color: #6b7280;">Point a CNAME record in your DNS settings to <code>localseogen.com</code>.</span>
+</div>
+<div class="form-group">
+<label for="custom-domain-redirect-input">
+       Root Redirect URL (Optional)
+      </label>
+<input id="custom-domain-redirect-input" placeholder="e.g. https://www.youragency.com" type="text" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; box-sizing: border-box;"/>
+<span style="font-size: 0.8rem; color: #6b7280;">Visitors to the root of your custom domain will be redirected here.</span>
+</div>
+<div class="form-group">
+<button class="button" type="submit">
+       Save Custom Domain
+      </button>
+</div>
+</form>
+<p id="custom-domain-success-msg" style="color: green; font-weight: bold; margin-top: 10px; display: none;"></p>
+<p id="custom-domain-error-msg" style="color: red; font-weight: bold; margin-top: 10px; display: none;"></p>
+</section>
+<section class="dashboard">
+<h2>
      Billing History
     </h2>
 <button class="button" id="refresh-billing-history">
@@ -344,6 +375,14 @@ agencyLogoPreview.style.display = 'block';
 }
 logoUrlInput.value = data.logoUrl || '';
 primaryColorInput.value = data.primaryColor || '#000000';
+const customDomainInput = document.getElementById('custom-domain-input');
+const customDomainRedirectInput = document.getElementById('custom-domain-redirect-input');
+if (customDomainInput) {
+    customDomainInput.value = data.customDomain || '';
+}
+if (customDomainRedirectInput) {
+    customDomainRedirectInput.value = data.customDomainRedirect || '';
+}
 const clientListBody = clientList.querySelector('tbody');
 clientListBody.innerHTML = '';
 clientSelect.innerHTML = '';
@@ -466,6 +505,48 @@ const { message } = await response.json();
 errorMessage.textContent = message;
 }
 });
+const customDomainForm = document.getElementById('custom-domain-form');
+const customDomainSuccessMsg = document.getElementById('custom-domain-success-msg');
+const customDomainErrorMsg = document.getElementById('custom-domain-error-msg');
+
+if (customDomainForm) {
+    customDomainForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (customDomainSuccessMsg) customDomainSuccessMsg.style.display = 'none';
+        if (customDomainErrorMsg) customDomainErrorMsg.style.display = 'none';
+
+        const customDomain = document.getElementById('custom-domain-input').value;
+        const customDomainRedirect = document.getElementById('custom-domain-redirect-input').value;
+
+        try {
+            const response = await fetch('/api/update-custom-domain', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customDomain, customDomainRedirect }),
+            });
+
+            const resData = await response.json();
+            if (response.ok) {
+                if (customDomainSuccessMsg) {
+                    customDomainSuccessMsg.textContent = resData.message;
+                    customDomainSuccessMsg.style.display = 'block';
+                }
+            } else {
+                if (customDomainErrorMsg) {
+                    customDomainErrorMsg.textContent = resData.message || 'Failed to update custom domain settings.';
+                    customDomainErrorMsg.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error updating custom domain:', error);
+            if (customDomainErrorMsg) {
+                customDomainErrorMsg.textContent = 'An unexpected error occurred.';
+                customDomainErrorMsg.style.display = 'block';
+            }
+        }
+    });
+}
+
 refreshBillingHistoryButton.addEventListener('click', fetchBillingHistory);
 document.getElementById('logout-link').addEventListener('click', async () => {
 await fetch('/api/logout', { method: 'POST' });

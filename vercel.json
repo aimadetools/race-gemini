@@ -25,6 +25,14 @@
     {
       "source": "/:clientId(\\d+)/:fileName",
       "destination": "/api/[[...slug]]?slug=:clientId&slug=:fileName"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/[[...slug]]?slug=custom&slug=sitemap.xml"
+    },
+    {
+      "source": "/:fileName([^/]+\\.html)",
+      "destination": "/api/[[...slug]]?slug=custom&slug=:fileName"
     }
   ],
   "crons": [

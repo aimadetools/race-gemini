@@ -45,7 +45,7 @@ async function handler(req, res, currentKvClient) {
 
         // Fetch user (agency) data from PostgreSQL
         const userResult = await query(
-            'SELECT id, name, email, credits, subscription_status, stripe_subscription_id, logo_url, primary_color, is_agency FROM users WHERE id = $1',
+            'SELECT id, name, email, credits, subscription_status, stripe_subscription_id, logo_url, primary_color, is_agency, custom_domain, custom_domain_redirect FROM users WHERE id = $1',
             [userId]
         );
 
@@ -119,6 +119,8 @@ async function handler(req, res, currentKvClient) {
             renewalDate: renewalDate,
             totalClients,
             totalPagesGenerated,
+            customDomain: agencyUser.custom_domain,
+            customDomainRedirect: agencyUser.custom_domain_redirect,
         });
 
     } catch (error) {

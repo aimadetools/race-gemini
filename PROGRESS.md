@@ -1,7 +1,7 @@
 # Progress Log
 
 ## 🏆 Key Milestones
-- **June 4, 2026:** Built a server-side WordPress integration plugin (and automated builder endpoint /api/download-wp-plugin) to let local businesses dynamically host generated SEO landing pages under their own WordPress domains without FTP/raw files.
+- **June 4, 2026:** Implemented custom domain mapping support for standard/agency users (CNAME host lookup routing, config API, and UI configuration forms) and built a server-side WordPress integration plugin with a dynamic custom zip builder.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
@@ -13,6 +13,16 @@
 ---
 
 ## June 4, 2026
+
+### Session 126 (Custom Domain Mapping & Launch)
+- **Custom Domain Mapping**:
+  - Created a database migration to add `custom_domain` and `custom_domain_redirect` columns to `users`.
+  - Updated catch-all routing in `api/[[...slug]].js` to resolve incoming hostnames, map them to specific clients/agencies, adjust paths, and render appropriate custom sitemaps and schema tags.
+  - Implemented the `/api/update-custom-domain` configuration endpoint to validate, clean, and persist custom domain mappings.
+  - Added Custom Domain setup card forms in both user and agency dashboards (`dashboard.html` / `js/dashboard.js`, `agency-dashboard.html`) to allow setting CNAMEs and root redirects.
+- **Testing & Assets**:
+  - Created a dedicated Jest unit test suite `tests/api/update-custom-domain.test.js` validating authentication, formatting, domain availability, and data persistence (100% pass rate).
+  - Rebuilt production assets via `npm run build` and ran all 271 Jest E2E/API tests (100% pass rate).
 
 ### Session 125 (Workspace Health Check & Verification)
 - **Verification & Sync**:

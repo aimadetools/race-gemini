@@ -183,6 +183,27 @@
                     Your custom plugin zip includes your account settings so configuration is automatic! Just upload the zip file in your WordPress dashboard, activate it, and your pages will show up under your domain.
                 </p>
             </div>
+            <div class="card" id="custom-domain-card">
+                <h2>Custom Domain Configuration</h2>
+                <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">
+                    Map your own custom domain (like <code>seo.yourplumberdomain.com</code>) to your generated landing pages instead of using our default URLs.
+                </p>
+                <form id="custom-domain-form" style="display: flex; flex-direction: column; gap: 15px; max-width: 500px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label for="custom-domain-input" style="font-weight: bold; font-size: 0.9rem; color: #fff;">Custom Domain Name</label>
+                        <input id="custom-domain-input" type="text" placeholder="e.g. seo.mybusiness.com" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                        <span style="font-size: 0.8rem; color: #6b7280;">Point a CNAME record in your DNS settings to <code>localseogen.com</code>.</span>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label for="custom-domain-redirect-input" style="font-weight: bold; font-size: 0.9rem; color: #fff;">Root Redirect URL (Optional)</label>
+                        <input id="custom-domain-redirect-input" type="text" placeholder="e.g. https://www.mybusiness.com" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                        <span style="font-size: 0.8rem; color: #6b7280;">Visitors to the root of your custom domain (e.g. <code>seo.mybusiness.com/</code>) will be redirected here.</span>
+                    </div>
+                    <button class="button" type="submit" style="align-self: flex-start; padding: 0.75rem 1.5rem;">Save Settings</button>
+                </form>
+                <p id="custom-domain-success-msg" style="color: #10b981; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
+                <p id="custom-domain-error-msg" style="color: #ef4444; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
+            </div>
             <div class="card">
                 <h2>Account Settings</h2>
                 <ul>

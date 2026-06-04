@@ -31,7 +31,7 @@ export default async function handler(req, res, currentKvClient) {
       const userId = decoded.userId;
 
       // Fetch user from PostgreSQL
-      const userResult = await query('SELECT email, credits FROM users WHERE id = $1', [userId]);
+      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect FROM users WHERE id = $1', [userId]);
       if (userResult.rows.length === 0) {
           return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
@@ -176,7 +176,9 @@ export default async function handler(req, res, currentKvClient) {
         indexingNotifications,
         leads: formattedLeads,
         isPaidUser,
-        dailyStats
+        dailyStats,
+        customDomain: user.custom_domain,
+        customDomainRedirect: user.custom_domain_redirect
       });
 
     } catch (error) {

@@ -44,6 +44,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     userCreditsSpan.textContent = data.credits !== undefined ? data.credits : 'N/A';
                 }
 
+                // Populate custom domain details
+                const customDomainInput = document.getElementById('custom-domain-input');
+                const customDomainRedirectInput = document.getElementById('custom-domain-redirect-input');
+                if (customDomainInput) {
+                    customDomainInput.value = data.customDomain || '';
+                }
+                if (customDomainRedirectInput) {
+                    customDomainRedirectInput.value = data.customDomainRedirect || '';
+                }
+
                 // Populate generated pages
                 generatedPagesTableBody.innerHTML = '';
                 if (data.generatedPages && data.generatedPages.length > 0) {
@@ -441,6 +451,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 downloadWpPluginBtn.disabled = false;
                 downloadWpPluginBtn.innerHTML = originalText;
             }, 3000);
+        });
+    }
+
+    // Custom domain configuration submit handler
+    const customDomainForm = document.getElementById('custom-domain-form');
+    const customDomainSuccessMsg = document.getElementById('custom-domain-success-msg');
+    const customDomainErrorMsg = document.getElementById('custom-domain-error-msg');
+
+    if (customDomainForm) {
+        customDomainForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (customDomainSuccessMsg) customDomainSuccessMsg.style.display = 'none';
+            if (customDomainErrorMsg) customDomainErrorMsg.style.display = 'none';
+
+            const customDomain = document.getElementById('custom-domain-input').value;
+            const customDomainRedirect = document.getElementById('custom-domain-redirect-input').value;
+
+            try {
+                const response = await fetch('/api/update-custom-domain', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ customDomain, customDomainRedirect })
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (customDomainSuccessMsg) {
+                        customDomainSuccessMsg.textContent = resData.message;
+                        customDomainSuccessMsg.style.display = 'block';
+                    }
+                } else {
+                    if (customDomainErrorMsg) {
+                        customDomainErrorMsg.textContent = resData.message || 'Failed to update settings.';
+                        customDomainErrorMsg.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating custom domain:', error);
+                if (customDomainErrorMsg) {
+                    customDomainErrorMsg.textContent = 'An unexpected error occurred.';
+                    customDomainErrorMsg.style.display = 'block';
+                }
+            }
         });
     }
 

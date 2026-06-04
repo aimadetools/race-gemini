@@ -7,6 +7,7 @@ import { addAgencyColumnsToUsers } from './migrations/add_agency_columns_to_user
 import { createLeadsTable } from './migrations/create_leads_table.js';
 import { alterLeadsTableV2 } from './migrations/alter_leads_table_v2.js';
 import { createAgencyInquiriesTable } from './migrations/create_agency_inquiries_table.js';
+import { addCustomDomainToUsers } from './migrations/add_custom_domain_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -36,6 +37,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring agency_inquiries table exists...');
     await createAgencyInquiriesTable();
+
+    console.log('Ensuring custom domain columns exist in users table...');
+    await addCustomDomainToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

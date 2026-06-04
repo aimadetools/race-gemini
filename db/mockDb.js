@@ -83,6 +83,8 @@ export const originalMockQuery = async (text, params) => {
                     primary_color: user.primary_color || null,
                     agency_id: user.agency_id || null,
                     is_agency: user.is_agency || false,
+                    custom_domain: user.custom_domain || null,
+                    custom_domain_redirect: user.custom_domain_redirect || null,
                 };
                 return { rows: [u] };
             }
@@ -109,6 +111,8 @@ export const originalMockQuery = async (text, params) => {
                     primary_color: user.primary_color || null,
                     agency_id: user.agency_id || null,
                     is_agency: user.is_agency || false,
+                    custom_domain: user.custom_domain || null,
+                    custom_domain_redirect: user.custom_domain_redirect || null,
                 };
                 return { rows: [u] };
             }
@@ -153,8 +157,37 @@ export const originalMockQuery = async (text, params) => {
                 primary_color: user.primary_color || null,
                 agency_id: user.agency_id || null,
                 is_agency: user.is_agency || false,
+                custom_domain: user.custom_domain || null,
+                custom_domain_redirect: user.custom_domain_redirect || null,
             }));
             return { rows };
+        }
+
+        if (textLower.includes('custom_domain = $1') || textLower.includes('lower(custom_domain) = $1')) {
+            const domain = params[0]?.toLowerCase();
+            const excludeId = textLower.includes('id != $2') ? params[1]?.toString() : null;
+            const user = mockUsers.find(u => u.custom_domain?.toLowerCase() === domain && u.id?.toString() !== excludeId);
+            if (user) {
+                const u = {
+                    id: user.id,
+                    name: user.name || null,
+                    email: user.email,
+                    password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                    credits: user.credits || 0,
+                    referral_code: user.referral_code,
+                    referrer_id: user.referrer_id,
+                    subscription_status: user.subscription_status || 'inactive',
+                    stripe_subscription_id: user.stripe_subscription_id || null,
+                    logo_url: user.logo_url || null,
+                    primary_color: user.primary_color || null,
+                    agency_id: user.agency_id || null,
+                    is_agency: user.is_agency || false,
+                    custom_domain: user.custom_domain || null,
+                    custom_domain_redirect: user.custom_domain_redirect || null,
+                };
+                return { rows: [u] };
+            }
+            return { rows: [] };
         }
     }
 
@@ -248,6 +281,15 @@ export const originalMockQuery = async (text, params) => {
                 user.password_hash = passwordHash;
                 user.hashed_password = passwordHash;
                 user.passwordHash = passwordHash;
+                return { rows: [user] };
+            }
+        }
+        if (textLower.includes('custom_domain = $1') && textLower.includes('custom_domain_redirect = $2')) {
+            const [customDomain, customDomainRedirect, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.custom_domain = customDomain;
+                user.custom_domain_redirect = customDomainRedirect;
                 return { rows: [user] };
             }
         }

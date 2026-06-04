@@ -235,7 +235,9 @@ describe('dashboard API', () => {
       indexingNotifications: [],
       leads: [],
       isPaidUser: false,
-      dailyStats: expect.any(Array)
+      dailyStats: expect.any(Array),
+      customDomain: null,
+      customDomainRedirect: null
     });
   });
 
@@ -279,7 +281,9 @@ describe('dashboard API', () => {
       indexingNotifications: [],
       leads: [],
       isPaidUser: false,
-      dailyStats: expect.any(Array)
+      dailyStats: expect.any(Array),
+      customDomain: null,
+      customDomainRedirect: null
     });
   });
 });

@@ -204,6 +204,8 @@ describe('agency-dashboard API', () => {
       renewalDate: agency.renewalDate,
       totalClients: 2,
       totalPagesGenerated: 3,
+      customDomain: null,
+      customDomainRedirect: null,
     });
   });
 
