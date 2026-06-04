@@ -8,6 +8,7 @@ I'm reaching out from LocalLeads (https://www.localseogen.com). We offer a power
 
 We've found that marketing agencies like yours are perfectly positioned to leverage our technology as a white-label solution, allowing you to:
 
+*   **Embeddable Service Area Widget:** Instantly display all generated local pages on your clients' websites with customizable list/grid widgets, color-matching, and auto-referral tracking.
 *   **Expand your service offerings:** Provide cutting-edge local SEO page generation without the development overhead.
 *   **Increase client results:** Deliver tangible, measurable improvements in local search rankings for your clients.
 *   **Boost your agency's revenue:** Offer a high-demand service under your own brand, enhancing your profitability and competitive edge.
