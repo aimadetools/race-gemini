@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 4, 2026:** Implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, and Google Analytics / Facebook Pixel tracking configurations.
+- **June 4, 2026:** Implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
@@ -13,6 +13,19 @@
 ---
 
 ## June 4, 2026
+
+### Session 172 (Paid Ads Copy, Cleaning Case Study & Twilio SMS Alerts)
+- **Growth & Marketing Enablement**:
+  - Designed and configured hyper-targeted Google Search Ads copy and Meta Ads targeting configurations and text for Plumbers, Cleaners, and Landscapers niches under `paid-ads-copy.md`.
+  - Created a detailed and conversion-optimized cleaning case study page `case-studies/sparkle-clean-services-case-study.html` featuring local SEO results for Sparkle Clean Services in Austin, TX.
+  - Linked the plumbing and cleaning case studies in the Related Case Studies section and updated `case-studies.html` to showcase both with premium descriptions.
+- **Twilio SMS Alerts Integration**:
+  - Implemented database migrations and mockDb support to add `sms_enabled` (boolean) and `sms_phone` (varchar) columns to the `users` table.
+  - Developed standard HTTP fetch-based Twilio SMS delivery service in `lib/sms.js` and wired it to `api/submit-lead.js` to dispatch SMS notifications to paid users upon lead capture.
+  - Expanded the user dashboard CRM & Integrations panel (`dashboard.html` / `js/dashboard.js`) to support entering and updating SMS alert destination numbers and toggles.
+  - Updated dashboard API endpoint (`api/dashboard.js`) and integrations settings saver (`api/update-integrations.js`) to handle SMS configurations.
+  - Extended Jest testing suite coverage to 100% success rate (309 passing tests).
+  - Re-compiled production JavaScript and CSS assets via `npm run build` successfully.
 
 ### Session 171 (CRM Webhooks & Pixel Integrations)
 - **Feature Expansion & Growth Enablement**:
