@@ -5,6 +5,7 @@ import path from 'path';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 import { getSchemaType } from '../lib/schema.js';
+import * as cheerio from 'cheerio';
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
@@ -134,9 +135,36 @@ export default async (req, res, currentKvClient) => {
         const resolvedTownSlug = slugify(page.town, { lower: true, strict: true });
 
         // Generate fallback descriptions & schema (consistent with generate-seo-pages.js)
-        const metaDescription = `Get expert ${page.service} in ${page.town} from ${page.businessName}. We provide top-quality ${page.service} with reliable service. Contact us today for a free quote!`;
-        const ogDescription = metaDescription;
-        const twitterDescription = metaDescription;
+        let metaDescription = `Get expert ${page.service} in ${page.town} from ${page.businessName}. We provide top-quality ${page.service} with reliable service. Contact us today for a free quote!`;
+        let ogDescription = metaDescription;
+        let twitterDescription = metaDescription;
+        let aiContentValue = '<p>Contact us today for a free estimate!</p>';
+
+        if (pageRow.content) {
+            try {
+                const $ = cheerio.load(pageRow.content);
+                
+                const desc = $('meta[name="description"]').attr('content');
+                if (desc) metaDescription = desc;
+
+                const ogDesc = $('meta[property="og:description"]').attr('content');
+                if (ogDesc) ogDescription = ogDesc;
+
+                const twDesc = $('meta[name="twitter:description"]').attr('content');
+                if (twDesc) twitterDescription = twDesc;
+
+                const mainContent = $('.main-content').clone();
+                if (mainContent.length > 0) {
+                    mainContent.find('h2').remove();
+                    const extractedAi = mainContent.html()?.trim();
+                    if (extractedAi) {
+                        aiContentValue = extractedAi;
+                    }
+                }
+            } catch (cheerioError) {
+                console.error('Error parsing pageRow.content with cheerio:', cheerioError);
+            }
+        }
 
         const hostHeader = req.headers.host || 'localseogen.com';
         const protocol = hostHeader.includes('localhost') || hostHeader.includes('127.0.0.1') ? 'http' : 'https';
@@ -159,7 +187,6 @@ export default async (req, res, currentKvClient) => {
         `.trim();
 
         const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;">` : page.businessName;
-        const aiContentValue = '<p>Contact us today for a free estimate!</p>';
 
         const resolvedPhone = page.telephone || '';
         const resolvedPriceRange = page.priceRange || 'Standard';

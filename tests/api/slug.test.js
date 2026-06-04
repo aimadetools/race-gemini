@@ -10,7 +10,7 @@ jest.mock('@vercel/kv', () => ({
 jest.mock('slugify', () => jest.fn((text) => text.toLowerCase().replace(/\s/g, '-')));
 
 jest.mock('fs', () => ({
-  readFileSync: jest.fn().mockReturnValue('<html>{{businessName}} {{service}} {{town}} {{metaDescription}} {{primaryColor}} {{agencyLogo}} {{ai_content}} {{localBusinessSchema}}</html>'),
+  readFileSync: jest.fn().mockReturnValue('<html>{{businessName}} {{service}} {{town}} {{metaDescription}} {{ogDescription}} {{twitterDescription}} {{primaryColor}} {{agencyLogo}} {{ai_content}} {{localBusinessSchema}}</html>'),
 }));
 
 import handler from '../../api/[[...slug]].js';
@@ -145,6 +145,50 @@ describe('[[...slug]] API Wildcard Route', () => {
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('London'));
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('#ff5500'));
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('<img src="https://logo.com/agency.png"'));
+  });
+
+  test('should dynamically parse meta descriptions and AI copy from pageRow.content using cheerio', async () => {
+    const clientId = 'client123';
+    req.query.slug = [clientId, 'plumbing-in-london.html'];
+
+    addMockUser({
+      id: clientId,
+      name: 'Test Client',
+      email: 'client@example.com',
+      is_agency: false,
+    });
+
+    addMockSeoPage({
+      id: 'page1',
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
+      service: 'Plumbing',
+      town: 'London',
+      file_name: 'plumbing-in-london.html',
+      content: `
+        <html>
+        <head>
+          <meta name="description" content="Custom Meta Description Here"/>
+          <meta property="og:description" content="Custom OG Description Here"/>
+          <meta name="twitter:description" content="Custom Twitter Description Here"/>
+        </head>
+        <body>
+          <section class="container main-content">
+            <h2>Reliable Plumbing Services in London</h2>
+            <p>This is Custom AI copy generated for Plumbers R Us.</p>
+          </section>
+        </body>
+        </html>
+      `,
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Custom Meta Description Here'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Custom OG Description Here'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Custom Twitter Description Here'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('<p>This is Custom AI copy generated for Plumbers R Us.</p>'));
   });
 
   test('should return 404 if specific page is not found for client', async () => {

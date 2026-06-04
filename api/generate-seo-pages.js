@@ -249,10 +249,33 @@ export default async (req, res) => {
                     // Save to database as well so it can be served dynamically in production Vercel
                     const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (file_name, slug, content, user_id)
-                         VALUES ($1, $2, $3, $4)
-                         ON CONFLICT (slug) DO UPDATE SET content = EXCLUDED.content, updated_at = CURRENT_TIMESTAMP`,
-                        [fileName, pageSlug, pageContent, userId]
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                         ON CONFLICT (slug) DO UPDATE SET 
+                           content = EXCLUDED.content,
+                           business_name = EXCLUDED.business_name,
+                           service = EXCLUDED.service,
+                           town = EXCLUDED.town,
+                           telephone = EXCLUDED.telephone,
+                           price_range = EXCLUDED.price_range,
+                           opening_hours = EXCLUDED.opening_hours,
+                           enable_ai_copy = EXCLUDED.enable_ai_copy,
+                           ai_style = EXCLUDED.ai_style,
+                           updated_at = CURRENT_TIMESTAMP`,
+                        [
+                            fileName,
+                            pageSlug,
+                            pageContent,
+                            userId,
+                            businessName,
+                            service,
+                            town,
+                            telephone || null,
+                            priceRange || null,
+                            openingHours || null,
+                            enableAICopy || false,
+                            aiStyle || null
+                        ]
                     );
 
                     generatedPages.push({ fileName, path: filePath, url: `/generated-seo-pages/${fileName}` });
