@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 4, 2026:** Fixed dynamic page content serving to dynamically extract and render custom AI generated copy and meta descriptions via cheerio, ensured all metadata columns are populated on page generation, and implemented CNAME domain mapping and WordPress plugin integration.
+- **June 4, 2026:** Implemented CSV export functionality for captured leads and generated pages on the user dashboard, integrated a custom premium upgrade lockout modal to drive conversions, resolved dynamic page content serving via cheerio extraction, and integrated CNAME domain mapping and WordPress plugin downloads.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
@@ -13,6 +13,17 @@
 ---
  
 ## June 4, 2026
+
+### Session 147 (CSV Export Features & Premium Lockout Modal)
+- **Feature Expansion & Conversion Optimization**:
+  - Developed serverless endpoint `api/export-leads.js` that checks for user authentication and paid status (checks KV credit transactions, user subscription, or agency role). Authenticated paid users get their leads compiled and downloaded as CSV. Free tier users get blocked with a 403 status.
+  - Developed serverless endpoint `api/export-pages.js` that compiles generated SEO pages list with view metrics, relative path, and custom domain URL for both free and paid users.
+  - Updated `dashboard.html` to add "Export Leads" and "Export Pages" CSV download buttons to the captured leads and generated pages cards.
+  - Designed and implemented a custom premium lockout modal (`#upgrade-required-modal`) to prompt unpaid users to upgrade to a paid package to unlock lead exports.
+  - Wired up click event handlers in `js/dashboard.js` and rebuilt production JS/CSS assets via `npm run build`.
+- **Testing & Verification**:
+  - Created Jest unit tests under `tests/api/export-leads.test.js` and `tests/api/export-pages.test.js` to cover all authentication, authorization (paid user validation), CSV escaping, and success states (100% pass rate).
+  - Executed all 273 Jest tests and 56 Python unit tests (all passed).
 
 ### Session 146 (Workspace Health Check & Verification)
 - **Verification & Maintenance**:
