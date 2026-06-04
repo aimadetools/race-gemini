@@ -157,4 +157,49 @@ describe('Submit Lead API', () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(200);
     });
+
+    it('should trigger webhook when paid user has enabled webhooks', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = jest.fn().mockImplementation(() => Promise.resolve({ ok: true }));
+
+        // Mock SQL responses
+        // 1. Fetch page owner metadata
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                user_id: 123,
+                business_name: 'Super Plumbing',
+                service: 'plumbing',
+                town: 'springfield'
+            }]
+        });
+        // 2. Insert lead (returns lead ID)
+        mockQuery.mockResolvedValueOnce({ rows: [{ id: 456 }] });
+        // 3. Fetch user owner profile with webhook_url and webhook_enabled
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                email: 'owner@example.com',
+                is_agency: true,
+                subscription_status: 'active',
+                webhook_url: 'https://hooks.zapier.com/hooks/catch/123/456',
+                webhook_enabled: true
+            }]
+        });
+
+        await handler(mockReq, mockRes, mockKv);
+
+        // Verify webhook was called with proper payload
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            'https://hooks.zapier.com/hooks/catch/123/456',
+            expect.objectContaining({
+                method: 'POST',
+                headers: expect.objectContaining({
+                    'Content-Type': 'application/json',
+                }),
+                body: expect.stringContaining('"event":"lead.captured"')
+            })
+        );
+
+        // Restore original fetch
+        globalThis.fetch = originalFetch;
+    });
 });

@@ -238,7 +238,11 @@ describe('dashboard API', () => {
       dailyStats: expect.any(Array),
       customDomain: null,
       customDomainRedirect: null,
-      clientId: 'user123'
+      clientId: 'user123',
+      webhookUrl: null,
+      webhookEnabled: false,
+      gaTrackingId: null,
+      fbPixelId: null
     });
   });
 
@@ -285,7 +289,11 @@ describe('dashboard API', () => {
       dailyStats: expect.any(Array),
       customDomain: null,
       customDomainRedirect: null,
-      clientId: 'user123'
+      clientId: 'user123',
+      webhookUrl: null,
+      webhookEnabled: false,
+      gaTrackingId: null,
+      fbPixelId: null
     });
   });
 });

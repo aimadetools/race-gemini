@@ -14,12 +14,13 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- **Paid Ads Launch**: Design and configure hyper-targeted Google/Facebook search ad copy targeting local contractors (plumbers, cleaners, landscapers) who want local leads.
+- **Conversion Optimization**: Create a detailed, beautiful case study section featuring plumbing/cleaning local SEO results to showcase to cold outreach prospects.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- **Twilio SMS Alerts**: Integrate Twilio SMS notifications to allow paid customers to receive text alerts the second a new lead is captured.
+- **Image CDN Optimization**: Optimize dynamic generated page layout loads by implementing lazy loading and WebP conversion for all user logo uploads.
 
 ## ✅ COMPLETED
-- ✅ C1-C63: Core features, Stripe checkout, geocoding fallback, referral program, SEO audits & sitemaps, B2B cold outreach (Waves 1-3), IndexNow, credit packs, lead capture, detail masking/upselling, dashboard, and page Edit/Delete (April – June 3, 2026).
-- ✅ C64-C68: Cold Outreach Wave 4, PostgreSQL page storage, GBP schema categories, interactive analytics graph, and custom white-label branding (June 3, 2026).
-- ✅ C69-C77: WordPress plugin integration, CNAME domain mapping, dynamic render fixes, CSV data exports with upgrade modals, embeddable service area widgets, B2B agency outreach wave 5, bulk client CSV imports, and systematic workspace health verifications with 100% test coverage (June 4, 2026).
+- ✅ C1-C77: Core landing page features, Stripe, KV & PostgreSQL database migration, referral system, B2B cold email outreach campaigns, CNAME custom domains, WordPress plugin, CSV export, embeddable service area widgets, and bulk client import (April – June 4, 2026).
+- ✅ C78: CRM & Webhook Integrations, Google Analytics & Facebook Pixel tracking configuration (June 4, 2026).

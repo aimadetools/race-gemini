@@ -307,6 +307,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 initializeWidgetBuilder(data);
+
+                // Populate CRM & Webhook settings
+                const webhookUrlInput = document.getElementById('webhook-url-input');
+                const webhookEnabledCheckbox = document.getElementById('webhook-enabled-checkbox');
+                const gaTrackingIdInput = document.getElementById('ga-tracking-id-input');
+                const fbPixelIdInput = document.getElementById('fb-pixel-id-input');
+
+                if (webhookUrlInput) webhookUrlInput.value = data.webhookUrl || '';
+                if (webhookEnabledCheckbox) webhookEnabledCheckbox.checked = !!data.webhookEnabled;
+                if (gaTrackingIdInput) gaTrackingIdInput.value = data.gaTrackingId || '';
+                if (fbPixelIdInput) fbPixelIdInput.value = data.fbPixelId || '';
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {
@@ -798,5 +809,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // First execution
         updateEmbedCodeAndPreview();
+    }
+
+    // CRM & Webhooks Form Submission
+    const integrationsForm = document.getElementById('integrations-form');
+    const integrationsSuccessMsg = document.getElementById('integrations-success-msg');
+    const integrationsErrorMsg = document.getElementById('integrations-error-msg');
+
+    if (integrationsForm) {
+        integrationsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (integrationsSuccessMsg) integrationsSuccessMsg.style.display = 'none';
+            if (integrationsErrorMsg) integrationsErrorMsg.style.display = 'none';
+
+            const webhookUrl = document.getElementById('webhook-url-input').value;
+            const webhookEnabled = document.getElementById('webhook-enabled-checkbox').checked;
+            const gaTrackingId = document.getElementById('ga-tracking-id-input').value;
+            const fbPixelId = document.getElementById('fb-pixel-id-input').value;
+
+            try {
+                const response = await fetch('/api/update-integrations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId })
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (integrationsSuccessMsg) {
+                        integrationsSuccessMsg.textContent = resData.message;
+                        integrationsSuccessMsg.style.display = 'block';
+                    }
+                    await fetchDashboardData();
+                } else {
+                    if (integrationsErrorMsg) {
+                        integrationsErrorMsg.textContent = resData.message || 'Failed to update integrations.';
+                        integrationsErrorMsg.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating integrations:', error);
+                if (integrationsErrorMsg) {
+                    integrationsErrorMsg.textContent = 'An unexpected error occurred.';
+                    integrationsErrorMsg.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    // Test Webhook Connection
+    const testWebhookBtn = document.getElementById('test-webhook-btn');
+    const webhookTestMsg = document.getElementById('webhook-test-msg');
+
+    if (testWebhookBtn) {
+        testWebhookBtn.addEventListener('click', async () => {
+            if (webhookTestMsg) {
+                webhookTestMsg.style.display = 'none';
+                webhookTestMsg.style.color = '#fff';
+            }
+
+            const webhookUrl = document.getElementById('webhook-url-input').value;
+            if (!webhookUrl) {
+                if (webhookTestMsg) {
+                    webhookTestMsg.textContent = 'Please enter a webhook URL first.';
+                    webhookTestMsg.style.color = '#ef4444';
+                    webhookTestMsg.style.display = 'block';
+                }
+                return;
+            }
+
+            testWebhookBtn.disabled = true;
+            const originalText = testWebhookBtn.textContent;
+            testWebhookBtn.textContent = 'Testing Connection...';
+
+            try {
+                const response = await fetch('/api/test-webhook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ webhookUrl })
+                });
+
+                const resData = await response.json();
+                if (webhookTestMsg) {
+                    webhookTestMsg.textContent = resData.message;
+                    webhookTestMsg.style.color = response.ok ? '#10b981' : '#ef4444';
+                    webhookTestMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error testing webhook:', error);
+                if (webhookTestMsg) {
+                    webhookTestMsg.textContent = 'Failed to connect to the test webhook endpoint.';
+                    webhookTestMsg.style.color = '#ef4444';
+                    webhookTestMsg.style.display = 'block';
+                }
+            } finally {
+                testWebhookBtn.disabled = false;
+                testWebhookBtn.textContent = originalText;
+            }
+        });
     }
 });

@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 4, 2026:** Implemented CSV export functionality for captured leads and generated pages, integrated premium lockout modals, resolved dynamic page content serving, integrated CNAME domain mapping, launched embeddable service area widgets, expanded B2B Agency outreach campaign with widget value proposition, and implemented Bulk Client CSV import functionality on the agency dashboard.
+- **June 4, 2026:** Implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, and Google Analytics / Facebook Pixel tracking configurations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
 - **May 29, 2026:** Resolved unit test failures for agency inquiries and signup KV errors; integrated IndexNow API and referral click tracking.
@@ -13,6 +13,16 @@
 ---
 
 ## June 4, 2026
+
+### Session 171 (CRM Webhooks & Pixel Integrations)
+- **Feature Expansion & Growth Enablement**:
+  - Implemented database migrations to add `webhook_url`, `webhook_enabled`, `ga_tracking_id`, and `fb_pixel_id` columns to the `users` table.
+  - Implemented serverless POST endpoints `api/update-integrations.js` to save webhook / tracking parameters, and `api/test-webhook.js` to test connection endpoints with abort-signal fetch payloads.
+  - Updated `api/submit-lead.js` to non-blockingly dispatch real-time lead JSON payloads (`lead.captured`) to enabled client webhooks upon successful lead capture for paid accounts.
+  - Updated Catch-all routing `api/[[...slug]].js` to fetch and dynamically inject Google Analytics and Facebook Pixel tracking codes before rendering landing pages.
+  - Expanded the user dashboard (`dashboard.html` / `js/dashboard.js`) with a "CRM & Webhook Integrations" management card, providing form inputs, test connection feedback, toggles, and live status responses.
+  - Extended Jest testing suite by adding 100% test coverage for update-integrations, test-webhook, and submit-lead webhook triggering logic.
+  - Re-compiled production JS and CSS bundles successfully.
 
 ### Session 170 (Workspace Health & QA Verification)
 - **Verification & Maintenance**:

@@ -78,7 +78,7 @@ export default async (req, res, currentKvClient) => {
         const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
         // Fetch client and their parent agency from PostgreSQL
-        const clientResult = await query('SELECT id, name, email, agency_id FROM users WHERE id = $1', [resolvedClientId]);
+        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id FROM users WHERE id = $1', [resolvedClientId]);
         if (clientResult.rows.length === 0) {
             return res.status(404).send('Not Found');
         }
@@ -211,6 +211,18 @@ export default async (req, res, currentKvClient) => {
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
             .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
             .replace(/{{pageId}}/g, pageIdToFind);
+
+        let trackingScripts = '';
+        if (client.ga_tracking_id) {
+            trackingScripts += `\n<!-- Global site tag (gtag.js) - Google Analytics -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=${client.ga_tracking_id}"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', '${client.ga_tracking_id}');\n</script>\n`;
+        }
+        if (client.fb_pixel_id) {
+            trackingScripts += `\n<!-- Facebook Pixel Code -->\n<script>\n  !function(f,b,e,v,n,t,s)\n  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?\n  n.callMethod.apply(n,arguments):n.queue.push(arguments)};\n  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\n  n.queue=[];t=b.createElement(e);t.async=!0;\n  t.src=v;s=b.getElementsByTagName(e)[0];\n  s.parentNode.insertBefore(t,s)}(window, document,'script',\n  'https://connect.facebook.net/en_US/fbevents.js');\n  fbq('init', '${client.fb_pixel_id}');\n  fbq('track', 'PageView');\n</script>\n<noscript><img height="1" width="1" style="display:none"\n  src="https://www.facebook.com/tr?id=${client.fb_pixel_id}&ev=PageView&noscript=1"\n/></noscript>\n<!-- End Facebook Pixel Code -->\n`;
+        }
+
+        if (trackingScripts) {
+            pageContent = pageContent.replace('</head>', `${trackingScripts}</head>`);
+        }
 
         res.setHeader('Content-Type', 'text/html');
         res.send(pageContent);

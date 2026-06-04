@@ -268,6 +268,46 @@
                 <p id="custom-domain-success-msg" style="color: #10b981; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
                 <p id="custom-domain-error-msg" style="color: #ef4444; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
             </div>
+            <div class="card" id="integrations-card">
+                <h2>CRM &amp; Webhook Integrations</h2>
+                <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">
+                    Sync leads with your CRM via real-time webhooks, or configure Google Analytics and Facebook Pixels to track performance.
+                </p>
+                <form id="integrations-form" style="display: flex; flex-direction: column; gap: 15px; max-width: 600px;">
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Lead Webhooks (Paid Plans Only)</h3>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;">
+                            <label for="webhook-url-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Webhook Destination URL</label>
+                            <input id="webhook-url-input" type="text" placeholder="e.g. https://hooks.zapier.com/hooks/catch/..." style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                            <span style="font-size: 0.8rem; color: #6b7280;">Payload will be sent as a POST request when a lead is captured.</span>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                            <input id="webhook-enabled-checkbox" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;" />
+                            <label for="webhook-enabled-checkbox" style="font-weight: bold; font-size: 0.85rem; color: #ccc; cursor: pointer;">Enable Webhook Notifications</label>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="button button-secondary button-small" id="test-webhook-btn" type="button" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Test Webhook Connection</button>
+                        </div>
+                        <p id="webhook-test-msg" style="margin-top: 8px; font-size: 0.85rem; display: none;"></p>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Tracking Pixels &amp; Analytics</h3>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;">
+                            <label for="ga-tracking-id-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Google Analytics Measurement ID</label>
+                            <input id="ga-tracking-id-input" type="text" placeholder="G-XXXXXXXXXX or GT-XXXXXXX" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                            <label for="fb-pixel-id-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Facebook Pixel ID</label>
+                            <input id="fb-pixel-id-input" type="text" placeholder="e.g. 123456789012345" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                        </div>
+                    </div>
+
+                    <button class="button" type="submit" style="align-self: flex-start; padding: 0.75rem 1.5rem;">Save Integrations</button>
+                </form>
+                <p id="integrations-success-msg" style="color: #10b981; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
+                <p id="integrations-error-msg" style="color: #ef4444; margin-top: 10px; display: none; font-size: 0.9rem; font-weight: bold;"></p>
+            </div>
             <div class="card">
                 <h2>Account Settings</h2>
                 <ul>

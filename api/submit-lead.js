@@ -89,7 +89,7 @@ export default async (req, res, currentKvClient) => {
         await logInfo(`Lead ${leadId} stored successfully for user ${userId}.`, 'Lead Submission');
 
         // 4. Retrieve user's email and package details to see if they are a paying customer
-        const userResult = await query('SELECT email, is_agency, subscription_status FROM users WHERE id = $1', [userId]);
+        const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled FROM users WHERE id = $1', [userId]);
         if (userResult.rows.length === 0) {
             return res.status(200).json({ message: 'Lead submitted successfully.' }); 
         }
@@ -178,6 +178,45 @@ export default async (req, res, currentKvClient) => {
         }
 
         await sendEmail(ownerEmail, subject, htmlContent);
+
+        // 6. Trigger webhook notification if configured and user is paid
+        if (isPaidUser && user.webhook_enabled && user.webhook_url) {
+            try {
+                const webhookPayload = {
+                    event: 'lead.captured',
+                    lead: {
+                        id: leadId,
+                        name: name,
+                        email: email,
+                        phone: phone || null,
+                        message: message || null,
+                        url: url || null,
+                        source: 'landing_page',
+                        createdAt: new Date().toISOString(),
+                        metadata: {
+                            businessName: businessName,
+                            service: service,
+                            town: town
+                        }
+                    }
+                };
+
+                // Perform non-blocking webhook dispatch
+                fetch(user.webhook_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'LocalLeads-Webhook/1.0'
+                    },
+                    body: JSON.stringify(webhookPayload)
+                }).catch(fetchErr => {
+                    console.error('Error in webhook fetch delivery:', fetchErr);
+                });
+            } catch (webhookErr) {
+                console.error('Error triggering webhook:', webhookErr);
+            }
+        }
+
         return res.status(200).json({ message: 'Lead submitted successfully.' });
 
     } catch (error) {

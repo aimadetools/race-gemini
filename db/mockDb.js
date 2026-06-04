@@ -85,6 +85,10 @@ export const originalMockQuery = async (text, params) => {
                     is_agency: user.is_agency || false,
                     custom_domain: user.custom_domain || null,
                     custom_domain_redirect: user.custom_domain_redirect || null,
+                    webhook_url: user.webhook_url || null,
+                    webhook_enabled: user.webhook_enabled || false,
+                    ga_tracking_id: user.ga_tracking_id || null,
+                    fb_pixel_id: user.fb_pixel_id || null,
                 };
                 return { rows: [u] };
             }
@@ -113,6 +117,10 @@ export const originalMockQuery = async (text, params) => {
                     is_agency: user.is_agency || false,
                     custom_domain: user.custom_domain || null,
                     custom_domain_redirect: user.custom_domain_redirect || null,
+                    webhook_url: user.webhook_url || null,
+                    webhook_enabled: user.webhook_enabled || false,
+                    ga_tracking_id: user.ga_tracking_id || null,
+                    fb_pixel_id: user.fb_pixel_id || null,
                 };
                 return { rows: [u] };
             }
@@ -290,6 +298,17 @@ export const originalMockQuery = async (text, params) => {
             if (user) {
                 user.custom_domain = customDomain;
                 user.custom_domain_redirect = customDomainRedirect;
+                return { rows: [user] };
+            }
+        }
+        if (textLower.includes('webhook_url = $1') && textLower.includes('webhook_enabled = $2')) {
+            const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.webhook_url = webhookUrl;
+                user.webhook_enabled = webhookEnabled;
+                user.ga_tracking_id = gaTrackingId;
+                user.fb_pixel_id = fbPixelId;
                 return { rows: [user] };
             }
         }
