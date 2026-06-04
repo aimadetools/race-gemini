@@ -220,7 +220,7 @@ export default async (req, res) => {
                         twitterDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
                     }
 
-                    const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;">` : escapedBusinessName; // Escape agency data
+                    const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName; // Escape agency data
                     const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
                     const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours);
 

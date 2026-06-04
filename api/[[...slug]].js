@@ -186,7 +186,7 @@ export default async (req, res, currentKvClient) => {
 </script>
         `.trim();
 
-        const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;">` : page.businessName;
+        const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;" loading="lazy">` : page.businessName;
 
         const resolvedPhone = page.telephone || '';
         const resolvedPriceRange = page.priceRange || 'Standard';

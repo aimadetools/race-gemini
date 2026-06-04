@@ -151,7 +151,7 @@ export default async function handler(req, res, currentKvClient) {
 </script>
         `.trim();
 
-        const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;">` : escapedBusinessName;
+        const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName;
         const aiContentValue = '<p>Contact us today for a free estimate!</p>';
 
         const resolvedPhone = telephone || '';
