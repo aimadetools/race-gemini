@@ -174,6 +174,27 @@
 </form>
 <p class="error-message" id="error-message">
 </p>
+<h2>
+     Bulk Import Clients (CSV)
+    </h2>
+<form id="bulk-import-form">
+<div class="form-group">
+<label for="bulk-csv-file">
+       Select CSV File
+      </label>
+<input id="bulk-csv-file" accept=".csv" required="" type="file"/>
+<small style="display: block; margin-top: 5px; color: #666;">
+       Expected format: <code>name,email</code> (no headers required, or with <code>name,email</code> headers)
+      </small>
+</div>
+<div class="form-group">
+<button class="button" id="bulk-import-submit-btn" type="submit">
+       Bulk Import
+      </button>
+</div>
+</form>
+<p id="bulk-import-message" style="margin-top: 10px; font-weight: bold;">
+</p>
 </section>
 <section class="dashboard">
 <h2>
@@ -418,6 +439,90 @@ addClientForm.reset();
 const { message } = await response.json();
 errorMessage.textContent = message;
 }
+});
+
+const bulkImportForm = document.getElementById('bulk-import-form');
+const bulkImportMessage = document.getElementById('bulk-import-message');
+const bulkImportSubmitBtn = document.getElementById('bulk-import-submit-btn');
+
+bulkImportForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    bulkImportMessage.textContent = '';
+    bulkImportMessage.style.color = '';
+    
+    const fileInput = document.getElementById('bulk-csv-file');
+    const file = fileInput.files[0];
+    if (!file) {
+        bulkImportMessage.textContent = 'Please select a CSV file first.';
+        bulkImportMessage.style.color = 'red';
+        return;
+    }
+    
+    bulkImportSubmitBtn.disabled = true;
+    bulkImportSubmitBtn.textContent = 'Importing...';
+    
+    const reader = new FileReader();
+    reader.onload = async function(event) {
+        const text = event.target.result;
+        const clients = [];
+        const lines = text.split(/\r?\n/);
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            
+            const parts = line.split(',');
+            if (parts.length < 2) continue;
+            
+            const name = parts[0].replace(/^["']|["']$/g, '').trim();
+            const email = parts[1].replace(/^["']|["']$/g, '').trim();
+            
+            // Skip header if it is exactly name/email
+            if (i === 0 && name.toLowerCase() === 'name' && email.toLowerCase() === 'email') {
+                continue;
+            }
+            
+            if (name && email) {
+                clients.push({ name, email });
+            }
+        }
+        
+        if (clients.length === 0) {
+            bulkImportMessage.textContent = 'No valid client records found in CSV file.';
+            bulkImportMessage.style.color = 'red';
+            bulkImportSubmitBtn.disabled = false;
+            bulkImportSubmitBtn.textContent = 'Bulk Import';
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/bulk-import-clients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clients }),
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                bulkImportMessage.textContent = `Import complete! Imported: ${result.importedCount}, Skipped: ${result.skippedCount}, Failed: ${result.failedCount}.`;
+                bulkImportMessage.style.color = 'green';
+                fetchDashboard();
+                bulkImportForm.reset();
+            } else {
+                bulkImportMessage.textContent = result.message || 'An error occurred during import.';
+                bulkImportMessage.style.color = 'red';
+            }
+        } catch (error) {
+            console.error('Bulk import error:', error);
+            bulkImportMessage.textContent = 'Failed to connect to the import API.';
+            bulkImportMessage.style.color = 'red';
+        } finally {
+            bulkImportSubmitBtn.disabled = false;
+            bulkImportSubmitBtn.textContent = 'Bulk Import';
+        }
+    };
+    reader.readAsText(file);
 });
 logoFileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
