@@ -500,6 +500,113 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Premium Upgrade modal controls
+    const upgradeModal = document.getElementById('upgrade-required-modal');
+    const closeUpgradeModal = document.getElementById('close-upgrade-modal');
+    const closeUpgradeBtn = document.getElementById('close-upgrade-btn');
+
+    if (closeUpgradeModal) {
+        closeUpgradeModal.addEventListener('click', () => {
+            upgradeModal.style.display = 'none';
+        });
+    }
+    if (closeUpgradeBtn) {
+        closeUpgradeBtn.addEventListener('click', () => {
+            upgradeModal.style.display = 'none';
+        });
+    }
+
+    // Export Leads Click Handler
+    const exportLeadsBtn = document.getElementById('export-leads-btn');
+    if (exportLeadsBtn) {
+        exportLeadsBtn.addEventListener('click', async () => {
+            exportLeadsBtn.disabled = true;
+            const originalText = exportLeadsBtn.innerHTML;
+            exportLeadsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+
+            try {
+                const response = await fetch('/api/export-leads', {
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'localleads-captured-leads.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } else if (response.status === 403) {
+                    if (upgradeModal) {
+                        upgradeModal.style.display = 'flex';
+                    } else {
+                        alert('Lead export is a premium feature. Please upgrade to a paid pack.');
+                    }
+                } else {
+                    const data = await response.json();
+                    alert(`Error: ${data.message || 'Failed to export leads.'}`);
+                }
+            } catch (error) {
+                console.error('Error exporting leads:', error);
+                alert('An unexpected error occurred while exporting leads.');
+            } finally {
+                exportLeadsBtn.disabled = false;
+                exportLeadsBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    // Export Pages Click Handler
+    const exportPagesBtn = document.getElementById('export-pages-btn');
+    if (exportPagesBtn) {
+        exportPagesBtn.addEventListener('click', async () => {
+            exportPagesBtn.disabled = true;
+            const originalText = exportPagesBtn.innerHTML;
+            exportPagesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+
+            try {
+                const response = await fetch('/api/export-pages', {
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'localleads-generated-pages.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    const data = await response.json();
+                    alert(`Error: ${data.message || 'Failed to export pages.'}`);
+                }
+            } catch (error) {
+                console.error('Error exporting pages:', error);
+                alert('An unexpected error occurred while exporting pages.');
+            } finally {
+                exportPagesBtn.disabled = false;
+                exportPagesBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    // Close modals on outside click
+    window.addEventListener('click', (event) => {
+        if (event.target === upgradeModal) {
+            upgradeModal.style.display = 'none';
+        }
+    });
+
     // Initial load
     fetchDashboardData();
 

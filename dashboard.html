@@ -104,7 +104,15 @@
                 </div>
             </div>
             <div class="card">
-                <h2>Your Generated Pages</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="margin: 0;">Your Generated Pages</h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Manage your active SEO pages and track performance analytics.</p>
+                    </div>
+                    <button class="button button-small button-secondary" id="export-pages-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-file-csv"></i> Export Pages
+                    </button>
+                </div>
                 <div id="generated-pages">
                     <table class="data-table">
                         <thead>
@@ -122,8 +130,15 @@
                 </div>
             </div>
             <div class="card" id="captured-leads-card">
-                <h2>Captured Leads</h2>
-                <p style="margin-bottom: 1.5rem; color: #9ca3af; font-size: 0.95rem;">Leads captured from forms on your generated landing pages.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="margin: 0;">Captured Leads</h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Leads captured from forms on your generated landing pages.</p>
+                    </div>
+                    <button class="button button-small" id="export-leads-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-file-csv"></i> Export Leads
+                    </button>
+                </div>
                 <div id="captured-leads" class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -356,6 +371,28 @@
         <div style="display: flex; justify-content: center; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem;">
           <button type="button" id="cancel-delete-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
           <button type="button" id="confirm-delete-btn" style="background: #ef4444; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Delete Page</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upgrade Required Modal -->
+    <div id="upgrade-required-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; text-align: center; position: relative;">
+        <span class="close-modal" id="close-upgrade-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af;">&times;</span>
+        <div style="background: rgba(59, 130, 246, 0.15); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; border: 1px solid rgba(59, 130, 246, 0.3);">
+          <i class="fas fa-lock" style="font-size: 2.25rem; color: #60a5fa;"></i>
+        </div>
+        <h2 style="margin-top: 0; margin-bottom: 1rem; color: #fff; font-size: 1.6rem; font-weight: 700;">Premium Feature Locked</h2>
+        <p style="margin-bottom: 2rem; color: #d1d5db; font-size: 0.95rem; line-height: 1.6;">
+          CSV export of customer leads is a premium feature. Upgrade to one of our paid packs to instantly download all lead names, emails, phones, and messages.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/pricing.html" class="button" style="padding: 0.8rem; font-weight: 600; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); display: block; text-align: center;">
+            <i class="fas fa-gem" style="margin-right: 6px;"></i> Upgrade Now
+          </a>
+          <button type="button" id="close-upgrade-btn" style="background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+            Keep Free Plan
+          </button>
         </div>
       </div>
     </div>
