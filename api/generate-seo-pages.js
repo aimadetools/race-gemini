@@ -230,8 +230,6 @@ export default async (req, res) => {
                     }
 
                     const resolvedPrimaryColor = primaryColor || '#007bff'; // Use provided color or default
-                    const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours);
-
                     const resolvedPhone = telephone || '';
                     const resolvedPriceRange = priceRange || 'Standard';
                     const resolvedOpeningHours = openingHours || 'Mo-Fr 09:00-17:00';
