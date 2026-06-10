@@ -124,22 +124,27 @@
       </h2>
       <div id="results-container">
       </div>
-      <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
-       <h3>
-        Receive a Detailed Report
-       </h3>
-       <p>
-        Enter your email to get a full audit report sent to your inbox.
-       </p>
-       <form id="emailReportForm">
-        <input class="form-input" id="reportEmail" placeholder="your@example.com" required="" type="email"/>
-        <button class="button" type="submit">
-         Send Report
-        </button>
-        <div id="emailMessage" style="margin-top: 1rem;">
-        </div>
-       </form>
-      </div>
+       <div id="emailCaptureSection" style="display:none; text-align: center; margin-top: 2rem;">
+        <h3>
+         Recibir un Informe Detallado
+        </h3>
+        <p>
+         Introduce tu correo electrónico para descargar tu informe en PDF y recibir una copia en tu bandeja de entrada.
+        </p>
+        <form id="emailReportForm">
+         <input class="form-input" id="reportEmail" placeholder="tu@ejemplo.com" required="" type="email"/>
+         <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; flex-wrap: wrap;">
+          <button class="button" type="submit" id="sendEmailBtn" style="flex: 1; min-width: 150px; margin: 0;">
+           Enviar Reporte
+          </button>
+          <button class="button button-secondary" type="button" id="downloadPdfBtn" style="flex: 1; min-width: 150px; margin: 0;">
+           Descargar PDF
+          </button>
+         </div>
+         <div id="emailMessage" style="margin-top: 1rem;">
+         </div>
+        </form>
+       </div>
      </div>
     </div>
    </section>
@@ -237,6 +242,7 @@
     </div>
    </div>
   </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="/js/app.min.js">
   </script>
   <button id="scrollToTopBtn" title="Go to top">

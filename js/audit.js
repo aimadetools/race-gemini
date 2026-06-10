@@ -440,70 +440,248 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailReportForm = document.getElementById('emailReportForm');
     const reportEmailInput = document.getElementById('reportEmail');
     const emailMessageDiv = document.getElementById('emailMessage');
-    const emailReportSubmitButton = emailReportForm.querySelector('button[type="submit"]');
+    const emailReportSubmitButton = document.getElementById('sendEmailBtn') || emailReportForm.querySelector('button[type="submit"]');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
 
-    emailReportForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = reportEmailInput.value;
+    if (emailReportForm) {
+        emailReportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = reportEmailInput.value;
 
-        if (!email || !currentAuditResults) {
-            emailMessageDiv.textContent = 'Please provide an email and run an audit first.';
-            return;
-        }
-        
-        emailReportSubmitButton.disabled = true;
-        emailReportSubmitButton.textContent = 'Sending...';
-
-        try {
-            const response = await fetch('/api/send-audit-report', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, auditResults: currentAuditResults, url: auditUrlInput.value }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to send report.');
+            if (!email || !currentAuditResults) {
+                emailMessageDiv.textContent = 'Please provide an email and run an audit first.';
+                emailMessageDiv.style.color = 'red';
+                return;
             }
+            
+            emailReportSubmitButton.disabled = true;
+            if (downloadPdfBtn) downloadPdfBtn.disabled = true;
+            emailReportSubmitButton.innerHTML = 'Sending... <span class="spinner"></span>';
 
-            emailMessageDiv.innerHTML = `
-                <div class="success-card" style="margin-top: 1.5rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); animation: fadeIn 0.5s ease-out;">
-                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
-                    <h4 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Report Sent Successfully!</h4>
-                    <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">We have sent a comprehensive analysis of your SEO opportunities and missing location keywords to your inbox.</p>
-                    <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1.5rem 0 1rem; padding-top: 1.5rem;">
-                        <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">Ready to claim these missing customers? Choose your path:</p>
-                        <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
-                            <div style="flex: 1; min-width: 250px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
-                                <h5 style="color: #e5e7eb; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">Option A: Start Free</h5>
-                                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 5 free signup credits to build your first local SEO pages.</p>
-                                <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); transition: transform 0.2s, box-shadow 0.2s;">
-                                    Generate 5 Pages Free
-                                </a>
-                            </div>
-                            <div style="flex: 1; min-width: 250px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
-                                <h5 style="color: #34d399; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">🔥 Option B: Upgrade &amp; Dominate</h5>
-                                <p style="color: #a7f3d0; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Unlock 200 page credits to dominate your entire local service area.</p>
-                                <form action="/api/checkout" method="POST" style="margin: 0; display: inline-block;">
-                                    <input name="creditPackId" type="hidden" value="pack_pro"/>
-                                    <button type="submit" class="button" style="display: inline-block; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-                                        Get Pro Pack (200 pages) for $99
-                                    </button>
-                                </form>
+            try {
+                const response = await fetch('/api/send-audit-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, auditResults: currentAuditResults, url: auditUrlInput.value }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to send report.');
+                }
+
+                emailMessageDiv.innerHTML = `
+                    <div class="success-card" style="margin-top: 1.5rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); animation: fadeIn 0.5s ease-out;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📩</div>
+                        <h4 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Report Sent Successfully!</h4>
+                        <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">We have sent a comprehensive analysis of your SEO opportunities and missing location keywords to your inbox.</p>
+                        <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1.5rem 0 1rem; padding-top: 1.5rem;">
+                            <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">Ready to claim these missing customers? Choose your path:</p>
+                            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                                <div style="flex: 1; min-width: 250px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                    <h5 style="color: #e5e7eb; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">Option A: Start Free</h5>
+                                    <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 5 free signup credits to build your first local SEO pages.</p>
+                                    <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); transition: transform 0.2s, box-shadow 0.2s;">
+                                        Generate 5 Pages Free
+                                    </a>
+                                </div>
+                                <div style="flex: 1; min-width: 250px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                    <h5 style="color: #34d399; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">🔥 Option B: Upgrade &amp; Dominate</h5>
+                                    <p style="color: #a7f3d0; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Unlock 200 page credits to dominate your entire local service area.</p>
+                                    <form action="/api/checkout" method="POST" style="margin: 0; display: inline-block;">
+                                        <input name="creditPackId" type="hidden" value="pack_pro"/>
+                                        <button type="submit" class="button" style="display: inline-block; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+                                            Get Pro Pack (200 pages) for $99
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-            emailMessageDiv.style.color = '';
-            reportEmailInput.value = '';
-            trackEvent('email_report_sent', { email: email, success: true });
-        } catch (error) {
-            emailMessageDiv.textContent = error.message;
-            emailMessageDiv.style.color = 'red';
-        } finally {
-            emailReportSubmitButton.disabled = false;
-            emailReportSubmitButton.textContent = 'Send Report';
-        }
-    });
+                `;
+                emailMessageDiv.style.color = '';
+                reportEmailInput.value = '';
+                trackEvent('email_report_sent', { email: email, success: true });
+            } catch (error) {
+                emailMessageDiv.textContent = error.message;
+                emailMessageDiv.style.color = 'red';
+            } finally {
+                emailReportSubmitButton.disabled = false;
+                if (downloadPdfBtn) downloadPdfBtn.disabled = false;
+                emailReportSubmitButton.textContent = 'Send Report';
+            }
+        });
+    }
+
+    if (downloadPdfBtn) {
+        downloadPdfBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = reportEmailInput.value;
+
+            // Trigger HTML5 validation reporting if empty or invalid email
+            if (!reportEmailInput.checkValidity()) {
+                reportEmailInput.reportValidity();
+                return;
+            }
+
+            if (!email || !currentAuditResults) {
+                emailMessageDiv.textContent = 'Please provide an email and run an audit first.';
+                emailMessageDiv.style.color = 'red';
+                return;
+            }
+
+            downloadPdfBtn.disabled = true;
+            emailReportSubmitButton.disabled = true;
+            downloadPdfBtn.innerHTML = 'Generating... <span class="spinner"></span>';
+
+            try {
+                // 1. Send report request to `/api/send-audit-report` to capture email lead
+                const response = await fetch('/api/send-audit-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, auditResults: currentAuditResults, url: auditUrlInput.value }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to send email report.');
+                }
+
+                // 2. Generate and download PDF client-side
+                const element = document.getElementById('results-container');
+                let domainName = 'website';
+                try {
+                    domainName = new URL(auditUrlInput.value).hostname;
+                } catch (_) {}
+
+                const opt = {
+                    margin:       0.5,
+                    filename:     `seo-audit-report-${domainName}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true,
+                        onclone: (clonedDoc) => {
+                            // Style the cloned container for a print-friendly light-mode PDF
+                            const container = clonedDoc.getElementById('results-container');
+                            if (container) {
+                                container.style.backgroundColor = '#ffffff';
+                                container.style.color = '#111111';
+                                container.style.padding = '20px';
+                                container.style.fontFamily = 'Inter, sans-serif';
+                                
+                                const sections = container.querySelectorAll('.audit-section');
+                                sections.forEach(sec => {
+                                    sec.style.backgroundColor = '#f9f9f9';
+                                    sec.style.color = '#333333';
+                                    sec.style.border = '1px solid #e2e8f0';
+                                    sec.style.boxShadow = 'none';
+                                    sec.style.marginBottom = '15px';
+                                    sec.style.borderRadius = '8px';
+                                    sec.style.padding = '15px';
+                                    
+                                    const h3 = sec.querySelector('h3');
+                                    if (h3) {
+                                        h3.style.borderBottom = '2px solid #e2e8f0';
+                                        h3.style.paddingBottom = '5px';
+                                        h3.style.marginTop = '0';
+                                        h3.style.fontSize = '1.4rem';
+                                        
+                                        // Keep standard colors or make them readable on light bg
+                                        if (sec.classList.contains('error')) h3.style.color = '#dc3545';
+                                        else if (sec.classList.contains('warning')) h3.style.color = '#d97706';
+                                        else if (sec.classList.contains('info')) h3.style.color = '#0284c7';
+                                        else if (sec.classList.contains('success')) h3.style.color = '#16a34a';
+                                        else h3.style.color = '#111827';
+                                    }
+                                    
+                                    const items = sec.querySelectorAll('.audit-issue-item');
+                                    items.forEach(item => {
+                                        item.style.backgroundColor = '#ffffff';
+                                        item.style.color = '#374151';
+                                        item.style.border = '1px solid #e5e7eb';
+                                        item.style.borderLeft = '4px solid';
+                                        item.style.padding = '8px 12px';
+                                        item.style.marginBottom = '8px';
+                                        item.style.borderRadius = '4px';
+                                        
+                                        if (sec.classList.contains('error')) item.style.borderLeftColor = '#dc3545';
+                                        else if (sec.classList.contains('warning')) item.style.borderLeftColor = '#ffc107';
+                                        else if (sec.classList.contains('info')) item.style.borderLeftColor = '#17a2b8';
+                                        else if (sec.classList.contains('success')) item.style.borderLeftColor = '#28a745';
+                                    });
+
+                                    const successText = sec.querySelector('p');
+                                    if (successText && sec.classList.contains('success')) {
+                                        successText.style.color = '#16a34a';
+                                    }
+                                });
+                                
+                                const badges = container.querySelectorAll('.category-badge');
+                                badges.forEach(badge => {
+                                    badge.style.backgroundColor = '#007bff';
+                                    badge.style.color = '#ffffff';
+                                    badge.style.padding = '4px 10px';
+                                    badge.style.borderRadius = '20px';
+                                    badge.style.fontWeight = 'bold';
+                                });
+                                
+                                const gbpResultCard = container.querySelector('.gbp-result-card');
+                                if (gbpResultCard) {
+                                    gbpResultCard.style.backgroundColor = '#f3f4f6';
+                                    gbpResultCard.style.border = '1px solid #e5e7eb';
+                                    gbpResultCard.style.color = '#1f2937';
+                                }
+                            }
+                        }
+                    },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                // Generate the PDF
+                await html2pdf().set(opt).from(element).save();
+
+                // Show success card
+                emailMessageDiv.innerHTML = `
+                    <div class="success-card" style="margin-top: 1.5rem; padding: 2rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); animation: fadeIn 0.5s ease-out;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📥</div>
+                        <h4 style="color: #60a5fa; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">PDF Generated &amp; Email Sent!</h4>
+                        <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">Your PDF report has been downloaded, and a copy has been sent to <strong>${escapeHtml(email)}</strong>.</p>
+                        <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1.5rem 0 1rem; padding-top: 1.5rem;">
+                            <p style="color: #f3f4f6; font-weight: 600; margin-bottom: 1.5rem; font-size: 1.1rem;">Ready to claim these missing customers? Choose your path:</p>
+                            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                                <div style="flex: 1; min-width: 250px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                    <h5 style="color: #e5e7eb; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">Option A: Start Free</h5>
+                                    <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Use your 5 free signup credits to build your first local SEO pages.</p>
+                                    <a href="/generate.html" class="button" style="display: inline-block; text-decoration: none; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); transition: transform 0.2s, box-shadow 0.2s;">
+                                        Generate 5 Pages Free
+                                    </a>
+                                </div>
+                                <div style="flex: 1; min-width: 250px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; box-sizing: border-box;">
+                                    <h5 style="color: #34d399; font-size: 1rem; margin-top: 0; margin-bottom: 0.5rem; font-weight: bold; font-family: 'Inter', sans-serif;">🔥 Option B: Upgrade &amp; Dominate</h5>
+                                    <p style="color: #a7f3d0; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Unlock 200 page credits to dominate your entire local service area.</p>
+                                    <form action="/api/checkout" method="POST" style="margin: 0; display: inline-block;">
+                                        <input name="creditPackId" type="hidden" value="pack_pro"/>
+                                        <button type="submit" class="button" style="display: inline-block; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+                                            Get Pro Pack (200 pages) for $99
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                emailMessageDiv.style.color = '';
+                reportEmailInput.value = '';
+                trackEvent('pdf_report_downloaded', { email: email, success: true });
+            } catch (error) {
+                emailMessageDiv.textContent = error.message;
+                emailMessageDiv.style.color = 'red';
+            } finally {
+                downloadPdfBtn.disabled = false;
+                emailReportSubmitButton.disabled = false;
+                downloadPdfBtn.textContent = 'Download PDF';
+            }
+        });
+    }
 });
