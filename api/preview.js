@@ -28,7 +28,7 @@ export default async (req, res) => {
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { businessName, service, town, primaryColor, telephone, priceRange, openingHours } = req.query;
+    const { businessName, service, town, primaryColor, telephone, priceRange, openingHours, export: exportParam } = req.query;
 
     if (!businessName || !service || !town) {
         return res.status(400).send('<h1>Error: Missing required query parameters: businessName, service, town</h1>');
@@ -131,8 +131,10 @@ export default async (req, res) => {
 </div>
 `;
         
-        // Find <body> and inject the banner
-        pageContent = pageContent.replace(/<body>/i, `<body>${bannerHtml}`);
+        // Find <body> and inject the banner if not exporting
+        if (exportParam !== 'true') {
+            pageContent = pageContent.replace(/<body>/i, `<body>${bannerHtml}`);
+        }
 
         res.setHeader('Content-Type', 'text/html');
         res.status(200).send(pageContent);

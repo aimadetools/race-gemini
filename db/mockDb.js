@@ -412,7 +412,7 @@ export const originalMockQuery = async (text, params) => {
     }
 
     if (textLower.includes('update seo_pages')) {
-        if (textLower.includes('where id = $12')) {
+        if (textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
             const [
                 content,
                 business_name,
@@ -425,8 +425,13 @@ export const originalMockQuery = async (text, params) => {
                 enable_ai_copy,
                 ai_style,
                 ai_keywords,
-                id
+                primary_color_or_id,
+                maybe_id
             ] = params;
+            
+            const id = maybe_id || primary_color_or_id;
+            const primary_color = maybe_id ? primary_color_or_id : null;
+            
             const page = mockSeoPages.find(p => p.id === id);
             if (page) {
                 page.content = content;
@@ -440,6 +445,9 @@ export const originalMockQuery = async (text, params) => {
                 page.enable_ai_copy = enable_ai_copy;
                 page.ai_style = ai_style;
                 page.ai_keywords = ai_keywords;
+                if (primary_color) {
+                    page.primary_color = primary_color;
+                }
                 page.updated_at = new Date();
                 return { rows: [page] };
             }

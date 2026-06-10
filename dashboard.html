@@ -568,6 +568,159 @@
       </div>
     </div>
 
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; margin-top: 1rem;">
+            <button type="button" id="cancel-edit-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
+            <button type="submit" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Visual Page Preview Editor Modal -->
+    <div id="visual-edit-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.98); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 2rem; width: 95%; max-width: 1200px; height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.6); color: #f3f4f6; position: relative; box-sizing: border-box; overflow: hidden;">
+        <span class="close-modal" id="close-visual-edit-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af; z-index: 10;">&times;</span>
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: #fff; font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-paint-brush" style="color: #60a5fa;"></i> Visual Page Editor & Preview
+        </h2>
+        
+        <div style="display: flex; flex: 1; min-height: 0; gap: 2rem; flex-wrap: wrap;">
+          <!-- Left Column: Controls (40%) -->
+          <div style="flex: 1 1 350px; display: flex; flex-direction: column; overflow-y: auto; padding-right: 0.5rem; max-height: 100%;">
+            <form id="visual-edit-form" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+              <input type="hidden" id="visual-edit-page-id" name="pageId" />
+              
+              <div>
+                <label for="visual-edit-business-name" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Business Name</label>
+                <input type="text" id="visual-edit-business-name" required style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+              </div>
+              
+              <div style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                  <label for="visual-edit-service" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Service</label>
+                  <input type="text" id="visual-edit-service" required style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+                <div style="flex: 1;">
+                  <label for="visual-edit-town" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Town</label>
+                  <input type="text" id="visual-edit-town" required style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                  <label for="visual-edit-zipcode" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Zip Code</label>
+                  <input type="text" id="visual-edit-zipcode" required style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+                <div style="flex: 1;">
+                  <label for="visual-edit-telephone" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Telephone (optional)</label>
+                  <input type="text" id="visual-edit-telephone" style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                  <label for="visual-edit-pricerange" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Price Range</label>
+                  <input type="text" id="visual-edit-pricerange" placeholder="e.g. $$" style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+                <div style="flex: 1;">
+                  <label for="visual-edit-openinghours" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Opening Hours</label>
+                  <input type="text" id="visual-edit-openinghours" placeholder="e.g. Mo-Fr 09:00-17:00" style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;" />
+                </div>
+              </div>
+
+              <!-- Color Styling & Themes -->
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 10px; margin-top: 0.5rem; box-sizing: border-box;">
+                <h3 style="margin-top: 0; margin-bottom: 0.75rem; font-size: 0.9rem; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                  <i class="fas fa-palette" style="color: #60a5fa; font-size: 0.85rem;"></i> Color & Theme Settings
+                </h3>
+                
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                  <span style="font-weight: 600; font-size: 0.8rem; color: #9ca3af; min-width: 100px;">Primary Color:</span>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="color" id="visual-edit-color" style="border: none; background: none; width: 34px; height: 34px; cursor: pointer; padding: 0;" />
+                    <input type="text" id="visual-edit-color-hex" style="width: 80px; padding: 0.35rem 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-family: monospace; font-size: 0.8rem; text-align: center; box-sizing: border-box;" />
+                  </div>
+                </div>
+                
+                <div>
+                  <span style="display: block; font-weight: 600; font-size: 0.8rem; color: #9ca3af; margin-bottom: 0.5rem;">Preset Themes:</span>
+                  <div id="visual-edit-presets" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="preset-btn" data-color="#2563eb" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #2563eb; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Royal Blue"></button>
+                    <button type="button" class="preset-btn" data-color="#059669" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #059669; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Forest Green"></button>
+                    <button type="button" class="preset-btn" data-color="#ea580c" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #ea580c; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Sunset Orange"></button>
+                    <button type="button" class="preset-btn" data-color="#7c3aed" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #7c3aed; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Deep Purple"></button>
+                    <button type="button" class="preset-btn" data-color="#475569" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #475569; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Midnight Slate"></button>
+                    <button type="button" class="preset-btn" data-color="#dc2626" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #dc2626; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Crimson Red"></button>
+                    <button type="button" class="preset-btn" data-color="#db2777" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: #db2777; cursor: pointer; transition: transform 0.2s, border-color 0.2s; padding: 0;" title="Bright Pink"></button>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" id="visual-edit-enable-ai-copy" style="width: auto; cursor: pointer; margin: 0;" />
+                <label for="visual-edit-enable-ai-copy" style="font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-bottom: 0;">Enable AI Copy Generation</label>
+              </div>
+              
+              <div id="visual-edit-ai-style-group" style="display: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                <div>
+                  <label for="visual-edit-ai-style" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">AI Content Style</label>
+                  <select id="visual-edit-ai-style" style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box;">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="friendly">Friendly</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="visual-edit-ai-keywords" style="display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.85rem; color: #9ca3af;">Custom Keywords / Prompts</label>
+                  <textarea id="visual-edit-ai-keywords" placeholder="e.g. family-owned, 24/7 service, eco-friendly" rows="2" style="width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; resize: vertical; box-sizing: border-box;"></textarea>
+                </div>
+              </div>
+            </form>
+            
+            <!-- Save & Export Actions at Bottom of Column -->
+            <div style="display: flex; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem; margin-top: auto; background: rgba(31, 41, 55, 0.98); position: sticky; bottom: 0; padding-bottom: 0.25rem; z-index: 10;">
+              <button type="button" id="cancel-visual-edit-btn" style="flex: 1; background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-size: 0.85rem;">Close</button>
+              <button type="button" id="export-html-btn" style="flex: 1.2; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem;" title="Export page as raw HTML file">
+                <i class="fas fa-download"></i> Export HTML
+              </button>
+              <button type="button" id="save-visual-edit-btn" style="flex: 1.5; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem;">
+                <i class="fas fa-save"></i> Save Page
+              </button>
+            </div>
+          </div>
+          
+          <!-- Right Column: Live Preview (60%) -->
+          <div style="flex: 1.5 1 500px; display: flex; flex-direction: column; height: 100%; min-height: 400px; background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; position: relative;">
+            <!-- Preview Header with Device Toggles -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1.25rem; background: rgba(31, 41, 55, 0.6); border-bottom: 1px solid rgba(255,255,255,0.08); box-sizing: border-box;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Live Preview Screen</span>
+              </div>
+              <div style="display: flex; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 2px;">
+                <button type="button" id="preview-dev-desktop" style="background: rgba(255, 255, 255, 0.1); border: none; color: #fff; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                  <i class="fas fa-desktop"></i> Desktop
+                </button>
+                <button type="button" id="preview-dev-mobile" style="background: transparent; border: none; color: #9ca3af; padding: 4px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                  <i class="fas fa-mobile-alt"></i> Mobile
+                </button>
+              </div>
+            </div>
+            
+            <!-- Iframe Wrapper -->
+            <div id="visual-preview-iframe-wrapper" style="flex: 1; position: relative; display: flex; justify-content: center; align-items: stretch; background: #1f2937; padding: 10px; overflow: hidden; transition: all 0.3s ease; box-sizing: border-box;">
+              <iframe id="visual-preview-iframe" style="width: 100%; height: 100%; border: none; background: #fff; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.25); transition: width 0.3s ease, max-width 0.3s ease;" src="about:blank"></iframe>
+              <!-- Loading Spinner overlay -->
+              <div id="visual-preview-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(31, 41, 55, 0.75); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #60a5fa;"></i>
+                <span style="font-size: 0.95rem; color: #e5e7eb; font-weight: 600;">Updating live preview...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="delete-page-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
       <div class="modal-content" style="background: rgba(31, 41, 55, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; text-align: center;">

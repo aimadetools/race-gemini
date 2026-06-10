@@ -442,6 +442,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 editModal.style.display = 'flex';
             }
+        } else if (event.target.classList.contains('visual-edit-page-btn') || event.target.closest('.visual-edit-page-btn')) {
+            const btn = event.target.classList.contains('visual-edit-page-btn') ? event.target : event.target.closest('.visual-edit-page-btn');
+            const pageId = btn.getAttribute('data-id');
+            openVisualEditor(pageId);
         } else if (event.target.classList.contains('delete-page-btn')) {
             const pageId = event.target.getAttribute('data-id');
             document.getElementById('delete-page-id').value = pageId;
@@ -978,6 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>
                         <a href="${page.url}" target="_blank" class="button button-small">View</a>
                         <button class="button button-small button-secondary edit-page-btn" data-id="${page.pageId}">Edit</button>
+                        <button class="button button-small button-secondary visual-edit-page-btn" data-id="${page.pageId}" style="display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-paint-brush"></i> Visual Edit</button>
                         <button class="button button-small button-danger delete-page-btn" data-id="${page.pageId}">Delete</button>
                     </td>
                 `;
@@ -1702,6 +1707,292 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         if (event.target === testimonialModal) {
             testimonialModal.style.display = 'none';
+        }
+        if (event.target === visualModal) {
+            closeVisualEditor();
+        }
+    });
+
+    // --- Visual Page Preview Editor Logic ---
+    const visualModal = document.getElementById('visual-edit-modal');
+    const visualForm = document.getElementById('visual-edit-form');
+    const closeVisualBtn = document.getElementById('close-visual-edit-modal');
+    const cancelVisualBtn = document.getElementById('cancel-visual-edit-btn');
+    const saveVisualBtn = document.getElementById('save-visual-edit-btn');
+    const exportHtmlBtn = document.getElementById('export-html-btn');
+
+    const visualPageId = document.getElementById('visual-edit-page-id');
+    const visualBusinessName = document.getElementById('visual-edit-business-name');
+    const visualService = document.getElementById('visual-edit-service');
+    const visualTown = document.getElementById('visual-edit-town');
+    const visualZipcode = document.getElementById('visual-edit-zipcode');
+    const visualTelephone = document.getElementById('visual-edit-telephone');
+    const visualPricerange = document.getElementById('visual-edit-pricerange');
+    const visualOpeninghours = document.getElementById('visual-edit-openinghours');
+    const visualColor = document.getElementById('visual-edit-color');
+    const visualColorHex = document.getElementById('visual-edit-color-hex');
+    const visualEnableAI = document.getElementById('visual-edit-enable-ai-copy');
+    const visualAiStyleGroup = document.getElementById('visual-edit-ai-style-group');
+    const visualAiStyle = document.getElementById('visual-edit-ai-style');
+    const visualAiKeywords = document.getElementById('visual-edit-ai-keywords');
+
+    const visualIframe = document.getElementById('visual-preview-iframe');
+    const visualLoading = document.getElementById('visual-preview-loading');
+    const btnDesktop = document.getElementById('preview-dev-desktop');
+    const btnMobile = document.getElementById('preview-dev-mobile');
+
+    let reloadTimeout = null;
+
+    function applyIframeStyling() {
+        try {
+            if (visualIframe.contentWindow && visualIframe.contentWindow.document) {
+                const doc = visualIframe.contentWindow.document;
+                doc.documentElement.style.setProperty('--primary-color', visualColor.value);
+            }
+        } catch (e) {
+            console.error('Error applying live CSS tweak to preview:', e);
+        }
+    }
+
+    function updatePreviewIframe(forceReload = false) {
+        if (!visualPageId.value) return;
+
+        const params = new URLSearchParams({
+            businessName: visualBusinessName.value || '',
+            service: visualService.value || '',
+            town: visualTown.value || '',
+            primaryColor: visualColor.value || '#3b82f6',
+            telephone: visualTelephone.value || '',
+            priceRange: visualPricerange.value || '',
+            openingHours: visualOpeninghours.value || ''
+        });
+
+        if (forceReload) {
+            visualLoading.style.opacity = '1';
+            visualLoading.style.pointerEvents = 'all';
+            visualIframe.src = '/api/preview?' + params.toString();
+            visualIframe.onload = () => {
+                visualLoading.style.opacity = '0';
+                visualLoading.style.pointerEvents = 'none';
+                applyIframeStyling();
+            };
+        } else {
+            applyIframeStyling();
+        }
+    }
+
+    function debouncePreviewReload() {
+        if (reloadTimeout) clearTimeout(reloadTimeout);
+        reloadTimeout = setTimeout(() => {
+            updatePreviewIframe(true);
+        }, 500);
+    }
+
+    function openVisualEditor(pageId) {
+        const page = userPages.find(p => p.pageId === pageId);
+        if (!page) return;
+
+        visualPageId.value = page.pageId;
+        visualBusinessName.value = page.businessName || '';
+        visualService.value = page.service || '';
+        visualTown.value = page.town || '';
+        visualZipcode.value = page.zipCode || '';
+        visualTelephone.value = page.telephone || '';
+        visualPricerange.value = page.priceRange || '';
+        visualOpeninghours.value = page.openingHours || '';
+        
+        const defaultColor = page.primaryColor || '#3b82f6';
+        visualColor.value = defaultColor;
+        visualColorHex.value = defaultColor.toUpperCase();
+        
+        // Highlight active preset color if it matches
+        const presetButtons = document.querySelectorAll('#visual-edit-presets .preset-btn');
+        presetButtons.forEach(btn => {
+            if (btn.getAttribute('data-color').toLowerCase() === defaultColor.toLowerCase()) {
+                btn.style.borderColor = '#fff';
+            } else {
+                btn.style.borderColor = 'rgba(255,255,255,0.2)';
+            }
+        });
+
+        visualEnableAI.checked = !!page.enableAICopy;
+        visualAiStyleGroup.style.display = page.enableAICopy ? 'flex' : 'none';
+        visualAiStyle.value = page.aiStyle || 'professional';
+        visualAiKeywords.value = page.aiKeywords || '';
+
+        // Reset device toggle to desktop style
+        btnDesktop.style.background = 'rgba(255, 255, 255, 0.1)';
+        btnDesktop.style.color = '#fff';
+        btnMobile.style.background = 'transparent';
+        btnMobile.style.color = '#9ca3af';
+        visualIframe.style.width = '100%';
+        visualIframe.style.maxWidth = '100%';
+
+        visualModal.style.display = 'flex';
+        updatePreviewIframe(true);
+    }
+
+    // Input listeners for instant visual CSS updates or debounced text updates
+    visualBusinessName.addEventListener('input', debouncePreviewReload);
+    visualService.addEventListener('input', debouncePreviewReload);
+    visualTown.addEventListener('input', debouncePreviewReload);
+    visualZipcode.addEventListener('input', debouncePreviewReload);
+    visualTelephone.addEventListener('input', debouncePreviewReload);
+    visualPricerange.addEventListener('input', debouncePreviewReload);
+    visualOpeninghours.addEventListener('input', debouncePreviewReload);
+
+    visualColor.addEventListener('input', (e) => {
+        const color = e.target.value;
+        visualColorHex.value = color.toUpperCase();
+        applyIframeStyling();
+    });
+
+    visualColorHex.addEventListener('input', (e) => {
+        let color = e.target.value;
+        if (color.startsWith('#') && (color.length === 4 || color.length === 7)) {
+            visualColor.value = color;
+            applyIframeStyling();
+        }
+    });
+
+    const presetButtonsList = document.querySelectorAll('#visual-edit-presets .preset-btn');
+    presetButtonsList.forEach(btn => {
+        btn.addEventListener('click', () => {
+            presetButtonsList.forEach(p => p.style.borderColor = 'rgba(255,255,255,0.2)');
+            btn.style.borderColor = '#fff';
+            
+            const color = btn.getAttribute('data-color');
+            visualColor.value = color;
+            visualColorHex.value = color.toUpperCase();
+            applyIframeStyling();
+        });
+    });
+
+    visualEnableAI.addEventListener('change', function() {
+        visualAiStyleGroup.style.display = this.checked ? 'flex' : 'none';
+        debouncePreviewReload();
+    });
+
+    visualAiStyle.addEventListener('change', debouncePreviewReload);
+    visualAiKeywords.addEventListener('input', debouncePreviewReload);
+
+    // Device View Toggles
+    btnDesktop.addEventListener('click', () => {
+        btnDesktop.style.background = 'rgba(255, 255, 255, 0.1)';
+        btnDesktop.style.color = '#fff';
+        btnMobile.style.background = 'transparent';
+        btnMobile.style.color = '#9ca3af';
+        
+        visualIframe.style.width = '100%';
+        visualIframe.style.maxWidth = '100%';
+    });
+
+    btnMobile.addEventListener('click', () => {
+        btnMobile.style.background = 'rgba(255, 255, 255, 0.1)';
+        btnMobile.style.color = '#fff';
+        btnDesktop.style.background = 'transparent';
+        btnDesktop.style.color = '#9ca3af';
+        
+        visualIframe.style.width = '375px';
+        visualIframe.style.maxWidth = '100%';
+    });
+
+    // Close Modal helpers
+    const closeVisualEditor = () => {
+        visualModal.style.display = 'none';
+        visualIframe.src = 'about:blank';
+    };
+    closeVisualBtn.addEventListener('click', closeVisualEditor);
+    cancelVisualBtn.addEventListener('click', closeVisualEditor);
+
+    // Save Page
+    saveVisualBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        saveVisualBtn.disabled = true;
+        const originalText = saveVisualBtn.innerHTML;
+        saveVisualBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+        
+        try {
+            const response = await fetch('/api/update-page', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify({
+                    pageId: visualPageId.value,
+                    businessName: visualBusinessName.value,
+                    service: visualService.value,
+                    town: visualTown.value,
+                    zipCode: visualZipcode.value,
+                    telephone: visualTelephone.value,
+                    priceRange: visualPricerange.value,
+                    openingHours: visualOpeninghours.value,
+                    enableAICopy: visualEnableAI.checked,
+                    aiStyle: visualAiStyle.value,
+                    aiKeywords: visualAiKeywords.value,
+                    primaryColor: visualColor.value
+                })
+            });
+            
+            if (response.ok) {
+                closeVisualEditor();
+                await fetchDashboardData();
+            } else {
+                const data = await response.json();
+                alert(`Error: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Error updating page:', error);
+            alert('Failed to update page.');
+        } finally {
+            saveVisualBtn.disabled = false;
+            saveVisualBtn.innerHTML = originalText;
+        }
+    });
+
+    // Export HTML file
+    exportHtmlBtn.addEventListener('click', async () => {
+        exportHtmlBtn.disabled = true;
+        const originalText = exportHtmlBtn.innerHTML;
+        exportHtmlBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+        
+        try {
+            const params = new URLSearchParams({
+                businessName: visualBusinessName.value,
+                service: visualService.value,
+                town: visualTown.value,
+                primaryColor: visualColor.value,
+                telephone: visualTelephone.value,
+                priceRange: visualPricerange.value,
+                openingHours: visualOpeninghours.value,
+                export: 'true'
+            });
+            
+            const response = await fetch('/api/preview?' + params.toString());
+            if (response.ok) {
+                const html = await response.text();
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                const filename = `${visualService.value.toLowerCase().replace(/\s+/g, '-')}-in-${visualTown.value.toLowerCase().replace(/\s+/g, '-')}.html`;
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                alert('Failed to generate export file.');
+            }
+        } catch (err) {
+            console.error('Error exporting page:', err);
+            alert('An unexpected error occurred during export.');
+        } finally {
+            exportHtmlBtn.disabled = false;
+            exportHtmlBtn.innerHTML = originalText;
         }
     });
 });

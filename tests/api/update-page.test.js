@@ -129,6 +129,21 @@ describe('Update Page API', () => {
             created_at: new Date('2026-06-03T19:00:00Z')
         });
 
+        req.body = {
+            pageId: 'page_123',
+            businessName: 'Super Plumber',
+            service: 'Plumbing',
+            town: 'Austin',
+            zipCode: '78701',
+            telephone: '5125550199',
+            priceRange: '$$',
+            openingHours: 'Mo-Fr 08:00-18:00',
+            enableAICopy: true,
+            aiStyle: 'friendly',
+            aiKeywords: 'family-owned, 24/7 service',
+            primaryColor: '#ff0055'
+        };
+
         await handler(req, res, mockKv);
 
         expect(submitSitemapToSearchEngines).toHaveBeenCalledWith(1, req);
@@ -143,7 +158,8 @@ describe('Update Page API', () => {
                 zipCode: '78701',
                 enableAICopy: true,
                 aiStyle: 'friendly',
-                aiKeywords: 'family-owned, 24/7 service'
+                aiKeywords: 'family-owned, 24/7 service',
+                primaryColor: '#ff0055'
             })
         }));
     });

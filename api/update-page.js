@@ -111,7 +111,8 @@ export default async function handler(req, res, currentKvClient) {
         openingHours,
         enableAICopy,
         aiStyle,
-        aiKeywords
+        aiKeywords,
+        primaryColor
     } = req.body;
 
     if (!pageId || !businessName || !service || !town || !zipCode) {
@@ -153,15 +154,22 @@ export default async function handler(req, res, currentKvClient) {
         const clientResult = await query('SELECT id, name, email, agency_id FROM users WHERE id = $1', [userId]);
         const client = clientResult.rows[0];
         let logoUrl = null;
-        let primaryColorValue = '#007bff';
+        let primaryColorValue = primaryColor || '#007bff';
         let agencyName = '';
 
-        if (client.agency_id) {
+        if (!primaryColor && client.agency_id) {
             const agencyResult = await query('SELECT name, logo_url, primary_color FROM users WHERE id = $1', [client.agency_id]);
             if (agencyResult.rows.length > 0) {
                 const agency = agencyResult.rows[0];
                 logoUrl = agency.logo_url || null;
                 primaryColorValue = agency.primary_color || '#007bff';
+                agencyName = agency.name || '';
+            }
+        } else if (client.agency_id) {
+            const agencyResult = await query('SELECT name, logo_url FROM users WHERE id = $1', [client.agency_id]);
+            if (agencyResult.rows.length > 0) {
+                const agency = agencyResult.rows[0];
+                logoUrl = agency.logo_url || null;
                 agencyName = agency.name || '';
             }
         }
@@ -278,8 +286,9 @@ export default async function handler(req, res, currentKvClient) {
                  enable_ai_copy = $9, 
                  ai_style = $10,
                  ai_keywords = $11,
+                 primary_color = $12,
                  updated_at = CURRENT_TIMESTAMP
-             WHERE id = $12`,
+             WHERE id = $13`,
             [
                 pageContent,
                 escapedBusinessName,
@@ -292,6 +301,7 @@ export default async function handler(req, res, currentKvClient) {
                 enableAICopy || false,
                 aiStyle || null,
                 aiKeywords || null,
+                primaryColorValue,
                 pageId
             ]
         );
@@ -308,6 +318,7 @@ export default async function handler(req, res, currentKvClient) {
             enableAICopy: enableAICopy || false,
             aiStyle: aiStyle || null,
             aiKeywords: aiKeywords || null,
+            primaryColor: primaryColorValue,
             updatedAt: new Date().toISOString()
         };
 

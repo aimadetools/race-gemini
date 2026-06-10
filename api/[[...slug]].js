@@ -101,7 +101,7 @@ export default async (req, res, currentKvClient) => {
 
         // Fetch the page from PostgreSQL where user_id = resolvedClientId and file_name = fileName
         const pageResult = await query(
-            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content 
+            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content, primary_color 
              FROM seo_pages WHERE user_id = $1 AND file_name = $2`,
             [resolvedClientId, fileName]
         );
@@ -120,6 +120,10 @@ export default async (req, res, currentKvClient) => {
 
         const pageRow = pageResult.rows[0];
         const pageIdToFind = pageRow.id;
+
+        if (pageRow.primary_color) {
+            primaryColorValue = pageRow.primary_color;
+        }
 
         const page = {
             businessName: pageRow.business_name,

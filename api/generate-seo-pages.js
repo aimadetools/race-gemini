@@ -267,8 +267,8 @@ export default async (req, res) => {
                     // Save to database as well so it can be served dynamically in production Vercel
                     const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -280,6 +280,7 @@ export default async (req, res) => {
                            enable_ai_copy = EXCLUDED.enable_ai_copy,
                            ai_style = EXCLUDED.ai_style,
                            ai_keywords = EXCLUDED.ai_keywords,
+                           primary_color = EXCLUDED.primary_color,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             fileName,
@@ -294,7 +295,8 @@ export default async (req, res) => {
                             openingHours || null,
                             enableAICopy || false,
                             aiStyle || null,
-                            aiKeywords || null
+                            aiKeywords || null,
+                            resolvedPrimaryColor
                         ]
                     );
 
