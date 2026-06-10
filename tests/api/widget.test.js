@@ -119,4 +119,29 @@ describe('Embeddable Service Area Widget API', () => {
         expect(sentContent).toContain('Plumbing');
         expect(sentContent).toContain('Paris');
     });
+
+    test('should include widgetCss in the generated script when present in user profile', async () => {
+        req.query.clientId = '123';
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: null, primary_color: null, widget_css: '.custom-class { color: magenta; }' }] };
+            }
+            if (text.includes('SELECT service, town')) {
+                return { rows: [
+                    { service: 'Plumbing', town: 'London', file_name: 'plumbing-in-london-plumbers.html' }
+                ] };
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+        
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('widgetCss = ".custom-class { color: magenta; }"');
+        expect(sentContent).toContain('styles + \'\\n\' + widgetCss');
+    });
 });

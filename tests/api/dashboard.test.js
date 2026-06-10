@@ -248,7 +248,8 @@ describe('dashboard API', () => {
       gaTrackingId: null,
       fbPixelId: null,
       smsEnabled: false,
-      smsPhone: null
+      smsPhone: null,
+      widgetCss: null
     });
   });
 
@@ -301,7 +302,8 @@ describe('dashboard API', () => {
       gaTrackingId: null,
       fbPixelId: null,
       smsEnabled: false,
-      smsPhone: null
+      smsPhone: null,
+      widgetCss: null
     });
   });
 });

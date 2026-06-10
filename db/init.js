@@ -14,6 +14,7 @@ import { createTestimonialsTable } from './migrations/create_testimonials_table.
 import { addFollowupColumnsToLeads } from './migrations/add_followup_columns_to_leads.js';
 import { addStripeCustomerIdToUsers } from './migrations/add_stripe_customer_id_to_users.js';
 import { addIndexingStatusToSeoPages } from './migrations/add_indexing_status_to_seo_pages.js';
+import { addWidgetCssToUsers } from './migrations/add_widget_css_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -64,6 +65,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring indexing status columns exist in seo_pages table...');
     await addIndexingStatusToSeoPages();
+
+    console.log('Ensuring widget CSS column exists in users table...');
+    await addWidgetCssToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

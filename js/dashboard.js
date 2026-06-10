@@ -965,12 +965,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const copyBtn = document.getElementById('copy-widget-code-btn');
         const previewBox = document.getElementById('widget-preview-box');
 
+        const cssInput = document.getElementById('widget-css-input');
+        const saveCssBtn = document.getElementById('save-widget-css-btn');
+        const cssSuccessMsg = document.getElementById('widget-css-success-msg');
+        const cssErrorMsg = document.getElementById('widget-css-error-msg');
+        const configForm = document.getElementById('widget-config-form');
+
         if (!layoutSelect || !themeSelect || !colorInput || !colorText || !embedCodeTextarea || !previewBox) {
             return;
         }
 
         const clientId = data.clientId;
         const pages = data.generatedPages || [];
+
+        // Load custom CSS if exists
+        if (cssInput && data.widgetCss) {
+            cssInput.value = data.widgetCss;
+        }
 
         // Keep color input and text in sync
         colorInput.addEventListener('input', (e) => {
@@ -991,6 +1002,253 @@ document.addEventListener('DOMContentLoaded', () => {
 
         layoutSelect.addEventListener('change', updateEmbedCodeAndPreview);
         themeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+        
+        if (cssInput) {
+            cssInput.addEventListener('input', updateCssPreview);
+        }
+
+        // Form submit handler to save Custom CSS
+        if (configForm) {
+            configForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!cssInput) return;
+
+                if (saveCssBtn) {
+                    saveCssBtn.disabled = true;
+                    saveCssBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 4px;"></i> Saving...';
+                }
+                if (cssSuccessMsg) cssSuccessMsg.style.display = 'none';
+                if (cssErrorMsg) cssErrorMsg.style.display = 'none';
+
+                try {
+                    const response = await fetch('/api/update-widget-css', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ widgetCss: cssInput.value })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        if (cssSuccessMsg) {
+                            cssSuccessMsg.textContent = result.message || 'Styles saved successfully!';
+                            cssSuccessMsg.style.display = 'block';
+                        }
+                        data.widgetCss = cssInput.value;
+                    } else {
+                        if (cssErrorMsg) {
+                            cssErrorMsg.textContent = result.message || 'Failed to save styles.';
+                            cssErrorMsg.style.display = 'block';
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error saving widget CSS:', error);
+                    if (cssErrorMsg) {
+                        cssErrorMsg.textContent = 'A network error occurred. Please try again.';
+                        cssErrorMsg.style.display = 'block';
+                    }
+                } finally {
+                    if (saveCssBtn) {
+                        saveCssBtn.disabled = false;
+                        saveCssBtn.innerHTML = '<i class="fas fa-save" style="margin-right: 4px;"></i> Save Styles';
+                    }
+                }
+            });
+        }
+
+        function updateCssPreview() {
+            if (!cssInput) return;
+            let style = document.getElementById('widget-preview-custom-css');
+            if (!style) {
+                style = document.createElement('style');
+                style.id = 'widget-preview-custom-css';
+                document.head.appendChild(style);
+            }
+            style.textContent = cssInput.value;
+        }
+
+        function updateBaseCssPreview(theme, layout, baseColor) {
+            let style = document.getElementById('widget-preview-base-styles');
+            if (!style) {
+                style = document.createElement('style');
+                style.id = 'widget-preview-base-styles';
+                document.head.appendChild(style);
+            }
+
+            style.textContent = `
+                .ll-widget-container-${clientId} {
+                    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    box-sizing: border-box;
+                    margin: 1rem 0;
+                    width: 100%;
+                }
+                .ll-widget-container-${clientId} * {
+                    box-sizing: border-box;
+                }
+                .ll-widget-title-${clientId} {
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .ll-widget-grid-${clientId} {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                    gap: 10px;
+                    width: 100%;
+                }
+                .ll-widget-card-${clientId} {
+                    border-radius: 8px;
+                    padding: 0.75rem;
+                    text-decoration: none;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    border: 1px solid rgba(128,128,128,0.2);
+                    cursor: pointer;
+                }
+                .ll-widget-card-${clientId}:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                .ll-widget-card-town-${clientId} {
+                    font-weight: 700;
+                    font-size: 0.85rem;
+                    margin-bottom: 4px;
+                }
+                .ll-widget-card-service-${clientId} {
+                    font-size: 0.75rem;
+                    opacity: 0.8;
+                }
+                .ll-widget-list-${clientId} {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    width: 100%;
+                }
+                .ll-widget-list-item-${clientId} a {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: background 0.2s ease, transform 0.1s ease;
+                    border: 1px solid rgba(128,128,128,0.2);
+                }
+                .ll-widget-list-item-${clientId} a:hover {
+                    transform: scale(1.02);
+                }
+
+                /* Light Theme */
+                .ll-theme-light-${clientId} .ll-widget-card-${clientId} {
+                    background: #ffffff;
+                    color: #1f2937;
+                }
+                .ll-theme-light-${clientId} .ll-widget-card-${clientId}:hover {
+                    border-color: ${baseColor};
+                }
+                .ll-theme-light-${clientId} .ll-widget-card-town-${clientId} {
+                    color: #111827;
+                }
+                .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a {
+                    background: #f3f4f6;
+                    color: #374151;
+                }
+                .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                    background: ${baseColor};
+                    color: #ffffff;
+                    border-color: ${baseColor};
+                }
+                .ll-theme-light-${clientId} .ll-widget-title-${clientId} {
+                    color: #111827;
+                }
+
+                /* Dark Theme */
+                .ll-theme-dark-${clientId} .ll-widget-card-${clientId} {
+                    background: #1f2937;
+                    color: #f3f4f6;
+                    border-color: #374151;
+                }
+                .ll-theme-dark-${clientId} .ll-widget-card-${clientId}:hover {
+                    border-color: ${baseColor};
+                }
+                .ll-theme-dark-${clientId} .ll-widget-card-town-${clientId} {
+                    color: #ffffff;
+                }
+                .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a {
+                    background: #374151;
+                    color: #f3f4f6;
+                    border-color: #4b5563;
+                }
+                .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                    background: ${baseColor};
+                    color: #ffffff;
+                    border-color: ${baseColor};
+                }
+                .ll-theme-dark-${clientId} .ll-widget-title-${clientId} {
+                    color: #ffffff;
+                }
+
+                /* Glassmorphic Theme */
+                .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId} {
+                    background: rgba(255, 255, 255, 0.05);
+                    color: #f3f4f6;
+                    border-color: rgba(255, 255, 255, 0.1);
+                }
+                .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId}:hover {
+                    border-color: ${baseColor};
+                    background: rgba(255, 255, 255, 0.08);
+                }
+                .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a {
+                    background: rgba(255, 255, 255, 0.05);
+                    color: #f3f4f6;
+                    border-color: rgba(255, 255, 255, 0.1);
+                }
+                .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                    background: ${baseColor};
+                    color: #ffffff;
+                    border-color: ${baseColor};
+                }
+
+                /* Badge Specifics */
+                .ll-badge-trigger-${clientId} {
+                    background: ${baseColor};
+                    color: #ffffff;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-weight: bold;
+                    font-size: 0.8rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                    cursor: pointer;
+                }
+                .ll-badge-modal-${clientId} {
+                    border-radius: 8px;
+                    border: 1px solid rgba(128,128,128,0.2);
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                }
+                .ll-badge-modal-close-${clientId} {
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 1rem;
+                    opacity: 0.7;
+                }
+                .ll-badge-modal-close-${clientId}:hover {
+                    opacity: 1;
+                }
+            `;
+        }
 
         function updateEmbedCodeAndPreview() {
             const layout = layoutSelect.value;
@@ -1007,6 +1265,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
             }
             embedCodeTextarea.value = embedCode;
+
+            // Update style blocks
+            updateBaseCssPreview(theme, layout, colorInput.value);
+            updateCssPreview();
 
             // Render live preview
             renderPreview(pages, theme, layout, colorInput.value);
@@ -1034,18 +1296,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (layout === 'badge') {
                 previewBox.innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; width: 100%; font-family: sans-serif;">
-                        <div style="background: ${baseColor}; color: #fff; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;" id="preview-badge-trigger">
+                    <div class="ll-widget-container-${clientId}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; width: 100%; font-family: sans-serif;">
+                        <div class="ll-badge-trigger-${clientId}" id="preview-badge-trigger">
                             📍 Serving ${pagesList.length} Areas
                         </div>
                         <p style="font-size: 0.75rem; color: #9ca3af; margin: 0; text-align: center;">Click the badge to preview the service area list.</p>
                         
-                        <div id="preview-badge-modal" style="display: none; flex-direction: column; width: 90%; max-height: 180px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.2); overflow: hidden; font-size: 0.8rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2); background: ${theme === 'light' ? '#fff' : '#111827'}; color: ${theme === 'light' ? '#374151' : '#f3f4f6'}; text-align: left;">
-                            <div style="padding: 8px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; justify-content: space-between; font-weight: bold; align-items: center;">
+                        <div id="preview-badge-modal" class="ll-badge-modal-${clientId}" style="display: none; flex-direction: column; width: 90%; max-height: 180px; background: ${theme === 'light' ? '#fff' : '#111827'}; color: ${theme === 'light' ? '#374151' : '#f3f4f6'}; text-align: left;">
+                            <div class="ll-badge-modal-header-${clientId}" style="padding: 8px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; justify-content: space-between; font-weight: bold; align-items: center;">
                                 <span>Our Service Areas</span>
-                                <span id="preview-close-modal" style="cursor: pointer; font-weight: bold; font-size: 1rem; opacity: 0.7;">&times;</span>
+                                <span id="preview-close-modal" class="ll-badge-modal-close-${clientId}">&times;</span>
                             </div>
-                            <div style="padding: 8px; overflow-y: auto; flex: 1;">
+                            <div class="ll-badge-modal-body-${clientId}" style="padding: 8px; overflow-y: auto; flex: 1;">
                                 <ul style="list-style: none; padding: 0; margin: 0;">
                                     ${pagesList.slice(0, 3).map(p => `<li style="margin-bottom: 4px;"><a href="#" onclick="return false;" style="display: block; padding: 6px 8px; border-radius: 4px; border: 1px solid rgba(128,128,128,0.15); text-decoration: none; color: inherit; font-size: 0.75rem; background: rgba(128,128,128,0.05); font-weight: 500;">${p.service} in ${p.town}</a></li>`).join('')}
                                     ${pagesList.length > 3 ? `<li style="font-size: 0.7rem; color: #9ca3af; padding-left: 8px;">+ ${pagesList.length - 3} more areas...</li>` : ''}
@@ -1068,9 +1330,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else if (layout === 'grid') {
                 let gridItems = pagesList.slice(0, 4).map(p => `
-                    <div style="border: 1px solid rgba(128,128,128,0.2); border-radius: 6px; padding: 8px; font-size: 0.75rem; background: rgba(128,128,128,0.03); display: flex; flex-direction: column; cursor: pointer;">
-                        <div style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.town}</div>
-                        <div style="font-size: 0.65rem; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.service}</div>
+                    <div class="ll-widget-card-${clientId}">
+                        <div class="ll-widget-card-town-${clientId}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.town}</div>
+                        <div class="ll-widget-card-service-${clientId}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.service}</div>
                     </div>
                 `).join('');
                 
@@ -1083,17 +1345,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 previewBox.innerHTML = `
-                    <div style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
-                        <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 8px;">📍 Areas We Serve</div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; flex: 1; overflow-y: auto;">
+                    <div class="ll-widget-container-${clientId} ll-theme-${theme}-${clientId}" style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
+                        <div class="ll-widget-title-${clientId}">📍 Areas We Serve</div>
+                        <div class="ll-widget-grid-${clientId}">
                             ${gridItems}
                         </div>
                     </div>
                 `;
             } else {
                 let listItems = pagesList.slice(0, 5).map(p => `
-                    <li style="display: inline-block;">
-                        <a href="#" onclick="return false;" style="display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; border: 1px solid rgba(128,128,128,0.2); text-decoration: none; color: inherit; background: rgba(128,128,128,0.05); font-weight: 500;">${p.service} in ${p.town}</a>
+                    <li class="ll-widget-list-item-${clientId}" style="display: inline-block;">
+                        <a href="#" onclick="return false;">${p.service} in ${p.town}</a>
                     </li>
                 `).join('');
 
@@ -1102,9 +1364,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 previewBox.innerHTML = `
-                    <div style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
-                        <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 8px;">📍 Areas We Serve</div>
-                        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; overflow-y: auto; flex: 1;">
+                    <div class="ll-widget-container-${clientId} ll-theme-${theme}-${clientId}" style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif;">
+                        <div class="ll-widget-title-${clientId}">📍 Areas We Serve</div>
+                        <ul class="ll-widget-list-${clientId}">
                             ${listItems}
                         </ul>
                     </div>

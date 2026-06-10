@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     try {
         // Query user info
         const userResult = await query(
-            'SELECT referral_code, custom_domain, primary_color FROM users WHERE id = $1',
+            'SELECT referral_code, custom_domain, primary_color, widget_css FROM users WHERE id = $1',
             [parsedClientId]
         );
 
@@ -54,6 +54,7 @@ export default async function handler(req, res) {
         // Clean domain and referral
         const customDomain = user.custom_domain ? user.custom_domain.trim() : null;
         const referralCode = user.referral_code ? user.referral_code.trim() : null;
+        const widgetCss = user.widget_css ? user.widget_css.trim() : '';
 
         const pagesJson = JSON.stringify(pagesResult.rows.map(row => ({
             service: row.service,
@@ -74,6 +75,7 @@ export default async function handler(req, res) {
     const customDomain = ${customDomain ? `"${customDomain}"` : 'null'};
     const referralCode = ${referralCode ? `"${referralCode}"` : 'null'};
     const clientId = ${parsedClientId};
+    const widgetCss = ${JSON.stringify(widgetCss)};
 
     let baseUrl = 'https://www.localseogen.com';
     if (customDomain) {
@@ -380,7 +382,7 @@ export default async function handler(req, res) {
                 to { opacity: 1; transform: translateY(0); }
             }
         \`;
-        style.textContent = styles;
+        style.textContent = styles + '\\n' + widgetCss;
         document.head.appendChild(style);
     }
 

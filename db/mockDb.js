@@ -118,6 +118,7 @@ export const originalMockQuery = async (text, params) => {
                     fb_pixel_id: user.fb_pixel_id || null,
                     sms_enabled: user.sms_enabled || false,
                     sms_phone: user.sms_phone || null,
+                    widget_css: user.widget_css || user.widgetCss || null,
                 };
                 return { rows: [u] };
             }
@@ -152,6 +153,7 @@ export const originalMockQuery = async (text, params) => {
                     fb_pixel_id: user.fb_pixel_id || null,
                     sms_enabled: user.sms_enabled || false,
                     sms_phone: user.sms_phone || null,
+                    widget_css: user.widget_css || user.widgetCss || null,
                 };
                 return { rows: [u] };
             }
@@ -309,6 +311,15 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('widget_css = $1')) {
+            const [widgetCss, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.widget_css = widgetCss;
+                return { rows: [{ id: user.id }] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('logo_url = $1') && textLower.includes('primary_color = $2')) {
             const [logoUrl, primaryColor, agencyId] = params;
             const user = mockUsers.find(u => u.id.toString() === agencyId.toString() && u.is_agency === true);

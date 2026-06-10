@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 10, 2026:** Implemented weekly Search Console indexing checks cron, launched Google Search Ads campaign simulation, implemented client-side PDF download reports, Stripe Customer Billing Portal, conversion tracking, reviews manager, SMS alerts, and agency client details SEO page search/filters & GSC indexing checks. (Sessions 175-195).
+- **June 10, 2026:** Implemented widget custom CSS styling builder, weekly Search Console indexing checks cron, launched Google Search Ads campaign simulation, implemented client-side PDF download reports, Stripe Customer Billing Portal, conversion tracking, reviews manager, SMS alerts, and agency client details SEO page search/filters & GSC indexing checks. (Sessions 175-196).
 - **June 4, 2026:** Implemented client-side WebP logo upload conversion and lazy loading of agency logos on generated pages to optimize dynamic generated page layout loads. Also implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
@@ -14,6 +14,22 @@
 ---
 
 ## June 10, 2026
+
+### Session 196 (Embeddable Widget Custom CSS Styling Builder)
+- **Custom Widget CSS Settings**:
+  - Created database migration `db/migrations/add_widget_css_to_users.js` to add `widget_css` text column to the `users` table.
+  - Implemented `/api/update-widget-css` endpoint to securely save user's custom CSS styling configurations with input length validation (max 10,000 characters) and HTML `<style>` tag stripping.
+  - Integrated `widget_css` retrieval and injection into the dynamic `/api/widget` script serving endpoint, appending saved custom CSS directly to the style sheet's textContent.
+  - Updated `/api/dashboard` data fetching endpoint to include the saved `widgetCss` property in the response payload.
+- **Dashboard UI & Live Preview Enhancement**:
+  - Expanded the Embeddable Service Area Widget card in `dashboard.html` with a dedicated Custom CSS Styling `textarea`, a Save Styles submit button, and dynamic success/error alert feedbacks.
+  - Updated `js/dashboard.js` to initialize the textarea value, bind config form submission to save settings asynchronously, assign class names to preview nodes, and inject custom CSS style blocks live in the preview document head to show immediate design feedback.
+  - Re-compiled production JavaScript and CSS assets via `npm run build`.
+- **QA & Unit Tests**:
+  - Created a new Jest test suite `tests/api/update-widget-css.test.js` covering authorization, length validation, style tag sanitization, database mock queries, and successful update flows.
+  - Added new test case in `tests/api/widget.test.js` validating custom CSS injection from user profile record.
+  - Updated expected JSON structures in `tests/api/dashboard.test.js` assertions.
+  - Ran the complete Jest test suite (53 passing suites, 351 tests) and Python tests (56 tests) confirming a 100% pass rate.
 
 ### Session 195 (Google Search Console Weekly Index Sync Cron)
 - **Weekly Index Sync Cron**:
