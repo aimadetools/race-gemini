@@ -113,6 +113,42 @@
                         <i class="fas fa-file-csv"></i> Export Pages
                     </button>
                 </div>
+                
+                <!-- Search and Tag Filtering Controls -->
+                <div class="filter-controls" style="margin-bottom: 1.5rem; text-align: left; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px;">
+                    <!-- Search Bar -->
+                    <div style="position: relative; margin-bottom: 1.25rem; width: 100%;">
+                        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.95rem;">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="page-search-input" placeholder="Search pages by business name, service, town, or zip code..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;" />
+                    </div>
+                    
+                    <!-- Tag Categories -->
+                    <div id="tag-filters-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Services Tags -->
+                        <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+                            <span style="color: #9ca3af; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; min-width: 80px;">Services:</span>
+                            <div id="service-tags" style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+                                <!-- Dynamically populated tags -->
+                            </div>
+                        </div>
+                        
+                        <!-- Towns Tags -->
+                        <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+                            <span style="color: #9ca3af; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; min-width: 80px;">Towns:</span>
+                            <div id="town-tags" style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+                                <!-- Dynamically populated tags -->
+                            </div>
+                        </div>
+                        
+                        <!-- Active Filter Status & Clear -->
+                        <div id="active-filters-info" style="display: none; align-items: center; justify-content: space-between; margin-top: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.75rem; font-size: 0.85rem; color: #9ca3af; flex-wrap: wrap; gap: 10px;">
+                            <span id="filtered-pages-count">Showing all pages</span>
+                            <button id="clear-filters-btn" class="button button-small button-secondary" style="padding: 4px 12px; font-size: 0.75rem; border-radius: 6px;">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
                 <div id="generated-pages">
                     <table class="data-table">
                         <thead>

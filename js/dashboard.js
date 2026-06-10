@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyReviewLinkBtn = document.getElementById('copy-review-link-btn');
 
     let userPages = [];
+    let activeServiceFilters = new Set();
+    let activeTownFilters = new Set();
+    let searchQuery = '';
 
     async function fetchDashboardData() {
         try {
@@ -65,28 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Populate generated pages
-                generatedPagesTableBody.innerHTML = '';
                 if (data.generatedPages && data.generatedPages.length > 0) {
                     userPages = data.generatedPages;
-                    data.generatedPages.forEach(page => {
-                        const row = generatedPagesTableBody.insertRow();
-                        row.innerHTML = `
-                            <td>${page.businessName}</td>
-                            <td>${page.service}</td>
-                            <td>${page.town}</td>
-                            <td>${page.views || 0}</td>
-                            <td>${page.uniqueVisitors || 0}</td>
-                            <td>
-                                <a href="${page.url}" target="_blank" class="button button-small">View</a>
-                                <button class="button button-small button-secondary edit-page-btn" data-id="${page.pageId}">Edit</button>
-                                <button class="button button-small button-danger delete-page-btn" data-id="${page.pageId}">Delete</button>
-                            </td>
-                        `;
-                    });
                 } else {
                     userPages = [];
-                    generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No pages generated yet.</td></tr>';
                 }
+
+                // Clean up active filters that are no longer in the retrieved page list
+                const uniqueServices = new Set(userPages.map(p => p.service).filter(Boolean));
+                const uniqueTowns = new Set(userPages.map(p => p.town).filter(Boolean));
+
+                for (const service of activeServiceFilters) {
+                    if (!uniqueServices.has(service)) {
+                        activeServiceFilters.delete(service);
+                    }
+                }
+                for (const town of activeTownFilters) {
+                    if (!uniqueTowns.has(town)) {
+                        activeTownFilters.delete(town);
+                    }
+                }
+
+                populateTagFilters();
+                renderFilteredPages();
 
                 // Populate captured leads
                 const leadsTableBody = document.querySelector('#captured-leads tbody');
@@ -718,6 +722,155 @@ document.addEventListener('DOMContentLoaded', () => {
             upgradeModal.style.display = 'none';
         }
     });
+
+    function populateTagFilters() {
+        const serviceTagsContainer = document.getElementById('service-tags');
+        const townTagsContainer = document.getElementById('town-tags');
+        
+        if (!serviceTagsContainer || !townTagsContainer) return;
+        
+        serviceTagsContainer.innerHTML = '';
+        townTagsContainer.innerHTML = '';
+        
+        // Extract unique services and towns
+        const services = [...new Set(userPages.map(p => p.service).filter(Boolean))].sort();
+        const towns = [...new Set(userPages.map(p => p.town).filter(Boolean))].sort();
+        
+        if (services.length === 0) {
+            serviceTagsContainer.innerHTML = '<span style="color: #6b7280; font-size: 0.85rem; font-style: italic;">None</span>';
+        } else {
+            services.forEach(service => {
+                const tag = document.createElement('span');
+                tag.className = `filter-tag filter-tag-service ${activeServiceFilters.has(service) ? 'active' : ''}`;
+                tag.textContent = service;
+                tag.addEventListener('click', () => {
+                    if (activeServiceFilters.has(service)) {
+                        activeServiceFilters.delete(service);
+                        tag.classList.remove('active');
+                    } else {
+                        activeServiceFilters.add(service);
+                        tag.classList.add('active');
+                    }
+                    renderFilteredPages();
+                });
+                serviceTagsContainer.appendChild(tag);
+            });
+        }
+        
+        if (towns.length === 0) {
+            townTagsContainer.innerHTML = '<span style="color: #6b7280; font-size: 0.85rem; font-style: italic;">None</span>';
+        } else {
+            towns.forEach(town => {
+                const tag = document.createElement('span');
+                tag.className = `filter-tag filter-tag-town ${activeTownFilters.has(town) ? 'active' : ''}`;
+                tag.textContent = town;
+                tag.addEventListener('click', () => {
+                    if (activeTownFilters.has(town)) {
+                        activeTownFilters.delete(town);
+                        tag.classList.remove('active');
+                    } else {
+                        activeTownFilters.add(town);
+                        tag.classList.add('active');
+                    }
+                    renderFilteredPages();
+                });
+                townTagsContainer.appendChild(tag);
+            });
+        }
+    }
+
+    function renderFilteredPages() {
+        if (!generatedPagesTableBody) return;
+        
+        generatedPagesTableBody.innerHTML = '';
+        
+        if (userPages.length === 0) {
+            generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No pages generated yet.</td></tr>';
+            const activeFiltersInfo = document.getElementById('active-filters-info');
+            if (activeFiltersInfo) activeFiltersInfo.style.display = 'none';
+            return;
+        }
+        
+        // Filter pages
+        const filtered = userPages.filter(page => {
+            // Search query match
+            const queryLower = searchQuery.toLowerCase().trim();
+            const matchesSearch = !queryLower || 
+                (page.businessName && page.businessName.toLowerCase().includes(queryLower)) ||
+                (page.service && page.service.toLowerCase().includes(queryLower)) ||
+                (page.town && page.town.toLowerCase().includes(queryLower)) ||
+                (page.zipCode && page.zipCode.toLowerCase().includes(queryLower));
+                
+            // Service tag match (OR match among selected service tags, or true if none selected)
+            const matchesService = activeServiceFilters.size === 0 || activeServiceFilters.has(page.service);
+            
+            // Town tag match (OR match among selected town tags, or true if none selected)
+            const matchesTown = activeTownFilters.size === 0 || activeTownFilters.has(page.town);
+            
+            return matchesSearch && matchesService && matchesTown;
+        });
+        
+        // Populate filtered pages table
+        if (filtered.length > 0) {
+            filtered.forEach(page => {
+                const row = generatedPagesTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${page.businessName}</td>
+                    <td>${page.service}</td>
+                    <td>${page.town}</td>
+                    <td>${page.views || 0}</td>
+                    <td>${page.uniqueVisitors || 0}</td>
+                    <td>
+                        <a href="${page.url}" target="_blank" class="button button-small">View</a>
+                        <button class="button button-small button-secondary edit-page-btn" data-id="${page.pageId}">Edit</button>
+                        <button class="button button-small button-danger delete-page-btn" data-id="${page.pageId}">Delete</button>
+                    </td>
+                `;
+            });
+        } else {
+            generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No matching pages found. Try adjusting your filters.</td></tr>';
+        }
+        
+        // Update active filter info bar
+        const activeFiltersInfo = document.getElementById('active-filters-info');
+        const filteredPagesCount = document.getElementById('filtered-pages-count');
+        
+        if (activeFiltersInfo && filteredPagesCount) {
+            const hasFilters = searchQuery || activeServiceFilters.size > 0 || activeTownFilters.size > 0;
+            if (hasFilters) {
+                activeFiltersInfo.style.display = 'flex';
+                filteredPagesCount.textContent = `Found ${filtered.length} of ${userPages.length} pages`;
+            } else {
+                activeFiltersInfo.style.display = 'none';
+            }
+        }
+    }
+
+    // Bind Search & Filter Event Listeners
+    const pageSearchInput = document.getElementById('page-search-input');
+    if (pageSearchInput) {
+        pageSearchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderFilteredPages();
+        });
+    }
+
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            const pageSearchInput = document.getElementById('page-search-input');
+            if (pageSearchInput) {
+                pageSearchInput.value = '';
+            }
+            searchQuery = '';
+            activeServiceFilters.clear();
+            activeTownFilters.clear();
+            
+            // Re-render tags to clear active class
+            populateTagFilters();
+            renderFilteredPages();
+        });
+    }
 
     // Initial load
     fetchDashboardData();
