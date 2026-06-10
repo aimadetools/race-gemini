@@ -1,386 +1,574 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>
    Generate SEO-Optimized Local Pages Instantly with LocalLeads
   </title>
-  <meta content="Create hyper-local, SEO-optimized landing pages in minutes. Boost local search rankings and attract more customers with LocalLeads' automated page generation." name="description"/>
-  <meta content="Generate SEO-Optimized Local Pages Instantly with LocalLeads" property="og:title"/>
-  <meta content="Create hundreds of hyper-local, SEO-optimized landing pages for your business in minutes. Boost your local search rankings and attract more customers with LocalLeads' automated page generation tool." property="og:description"/>
-  <link href="../style.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="../images/favicon.png" rel="icon" type="image/png"/>
-  <script type="application/ld+json">
-   {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localseogen.com/images/logo.png","url": "https://www.localseogen.com","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localseogen.com/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
+<meta content="Create hyper-local, SEO-optimized landing pages in minutes. Boost local search rankings and attract more customers with LocalLeads' automated page generation." name="description"/>
+<meta content="Generate SEO-Optimized Local Pages Instantly with LocalLeads" property="og:title"/>
+<meta content="Create hundreds of hyper-local, SEO-optimized landing pages for your business in minutes. Boost your local search rankings and attract more customers with LocalLeads' automated page generation tool." property="og:description"/>
+<meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+<link href="../style.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../images/favicon.png" rel="icon" type="image/png"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.localseogen.com/#organization",
+      "name": "LocalLeads",
+      "url": "https://www.localseogen.com",
+      "logo": "https://www.localseogen.com/images/logo.svg",
+      "sameAs": [
+        "https://www.facebook.com/LocalLeadsApp",
+        "https://www.linkedin.com/company/localleads",
+        "https://twitter.com"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.localseogen.com/#website",
+      "url": "https://www.localseogen.com",
+      "name": "LocalLeads",
+      "description": "LocalLeads leverages AI to create automated, hyper-local SEO landing pages, converting local searches into paying customers for small businesses. Boost your local lead generation today!",
+      "publisher": {
+        "@id": "https://www.localseogen.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.localseogen.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
   </script>
-  <link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
- </head>
- <body>
-  <div id="mobile-nav-overlay">
-  </div>
-  <header>
-   <nav>
-    <div class="container">
-     <a class="logo" href="../index.html">
-      LocalLeads
-     </a>
-     <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-      <div class="bar">
-      </div>
-     </div>
-     <ul class="nav-links" id="nav-menu">
-      <li class="close-menu-li">
-       <button aria-label="Close mobile menu" id="close-menu-btn">
+<link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
+</head>
+<script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+<script defer="" src="/_vercel/insights/script.js"></script>
+<body>
+<div id="mobile-nav-overlay">
+</div>
+<header>
+<nav>
+<div class="container">
+<a class="logo" href="../">
+<img alt="LocalLeads Logo" class="logo-svg" src="../images/logo.svg"/>
+</a> <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+<div class="bar">
+</div>
+</div>
+<ul class="nav-links" id="nav-menu">
+<li class="close-menu-li">
+<button aria-label="Close mobile menu" id="close-menu-btn">
         ×
        </button>
-      </li>
-      <li>
-       <a data-i18n-key="header_generate_pages" href="../generate.html">
-        Generar Páginas
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_pricing" href="../pricing.html">
-        Precios
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_blog" href="/blog.html">
-        Blog
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_about" href="../about.html">
-        Acerca de
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_audit" href="../audit.html">
-        Auditoría Gratuita
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_contact" href="../contact.html">
-        Contacto
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_login_signup" href="../auth.html">
-        Iniciar Sesión/Registrarse
-       </a>
-      </li>
-      <li>
-       <a data-i18n-key="header_buy_credits" href="/buy-credits.html">
-        Comprar Créditos
-       </a>
-      </li>
-     </ul>
-    </div>
-   </nav>
-  </header>
-  <main>
-   <section class="hero">
-    <h1 data-i18n-key="generate_hero_title">
-     Genera Tus Páginas SEO Locales
-    </h1>
-    <p data-i18n-key="generate_hero_subtitle">
-     Desbloquea la visibilidad de búsqueda local. Proporciona los detalles de tu negocio y crearemos instantáneamente un conjunto de páginas de destino optimizadas para SEO, adaptadas a cada ciudad a la que sirves.
-    </p>
-   </section>
-   <section class="how-it-works">
-    <h2 data-i18n-key="generate_how_it_works_title">
-     Cómo Funciona
-    </h2>
-    <div class="steps">
-     <div class="step">
-      <i class="fas fa-file-signature icon">
-      </i>
-      <h3 data-i18n-key="generate_step1_title">
-       1. Introduce Tus Detalles
-      </h3>
-      <p data-i18n-key="generate_step1_description">
-       Proporciona el nombre de tu negocio, los servicios específicos que ofreces y todas las ciudades a las que quieres dirigirte.
-      </p>
-     </div>
-     <div class="step">
-      <i class="fas fa-gears icon">
-      </i>
-      <h3 data-i18n-key="generate_step2_title">
-       2. Generamos Tus Páginas
-      </h3>
-      <p data-i18n-key="generate_step2_description">
-       Nuestro sistema crea instantáneamente páginas de destino únicas y optimizadas para SEO para cada servicio en cada ciudad.
-      </p>
-     </div>
-     <div class="step">
-      <i class="fas fa-download icon">
-      </i>
-      <h3 data-i18n-key="generate_step3_title">
-       3. Descarga y Despliega
-      </h3>
-      <p data-i18n-key="generate_step3_description">
-       Recibe un archivo ZIP con todas tus nuevas páginas, listo para ser subido a tu sitio web.
-      </p>
-     </div>
-    </div>
-   </section>
-   <section class="generate-form">
-    <div class="onboarding-message" id="onboarding-message">
-     <p>
-      <i class="fas fa-info-circle onboarding-icon">
-      </i>
-      <b>
+</li>
+<li>
+<a data-i18n-key="header_generate_pages" href="../generate.html">Generar Páginas</a>
+</li>
+<li>
+<a data-i18n-key="header_pricing" href="../pricing.html">Precios</a>
+</li>
+<li>
+<a data-i18n-key="header_blog" href="../blog.html">Blog</a>
+</li>
+<li>
+<a data-i18n-key="header_about" href="../about.html">Acerca de</a>
+</li>
+<li>
+<a data-i18n-key="header_audit" href="../audit.html">Auditoría Gratuita</a>
+</li>
+<li>
+<a data-i18n-key="header_contact" href="../contact.html">Contacto</a>
+</li>
+<li>
+<a data-i18n-key="header_login_signup" href="../auth.html">Iniciar Sesión/Registrarse</a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<main>
+<section class="hero">
+<h1 data-i18n-key="generate_hero_title">Genera Tus Páginas SEO Locales</h1>
+<p data-i18n-key="generate_hero_subtitle">Desbloquea la visibilidad de búsqueda local. Proporciona los detalles de tu negocio y crearemos instantáneamente un conjunto de páginas de destino optimizadas para SEO, adaptadas a cada ciudad a la que sirves.</p>
+</section>
+<section class="how-it-works">
+<h2 data-i18n-key="generate_how_it_works_title">Cómo Funciona</h2>
+<div class="steps">
+<div class="step">
+<i class="fas fa-file-signature icon">
+</i>
+<h3 data-i18n-key="generate_step1_title">1. Introduce Tus Detalles</h3>
+<p data-i18n-key="generate_step1_description">Proporciona el nombre de tu negocio, los servicios específicos que ofreces y todas las ciudades a las que quieres dirigirte.</p>
+</div>
+<div class="step">
+<i class="fas fa-gears icon">
+</i>
+<h3 data-i18n-key="generate_step2_title">2. Generamos Tus Páginas</h3>
+<p data-i18n-key="generate_step2_description">Nuestro sistema crea instantáneamente páginas de destino únicas y optimizadas para SEO para cada servicio en cada ciudad.</p>
+</div>
+<div class="step">
+<i class="fas fa-download icon">
+</i>
+<h3 data-i18n-key="generate_step3_title">3. Descarga y Despliega</h3>
+<p data-i18n-key="generate_step3_description">Recibe un archivo ZIP con todas tus nuevas páginas, listo para ser subido a tu sitio web.</p>
+</div>
+</div>
+</section>
+<section class="generate-form">
+<div class="onboarding-message" id="onboarding-message">
+<p>
+<i class="fas fa-info-circle onboarding-icon">
+</i>
+<b>
        Welcome to LocalLeads!
       </b>
       To get started, simply fill out the form below. We'll generate SEO-optimized landing pages for your business based on the services and towns you provide.
      </p>
-     <button class="dismiss-button" id="dismiss-onboarding">
+<button class="dismiss-button" id="dismiss-onboarding">
       ×
      </button>
-    </div>
-    <p class="form-description" data-i18n-key="generate_form_description">
-     Rellena el siguiente formulario para empezar. Sé lo más específico posible con tus servicios y enumera todas las ciudades objetivo para obtener los mejores resultados.
-    </p>
-    <form id="generate-form">
-     <div class="credit-info-container">
-      <p>
+</div>
+<p class="form-description" data-i18n-key="generate_form_description">Rellena el siguiente formulario para empezar. Sé lo más específico posible con tus servicios y enumera todas las ciudades objetivo para obtener los mejores resultados.</p>
+<!-- Persistent Credits Widget / Progress Bar -->
+<div id="credits-floating-widget" style="position: fixed; bottom: 80px; right: 20px; z-index: 1000; background: rgba(31, 41, 55, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 260px; font-family: 'Inter', sans-serif; display: none; color: #f3f4f6; transition: all 0.3s ease;">
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+<span style="font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; color: #e5e7eb;">
+          🪙 <span>Page Credits</span>
+</span>
+<span id="widget-credits-count" style="font-weight: bold; color: #3b82f6; background: rgba(59, 130, 246, 0.15); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.9rem;">--</span>
+</div>
+<div id="widget-progress-container" style="background: rgba(255, 255, 255, 0.1); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem;">
+<div id="widget-progress-bar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 4px; transition: width 0.3s ease;"></div>
+</div>
+<div id="widget-warning-card" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.75rem; border-radius: 8px; margin-top: 0.75rem;">
+<h5 style="margin: 0 0 0.25rem 0; color: #f87171; font-size: 0.85rem; font-weight: bold; font-family: 'Inter', sans-serif;">Need more pages?</h5>
+<p style="margin: 0 0 0.75rem 0; font-size: 0.75rem; color: #fca5a5; line-height: 1.3;">Buy additional credits starting at $49.</p>
+<a class="button" href="../buy-credits.html" style="display: block; text-align: center; text-decoration: none; padding: 0.5rem; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border-radius: 6px; font-weight: bold; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3); transition: transform 0.2s;">Buy Credits</a>
+</div>
+</div>
+<form id="generate-form">
+<div class="credit-info-container">
+<p>
        Your Credits:
        <span id="current-credits">
         --
        </span>
-       <a class="buy-credits-link" href="/buy-credits.html">
+<a class="buy-credits-link" href="../pricing.html">
         (Buy More)
        </a>
-      </p>
-      <p>
+</p>
+<p>
        Estimated Credits for this Generation:
        <span id="estimated-credits">
         0
        </span>
-      </p>
-      <div id="credits-status-message" style="margin-top: 1rem;">
-      </div>
-     </div>
-     <div class="tooltip-container">
-      <label data-i18n-key="generate_label_business_name" for="businessName">
-       Nombre del Negocio:
-      </label>
-      <i class="fas fa-info-circle tooltip-icon" title="Enter the full, legal name of your business. This will be used on all generated pages.">
-      </i>
-     </div>
-     <input autocomplete="organization" class="form-input" id="businessName" name="businessName" placeholder="e.g., 'Smith's Plumbing &amp; Heating'" required="" type="text"/>
-     <span class="input-error-message" id="businessName-error">
-     </span>
-     <div class="tooltip-container">
-      <label data-i18n-key="generate_label_zip_code" for="zipCode">
-       Código Postal del Negocio:
-      </label>
-      <i class="fas fa-info-circle tooltip-icon" title="The primary zip code of your business location.">
-      </i>
-     </div>
-     <input autocomplete="postal-code" class="form-input" id="zipCode" name="zipCode" placeholder="e.g., '90210'" required="" type="text"/>
-     <span class="input-error-message" id="zipCode-error">
-     </span>
-     <div class="tooltip-container">
-      <label data-i18n-key="generate_label_services" for="services">
-       Servicios (separados por comas):
-      </label>
-      <i class="fas fa-info-circle tooltip-icon" title="List the key services you offer, separated by commas. E.g., 'plumbing repair, water heater installation, drain cleaning'.">
-      </i>
-     </div>
-     <input class="form-input" id="services" name="services" placeholder="e.g., 'plumbing repair, water heater installation, drain cleaning'" required="" type="text"/>
-     <span class="input-error-message" id="services-error">
-     </span>
-     <div class="char-counter">
-      <span id="services-char-count">
+</p>
+<div id="credits-status-message" style="margin-top: 1rem;">
+</div>
+</div>
+<div class="tooltip-container">
+<label data-i18n-key="generate_label_business_name" for="businessName">Nombre del Negocio:</label>
+<i class="fas fa-info-circle tooltip-icon" title="Enter the full, legal name of your business. This will be used on all generated pages.">
+</i>
+</div>
+<input autocomplete="organization" class="form-input" id="businessName" name="businessName" placeholder="e.g., 'Smith's Plumbing &amp; Heating'" required="" type="text"/>
+<span class="input-error-message" id="businessName-error">
+</span>
+<div class="tooltip-container">
+<label data-i18n-key="generate_label_zip_code" for="zipCode">Código Postal del Negocio:</label>
+<i class="fas fa-info-circle tooltip-icon" title="The primary zip code of your business location.">
+</i>
+</div>
+<input autocomplete="postal-code" class="form-input" id="zipCode" name="zipCode" placeholder="e.g., '90210'" required="" type="text"/>
+<span class="input-error-message" id="zipCode-error">
+</span>
+<div class="tooltip-container">
+<label data-i18n-key="generate_label_services" for="services">Servicios (separados por comas):</label>
+<i class="fas fa-info-circle tooltip-icon" title="List the key services you offer, separated by commas. E.g., 'plumbing repair, water heater installation, drain cleaning'.">
+</i>
+</div>
+<input class="form-input" id="services" name="services" placeholder="e.g., 'AC Repair, Furnace Cleaning, HVAC Installation'" required="" type="text"/>
+<span class="input-error-message" id="services-error">
+</span>
+<div class="char-counter">
+<span id="services-char-count">
        0
       </span>
       characters
      </div>
-     <div class="tooltip-container">
-      <label data-i18n-key="generate_label_towns" for="towns">
-       Ciudades (separadas por comas):
-      </label>
-      <i class="fas fa-info-circle tooltip-icon" title="List all the towns or cities you serve, separated by commas. E.g., 'Springfield, Shelbyville, Capital City'.">
-      </i>
-     </div>
-     <textarea class="form-input" id="towns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City'" required="" rows="5"></textarea>
-     <span class="input-error-message" id="towns-error">
-     </span>
-     <div class="char-counter">
-      <span id="towns-char-count">
+<div class="tooltip-container">
+<label data-i18n-key="generate_label_towns" for="towns">Ciudades (separadas por comas):</label>
+<i class="fas fa-info-circle tooltip-icon" title="List all the towns or cities you serve, separated by commas. E.g., 'Springfield, Shelbyville, Capital City'.">
+</i>
+</div>
+<textarea class="form-input" id="towns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City, North Haverbrook'" required="" rows="5"></textarea>
+<span class="input-error-message" id="towns-error">
+</span>
+<div class="char-counter">
+<span id="towns-char-count">
        0
       </span>
       characters
      </div>
-     <div class="form-group" id="enable-ai-group">
-      <input id="enableAICopy" name="enableAICopy" type="checkbox"/>
-      <label data-i18n-key="generate_label_enable_ai_copy" for="enableAICopy" style="display: inline; margin-left: 0.5rem;">
-       Habilitar copia con IA para las páginas
-      </label>
-     </div>
-     <div class="form-group" id="ai-style-group" style="display: none;">
-      <label data-i18n-key="generate_label_ai_content_style" for="ai-style">
-       Estilo de Contenido de IA:
-      </label>
-      <select class="form-input" id="ai-style" name="ai-style">
-       <option data-i18n-key="generate_ai_style_professional" value="professional">
-        Profesional
-       </option>
-       <option data-i18n-key="generate_ai_style_casual" value="casual">
-        Casual
-       </option>
-      </select>
-     </div>
-     <button class="button" data-i18n-key="generate_submit_button" id="generate-pages-button" type="submit">
-      Generar Páginas
-     </button>
-     <div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
-     </div>
-    </form>
-    <div id="loading-indicator" style="display: none;">
-     <p data-i18n-key="generate_loading_message">
-      Generando tus páginas... Esto puede tardar un momento.
-     </p>
-    </div>
-   </section>
-   <section class="testimonials">
-    <h2>
+<div class="form-group" id="enable-ai-group">
+<input id="enableAICopy" name="enableAICopy" type="checkbox"/>
+<label data-i18n-key="generate_label_enable_ai_copy" for="enableAICopy" style="display: inline; margin-left: 0.5rem;">Habilitar copia con IA para las páginas</label>
+</div>
+<div class="form-group" id="ai-style-group" style="display: none;">
+<div style="margin-bottom: 1.25rem;">
+<label data-i18n-key="generate_label_ai_content_style" for="ai-style">Estilo de Contenido de IA:</label>
+<select class="form-input" id="ai-style" name="ai-style">
+<option data-i18n-key="generate_ai_style_professional" value="professional">Profesional</option>
+<option data-i18n-key="generate_ai_style_casual" value="casual">Casual</option>
+<option data-i18n-key="generate_ai_style_friendly" value="friendly">Amigable</option>
+</select>
+</div>
+<div>
+<label data-i18n-key="generate_label_ai_keywords" for="aiKeywords">Palabras clave / Indicaciones personalizadas (Opcional):</label>
+<textarea class="form-input" data-i18n-key="generate_placeholder_ai_keywords" id="aiKeywords" name="aiKeywords" placeholder="por ejemplo, empresa familiar, servicio 24/7, ecológico, técnicos certificados" rows="3"></textarea>
+</div>
+</div>
+<style>
+        .advanced-settings-details {
+          margin-bottom: 1.5rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        .advanced-settings-details summary {
+          padding: 1rem;
+          font-weight: 600;
+          font-size: 0.95rem;
+          color: #cbd5e1;
+          cursor: pointer;
+          user-select: none;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: rgba(255, 255, 255, 0.01);
+          outline: none;
+        }
+        .advanced-settings-details summary::-webkit-details-marker {
+          display: none;
+        }
+        .advanced-settings-details summary::marker {
+          display: none;
+        }
+        .advanced-settings-details[open] summary {
+          background: rgba(255, 255, 255, 0.03);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .advanced-settings-details[open] summary i.fa-chevron-down {
+          transform: rotate(180deg);
+        }
+        .advanced-settings-details i.fa-chevron-down {
+          font-size: 0.85rem;
+          color: #94a3b8;
+          transition: transform 0.3s ease;
+        }
+      </style>
+<details class="advanced-settings-details">
+<summary>
+<span>⚙️ Advanced Settings (Optional)</span>
+<i class="fas fa-chevron-down"></i>
+</summary>
+<div style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+<div class="form-group" style="margin-bottom: 0;">
+<div class="tooltip-container" style="margin-bottom: 0.4rem;">
+<label for="telephone" style="margin-bottom: 0;">Business Phone Number:</label>
+<i class="fas fa-info-circle tooltip-icon" title="Optional. Displayed as a click-to-call link on all generated pages."></i>
+</div>
+<input class="form-input" id="telephone" name="telephone" placeholder="e.g., (555) 123-4567" style="margin-top: 0;" type="text"/>
+</div>
+<div class="form-group" style="margin-bottom: 0;">
+<div class="tooltip-container" style="margin-bottom: 0.4rem;">
+<label for="priceRange" style="margin-bottom: 0;">Price Range:</label>
+<i class="fas fa-info-circle tooltip-icon" title="Optional schema pricing category."></i>
+</div>
+<select class="form-input" id="priceRange" name="priceRange" style="margin-top: 0;">
+<option value="Standard">Standard ($$)</option>
+<option value="$">Inexpensive ($)</option>
+<option value="$$">Moderate ($$)</option>
+<option value="$$$">Expensive ($$$)</option>
+<option value="$$$$">Ultra High-End ($$$$)</option>
+</select>
+</div>
+<div class="form-group" style="margin-bottom: 0;">
+<div class="tooltip-container" style="margin-bottom: 0.4rem;">
+<label for="openingHours" style="margin-bottom: 0;">Opening Hours:</label>
+<i class="fas fa-info-circle tooltip-icon" title="Optional. E.g., 'Mon-Fri: 9:00 AM - 5:00 PM' or '24/7'."></i>
+</div>
+<input class="form-input" id="openingHours" name="openingHours" placeholder="e.g., Mon-Fri: 9:00 AM - 5:00 PM" style="margin-top: 0;" type="text"/>
+</div>
+<div class="form-group" style="margin-bottom: 0;">
+<div class="tooltip-container" style="margin-bottom: 0.4rem;">
+<label for="primaryColor" style="margin-bottom: 0;">Primary Brand Color:</label>
+<i class="fas fa-info-circle tooltip-icon" title="Select a primary brand color to theme the generated pages."></i>
+</div>
+<div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.25rem;">
+<input id="primaryColor" name="primaryColor" style="border: none; width: 44px; height: 44px; padding: 0; border-radius: 8px; cursor: pointer; background: transparent;" type="color" value="#3b82f6"/>
+<span style="font-size: 0.9rem; color: #94a3b8;">Choose a theme color for call-to-actions, borders, and buttons.</span>
+</div>
+</div>
+</div>
+</details>
+<button class="button" data-i18n-key="generate_submit_button" id="generate-pages-button" type="submit">Generar Páginas</button>
+<div class="error-message" id="form-error-message" style="text-align: center; margin-top: 1rem;">
+</div>
+</form>
+<div id="loading-indicator" style="display: none;">
+<p data-i18n-key="generate_loading_message">Generando tus páginas... Esto puede tardar un momento.</p>
+</div>
+</section>
+<section class="testimonials">
+<h2>
      What Our Customers Say
     </h2>
-    <div class="testimonial-cards">
-     <div class="card">
-      <p>
+<div class="testimonial-cards">
+<div class="card">
+<p>
        "The pages generated are professional and truly SEO optimized. A game-changer for our small business."
       </p>
-      <p class="author">
+<p class="author">
        - Sarah P., Landscaping Company
       </p>
-     </div>
-     <div class="card">
-      <p>
+</div>
+<div class="card">
+<p>
        "I was skeptical at first, but LocalLeads delivered. Our cleaning business is now booked solid for months!"
       </p>
-      <p class="author">
+<p class="author">
        - Maria G., Cleaning Services
       </p>
-     </div>
-    </div>
-   </section>
-  </main>
-  <div class="sticky-cta-bar">
-   <p>
+</div>
+</div>
+</section>
+</main>
+<div class="sticky-cta-bar">
+<p>
     Ready to get more local customers?
    </p>
-   <a class="button" href="../generate.html">
+<a class="button" href="../generate.html">
     Generate Pages Now
    </a>
-   <a class="button button-secondary" href="../audit.html">
+<a class="button button-secondary" href="../audit.html">
     Get Free Audit
    </a>
-  </div>
-  <footer>
-   <div class="container">
-    <div class="footer-columns">
-     <div class="footer-col">
-      <h2>
+</div>
+<footer>
+<div class="container">
+<div class="footer-columns">
+<div class="footer-col">
+<h2>
        LocalLeads
       </h2>
-      <p>
+<p>
        Dominate your local market, effortlessly.
       </p>
-      <div class="social-icons">
-       <a aria-label="LinkedIn" href="https://linkedin.com/company/localleads" target="_blank">
-        <i class="fab fa-linkedin-in">
-        </i>
-       </a>
-       <a aria-label="Facebook" href="https://facebook.com/LocalLeadsApp" target="_blank">
-        <i class="fab fa-facebook-f">
-        </i>
-       </a>
-      </div>
-     </div>
-     <div class="footer-col">
-      <h2>
+<div class="social-icons">
+<a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
+<i class="fab fa-facebook-f">
+</i>
+</a>
+<a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
+<i class="fab fa-linkedin-in">
+</i>
+</a>
+<a aria-label="Twitter" href="https://twitter.com" target="_blank">
+<i class="fab fa-twitter">
+</i>
+</a>
+</div>
+</div>
+<div class="footer-col">
+<h2>
        Quick Links
       </h2>
-      <ul>
-       <li>
-        <a href="../about.html">
+<ul>
+<li>
+<a href="../about.html">
          About Us
         </a>
-       </li>
-       <li>
-        <a href="../pricing.html">
+</li>
+<li>
+<a href="../pricing.html">
          Pricing
         </a>
-       </li>
-       <li>
-        <a href="/blog.html">
+</li>
+<li>
+<a href="../blog.html">
          Blog
         </a>
-       </li>
-       <li>
-        <a href="../contact.html">
+</li>
+<li>
+<a href="../contact.html">
          Contact
         </a>
-       </li>
-      </ul>
-     </div>
-     <div class="footer-col">
-      <h2>
+</li>
+<li>
+<a href="../faq.html">
+         FAQ
+        </a>
+</li>
+<li>
+<a href="../referral-program.html">
+         Referral Program
+        </a>
+</li>
+</ul>
+</div>
+<div class="footer-col">
+<h2>
        Legal
       </h2>
-      <ul>
-       <li>
-        <a href="/privacy.html">
+<ul>
+<li>
+<a href="../privacy.html">
          Privacy Policy
         </a>
-       </li>
-       <li>
-        <a href="/terms.html">
+</li>
+<li>
+<a href="../terms.html">
          Terms of Service
         </a>
-       </li>
-       <li>
-        <a href="../audit.html">
+</li>
+<li>
+<a href="../audit.html">
          Free SEO Audit
         </a>
-       </li>
-      </ul>
-     </div>
-    </div>
-    <div class="footer-bottom">
-     <p>
+</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>
       © 2026 LocalLeads. All rights reserved.
      </p>
-    </div>
-   </div>
-  </footer>
-  <script src="/js/app.min.js">
-  </script>
-  <script>
+</div>
+</div>
+</footer>
+<script>
    (async function() {
 const variant = await ABTest.init('ai-content-test');
 if (variant === 'A') {
 document.getElementById('enable-ai-group').style.display = 'none';
 }
+
+const currentCreditsSpan = document.getElementById('current-credits');
+const estimatedCreditsSpan = document.getElementById('estimated-credits');
+const servicesInput = document.getElementById('services');
+const townsTextarea = document.getElementById('towns');
+const generateButton = document.getElementById('generate-pages-button');
+const creditsStatusMessage = document.getElementById('credits-status-message');
+const generateForm = document.getElementById('generate-form');
+
+let userCredits = 0;
+
+async function fetchCredits() {
+try {
+const response = await fetch('/api/get-credits');
+if (response.ok) {
+const data = await response.json();
+userCredits = data.credits;
+currentCreditsSpan.textContent = userCredits;
+document.getElementById('credits-floating-widget').style.display = 'block';
+} else {
+// Handle cases where user is not logged in or token expired
+currentCreditsSpan.textContent = 'N/A (Login required)';
+console.warn('Could not fetch credits:', await response.text());
+}
+} catch (error) {
+console.error('Error fetching credits:', error);
+currentCreditsSpan.textContent = 'Error';
+}
+}
+
+function calculateEstimatedCredits() {
+const services = servicesInput.value.split(',').filter(s => s.trim() !== '').length;
+const towns = townsTextarea.value.split(',').filter(t => t.trim() !== '').length;
+return services * towns;
+}
+
+function updateCreditDisplayAndButton() {
+const estimated = calculateEstimatedCredits();
+estimatedCreditsSpan.textContent = estimated;
+
+const widgetCreditsCount = document.getElementById('widget-credits-count');
+const widgetProgressBar = document.getElementById('widget-progress-bar');
+const widgetWarningCard = document.getElementById('widget-warning-card');
+const widgetContainer = document.getElementById('credits-floating-widget');
+
+if (userCredits !== null && userCredits !== undefined && !isNaN(userCredits)) {
+    widgetCreditsCount.textContent = userCredits;
+    const maxVal = 200;
+    const percentage = Math.min((userCredits / maxVal) * 100, 100);
+    widgetProgressBar.style.width = `${percentage}%`;
+    
+    if (userCredits < 10) {
+        widgetProgressBar.style.background = 'linear-gradient(90deg, #ef4444, #f87171)';
+        widgetWarningCard.style.display = 'block';
+    } else {
+        widgetProgressBar.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+        widgetWarningCard.style.display = 'none';
+    }
+}
+
+if (userCredits === 0 && estimated > 0) { // If user has 0 credits and wants to generate pages
+creditsStatusMessage.textContent = 'You have no credits. Please buy more.';
+creditsStatusMessage.style.color = 'red';
+generateButton.disabled = true;
+} else if (estimated > userCredits) {
+creditsStatusMessage.textContent = `You need ${estimated - userCredits} more credits.`;
+creditsStatusMessage.style.color = 'orange';
+generateButton.disabled = true;
+} else {
+creditsStatusMessage.textContent = ''; // Clear message
+generateButton.disabled = false;
+}
+}
+
+// Initial fetch and update
+await fetchCredits();
+updateCreditDisplayAndButton();
+
+// Event listeners for input changes
+servicesInput.addEventListener('input', updateCreditDisplayAndButton);
+townsTextarea.addEventListener('input', updateCreditDisplayAndButton);
+
+// Form submission logic
+generateForm.addEventListener('submit', function(event) {
+if (generateButton.disabled) { // Prevent submission if button is disabled due to insufficient credits
+event.preventDefault();
+alert('Please acquire enough credits to generate the pages.');
+}
+// Further validation (like generate-form-validation.min.js) would run after this.
+});
+
 })();
   </script>
-  <button id="scrollToTopBtn" title="Go to top">
-   <i class="fas fa-arrow-up">
-   </i>
-  </button>
-  <button id="scrollToTopBtn" title="Go to top">
-   <i class="fas fa-arrow-up">
-   </i>
-  </button>
- </body>
+<script src="/js/app.min.js">
+</script>
+<button id="scrollToTopBtn" title="Go to top">
+<i class="fas fa-arrow-up">
+</i>
+</button>
+</body>
 </html>

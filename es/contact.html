@@ -11,38 +11,57 @@
 <meta content="contact us, support, questions, local SEO help, get in touch" name="keywords"/>
 <meta content="Contact LocalLeads: Get in Touch for Local SEO Solutions &amp; Support" property="og:title"/>
 <meta content="Have questions about LocalLeads' hyper-local SEO services? Reach out to our team for expert support, inquiries about pricing, features, or any other assistance you need to boost your local presence." property="og:description"/>
+<meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
 <link href="../style.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../images/favicon.png" rel="icon" type="image/png"/>
 <script type="application/ld+json">
-   {
+{
   "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "name": "Contact LocalLeads",
-  "url": "https://www.localseogen.com/contact.html",
-  "description": "Get in touch with LocalLeads for questions about local SEO solutions, pricing, features, and support.",
-  "mainEntity": {
-    "@type": "Organization",
-    "name": "LocalLeads",
-    "url": "https://www.localseogen.com",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-555-123-4567",
-      "contactType": "customer service",
-      "areaServed": "US",
-      "availableLanguage": ["en", "es"]
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.localseogen.com/#organization",
+      "name": "LocalLeads",
+      "url": "https://www.localseogen.com",
+      "logo": "https://www.localseogen.com/images/logo.svg",
+      "sameAs": [
+        "https://www.facebook.com/LocalLeadsApp",
+        "https://www.linkedin.com/company/localleads",
+        "https://twitter.com"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-555-123-4567",
+        "contactType": "customer service",
+        "areaServed": "US",
+        "availableLanguage": ["en", "es"]
+      }
     },
-    "sameAs": [
-      "https://twitter.com",
-      "https://www.facebook.com/LocalLeadsApp",
-      "https://www.linkedin.com/company/localleads"
-    ]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://www.localseogen.com/#website",
+      "url": "https://www.localseogen.com",
+      "name": "LocalLeads",
+      "description": "LocalLeads leverages AI to create automated, hyper-local SEO landing pages, converting local searches into paying customers for small businesses. Boost your local lead generation today!",
+      "publisher": {
+        "@id": "https://www.localseogen.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.localseogen.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
 }
   </script>
-
-  <link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
+<link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
 </head>
+<script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+<script defer="" src="/_vercel/insights/script.js"></script>
 <body>
 <div id="mobile-nav-overlay">
 </div>
@@ -50,8 +69,8 @@
 <nav>
 <div class="container">
 <a class="logo" href="../">
-      LocalLeads
-     </a>
+<img alt="LocalLeads Logo" class="logo-svg" src="../images/logo.svg"/>
+</a>
 <div class="hamburger-menu" id="hamburger-icon">
 <div class="bar">
 </div>
@@ -67,44 +86,33 @@
        </button>
 </li>
 <li>
-<a data-i18n-key="header_generate_pages" href="../generate.html">
-        Generar Páginas
+<a data-i18n-key="header_generate_pages" href="../generate.html">Generar Páginas</a>
+</li>
+<li>
+<a data-i18n-key="header_live_demo" href="../index.html#live-demo">
+        Live Demo
        </a>
 </li>
 <li>
-<a data-i18n-key="header_pricing" href="../pricing.html">
-        Precios
-       </a>
+<a data-i18n-key="header_pricing" href="../pricing.html">Precios</a>
 </li>
 <li>
-<a data-i18n-key="header_blog" href="/blog.html">
-        Blog
-       </a>
+<a data-i18n-key="header_blog" href="../blog.html">Blog</a>
 </li>
 <li>
-<a data-i18n-key="header_about" href="../about.html">
-        Acerca de
-       </a>
+<a data-i18n-key="header_about" href="../about.html">Acerca de</a>
 </li>
 <li>
-<a data-i18n-key="header_audit" href="../audit.html">
-        Auditoría Gratuita
-       </a>
+<a data-i18n-key="header_audit" href="../audit.html">Auditoría Gratuita</a>
 </li>
 <li>
-<a data-i18n-key="header_contact" href="../contact.html">
-        Contacto
-       </a>
+<a data-i18n-key="header_contact" href="../contact.html">Contacto</a>
 </li>
 <li>
-<a data-i18n-key="header_login_signup" href="../auth.html">
-        Iniciar Sesión/Registrarse
-       </a>
+<a data-i18n-key="header_login_signup" href="../auth.html">Iniciar Sesión/Registrarse</a>
 </li>
 <li>
-<a data-i18n-key="header_buy_credits" href="/buy-credits.html">
-        Comprar Créditos
-       </a>
+<a data-i18n-key="header_buy_credits" href="../buy-credits.html">Comprar Créditos</a>
 </li>
 </ul>
 </div>
@@ -112,32 +120,20 @@
 </header>
 <main>
 <section class="hero">
-<h1 data-i18n-key="contact_hero_title">
-     Contáctanos
-    </h1>
-<p data-i18n-key="contact_hero_subtitle">
-     ¡Nos encantaría saber de ti! Si tienes alguna pregunta sobre nuestros servicios, precios o cualquier otra cosa, nuestro equipo está listo para responder a todas tus preguntas.
-    </p>
+<h1 data-i18n-key="contact_hero_title">Contáctanos</h1>
+<p data-i18n-key="contact_hero_subtitle">¡Nos encantaría saber de ti! Si tienes alguna pregunta sobre nuestros servicios, precios o cualquier otra cosa, nuestro equipo está listo para responder a todas tus preguntas.</p>
 </section>
 <section class="generate-form">
 <form id="contact-form">
-<label data-i18n-key="contact_label_name" for="name">
-      Nombre:
-     </label>
+<label data-i18n-key="contact_label_name" for="name">Nombre:</label>
 <input autocomplete="name" class="form-input" id="name" name="name" required="" type="text"/>
-<label data-i18n-key="contact_label_email" for="email">
-      Correo Electrónico:
-     </label>
+<label data-i18n-key="contact_label_email" for="email">Correo Electrónico:</label>
 <input autocomplete="email" class="form-input" id="email" name="email" required="" type="email"/>
-<label data-i18n-key="contact_label_message" for="message">
-      Mensaje:
-     </label>
+<label data-i18n-key="contact_label_message" for="message">Mensaje:</label>
 <textarea class="form-input" id="message" name="message" required="" rows="5"></textarea>
-<button class="button" data-i18n-key="contact_send_message" type="submit">
-      Enviar Mensaje
-     </button>
+<button class="button" data-i18n-key="contact_send_message" type="submit">Enviar Mensaje</button>
 </form>
-<div class="error-message" id="form-message" style="text-align: center; margin-top: 1rem;">
+<div class="error-message" id="message" style="text-align: center; margin-top: 1rem;">
 </div>
 </section>
 </main>
@@ -163,12 +159,16 @@
        Dominate your local market, effortlessly.
       </p>
 <div class="social-icons">
-<a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localseogen.com/contact.html" target="_blank">
+<a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
 <i class="fab fa-facebook-f">
 </i>
 </a>
-<a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localseogen.com/contact.html&amp;title=Contact Us - LocalLeads" target="_blank">
+<a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
 <i class="fab fa-linkedin-in">
+</i>
+</a>
+<a aria-label="Twitter" href="https://twitter.com" target="_blank">
+<i class="fab fa-twitter">
 </i>
 </a>
 </div>
@@ -189,13 +189,23 @@
         </a>
 </li>
 <li>
-<a href="/blog.html">
+<a href="../blog.html">
          Blog
         </a>
 </li>
 <li>
 <a href="../contact.html">
          Contact
+        </a>
+</li>
+<li>
+<a href="../faq.html">
+         FAQ
+        </a>
+</li>
+<li>
+<a href="../referral-program.html">
+         Referral Program
         </a>
 </li>
 </ul>
@@ -206,12 +216,12 @@
       </h2>
 <ul>
 <li>
-<a href="/privacy.html">
+<a href="../privacy.html">
          Privacy Policy
         </a>
 </li>
 <li>
-<a href="/terms.html">
+<a href="../terms.html">
          Terms of Service
         </a>
 </li>
@@ -232,10 +242,6 @@
 </footer>
 <script src="/js/app.min.js">
 </script>
-<button id="scrollToTopBtn" title="Go to top">
-<i class="fas fa-arrow-up">
-</i>
-</button>
-  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 </body>
 </html>

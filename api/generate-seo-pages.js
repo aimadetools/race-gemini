@@ -107,7 +107,7 @@ export default async (req, res) => {
             return res.status(401).json({ message: 'Authentication required to generate pages.' });
         }
 
-        const { businessName, services, towns, enableAICopy = false, aiStyle, primaryColor, telephone, priceRange, openingHours } = req.body;
+        const { businessName, services, towns, enableAICopy = false, aiStyle, aiKeywords, primaryColor, telephone, priceRange, openingHours } = req.body;
 
         if (!businessName || !services || !towns) {
             return res.status(400).json({ message: 'Missing required fields: businessName, services, and towns.' });
@@ -189,7 +189,10 @@ export default async (req, res) => {
                     if (enableAICopy && geminiModel) {
                         try {
                             // Generate main AI content
-                            const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${businessName}" that provides "${service}" in "${town}". Focus on why a customer should choose them.`;
+                            let prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${businessName}" that provides "${service}" in "${town}". Focus on why a customer should choose them.`;
+                            if (aiKeywords) {
+                                prompt += ` Incorporate the following keywords/instructions: ${aiKeywords}.`;
+                            }
                             aiContent = await generateAIContent(prompt, '<p>AI copy generation failed. Please try again later or contact support.</p>');
 
                             // Generate AI-powered meta description
@@ -264,8 +267,8 @@ export default async (req, res) => {
                     // Save to database as well so it can be served dynamically in production Vercel
                     const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -276,6 +279,7 @@ export default async (req, res) => {
                            opening_hours = EXCLUDED.opening_hours,
                            enable_ai_copy = EXCLUDED.enable_ai_copy,
                            ai_style = EXCLUDED.ai_style,
+                           ai_keywords = EXCLUDED.ai_keywords,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             fileName,
@@ -289,7 +293,8 @@ export default async (req, res) => {
                             priceRange || null,
                             openingHours || null,
                             enableAICopy || false,
-                            aiStyle || null
+                            aiStyle || null,
+                            aiKeywords || null
                         ]
                     );
 

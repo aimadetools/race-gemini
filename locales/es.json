@@ -102,6 +102,8 @@
     "generate_label_towns": "Ciudades (separadas por comas):",
     "generate_label_enable_ai_copy": "Habilitar copia con IA para las páginas",
     "generate_label_ai_content_style": "Estilo de Contenido de IA:",
+    "generate_label_ai_keywords": "Palabras clave / Indicaciones personalizadas (Opcional):",
+    "generate_placeholder_ai_keywords": "por ejemplo, empresa familiar, servicio 24/7, ecológico, técnicos certificados",
     "generate_ai_style_professional": "Profesional",
     "generate_ai_style_casual": "Casual",
     "generate_ai_style_friendly": "Amigable",

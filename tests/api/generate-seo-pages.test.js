@@ -1,6 +1,6 @@
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const { clearMockUsers, addMockUser } = require('../../db/mockDb.js');
+const { clearMockUsers, addMockUser, getMockSeoPages } = require('../../db/mockDb.js');
 
 jest.mock('jsonwebtoken', () => ({
     verify: jest.fn(() => ({ userId: 'testUserId123' }))
@@ -464,6 +464,46 @@ describe('POST /api/generate-seo-pages', () => {
             'utf8'
         );
         expect(mockGenAI.getGenerativeModel).not.toHaveBeenCalled();
+    });
+
+    test('should incorporate custom keywords/prompts into AI prompt and database for generate-seo-pages', async () => {
+        // Restore API key
+        process.env.GEMINI_API_KEY = 'mock-api-key';
+        delete require.cache[require.resolve('../../api/generate-seo-pages')];
+        const handlerWithAi = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
+
+        const req = createRequest({
+            method: 'POST',
+            body: {
+                businessName: 'Test Business',
+                services: ['Plumbing'],
+                towns: ['New York'],
+                enableAICopy: true,
+                aiStyle: 'friendly',
+                aiKeywords: 'family-owned, 24/7 service',
+                primaryColor: '#ff0000'
+            }
+        });
+        const res = createResponse();
+
+        const mockGeminiModel = _getMockGeminiModel();
+        mockGeminiModel.generateContent.mockClear();
+
+        await handlerWithAi(req, res);
+
+        expect(res.statusCode).toBe(200);
+
+        // Verify the prompt passed to the mock model contained the keywords
+        const calls = mockGeminiModel.generateContent.mock.calls;
+        const mainCopyPromptCall = calls.find(call => call[0].includes('Write 2-3 paragraphs of marketing copy'));
+        expect(mainCopyPromptCall).toBeDefined();
+        expect(mainCopyPromptCall[0]).toContain('Incorporate the following keywords/instructions: family-owned, 24/7 service');
+
+        // Verify the database record contains the keywords
+        const pages = getMockSeoPages();
+        const page = pages.find(p => p.service === 'Plumbing' && p.town === 'New York');
+        expect(page).toBeDefined();
+        expect(page.ai_keywords).toBe('family-owned, 24/7 service');
     });
 
 });

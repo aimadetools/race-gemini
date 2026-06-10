@@ -83,7 +83,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
 
 export default async (req, res) => {
     if (req.method === 'POST') {
-        const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle, telephone, priceRange, openingHours, primaryColor } = req.body;
+        const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle, aiKeywords, telephone, priceRange, openingHours, primaryColor } = req.body;
 
         if (!businessName || !services || !towns || !zipCode) {
             await logError(new Error('Missing required fields'), 'Generate API - Missing Fields', 'generate_error.log');
@@ -199,7 +199,10 @@ export default async (req, res) => {
 
                     if (enableAICopy && geminiModel) {
                         try {
-                            const prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
+                            let prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
+                            if (aiKeywords) {
+                                prompt += ` Incorporate the following keywords/instructions: ${aiKeywords}.`;
+                            }
                             aiContent = await generateAIContent(geminiModel, prompt, getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown));
 
                             const metaPrompt = `Write a concise and compelling meta description (around 150-160 characters) for a business called "${escapedBusinessName}" that offers "${escapedService}" in "${escapedTown}". Highlight key benefits and encourage clicks.`;
@@ -271,8 +274,8 @@ export default async (req, res) => {
                     // Store page in database
                     const pageSlug = `${userId}-${serviceSlug}-in-${townSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -284,6 +287,7 @@ export default async (req, res) => {
                            opening_hours = EXCLUDED.opening_hours,
                            enable_ai_copy = EXCLUDED.enable_ai_copy,
                            ai_style = EXCLUDED.ai_style,
+                           ai_keywords = EXCLUDED.ai_keywords,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             pageId,
@@ -299,7 +303,8 @@ export default async (req, res) => {
                             priceRange || null,
                             openingHours || null,
                             enableAICopy || false,
-                            aiStyle || null
+                            aiStyle || null,
+                            aiKeywords || null
                         ]
                     );
                 }

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cityList = document.getElementById('city-list').value.trim();
         const enableAICopy = document.getElementById('enable-ai-copy').checked;
         const aiStyle = document.getElementById('ai-style').value.trim();
+        const aiKeywords = document.getElementById('ai-keywords').value.trim();
         const template = document.getElementById('template').value;
         const primaryColor = document.getElementById('primary-color').value.trim();
         const telephone = document.getElementById('telephone').value.trim();
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     towns: cities,
                     enableAICopy,
                     aiStyle: aiStyle || undefined, // Send undefined if empty
+                    aiKeywords: aiKeywords || undefined,
                     template: template,
                     primaryColor: primaryColor || undefined, // Send undefined if empty
                     telephone: telephone || undefined,

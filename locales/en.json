@@ -102,6 +102,8 @@
     "generate_label_towns": "Towns (comma-separated):",
     "generate_label_enable_ai_copy": "Enable AI-powered copy for pages",
     "generate_label_ai_content_style": "AI Content Style:",
+    "generate_label_ai_keywords": "Custom Keywords / Prompts (Optional):",
+    "generate_placeholder_ai_keywords": "e.g., family-owned, 24/7 service, eco-friendly, certified technicians",
     "generate_ai_style_professional": "Professional",
     "generate_ai_style_casual": "Casual",
     "generate_ai_style_friendly": "Friendly",

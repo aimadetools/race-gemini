@@ -11,7 +11,7 @@
 <meta content="pricing, local seo cost, small business marketing packages, local SEO pricing, affordable SEO, one-time fee SEO, local lead generation pricing, buy credits" name="keywords"/>
 <meta content="LocalLeads Pricing: Affordable Plans for Local SEO &amp; More Customers" property="og:title"/>
 <meta content="Explore LocalLeads' transparent, one-time pricing. Choose from Starter, Pro, or Agency plans to get SEO-optimized pages that drive local traffic and grow your business. No hidden fees!" property="og:description"/>
-<meta content="https://www.localseogen.com/og-image.png" property="og:image"/>
+<meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
 <meta content="https://www.localseogen.com/pricing.html" property="og:url"/>
 <link href="https://www.localseogen.com/pricing.html" rel="canonical"/>
 <meta content="summary_large_image" name="twitter:card"/>
@@ -19,20 +19,56 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="../images/favicon.png" rel="icon" type="image/png"/>
 <script type="application/ld+json">
-   {"@context": "http://schema.org","@type": "LocalBusiness","name": "LocalLeads","image": "https://www.localseogen.com/images/logo.png","url": "https://www.localseogen.com","telephone": "+1-555-123-4567","address": {"@type": "PostalAddress","streetAddress": "123 Main St","addressLocality": "Anytown","addressRegion": "CA","postalCode": "90210","addressCountry": "US"},"openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "17:00"}],"potentialAction": {"@type": "ReserveAction","target": {"@type": "EntryPoint","urlTemplate": "https://www.localseogen.com/contact.html","inLanguage": "en-US","actionPlatform": ["http://schema.org/DesktopWebPlatform","http://schema.org/IOSPlatform","http://schema.org/AndroidPlatform"]},"resultInEffect": {"@type": "ActionStatusType","name": "PotentialActionStatus"}},"sameAs": ["https://twitter.com","https://www.facebook.com/LocalLeadsApp","https://www.linkedin.com/company/localleads"]}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.localseogen.com/#organization",
+      "name": "LocalLeads",
+      "url": "https://www.localseogen.com",
+      "logo": "https://www.localseogen.com/images/logo.svg",
+      "sameAs": [
+        "https://www.facebook.com/LocalLeadsApp",
+        "https://www.linkedin.com/company/localleads",
+        "https://twitter.com"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.localseogen.com/#website",
+      "url": "https://www.localseogen.com",
+      "name": "LocalLeads",
+      "description": "LocalLeads leverages AI to create automated, hyper-local SEO landing pages, converting local searches into paying customers for small businesses. Boost your local lead generation today!",
+      "publisher": {
+        "@id": "https://www.localseogen.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.localseogen.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
   </script>
-
-  <link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
+<link href="../style_scroll_to_top.min.css" rel="stylesheet"/>
+<script src="https://js.stripe.com/v3/"></script>
+<script defer="" src="/js/checkout.js"></script>
 </head>
+<script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+<script defer="" src="/_vercel/insights/script.js"></script>
 <body>
 <div id="mobile-nav-overlay">
 </div>
 <header>
 <nav>
 <div class="container">
-<a class="logo" href="../index.html">
-      LocalLeads
-     </a>
+<a class="logo" href="../">
+<img alt="LocalLeads Logo" class="logo-svg" src="../images/logo.svg"/>
+</a>
 <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button">
 <div class="bar">
 </div>
@@ -48,44 +84,30 @@
        </button>
 </li>
 <li>
-<a data-i18n-key="header_generate_pages" href="../generate.html">
-        Generar Páginas
+<a data-i18n-key="header_generate_pages" href="../generate.html">Generar Páginas</a>
+</li>
+<li>
+<a data-i18n-key="header_live_demo" href="../index.html#live-demo">
+        Live Demo
        </a>
 </li>
 <li>
-<a data-i18n-key="header_pricing" href="../pricing.html">
-        Precios
-       </a>
+<a data-i18n-key="header_pricing" href="../pricing.html">Precios</a>
 </li>
 <li>
-<a data-i18n-key="header_blog" href="/blog.html">
-        Blog
-       </a>
+<a data-i18n-key="header_blog" href="../blog.html">Blog</a>
 </li>
 <li>
-<a data-i18n-key="header_about" href="../about.html">
-        Acerca de
-       </a>
+<a data-i18n-key="header_about" href="../about.html">Acerca de</a>
 </li>
 <li>
-<a data-i18n-key="header_audit" href="../audit.html">
-        Auditoría Gratuita
-       </a>
+<a data-i18n-key="header_audit" href="../audit.html">Auditoría Gratuita</a>
 </li>
 <li>
-<a data-i18n-key="header_contact" href="../contact.html">
-        Contacto
-       </a>
+<a data-i18n-key="header_contact" href="../contact.html">Contacto</a>
 </li>
 <li>
-<a data-i18n-key="header_login_signup" href="../auth.html">
-        Iniciar Sesión/Registrarse
-       </a>
-</li>
-<li>
-<a data-i18n-key="header_buy_credits" href="/buy-credits.html">
-        Comprar Créditos
-       </a>
+<a data-i18n-key="header_login_signup" href="../auth.html">Iniciar Sesión/Registrarse</a>
 </li>
 </ul>
 </div>
@@ -93,159 +115,202 @@
 </header>
 <main>
 <section class="pricing" id="pricing">
-<h1 data-i18n-key="pricing_hero_title">
-     Precios Simples y Únicos: Hazte Encontrar, Permanece Encontrado.
-    </h1>
-<p data-i18n-key="pricing_hero_subtitle" style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">
-     Invierte una sola vez para un impacto duradero en el SEO local. Elige el plan que se adapte a las necesidades de tu negocio y obtén un potente conjunto de páginas de destino optimizadas para SEO diseñadas para captar clientes en cada ciudad a la que sirves. Sin suscripciones, solo resultados.
-    </p>
+<h1 data-i18n-key="pricing_hero_title">Precios Simples y Únicos: Hazte Encontrar, Permanece Encontrado.</h1>
+<p data-i18n-key="pricing_hero_subtitle" style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; line-height: 1.6;">Invierte una sola vez para un impacto duradero en el SEO local. Elige el plan que se adapte a las necesidades de tu negocio y obtén un potente conjunto de páginas de destino optimizadas para SEO diseñadas para captar clientes en cada ciudad a la que sirves. Sin suscripciones, solo resultados.</p>
+<div class="pricing-switcher" style="text-align: center; margin-bottom: 2rem;">
+<button class="button" id="showCredits" style="margin-right: 1rem;">Credit Packs</button>
+<button class="button" id="showSubscriptions">Agency Subscriptions</button>
+</div>
+<div id="credit-packs">
 <div class="price-cards">
-<div class="card" data-credits="50" data-price="49" data-stripe-price-id="price_1PKyXqJd7gZvY2J8c6Z1Yq2L">
-<h2 data-i18n-key="pricing_plan_starter_title">
-       Básico
-      </h2>
+<div class="card" data-credits="50" data-price="49" data-stripe-price-id="price_SMALL_BUSINESS_PACK">
+<h2 data-i18n-key="pricing_plan_small_business_title">
+                Small Business Pack
+            </h2>
 <p class="price">
-       $49
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       Tarifa Única
-      </p>
+                $49
+            </p>
+<p data-i18n-key="pricing_one_time_fee">Tarifa Única</p>
 <ul>
-<li data-i18n-key="pricing_starter_feature1">
-        Hasta 50 Páginas Hiperlocales: Dirige tus áreas de servicio principales de manera efectiva.
-       </li>
-<li data-i18n-key="pricing_starter_feature2">
-        Optimización SEO Incorporada: Páginas diseñadas para posicionarse alto en los resultados de búsqueda local.
-       </li>
-<li data-i18n-key="pricing_starter_feature3">
-        Diseño Mobile-First y Responsivo: Experiencia impecable en cualquier dispositivo.
-       </li>
-<li data-i18n-key="pricing_starter_feature4">
-        Ideal para negocios nuevos o servicios locales muy enfocados.
-       </li>
+<li data-i18n-key="pricing_starter_feature1">Hasta 50 Páginas Hiperlocales: Dirige tus áreas de servicio principales de manera efectiva.</li>
+<li data-i18n-key="pricing_starter_feature2">Optimización SEO Incorporada: Páginas diseñadas para posicionarse alto en los resultados de búsqueda local.</li>
+<li data-i18n-key="pricing_starter_feature3">Diseño Mobile-First y Responsivo: Experiencia impecable en cualquier dispositivo.</li>
+<li data-i18n-key="pricing_starter_feature4">Ideal para negocios nuevos o servicios locales muy enfocados.</li>
 </ul>
 <form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_1PKyXqJd7gZvY2J8c6Z1Yq2L"/>
-<button class="button" data-i18n-key="pricing_choose_starter" type="submit">
-        Elegir Básico
-       </button>
+<input name="creditPackId" type="hidden" value="pack_small_business"/>
+<button class="button" data-i18n-key="pricing_choose_small_business" type="submit">
+                    Choose Small Business Pack
+                </button>
 </form>
-<div id="paypal-button-container-starter">
 </div>
-</div>
-<div class="card" data-credits="200" data-price="99" data-stripe-price-id="price_1PKyYJJd7gZvY2J8c6Z1Yq2M">
-<h3 data-i18n-key="pricing_plan_pro_title">
-       Pro
-      </h3>
+<div class="card" data-credits="200" data-price="99" data-stripe-price-id="price_PRO_PACK">
+<h2 data-i18n-key="pricing_plan_pro_title">Pro</h2>
+<div class="best-value-badge">Best Value</div>
 <p class="price">
-       $99
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       Tarifa Única
-      </p>
+                $99
+            </p>
+<p data-i18n-key="pricing_one_time_fee">Tarifa Única</p>
 <ul>
-<li data-i18n-key="pricing_pro_feature1">
-        Hasta 200 Páginas Hiperlocales: Amplía tu alcance en más ciudades y servicios.
-       </li>
-<li data-i18n-key="pricing_pro_feature2">
-        Estructuración SEO Avanzada: Optimización más profunda para palabras clave competitivas.
-       </li>
-<li data-i18n-key="pricing_pro_feature3">
-        Diseño Mobile-First y Responsivo: Garantiza accesibilidad y rendimiento.
-       </li>
-<li data-i18n-key="pricing_pro_feature4">
-        Incluye todo lo de Básico, más cobertura extendida.
-       </li>
-<li data-i18n-key="pricing_pro_feature5">
-        Perfecto para negocios en crecimiento que buscan un dominio local más amplio.
-       </li>
+<li data-i18n-key="pricing_pro_feature1">Hasta 200 Páginas Hiperlocales: Amplía tu alcance en más ciudades y servicios.</li>
+<li data-i18n-key="pricing_pro_feature2">Estructuración SEO Avanzada: Optimización más profunda para palabras clave competitivas.</li>
+<li data-i18n-key="pricing_pro_feature3">Diseño Mobile-First y Responsivo: Garantiza accesibilidad y rendimiento.</li>
+<li data-i18n-key="pricing_pro_feature4">Incluye todo lo de Básico, más cobertura extendida.</li>
+<li data-i18n-key="pricing_pro_feature5">Perfecto para negocios en crecimiento que buscan un dominio local más amplio.</li>
 </ul>
 <form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_1PKyYJJd7gZvY2J8c6Z1Yq2M"/>
-<button class="button" data-i18n-key="pricing_choose_pro" type="submit">
-        Elegir Pro
-       </button>
+<input name="creditPackId" type="hidden" value="pack_pro"/>
+<button class="button" data-i18n-key="pricing_choose_pro" type="submit">Elegir Pro</button>
 </form>
-<div id="paypal-button-container-pro">
 </div>
+<div class="card" data-credits="1000" data-price="249" data-stripe-price-id="price_AGENCY_PACK">
+<h2 data-i18n-key="pricing_plan_agency_title">Agencia</h2>
+<p class="price">
+                $249
+            </p>
+<p data-i18n-key="pricing_one_time_fee">Tarifa Única</p>
+<ul>
+<li data-i18n-key="pricing_agency_feature1">Hasta 1000 Páginas Hiperlocales: Maximiza tu presencia en regiones enteras.</li>
+<li data-i18n-key="pricing_agency_feature2">Estrategia SEO Integral: Adaptada para una amplia segmentación geográfica y de servicios.</li>
+<li data-i18n-key="pricing_agency_feature3">Diseño Mobile-First y Responsivo: Experiencia de usuario de primer nivel en todos los dispositivos.</li>
+<li data-i18n-key="pricing_agency_feature4">Incluye todas las características de Pro, escaladas para la máxima saturación del mercado local.</li>
+<li data-i18n-key="pricing_agency_feature5">Lo mejor para negocios con múltiples ubicaciones o agencias de marketing.</li>
+</ul>
+<form action="/api/checkout" method="POST">
+<input name="creditPackId" type="hidden" value="pack_agency"/>
+<button class="button" data-i18n-key="pricing_choose_agency" type="submit">Elegir Agencia</button>
+</form>
+</div>
+<div class="card" id="custom-credits-card">
+<h2>Custom Credits</h2>
+<p>Choose your own amount of credits.</p>
+<div class="form-group">
+<label for="customCredits">Credits:</label>
+<input class="form-input" id="customCredits" max="100000" min="1" type="number" value="1"/>
+</div>
+<p class="price">
+                $<span id="calculatedPrice">1.00</span>
+</p>
+<p data-i18n-key="pricing_one_time_fee">Tarifa Única</p>
+<form action="/api/checkout" id="custom-credits-form" method="POST">
+<input id="customCreditPackId" name="creditPackId" type="hidden" value="pack_custom">
+<input id="customAmountInput" name="customAmount" type="hidden"/>
+<input id="customCreditsInput" name="customCredits" type="hidden"/>
+<button class="button" type="submit">Buy Custom Credits</button>
+</input></form>
+</div>
+</div>
+</div>
+<div class="center-button" style="margin-top: 2rem; margin-bottom: 2rem;">
+<a aria-label="Generate Pages Now" class="button pulse-animation" data-i18n-key="generate_pages_now_after_credits" href="../generate.html">
+        Generate Pages Now
+    </a>
+</div>
+<div id="subscription-plans" style="display: none;">
+<h2 style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
+        Agency Subscription Plans
+    </h2>
+<div class="price-cards">
+<div class="card">
+<h2 data-i18n-key="pricing_plan_basic_agency_title">
+                Basic Agency
+            </h2>
+<p class="price">
+                $49
+            </p>
+<p data-i18n-key="pricing_per_month">
+                per month
+            </p>
+<ul>
+<li data-i18n-key="pricing_basic_agency_feature1">
+<strong>
+                        100 Credits
+                    </strong>
+                    per month
+                </li>
+<li data-i18n-key="pricing_basic_agency_feature2">
+                    Access to Agency Dashboard
+                </li>
+<li data-i18n-key="pricing_basic_agency_feature3">
+                    Client Management Features
+                </li>
+<li data-i18n-key="pricing_basic_agency_feature4">
+                    Standard Support
+                </li>
+</ul>
+<form action="/api/checkout" method="POST">
+<input name="agencyPlanId" type="hidden" value="plan_basic_agency"/>
+<button class="button" data-i18n-key="pricing_choose_basic_agency" type="submit">
+                    Choose Basic Agency
+                </button>
+</form>
 </div>
 <div class="card">
-<h3 data-i18n-key="pricing_plan_agency_title">
-       Agencia
-      </h3>
+<h2 data-i18n-key="pricing_plan_pro_agency_title">
+                Pro Agency
+            </h2>
 <p class="price">
-       $249
-      </p>
-<p data-i18n-key="pricing_one_time_fee">
-       Tarifa Única
-      </p>
+                $99
+            </p>
+<p data-i18n-key="pricing_per_month">
+                per month
+            </p>
 <ul>
-<li data-i18n-key="pricing_agency_feature1">
-        Hasta 1000 Páginas Hiperlocales: Maximiza tu presencia en regiones enteras.
-       </li>
-<li data-i18n-key="pricing_agency_feature2">
-        Estrategia SEO Integral: Adaptada para una amplia segmentación geográfica y de servicios.
-       </li>
-<li data-i18n-key="pricing_agency_feature3">
-        Diseño Mobile-First y Responsivo: Experiencia de usuario de primer nivel en todos los dispositivos.
-       </li>
-<li data-i18n-key="pricing_agency_feature4">
-        Incluye todas las características de Pro, escaladas para la máxima saturación del mercado local.
-       </li>
-<li data-i18n-key="pricing_agency_feature5">
-        Lo mejor para negocios con múltiples ubicaciones o agencias de marketing.
-       </li>
+<li data-i18n-key="pricing_pro_agency_feature1">
+<strong>
+                        250 Credits
+                    </strong>
+                    per month
+                </li>
+<li data-i18n-key="pricing_pro_agency_feature2">
+                    All Basic Agency Features
+                </li>
+<li data-i18n-key="pricing_pro_agency_feature3">
+<strong>
+                        Advanced Analytics
+                    </strong>
+</li>
+<li data-i18n-key="pricing_pro_agency_feature4">
+<strong>
+                        Priority Support
+                    </strong>
+</li>
 </ul>
 <form action="/api/checkout" method="POST">
-<input name="priceId" type="hidden" value="price_1PKyZJJd7gZvY2J8c6Z1Yq2N"/>
-<button class="button" data-i18n-key="pricing_choose_agency" type="submit">
-        Elegir Agencia
-       </button>
+<input name="agencyPlanId" type="hidden" value="plan_pro_agency"/>
+<button class="button" data-i18n-key="pricing_choose_pro_agency" type="submit">
+                    Choose Pro Agency
+                </button>
 </form>
-<div id="paypal-button-container-agency">
-</div>
 </div>
 <div class="card">
-<h3 data-i18n-key="pricing_plan_whitelabel_title">
-       Agencia de Marca Blanca
-      </h3>
-<p class="price" data-i18n-key="pricing_contact_us">
-       Contáctanos
-      </p>
-<p data-i18n-key="pricing_custom_solution">
-       Para una solución personalizada
-      </p>
+<h2 data-i18n-key="pricing_plan_whitelabel_title">Agencia de Marca Blanca</h2>
+<p class="price" data-i18n-key="pricing_contact_us">Contáctanos</p>
+<p data-i18n-key="pricing_custom_solution">Para una solución personalizada</p>
 <ul>
-<li data-i18n-key="pricing_whitelabel_feature1">
-        Clientes Ilimitados: Administra a todos tus clientes bajo un mismo techo.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature2">
-        Marca Personalizada: Etiqueta blanca la plataforma con tu propia marca.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature3">
-        Panel de Control para Clientes: Un panel para que tus clientes sigan sus resultados.
-       </li>
-<li data-i18n-key="pricing_whitelabel_feature4">
-        Soporte Dedicado: Obtén soporte prioritario de nuestro equipo.
-       </li>
+<li data-i18n-key="pricing_whitelabel_feature1">Clientes Ilimitados: Administra a todos tus clientes bajo un mismo techo.</li>
+<li data-i18n-key="pricing_whitelabel_feature2">Marca Personalizada: Etiqueta blanca la plataforma con tu propia marca.</li>
+<li data-i18n-key="pricing_whitelabel_feature3">Panel de Control para Clientes: Un panel para que tus clientes sigan sus resultados.</li>
+<li data-i18n-key="pricing_whitelabel_feature4">Soporte Dedicado: Obtén soporte prioritario de nuestro equipo.</li>
 </ul>
-<a class="button" data-i18n-key="pricing_agency_signup" href="/agency-partnerships.html">
-       Registro de Agencia
-      </a>
+<a class="button" data-i18n-key="pricing_agency_contact" href="../contact.html">
+                Contact for Quote
+            </a>
 </div>
 </div>
-<div class="usage-pricing-card">
-<h3 data-i18n-key="pricing_usage_based_title">
-      ¡La Tarificación Basada en el Uso Está Aquí!
-     </h3>
-<p data-i18n-key="pricing_usage_based_description">
-      Nos complace anunciar que ya está disponible un nuevo modelo de precios flexible. Con la tarificación basada en el uso, podrás comprar créditos y generar páginas según los necesites. Es la solución perfecta para negocios con necesidades fluctuantes o aquellos que quieren empezar poco a poco y escalar con el tiempo.
-     </p>
-<a class="button" data-i18n-key="pricing_buy_credits" href="/buy-credits.html">
-      Comprar Créditos
-     </a>
 </div>
 </section>
+<script>
+    document.getElementById('showCredits').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'block';
+        document.getElementById('subscription-plans').style.display = 'none';
+    });
+
+    document.getElementById('showSubscriptions').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'none';
+        document.getElementById('subscription-plans').style.display = 'block';
+    });
+</script>
 </main>
 <div class="sticky-cta-bar">
 <p>
@@ -269,12 +334,16 @@
        Dominate your local market, effortlessly.
       </p>
 <div class="social-icons">
-<a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localseogen.com/pricing.html" target="_blank">
+<a aria-label="Facebook" href="https://www.facebook.com/LocalLeadsApp" target="_blank">
 <i class="fab fa-facebook-f">
 </i>
 </a>
-<a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localseogen.com/pricing.html&amp;title=Pricing - LocalLeads" target="_blank">
+<a aria-label="LinkedIn" href="https://www.linkedin.com/company/localleads" target="_blank">
 <i class="fab fa-linkedin-in">
+</i>
+</a>
+<a aria-label="Twitter" href="https://twitter.com" target="_blank">
+<i class="fab fa-twitter">
 </i>
 </a>
 </div>
@@ -295,13 +364,18 @@
         </a>
 </li>
 <li>
-<a href="/blog.html">
+<a href="../blog.html">
          Blog
         </a>
 </li>
 <li>
 <a href="../contact.html">
          Contact
+        </a>
+</li>
+<li>
+<a href="../faq.html">
+         FAQ
         </a>
 </li>
 <li>
@@ -317,12 +391,12 @@
       </h2>
 <ul>
 <li>
-<a href="/privacy.html">
+<a href="../privacy.html">
          Privacy Policy
         </a>
 </li>
 <li>
-<a href="/terms.html">
+<a href="../terms.html">
          Terms of Service
         </a>
 </li>
@@ -343,64 +417,56 @@
 </footer>
 <script src="/js/app.min.js">
 </script>
-<script data-sdk-integration-source="developer-studio" src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID">
-</script>
 <script>
-   fetch('/api/paypal-client-id')
-.then(response => response.json())
-.then(data => {
-const script = document.querySelector('script[src*="paypal.com/sdk/js"]');
-script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}`;
-});
-function renderPayPalButton(containerId, credits, price) {
-paypal.Buttons({
-createOrder: function(data, actions) {
-return fetch('/api/paypal-checkout', {
-method: 'post',
-headers: {
-'content-type': 'application/json'
-},
-body: JSON.stringify({
-purchase_units: [{
-amount: {
-value: price
-}
-}]
-})
-}).then(function(res) {
-return res.json();
-}).then(function(data) {
-return data.orderID;
-});
-},
-onApprove: function(data, actions) {
-return fetch('/api/paypal-capture', {
-method: 'post',
-headers: {
-'content-type': 'application/json'
-},
-body: JSON.stringify({
-orderID: data.orderID,
-credits: credits
-})
-}).then(function(res) {
-return res.json();
-}).then(function(data) {
-window.location.href = 'success.html';
-});
-}
-}).render(`#${containerId}`);
-}
-document.addEventListener('DOMContentLoaded', function() {
-renderPayPalButton('paypal-button-container-starter', '50', '49.00');
-renderPayPalButton('paypal-button-container-pro', '200', '99.00');
-renderPayPalButton('paypal-button-container-agency', '1000', '249.00');
-});
-  </script>
-<button id="scrollToTopBtn" title="Go to top">
-<i class="fas fa-arrow-up">
-</i>
-</button>
-  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+    document.getElementById('showCredits').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'block';
+        document.getElementById('subscription-plans').style.display = 'none';
+    });
+
+    document.getElementById('showSubscriptions').addEventListener('click', function() {
+        document.getElementById('credit-packs').style.display = 'none';
+        document.getElementById('subscription-plans').style.display = 'block';
+    });
+
+    const customCreditsInput = document.getElementById('customCredits');
+    const calculatedPriceSpan = document.getElementById('calculatedPrice');
+    const customAmountInput = document.getElementById('customAmountInput');
+    const customCreditsFormInput = document.getElementById('customCreditsInput');
+
+    function calculateCustomPrice() {
+        let credits = parseInt(customCreditsInput.value, 10);
+        if (isNaN(credits) || credits < 1) {
+            credits = 1;
+            customCreditsInput.value = 1;
+        }
+        if (credits > 100000) { // Set a reasonable upper limit to prevent abuse
+            credits = 100000;
+            customCreditsInput.value = 100000;
+        }
+
+        let totalPrice;
+        if (credits <= 50) {
+            totalPrice = credits * 0.98;
+        } else if (credits <= 200) {
+            totalPrice = 49 + (credits - 50) * (50 / 150);
+        } else if (credits <= 1000) {
+            totalPrice = 99 + (credits - 200) * (150 / 800);
+        } else {
+            totalPrice = 249 + (credits - 1000) * 0.249;
+        }
+
+        const totalPriceFormatted = totalPrice.toFixed(2);
+        calculatedPriceSpan.textContent = totalPriceFormatted;
+        customAmountInput.value = Math.round(totalPrice * 100); // Price in cents
+        customCreditsFormInput.value = credits; // Actual number of credits
+    }
+
+    // Initial calculation
+    calculateCustomPrice();
+
+    // Recalculate on input change
+    customCreditsInput.addEventListener('input', calculateCustomPrice);
+</script>
+<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 </body>
 </html>

@@ -274,22 +274,30 @@
        Enable AI-powered copy for pages
       </label>
      </div>
-     <div class="form-group" id="ai-style-group" style="display: none;">
-      <label data-i18n-key="generate_label_ai_content_style" for="ai-style">
-       AI Content Style:
-      </label>
-      <select class="form-input" id="ai-style" name="ai-style">
-       <option data-i18n-key="generate_ai_style_professional" value="professional">
-        Professional
-       </option>
-       <option data-i18n-key="generate_ai_style_casual" value="casual">
-        Casual
-       </option>
-       <option data-i18n-key="generate_ai_style_friendly" value="friendly">
-        Friendly
-       </option>
-      </select>
-     </div>
+      <div class="form-group" id="ai-style-group" style="display: none;">
+       <div style="margin-bottom: 1.25rem;">
+        <label data-i18n-key="generate_label_ai_content_style" for="ai-style">
+         AI Content Style:
+        </label>
+        <select class="form-input" id="ai-style" name="ai-style">
+         <option data-i18n-key="generate_ai_style_professional" value="professional">
+          Professional
+         </option>
+         <option data-i18n-key="generate_ai_style_casual" value="casual">
+          Casual
+         </option>
+         <option data-i18n-key="generate_ai_style_friendly" value="friendly">
+          Friendly
+         </option>
+        </select>
+       </div>
+       <div>
+        <label data-i18n-key="generate_label_ai_keywords" for="aiKeywords">
+         Custom Keywords / Prompts (Optional):
+        </label>
+        <textarea class="form-input" id="aiKeywords" name="aiKeywords" data-i18n-key="generate_placeholder_ai_keywords" placeholder="e.g., family-owned, 24/7 service, eco-friendly, certified technicians" rows="3"></textarea>
+       </div>
+      </div>
      <style>
         .advanced-settings-details {
           margin-bottom: 1.5rem;

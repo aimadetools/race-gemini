@@ -141,4 +141,43 @@ describe('POST /api/generate', () => {
         await handler(req, res);
         expect(res.statusCode).toBe(401);
     });
+
+    test('should incorporate custom keywords/prompts into AI prompt and database', async () => {
+        const req = createRequest({
+            method: 'POST',
+            headers: {
+                authorization: 'Bearer mock-token'
+            },
+            body: {
+                businessName: 'Super Plumber',
+                services: 'Plumbing',
+                towns: 'New York',
+                zipCode: '10001',
+                enableAICopy: true,
+                'ai-style': 'friendly',
+                aiKeywords: 'family-owned, 24/7 emergency service'
+            }
+        });
+        const res = createResponse();
+        res.writeHead = jest.fn();
+
+        const mockGeminiModel = require('@google/generative-ai')._getMockGeminiModel();
+        
+        await handler(req, res);
+
+        // Verify writeHead or statusCode to ensure successful run
+        expect(res.statusCode).toBe(200);
+
+        // Verify the mock model received a prompt containing the custom keywords
+        const calls = mockGeminiModel.generateContent.mock.calls;
+        const mainCopyPromptCall = calls.find(call => call[0].includes('Write 2-3 paragraphs of marketing copy'));
+        expect(mainCopyPromptCall).toBeDefined();
+        expect(mainCopyPromptCall[0]).toContain('Incorporate the following keywords/instructions: family-owned, 24/7 emergency service');
+
+        // Verify the database record contains the keywords
+        const pages = getMockSeoPages();
+        const plumberPage = pages.find(p => p.service === 'Plumbing' && p.town === 'New York');
+        expect(plumberPage).toBeDefined();
+        expect(plumberPage.ai_keywords).toBe('family-owned, 24/7 emergency service');
+    });
 });
