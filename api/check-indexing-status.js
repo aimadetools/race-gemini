@@ -44,13 +44,23 @@ export default async function handler(req, res) {
 
     const pageRow = pageResult.rows[0];
     
-    // Verify user owns the page
-    if (pageRow.user_id !== userId) {
+    // Verify user owns the page, OR is the agency that manages the client who owns the page
+    let isAuthorized = false;
+    if (pageRow.user_id === userId) {
+      isAuthorized = true;
+    } else {
+      const pageOwnerResult = await query('SELECT agency_id FROM users WHERE id = $1', [pageRow.user_id]);
+      if (pageOwnerResult.rows.length > 0 && pageOwnerResult.rows[0].agency_id === userId) {
+        isAuthorized = true;
+      }
+    }
+
+    if (!isAuthorized) {
       return res.status(403).json({ message: 'Unauthorized. You do not own this page.' });
     }
 
     // Construct pageUrl and siteUrl
-    const userResult = await query('SELECT custom_domain FROM users WHERE id = $1', [userId]);
+    const userResult = await query('SELECT custom_domain FROM users WHERE id = $1', [pageRow.user_id]);
     const customDomain = userResult.rows[0]?.custom_domain;
     
     const serviceSlug = slugify(pageRow.service || '', { lower: true, strict: true });
@@ -65,7 +75,7 @@ export default async function handler(req, res) {
     } else {
       const defaultDomain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
       siteUrl = `${defaultDomain}/`;
-      pageUrl = `${defaultDomain}/${userId}/${serviceSlug}-in-${townSlug}.html`;
+      pageUrl = `${defaultDomain}/${pageRow.user_id}/${serviceSlug}-in-${townSlug}.html`;
     }
 
     // Query Google Search Console URL Inspection

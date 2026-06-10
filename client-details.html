@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <link href="/images/favicon.png" rel="icon" type="image/png"/>
 <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
     <script>
       window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
@@ -131,6 +132,43 @@
 <h2>
      Generated Pages
     </h2>
+
+<!-- Search and Tag Filtering Controls -->
+<div class="filter-controls" style="margin-bottom: 1.5rem; text-align: left; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px;">
+    <!-- Search Bar -->
+    <div style="position: relative; margin-bottom: 1.25rem; width: 100%;">
+        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.95rem;">
+            <i class="fas fa-search"></i>
+        </span>
+        <input type="text" id="page-search-input" placeholder="Search pages by service, town, or zip code..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;" />
+    </div>
+    
+    <!-- Tag Categories -->
+    <div id="tag-filters-container" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Services Tags -->
+        <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+            <span style="color: #9ca3af; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; min-width: 80px;">Services:</span>
+            <div id="service-tags" style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+                <!-- Dynamically populated tags -->
+            </div>
+        </div>
+        
+        <!-- Towns Tags -->
+        <div style="display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+            <span style="color: #9ca3af; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; min-width: 80px;">Towns:</span>
+            <div id="town-tags" style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+                <!-- Dynamically populated tags -->
+            </div>
+        </div>
+        
+        <!-- Active Filter Status & Clear -->
+        <div id="active-filters-info" style="display: none; align-items: center; justify-content: space-between; margin-top: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.75rem; font-size: 0.85rem; color: #9ca3af; flex-wrap: wrap; gap: 10px;">
+            <span id="filtered-pages-count">Showing all pages</span>
+            <button id="clear-filters-btn" class="button button-small button-secondary" style="padding: 4px 12px; font-size: 0.75rem; border-radius: 6px;">Clear Filters</button>
+        </div>
+    </div>
+</div>
+
 <table id="generated-pages">
 <thead>
 <tr>
@@ -139,6 +177,15 @@
        </th>
 <th>
         Town
+       </th>
+<th>
+        Views
+       </th>
+<th>
+        Unique Visitors
+       </th>
+<th>
+        Indexing Status
        </th>
 <th>
         Created At
@@ -177,6 +224,146 @@ const editClientMessage = document.getElementById('edit-client-message');
 const deleteClientButton = document.getElementById('delete-client-button');
 
 let currentClientId = null;
+let clientPages = [];
+let searchQuery = '';
+const activeServiceFilters = new Set();
+const activeTownFilters = new Set();
+
+function populateTagFilters() {
+    const serviceTagsContainer = document.getElementById('service-tags');
+    const townTagsContainer = document.getElementById('town-tags');
+    
+    if (!serviceTagsContainer || !townTagsContainer) return;
+    
+    serviceTagsContainer.innerHTML = '';
+    townTagsContainer.innerHTML = '';
+    
+    const services = [...new Set(clientPages.map(p => p.service).filter(Boolean))].sort();
+    const towns = [...new Set(clientPages.map(p => p.town).filter(Boolean))].sort();
+    
+    if (services.length === 0) {
+        serviceTagsContainer.innerHTML = '<span style="color: #6b7280; font-size: 0.85rem; font-style: italic;">None</span>';
+    } else {
+        services.forEach(service => {
+            const tag = document.createElement('span');
+            tag.className = `filter-tag filter-tag-service ${activeServiceFilters.has(service) ? 'active' : ''}`;
+            tag.textContent = service;
+            tag.addEventListener('click', () => {
+                if (activeServiceFilters.has(service)) {
+                    activeServiceFilters.delete(service);
+                    tag.classList.remove('active');
+                } else {
+                    activeServiceFilters.add(service);
+                    tag.classList.add('active');
+                }
+                renderFilteredPages();
+            });
+            serviceTagsContainer.appendChild(tag);
+        });
+    }
+    
+    if (towns.length === 0) {
+        townTagsContainer.innerHTML = '<span style="color: #6b7280; font-size: 0.85rem; font-style: italic;">None</span>';
+    } else {
+        towns.forEach(town => {
+            const tag = document.createElement('span');
+            tag.className = `filter-tag filter-tag-town ${activeTownFilters.has(town) ? 'active' : ''}`;
+            tag.textContent = town;
+            tag.addEventListener('click', () => {
+                if (activeTownFilters.has(town)) {
+                    activeTownFilters.delete(town);
+                    tag.classList.remove('active');
+                } else {
+                    activeTownFilters.add(town);
+                    tag.classList.add('active');
+                }
+                renderFilteredPages();
+            });
+            townTagsContainer.appendChild(tag);
+        });
+    }
+}
+
+function renderFilteredPages() {
+    const generatedPagesBody = generatedPages.querySelector('tbody');
+    if (!generatedPagesBody) return;
+    
+    generatedPagesBody.innerHTML = '';
+    
+    if (clientPages.length === 0) {
+        generatedPagesBody.innerHTML = '<tr><td colspan="7">No pages generated yet.</td></tr>';
+        const activeFiltersInfo = document.getElementById('active-filters-info');
+        if (activeFiltersInfo) activeFiltersInfo.style.display = 'none';
+        return;
+    }
+    
+    const filtered = clientPages.filter(page => {
+        const queryLower = searchQuery.toLowerCase().trim();
+        const matchesSearch = !queryLower || 
+            (page.service && page.service.toLowerCase().includes(queryLower)) ||
+            (page.town && page.town.toLowerCase().includes(queryLower)) ||
+            (page.zipCode && page.zipCode.toLowerCase().includes(queryLower));
+            
+        const matchesService = activeServiceFilters.size === 0 || activeServiceFilters.has(page.service);
+        const matchesTown = activeTownFilters.size === 0 || activeTownFilters.has(page.town);
+        
+        return matchesSearch && matchesService && matchesTown;
+    });
+    
+    if (filtered.length > 0) {
+        filtered.forEach(page => {
+            const getIndexingBadge = (status) => {
+                const statusLower = (status || '').toLowerCase();
+                if (statusLower.includes('indexed') || statusLower === 'pass' || statusLower === 'indexed, primary') {
+                    return `<span class="badge badge-indexed" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> Indexed</span>`;
+                }
+                if (statusLower.includes('crawled') || statusLower === 'neutral') {
+                    return `<span class="badge badge-crawled" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-history"></i> Crawled</span>`;
+                }
+                if (statusLower.includes('excluded') || statusLower.includes('noindex') || statusLower === 'fail') {
+                    return `<span class="badge badge-excluded" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Excluded</span>`;
+                }
+                return `<span class="badge badge-unknown" style="background: rgba(156, 163, 175, 0.15); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-question-circle"></i> Unknown</span>`;
+            };
+
+            const pageRow = document.createElement('tr');
+            pageRow.innerHTML = `
+                <td>${page.service}</td>
+                <td>${page.town}</td>
+                <td>${page.views || 0}</td>
+                <td>${page.uniqueVisitors || 0}</td>
+                <td>
+                    <div style="display: inline-flex; align-items: center; flex-wrap: nowrap;">
+                        ${getIndexingBadge(page.indexingStatus)}
+                        <button class="check-indexing-btn" data-id="${page.pageId}" title="Check actual Google indexing status" style="background: none; border: none; color: #60a5fa; cursor: pointer; padding: 4px 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; transition: background 0.2s; margin-left: 6px;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    ${page.lastIndexingCheck ? `<div style="font-size: 0.7rem; color: #6b7280; margin-top: 4px; white-space: nowrap;">Checked: ${new Date(page.lastIndexingCheck).toLocaleDateString()}</div>` : ''}
+                </td>
+                <td>${new Date(page.createdAt).toLocaleDateString()}</td>
+                <td><a href="/${currentClientId}/${page.fileName}" target="_blank" class="button button-small">View</a></td>
+            `;
+            generatedPagesBody.appendChild(pageRow);
+        });
+    } else {
+        generatedPagesBody.innerHTML = '<tr><td colspan="7">No matching pages found. Try adjusting your filters.</td></tr>';
+    }
+    
+    // Update active filter info bar
+    const activeFiltersInfo = document.getElementById('active-filters-info');
+    const filteredPagesCount = document.getElementById('filtered-pages-count');
+    
+    if (activeFiltersInfo && filteredPagesCount) {
+        const hasFilters = searchQuery || activeServiceFilters.size > 0 || activeTownFilters.size > 0;
+        if (hasFilters) {
+            activeFiltersInfo.style.display = 'flex';
+            filteredPagesCount.textContent = `Found ${filtered.length} of ${clientPages.length} pages`;
+        } else {
+            activeFiltersInfo.style.display = 'none';
+        }
+    }
+}
 
 async function fetchClientDetails() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -194,19 +381,83 @@ async function fetchClientDetails() {
         editClientNameInput.value = data.name;
         editClientEmailInput.value = data.email;
 
-        const generatedPagesBody = generatedPages.querySelector('tbody');
-        generatedPagesBody.innerHTML = '';
-        data.pages.forEach(page => {
-            const pageRow = document.createElement('tr');
-            pageRow.innerHTML = `
-                <td>${page.service}</td><td>${page.town}</td><td>${new Date(page.createdAt).toLocaleDateString()}</td><td><a href="/${data.id}/${page.fileName}" target="_blank">View</a></td>
-            `;
-            generatedPagesBody.appendChild(pageRow);
-        });
+        clientPages = data.pages || [];
+        populateTagFilters();
+        renderFilteredPages();
     } else {
         window.location.href = 'agency-dashboard.html';
     }
 }
+
+// Bind Search & Filter Event Listeners
+const pageSearchInput = document.getElementById('page-search-input');
+if (pageSearchInput) {
+    pageSearchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderFilteredPages();
+    });
+}
+
+const clearFiltersBtn = document.getElementById('clear-filters-btn');
+if (clearFiltersBtn) {
+    clearFiltersBtn.addEventListener('click', () => {
+        if (pageSearchInput) {
+            pageSearchInput.value = '';
+        }
+        searchQuery = '';
+        activeServiceFilters.clear();
+        activeTownFilters.clear();
+        
+        populateTagFilters();
+        renderFilteredPages();
+    });
+}
+
+// Click listener for checking indexing status (via delegation on the table)
+generatedPages.addEventListener('click', async (event) => {
+    const checkBtn = event.target.closest('.check-indexing-btn');
+    if (checkBtn) {
+        const pageId = checkBtn.getAttribute('data-id');
+        const icon = checkBtn.querySelector('i');
+        
+        if (icon.classList.contains('fa-spin')) return; // already loading
+        
+        icon.classList.add('fa-spin');
+        checkBtn.disabled = true;
+        
+        try {
+            const response = await fetch('/api/check-indexing-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pageId })
+            });
+            
+            if (response.ok) {
+                const resData = await response.json();
+                
+                const page = clientPages.find(p => p.pageId === pageId);
+                if (page) {
+                    page.indexingStatus = resData.indexingStatus;
+                    page.lastIndexingCheck = resData.lastIndexingCheck;
+                }
+                
+                renderFilteredPages();
+            } else {
+                const errData = await response.json();
+                alert(`Error checking indexing status: ${errData.message || 'Failed request.'}`);
+                icon.classList.remove('fa-spin');
+                checkBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error checking indexing status:', error);
+            alert('An unexpected error occurred while checking indexing status.');
+            icon.classList.remove('fa-spin');
+            checkBtn.disabled = false;
+        }
+    }
+});
 
 assignCreditsForm.addEventListener('submit', async (e) => {
     e.preventDefault();

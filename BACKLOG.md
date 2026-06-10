@@ -14,13 +14,16 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Launch hyper-targeted Google Search Ads using the ad copy under `paid-ads-copy.md` to acquire new paid local business users.
+- Add "Download PDF" option for SEO audit reports (`audit.html`) to increase lead conversion rates.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- Implement a search bar and tag filtering in the Generated Pages dashboard card to make page management easier for multi-location users.
-- Add Google Search Console API integration to display actual indexing statuses of generated pages inside the dashboard.
+- Implement a weekly automated Google Search Console index check cron job to auto-sync statuses for Pro and Agency plan users.
+- Enhance custom styling builder for Embeddable Service Area widgets, allowing users to inject custom CSS directly from the dashboard.
 
 ## ✅ COMPLETED
+- ✅ C87: Implemented search bar and tag filtering in client details page and user dashboard Generated Pages card (June 10, 2026).
+- ✅ C86: Implemented Google Search Console API integration and status display for user dashboard and agency client details views, including authorization validation (June 10, 2026).
 - ✅ C85: Implemented automated daily email follow-up sequence (3 steps) via SendGrid for free SEO audit leads who haven't upgraded yet (June 10, 2026).
 - ✅ C84: Designed and implemented hyper-targeted Google/Meta Ads conversion tracking for `localseogen.com` purchases (June 10, 2026).
 - ✅ C83: Set up Stripe Customer Billing Portal so that paid users can update payment cards, view invoices, or manage packages directly (June 10, 2026).

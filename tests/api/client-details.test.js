@@ -4,6 +4,7 @@ jest.mock('@vercel/kv', () => ({
   kv: {
     get: jest.fn(),
     smembers: jest.fn(),
+    scard: jest.fn(),
   },
 }));
 
@@ -33,6 +34,7 @@ describe('client-details API', () => {
     mockKv = {
       get: jest.fn(),
       smembers: jest.fn(),
+      scard: jest.fn(),
     };
 
     req = {
@@ -218,6 +220,7 @@ describe('client-details API', () => {
       credits: client.credits,
       pages: [
         {
+          pageId: pageId1,
           businessName: 'Plumbers R Us',
           service: 'SEO',
           town: 'London',
@@ -226,9 +229,14 @@ describe('client-details API', () => {
           telephone: undefined,
           priceRange: undefined,
           openingHours: undefined,
+          views: 0,
+          uniqueVisitors: 0,
+          indexingStatus: 'unknown',
+          lastIndexingCheck: null,
           fileName: 'seo-in-london.html'
         },
         {
+          pageId: pageId2,
           businessName: 'Plumbers R Us',
           service: 'PPC',
           town: 'Paris',
@@ -237,6 +245,10 @@ describe('client-details API', () => {
           telephone: undefined,
           priceRange: undefined,
           openingHours: undefined,
+          views: 0,
+          uniqueVisitors: 0,
+          indexingStatus: 'unknown',
+          lastIndexingCheck: null,
           fileName: 'ppc-in-paris.html'
         },
       ],

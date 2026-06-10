@@ -71,16 +71,21 @@ async function handler(req, res, currentKvClient) {
 
         // Retrieve client pages from PostgreSQL
         const pagesResult = await query(
-            `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, telephone, price_range, opening_hours 
+            `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, telephone, price_range, opening_hours, indexing_status, last_indexing_check 
              FROM seo_pages WHERE user_id = $1`,
             [id]
         );
         const pages = [];
         for (const row of pagesResult.rows) {
+            const pageId = row.id;
+            const views = await currentKv.get(`page:${pageId}:views`) || 0;
+            const uniqueVisitors = await currentKv.scard(`page:${pageId}:unique_visitors`) || 0;
+
             const serviceSlug = slugify(row.service || '', { lower: true, strict: true });
             const townSlug = slugify(row.town || '', { lower: true, strict: true });
             const fileName = `${serviceSlug}-in-${townSlug}.html`;
             pages.push({
+                pageId,
                 businessName: row.business_name,
                 service: row.service,
                 town: row.town,
@@ -89,6 +94,10 @@ async function handler(req, res, currentKvClient) {
                 telephone: row.telephone,
                 priceRange: row.price_range,
                 openingHours: row.opening_hours,
+                views: parseInt(views),
+                uniqueVisitors: parseInt(uniqueVisitors),
+                indexingStatus: row.indexing_status || 'unknown',
+                lastIndexingCheck: row.last_indexing_check ? row.last_indexing_check.toISOString() : null,
                 fileName
             });
         }

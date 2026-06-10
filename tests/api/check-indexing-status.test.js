@@ -110,4 +110,29 @@ describe('Check Indexing Status API', () => {
             lastIndexingCheck: expect.any(String)
         }));
     });
+
+    test('should successfully check indexing status and return 200 for agency-managed client pages', async () => {
+        parseCookie.mockReturnValue({ authToken: 'valid_token' });
+        jwt.verify.mockReturnValue({ userId: 2 });
+        
+        addMockUser({ id: 1, name: 'Client 1', email: 'client1@example.com', agency_id: 2, custom_domain: null });
+        addMockUser({ id: 2, name: 'Agency 1', email: 'agency1@example.com', is_agency: true });
+        addMockSeoPage({
+            id: 'page_123',
+            user_id: 1,
+            business_name: 'Super Plumber',
+            service: 'Plumbing',
+            town: 'Austin',
+            zip_code: '78701',
+        });
+
+        await handler(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Indexing status checked successfully.',
+            indexingStatus: expect.any(String),
+            lastIndexingCheck: expect.any(String)
+        }));
+    });
 });

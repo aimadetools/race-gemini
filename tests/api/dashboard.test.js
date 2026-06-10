@@ -211,7 +211,9 @@ describe('dashboard API', () => {
           aiStyle: null,
           url: `/user123/plumbing-in-dallas.html`,
           views: 10,
-          uniqueVisitors: 5
+          uniqueVisitors: 5,
+          indexingStatus: 'unknown',
+          lastIndexingCheck: null
         },
         {
           pageId: pageId2,
@@ -228,7 +230,9 @@ describe('dashboard API', () => {
           aiStyle: null,
           url: `/user123/cleaning-in-houston.html`,
           views: 20,
-          uniqueVisitors: 15
+          uniqueVisitors: 15,
+          indexingStatus: 'unknown',
+          lastIndexingCheck: null
         },
       ],
       creditTransactions: [],
