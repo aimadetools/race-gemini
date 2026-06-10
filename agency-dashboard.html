@@ -292,9 +292,12 @@
 <input id="custom-domain-redirect-input" placeholder="e.g. https://www.youragency.com" type="text" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; box-sizing: border-box;"/>
 <span style="font-size: 0.8rem; color: #6b7280;">Visitors to the root of your custom domain will be redirected here.</span>
 </div>
-<div class="form-group">
+<div class="form-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
 <button class="button" type="submit">
        Save Custom Domain
+      </button>
+<button class="button button-secondary" id="verify-dns-btn" type="button" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+       Verify CNAME Mapping
       </button>
 </div>
 </form>
@@ -677,6 +680,57 @@ if (customDomainForm) {
                 customDomainErrorMsg.textContent = 'An unexpected error occurred.';
                 customDomainErrorMsg.style.display = 'block';
             }
+        }
+    });
+}
+
+const verifyDnsBtn = document.getElementById('verify-dns-btn');
+if (verifyDnsBtn) {
+    verifyDnsBtn.addEventListener('click', async () => {
+        if (customDomainSuccessMsg) customDomainSuccessMsg.style.display = 'none';
+        if (customDomainErrorMsg) customDomainErrorMsg.style.display = 'none';
+
+        const customDomain = document.getElementById('custom-domain-input').value;
+        if (!customDomain || !customDomain.trim()) {
+            if (customDomainErrorMsg) {
+                customDomainErrorMsg.textContent = 'Please enter a custom domain name first.';
+                customDomainErrorMsg.style.display = 'block';
+            }
+            return;
+        }
+
+        const originalBtnText = verifyDnsBtn.textContent;
+        verifyDnsBtn.textContent = 'Verifying...';
+        verifyDnsBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/verify-dns', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: customDomain }),
+            });
+
+            const resData = await response.json();
+            if (response.ok && resData.verified) {
+                if (customDomainSuccessMsg) {
+                    customDomainSuccessMsg.textContent = resData.message;
+                    customDomainSuccessMsg.style.display = 'block';
+                }
+            } else {
+                if (customDomainErrorMsg) {
+                    customDomainErrorMsg.textContent = resData.message || 'DNS verification failed.';
+                    customDomainErrorMsg.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error verifying DNS:', error);
+            if (customDomainErrorMsg) {
+                customDomainErrorMsg.textContent = 'An error occurred during DNS verification.';
+                customDomainErrorMsg.style.display = 'block';
+            }
+        } finally {
+            verifyDnsBtn.textContent = originalBtnText;
+            verifyDnsBtn.disabled = false;
         }
     });
 }

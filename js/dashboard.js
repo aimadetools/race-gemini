@@ -625,6 +625,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const verifyDnsBtn = document.getElementById('verify-dns-btn');
+    if (verifyDnsBtn) {
+        verifyDnsBtn.addEventListener('click', async () => {
+            if (customDomainSuccessMsg) customDomainSuccessMsg.style.display = 'none';
+            if (customDomainErrorMsg) customDomainErrorMsg.style.display = 'none';
+
+            const customDomain = document.getElementById('custom-domain-input').value;
+            if (!customDomain || !customDomain.trim()) {
+                if (customDomainErrorMsg) {
+                    customDomainErrorMsg.textContent = 'Please enter a custom domain name first.';
+                    customDomainErrorMsg.style.display = 'block';
+                }
+                return;
+            }
+
+            const originalBtnText = verifyDnsBtn.textContent;
+            verifyDnsBtn.textContent = 'Verifying...';
+            verifyDnsBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/verify-dns', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ domain: customDomain })
+                });
+
+                const resData = await response.json();
+                if (response.ok && resData.verified) {
+                    if (customDomainSuccessMsg) {
+                        customDomainSuccessMsg.textContent = resData.message;
+                        customDomainSuccessMsg.style.display = 'block';
+                    }
+                } else {
+                    if (customDomainErrorMsg) {
+                        customDomainErrorMsg.textContent = resData.message || 'DNS verification failed.';
+                        customDomainErrorMsg.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error verifying DNS:', error);
+                if (customDomainErrorMsg) {
+                    customDomainErrorMsg.textContent = 'An error occurred during DNS verification.';
+                    customDomainErrorMsg.style.display = 'block';
+                }
+            } finally {
+                verifyDnsBtn.textContent = originalBtnText;
+                verifyDnsBtn.disabled = false;
+            }
+        });
+    }
+
     // Premium Upgrade modal controls
     const upgradeModal = document.getElementById('upgrade-required-modal');
     const closeUpgradeModal = document.getElementById('close-upgrade-modal');
