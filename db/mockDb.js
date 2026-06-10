@@ -3,6 +3,7 @@ import crypto from 'crypto';
 const mockUsers = [];
 const mockSeoPages = [];
 const mockTestimonials = [];
+const mockLeads = [];
 let nextId = 1;
 
 let queryDelegate = null;
@@ -18,11 +19,24 @@ export const getMockTestimonials = () => mockTestimonials;
 export const addMockTestimonial = (t) => mockTestimonials.push(t);
 export const clearMockTestimonials = () => { mockTestimonials.length = 0; };
 
+export const getMockLeads = () => mockLeads;
+export const addMockLead = (l) => mockLeads.push(l);
+export const clearMockLeads = () => { mockLeads.length = 0; };
+
 export const originalMockQuery = async (text, params) => {
     const textLower = text.toLowerCase();
 
     // 1. SELECT query
     if (textLower.startsWith('select')) {
+        if (textLower.includes('from leads')) {
+            if (textLower.includes('where source = $1')) {
+                const source = params[0];
+                const rows = mockLeads.filter(l => l.source === source);
+                return { rows };
+            }
+            return { rows: mockLeads };
+        }
+
         if (textLower.includes('from seo_pages')) {
             if (textLower.includes('count(*)')) {
                 const userId = params[0]?.toString();
@@ -277,6 +291,22 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('insert into leads')) {
+        const match = text.match(/insert\s+into\s+leads\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newLead = { id: (nextId++).toString() };
+            cols.forEach((col, i) => {
+                newLead[col] = params[i];
+            });
+            newLead.created_at = new Date();
+            newLead.last_followup_step = 0;
+            newLead.last_followup_at = null;
+            mockLeads.push(newLead);
+            return { rows: [newLead] };
+        }
+    }
+
     // 3. UPDATE query
     if (textLower.includes('update users')) {
         if (textLower.includes('logo_url = $1') && textLower.includes('primary_color = $2')) {
@@ -354,6 +384,17 @@ export const originalMockQuery = async (text, params) => {
                     user.ga_tracking_id = gaTrackingId;
                     user.fb_pixel_id = fbPixelId;
                     return { rows: [user] };
+                }
+            }
+        }
+        if (textLower.includes('update leads')) {
+            if (textLower.includes('last_followup_step = $1')) {
+                const [step, at, id] = params;
+                const lead = mockLeads.find(l => l.id.toString() === id.toString());
+                if (lead) {
+                    lead.last_followup_step = step;
+                    lead.last_followup_at = at;
+                    return { rows: [lead] };
                 }
             }
         }
@@ -447,6 +488,7 @@ export const clearMockUsers = () => {
     mockUsers.length = 0;
     mockSeoPages.length = 0;
     mockTestimonials.length = 0;
+    mockLeads.length = 0;
     nextId = 1;
 };
 

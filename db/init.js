@@ -12,6 +12,7 @@ import { addWebhookAndTrackingColumnsToUsers } from './migrations/add_webhook_an
 import { addSmsColumnsToUsers } from './migrations/add_sms_columns_to_users.js';
 import { createTestimonialsTable } from './migrations/create_testimonials_table.js';
 import { addStripeCustomerIdToUsers } from './migrations/add_stripe_customer_id_to_users.js';
+import { addFollowupColumnsToLeads } from './migrations/add_followup_columns_to_leads.js';
 
 export async function initializeDatabase() {
   try {
@@ -56,6 +57,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring Stripe customer ID column exists in users table...');
     await addStripeCustomerIdToUsers();
+
+    console.log('Ensuring follow-up columns exist in leads table...');
+    await addFollowupColumnsToLeads();
 
     console.log('Database initialization completed.');
   } catch (error) {
