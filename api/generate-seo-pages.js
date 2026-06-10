@@ -10,6 +10,7 @@ import { updateStaticSitemapAndPing } from '../lib/indexing.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { getSchemaType } from '../lib/schema.js';
+import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -39,7 +40,7 @@ async function generateAIContent(prompt, defaultValue) {
 }
 
 // Helper function to generate LocalBusiness schema
-function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
+function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials = []) {
     const schema = {
         "@context": "http://schema.org",
         "@type": getSchemaType(service),
@@ -47,13 +48,12 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
         "address": {
             "@type": "PostalAddress",
             "addressLocality": town,
-            // You might want to add more specific address details here if available
         },
         "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ' ' + town)}`,
         "url": `https://www.localseogen.com/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
-        "telephone": telephone || "", // Use provided telephone or default to empty string
-        "priceRange": priceRange || "", // Use provided priceRange or default to empty string
-        "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [ // Use provided openingHours if available, otherwise default
+        "telephone": telephone || "",
+        "priceRange": priceRange || "",
+        "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": [
@@ -67,14 +67,21 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
                 "closes": "17:00"
             }
         ],
-        "servesCuisine": service, // Using service as servesCuisine for now, can be more specific
+        "servesCuisine": service,
         "description": `Expert ${service} services in ${town} by ${businessName}.`,
-        "image": "https://www.localseogen.com/images/logo.svg", // Placeholder: use actual business logo
+        "image": "https://www.localseogen.com/images/logo.svg",
         "areaServed": {
-            "@type": "State", // Could be more specific like City, if needed
+            "@type": "State",
             "name": town
         }
     };
+
+    if (testimonials && testimonials.length > 0) {
+        const schemaReviews = generateSchemaReviews(testimonials);
+        schema.review = schemaReviews.review;
+        schema.aggregateRating = schemaReviews.aggregateRating;
+    }
+
     return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 }
 
@@ -144,6 +151,13 @@ export default async (req, res) => {
 
             await logInfo(`User ${userId} deducted ${neededCredits} credits. Remaining credits: ${updateCreditsResult.rows[0].credits}`, 'Credit Deduction');
 
+            // Fetch testimonials for the user
+            const testimonialsResult = await query(
+                'SELECT author_name, author_avatar, rating, review_text, review_date FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
+                [userId]
+            );
+            const testimonials = testimonialsResult.rows || [];
+            const testimonialsSectionHtml = renderTestimonialsSection(testimonials);
 
             await fs.mkdir(outputDir, { recursive: true });
 
@@ -223,6 +237,8 @@ export default async (req, res) => {
                     const resolvedOpeningHours = openingHours || 'Mo-Fr 09:00-17:00';
                     const phoneCtaDisplay = telephone ? 'inline-block' : 'none';
 
+                    const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials);
+
                     let pageContent = template
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
@@ -235,6 +251,7 @@ export default async (req, res) => {
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+                        .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
                         .replace(/{{telephone}}/g, resolvedPhone)
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)

@@ -12,6 +12,7 @@ import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 import { getSchemaType } from '../lib/schema.js';
+import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -35,7 +36,7 @@ async function generateAIContent(geminiModel, prompt, defaultValue) {
     }
 }
 
-function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours) {
+function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials = []) {
     const schema = {
         "@context": "http://schema.org",
         "@type": getSchemaType(service),
@@ -70,6 +71,13 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
             "name": town
         }
     };
+
+    if (testimonials && testimonials.length > 0) {
+        const schemaReviews = generateSchemaReviews(testimonials);
+        schema.review = schemaReviews.review;
+        schema.aggregateRating = schemaReviews.aggregateRating;
+    }
+
     return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 }
 
@@ -117,6 +125,14 @@ export default async (req, res) => {
                 return res.status(404).json({ message: 'User not found. Please log in again.' });
             }
             const user = userResult.rows[0];
+
+            // Fetch testimonials for the user
+            const testimonialsResult = await query(
+                'SELECT author_name, author_avatar, rating, review_text, review_date FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
+                [userId]
+            );
+            const testimonials = testimonialsResult.rows || [];
+            const testimonialsSectionHtml = renderTestimonialsSection(testimonials);
 
             if (user.credits < pagesToGenerate) {
                 return res.status(402).json({ message: `Insufficient credits. You need ${pagesToGenerate} credits but only have ${user.credits}. Please buy more credits.` });
@@ -222,7 +238,7 @@ export default async (req, res) => {
 
                     const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName; // Escape agency data
                     const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
-                    const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours);
+                    const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
 
                     const resolvedPhone = escapeHtml(telephone || '');
                     const resolvedPriceRange = escapeHtml(priceRange || 'Standard');
@@ -242,6 +258,7 @@ export default async (req, res) => {
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+                        .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
                         .replace(/{{telephone}}/g, resolvedPhone)
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)

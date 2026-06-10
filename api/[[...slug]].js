@@ -6,6 +6,7 @@ import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 import { getSchemaType } from '../lib/schema.js';
 import * as cheerio from 'cheerio';
+import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
@@ -110,6 +111,13 @@ export default async (req, res, currentKvClient) => {
             return res.status(404).send('Not Found');
         }
 
+        // Fetch testimonials for the user
+        const testimonialsResult = await query(
+            'SELECT author_name, author_avatar, rating, review_text, review_date FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
+            [resolvedClientId]
+        );
+        const testimonials = testimonialsResult.rows || [];
+
         const pageRow = pageResult.rows[0];
         const pageIdToFind = pageRow.id;
 
@@ -169,22 +177,32 @@ export default async (req, res, currentKvClient) => {
         const hostHeader = req.headers.host || 'localseogen.com';
         const protocol = hostHeader.includes('localhost') || hostHeader.includes('127.0.0.1') ? 'http' : 'https';
 
+        const schemaObj = {
+          "@context": "http://schema.org",
+          "@type": getSchemaType(page.service),
+          "name": page.businessName,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": page.town
+          },
+          "url": `${protocol}://${cleanHost}${isCustomDomain ? '' : '/' + resolvedClientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html`,
+          "description": `Expert ${page.service} services in ${page.town} by ${page.businessName}.`,
+          "image": logoUrl || 'https://www.localseogen.com/images/logo.svg'
+        };
+
+        if (testimonials && testimonials.length > 0) {
+          const schemaReviews = generateSchemaReviews(testimonials);
+          schemaObj.review = schemaReviews.review;
+          schemaObj.aggregateRating = schemaReviews.aggregateRating;
+        }
+
         const localBusinessSchema = `
 <script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "${getSchemaType(page.service)}",
-  "name": "${page.businessName}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "${page.town}"
-  },
-  "url": "${protocol}://${cleanHost}${isCustomDomain ? '' : '/' + resolvedClientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html",
-  "description": "Expert ${page.service} services in ${page.town} by ${page.businessName}.",
-  "image": "${logoUrl || 'https://www.localseogen.com/images/logo.svg'}"
-}
+${JSON.stringify(schemaObj, null, 2)}
 </script>
         `.trim();
+
+        const testimonialsSectionHtml = renderTestimonialsSection(testimonials);
 
         const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;" loading="lazy">` : page.businessName;
 
@@ -206,6 +224,7 @@ export default async (req, res, currentKvClient) => {
             .replace(/{{service_slug}}/g, resolvedServiceSlug)
             .replace(/{{town_slug}}/g, resolvedTownSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+            .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
             .replace(/{{telephone}}/g, resolvedPhone)
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)

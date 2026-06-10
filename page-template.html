@@ -368,6 +368,120 @@
     font-size: 0.95rem;
   }
 
+  /* Testimonials styles */
+  .testimonials-section {
+    background-color: var(--bg-alt);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 5rem 0;
+    text-align: center;
+  }
+  .testimonials-section h2 {
+    font-size: 2.25rem;
+    color: #111827;
+    margin-top: 0;
+    margin-bottom: 3rem;
+  }
+  .testimonials-container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 3rem;
+  }
+  .testimonial-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+    display: none;
+  }
+  .testimonial-stars {
+    color: #fbbf24;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .testimonial-text {
+    font-size: 1.15rem;
+    color: #374151;
+    line-height: 1.65;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+    background-color: #e5e7eb;
+  }
+  .testimonial-author-info {
+    text-align: left;
+  }
+  .testimonial-author-name {
+    font-weight: 700;
+    color: #111827;
+    font-size: 1.05rem;
+    margin: 0 0 2px 0;
+  }
+  .testimonial-date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, background-color 0.2s;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  .carousel-nav:hover {
+    opacity: 0.9;
+  }
+  .carousel-nav.prev-btn {
+    left: 0;
+  }
+  .carousel-nav.next-btn {
+    right: 0;
+  }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+  }
+  .carousel-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #d1d5db;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .carousel-dots .dot.active {
+    background-color: var(--primary-color);
+  }
+
   footer {
     background-color: #111827;
     color: #9ca3af;
@@ -426,6 +540,8 @@
     <h2>Reliable {{service}} Services in {{town}}</h2>
     {{ai_content}}
   </section>
+
+  {{testimonialsSection}}
 
   <section class="details-section" id="quote-form-section">
     <div class="container details-grid">
@@ -555,7 +671,59 @@
           submitBtn.disabled = false;
           submitBtn.textContent = 'Submit Request';
         }
-      });
+    // 3. Testimonials Carousel
+    const carouselContainer = document.querySelector('.testimonial-carousel-container');
+    if (carouselContainer) {
+      const cards = Array.from(carouselContainer.querySelectorAll('.testimonial-card'));
+      const prevBtn = carouselContainer.querySelector('.prev-btn');
+      const nextBtn = carouselContainer.querySelector('.next-btn');
+      const dotsContainer = carouselContainer.querySelector('.carousel-dots');
+      let currentIndex = 0;
+      const totalCards = cards.length;
+
+      if (totalCards > 1) {
+        for (let i = 0; i < totalCards; i++) {
+          const dot = document.createElement('span');
+          dot.classList.add('dot');
+          dot.addEventListener('click', () => moveToSlide(i));
+          dotsContainer.appendChild(dot);
+        }
+        const dots = Array.from(dotsContainer.querySelectorAll('.dot'));
+
+        function updateCarousel() {
+          cards.forEach((card, index) => {
+            card.style.display = index === currentIndex ? 'block' : 'none';
+          });
+          dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+          });
+        }
+
+        function moveToSlide(index) {
+          currentIndex = index;
+          updateCarousel();
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', () => {
+            currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
+            updateCarousel();
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', () => {
+            currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
+            updateCarousel();
+          });
+        }
+
+        updateCarousel();
+      } else if (totalCards === 1) {
+        cards[0].style.display = 'block';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (dotsContainer) dotsContainer.style.display = 'none';
+      }
     }
   });
 </script>

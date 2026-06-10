@@ -2,6 +2,7 @@ import crypto from 'crypto';
 
 const mockUsers = [];
 const mockSeoPages = [];
+const mockTestimonials = [];
 let nextId = 1;
 
 let queryDelegate = null;
@@ -12,6 +13,10 @@ export const setQueryDelegate = (fn) => {
 export const getMockSeoPages = () => mockSeoPages;
 export const addMockSeoPage = (page) => mockSeoPages.push(page);
 export const clearMockSeoPages = () => { mockSeoPages.length = 0; };
+
+export const getMockTestimonials = () => mockTestimonials;
+export const addMockTestimonial = (t) => mockTestimonials.push(t);
+export const clearMockTestimonials = () => { mockTestimonials.length = 0; };
 
 export const originalMockQuery = async (text, params) => {
     const textLower = text.toLowerCase();
@@ -53,6 +58,14 @@ export const originalMockQuery = async (text, params) => {
                 const fileName = params[0];
                 const page = mockSeoPages.find(p => p.file_name === fileName);
                 return { rows: page ? [page] : [] };
+            }
+        }
+
+        if (textLower.includes('from testimonials')) {
+            if (textLower.includes('where user_id = $1')) {
+                const userId = params[0]?.toString();
+                const rows = mockTestimonials.filter(t => t.user_id?.toString() === userId);
+                return { rows };
             }
         }
 
@@ -250,6 +263,20 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('insert into testimonials')) {
+        const match = text.match(/insert\s+into\s+testimonials\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newTestimonial = { id: (nextId++).toString() };
+            cols.forEach((col, i) => {
+                newTestimonial[col] = params[i];
+            });
+            newTestimonial.created_at = new Date();
+            mockTestimonials.push(newTestimonial);
+            return { rows: [newTestimonial] };
+        }
+    }
+
     // 3. UPDATE query
     if (textLower.includes('update users')) {
         if (textLower.includes('logo_url = $1') && textLower.includes('primary_color = $2')) {
@@ -386,6 +413,17 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('delete from testimonials')) {
+        if (textLower.includes('where id = $1 and user_id = $2') || textLower.includes('where id = $1')) {
+            const id = params[0]?.toString();
+            const idx = mockTestimonials.findIndex(t => t.id?.toString() === id);
+            if (idx !== -1) {
+                mockTestimonials.splice(idx, 1);
+            }
+            return { rows: [] };
+        }
+    }
+
     // Default mock behavior
     return { rows: [] };
 };
@@ -408,6 +446,7 @@ export const addMockUser = (user) => {
 export const clearMockUsers = () => {
     mockUsers.length = 0;
     mockSeoPages.length = 0;
+    mockTestimonials.length = 0;
     nextId = 1;
 };
 
