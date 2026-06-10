@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const editForm = document.getElementById('edit-page-form');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
+    // Testimonials Elements
+    const testimonialModal = document.getElementById('add-testimonial-modal');
+    const addTestimonialBtn = document.getElementById('add-testimonial-btn');
+    const closeTestimonialModal = document.getElementById('close-testimonial-modal');
+    const cancelTestimonialBtn = document.getElementById('cancel-testimonial-btn');
+    const addTestimonialForm = document.getElementById('add-testimonial-form');
+    const testimonialsTableBody = document.querySelector('#testimonials-card tbody');
+    const reviewLinkInput = document.getElementById('review-link-input');
+    const copyReviewLinkBtn = document.getElementById('copy-review-link-btn');
+
     let userPages = [];
 
     async function fetchDashboardData() {
@@ -323,6 +333,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const smsEnabledCheckbox = document.getElementById('sms-enabled-checkbox');
                 if (smsPhoneInput) smsPhoneInput.value = data.smsPhone || '';
                 if (smsEnabledCheckbox) smsEnabledCheckbox.checked = !!data.smsEnabled;
+
+                // Populate review link
+                if (reviewLinkInput && data.clientId) {
+                    reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
+                }
+
+                // Fetch testimonials
+                await fetchTestimonials();
             } else if (response.status === 401) {
                 window.location.href = '/auth.html';
             } else {
@@ -332,6 +350,48 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Fetch error for dashboard data:', error);
             alert('An unexpected error occurred while loading dashboard data.');
+        }
+    }
+
+    async function fetchTestimonials() {
+        const testimonialsBody = document.querySelector('#testimonials-card tbody');
+        if (!testimonialsBody) return;
+
+        try {
+            const response = await fetch('/api/testimonials', {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                testimonialsBody.innerHTML = '';
+
+                if (data.testimonials && data.testimonials.length > 0) {
+                    data.testimonials.forEach(t => {
+                        const row = testimonialsBody.insertRow();
+                        const ratingStars = '★'.repeat(t.rating) + '☆'.repeat(5 - t.rating);
+                        const formattedDate = t.review_date ? new Date(t.review_date).toLocaleDateString() : 'N/A';
+
+                        row.innerHTML = `
+                            <td style="font-weight: 600; color: #fff;">${t.author_name}</td>
+                            <td style="color: #fbbf24; font-size: 1.1rem;">${ratingStars}</td>
+                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.review_text}">${t.review_text}</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <button class="button button-small button-danger delete-testimonial-btn" data-id="${t.id}">Delete</button>
+                            </td>
+                        `;
+                    });
+                } else {
+                    testimonialsBody.innerHTML = '<tr><td colspan="5">No reviews collected yet. Share your link above to get started!</td></tr>';
+                }
+            } else {
+                console.error('Failed to fetch testimonials:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching testimonials:', error);
         }
     }
 
@@ -921,4 +981,122 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Copy review link to clipboard
+    if (copyReviewLinkBtn && reviewLinkInput) {
+        copyReviewLinkBtn.addEventListener('click', () => {
+            reviewLinkInput.select();
+            reviewLinkInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(reviewLinkInput.value);
+            const originalText = copyReviewLinkBtn.innerHTML;
+            copyReviewLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                copyReviewLinkBtn.innerHTML = originalText;
+            }, 2000);
+        });
+    }
+
+    // Testimonial Modal Open/Close
+    if (addTestimonialBtn && testimonialModal) {
+        addTestimonialBtn.addEventListener('click', () => {
+            testimonialModal.style.display = 'flex';
+        });
+    }
+
+    if (closeTestimonialModal) {
+        closeTestimonialModal.addEventListener('click', () => {
+            testimonialModal.style.display = 'none';
+        });
+    }
+
+    if (cancelTestimonialBtn) {
+        cancelTestimonialBtn.addEventListener('click', () => {
+            testimonialModal.style.display = 'none';
+        });
+    }
+
+    // Add Testimonial Form submit
+    if (addTestimonialForm) {
+        addTestimonialForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = addTestimonialForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Adding...';
+
+            const authorName = document.getElementById('testimonial-author').value;
+            const rating = document.getElementById('testimonial-rating').value;
+            const reviewText = document.getElementById('testimonial-text').value;
+            const reviewDate = document.getElementById('testimonial-date').value;
+
+            try {
+                const response = await fetch('/api/testimonials', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        authorName,
+                        rating,
+                        reviewText,
+                        reviewDate: reviewDate || undefined
+                    })
+                });
+
+                if (response.ok) {
+                    testimonialModal.style.display = 'none';
+                    addTestimonialForm.reset();
+                    await fetchTestimonials();
+                } else {
+                    const errData = await response.json();
+                    alert(errData.message || 'Failed to add testimonial.');
+                }
+            } catch (err) {
+                console.error('Error adding testimonial:', err);
+                alert('An unexpected error occurred.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Add Testimonial';
+            }
+        });
+    }
+
+    // Testimonials Card actions (delete review)
+    const testimonialsCard = document.getElementById('testimonials-card');
+    if (testimonialsCard) {
+        testimonialsCard.addEventListener('click', async (event) => {
+            if (event.target.classList.contains('delete-testimonial-btn')) {
+                const testimonialId = event.target.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this testimonial?')) {
+                    try {
+                        const response = await fetch('/api/testimonials', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${jwtToken}`
+                            },
+                            body: JSON.stringify({ id: testimonialId })
+                        });
+
+                        if (response.ok) {
+                            await fetchTestimonials();
+                        } else {
+                            const errData = await response.json();
+                            alert(errData.message || 'Failed to delete testimonial.');
+                        }
+                    } catch (err) {
+                        console.error('Error deleting testimonial:', err);
+                        alert('An unexpected error occurred.');
+                    }
+                }
+            }
+        });
+    }
+
+    // Close testimonials modal on outside click
+    window.addEventListener('click', (event) => {
+        if (event.target === testimonialModal) {
+            testimonialModal.style.display = 'none';
+        }
+    });
 });

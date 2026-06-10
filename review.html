@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Leave a Review - LocalLeads</title>
+  <link href="style.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+      margin: 0;
+    }
+
+    .review-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.6s ease-out;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-img {
+      max-height: 50px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .rating-container {
+      margin-bottom: 2rem;
+    }
+
+    .rating-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-bottom: 0.75rem;
+      text-align: left;
+    }
+
+    .stars-selector {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      direction: rtl; /* For clean CSS hover effects */
+    }
+
+    .stars-selector input {
+      display: none;
+    }
+
+    .stars-selector label {
+      font-size: 2.25rem;
+      color: #4b5563;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .stars-selector label:hover,
+    .stars-selector label:hover ~ label,
+    .stars-selector input:checked ~ label {
+      color: #fbbf24;
+      transform: scale(1.1);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      background: #4b5563;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 3px solid #fff;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .success-state {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      color: #10b981;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    footer {
+      margin-top: 3rem;
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: #9ca3af;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="review-card" id="form-card">
+    <div class="logo-container" id="logo-wrapper" style="display: none;">
+      <img src="" alt="Business Logo" class="logo-img" id="business-logo"/>
+    </div>
+    <h1 id="business-title">Leave a Review</h1>
+    <p class="subtitle" id="business-subtitle">Share your experience to help us improve our services.</p>
+
+    <form id="review-form">
+      <div class="rating-container">
+        <span class="rating-label">Your Rating *</span>
+        <div class="stars-selector">
+          <input type="radio" id="star5" name="rating" value="5" required />
+          <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="authorName">Your Name *</label>
+        <input type="text" id="authorName" class="form-input" placeholder="e.g. John Doe" required />
+      </div>
+
+      <div class="form-group">
+        <label for="reviewText">Your Review *</label>
+        <textarea id="reviewText" class="form-input" placeholder="What did you think of our service?" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        Submit Review
+      </button>
+      <div class="error-msg" id="error-message"></div>
+    </form>
+  </div>
+
+  <div class="review-card success-state" id="success-card">
+    <i class="fas fa-check-circle success-icon"></i>
+    <h1>Thank You!</h1>
+    <p class="subtitle" id="success-message-text">Your review has been successfully submitted. We appreciate your feedback!</p>
+  </div>
+
+  <footer>
+    Powered by <a href="https://localseogen.com">LocalLeads</a>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientId = urlParams.get('client');
+
+      if (!clientId) {
+        document.getElementById('form-card').innerHTML = `
+          <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ef4444; margin-bottom: 1.5rem;"></i>
+          <h1>Invalid Review Link</h1>
+          <p class="subtitle">This review collection link is missing a client ID. Please verify the link and try again.</p>
+        `;
+        return;
+      }
+
+      // Fetch business details
+      try {
+        const response = await fetch(`/api/public-business-info?clientId=${clientId}`);
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('business-title').textContent = `Review ${data.businessName}`;
+          document.getElementById('business-subtitle').textContent = `How was your experience with ${data.businessName}? Leave your feedback below.`;
+          
+          if (data.logoUrl) {
+            const logoImg = document.getElementById('business-logo');
+            logoImg.src = data.logoUrl;
+            logoImg.alt = `${data.businessName} Logo`;
+            document.getElementById('logo-wrapper').style.display = 'block';
+          }
+        } else {
+          console.warn('Failed to load business info, displaying defaults.');
+        }
+      } catch (err) {
+        console.error('Error fetching business info:', err);
+      }
+
+      // Handle Form Submission
+      const form = document.getElementById('review-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const errorMsg = document.getElementById('error-message');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Submitting... <span class="spinner"></span>';
+        errorMsg.style.display = 'none';
+
+        const authorName = document.getElementById('authorName').value;
+        const reviewText = document.getElementById('reviewText').value;
+        const ratingVal = document.querySelector('input[name="rating"]:checked').value;
+
+        try {
+          const res = await fetch('/api/submit-review', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              clientId,
+              authorName,
+              rating: ratingVal,
+              reviewText
+            })
+          });
+
+          if (res.ok) {
+            document.getElementById('form-card').style.display = 'none';
+            document.getElementById('success-card').style.display = 'block';
+          } else {
+            const errData = await res.json();
+            throw new Error(errData.message || 'Failed to submit review. Please try again.');
+          }
+        } catch (err) {
+          errorMsg.textContent = err.message;
+          errorMsg.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit Review';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -156,6 +156,41 @@
                     </table>
                 </div>
             </div>
+            <div class="card" id="testimonials-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="margin: 0;">Testimonials & Reviews</h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Manage customer reviews that are displayed on your generated pages and schema.</p>
+                    </div>
+                    <button class="button button-small" id="add-testimonial-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-plus"></i> Add Testimonial
+                    </button>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem;">
+                    <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 8px;">Review Collection Link</h3>
+                    <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.85rem;">Send this link to your clients to collect reviews directly. They will be automatically updated on your pages!</p>
+                    <div style="display: flex; gap: 10px; align-items: center; max-width: 500px;">
+                        <input id="review-link-input" type="text" readonly style="background: rgba(17, 24, 39, 0.8); color: #60a5fa; border: 1px solid #3b82f6; padding: 0.6rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; flex: 1;" />
+                        <button class="button button-small" id="copy-review-link-btn" type="button" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;"><i class="far fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+
+                <div id="testimonials-list" class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Author Name</th>
+                            <th>Rating</th>
+                            <th>Review Text</th>
+                            <th>Review Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
             <div class="card">
                 <h2>Search Engine Indexing Notifications</h2>
                 <div id="indexing-notifications">
@@ -496,6 +531,46 @@
             Keep Free Plan
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Add Testimonial Modal -->
+    <div id="add-testimonial-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; position: relative;">
+        <span class="close-modal" id="close-testimonial-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af;">&times;</span>
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: #fff; font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem;">Add Testimonial</h2>
+        <form id="add-testimonial-form">
+          <div style="margin-bottom: 1rem;">
+            <label for="testimonial-author" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Author Name</label>
+            <input type="text" id="testimonial-author" name="authorName" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;" placeholder="e.g. Jane Smith" />
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <label for="testimonial-rating" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Rating</label>
+            <select id="testimonial-rating" name="rating" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+                <option value="5">5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="2">2 Stars</option>
+                <option value="1">1 Star</option>
+            </select>
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <label for="testimonial-text" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Review Text</label>
+            <textarea id="testimonial-text" name="reviewText" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; min-height: 100px; box-sizing: border-box;" placeholder="Great job! Highly recommended."></textarea>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <label for="testimonial-date" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Review Date (Optional)</label>
+            <input type="date" id="testimonial-date" name="reviewDate" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; margin-top: 1rem;">
+            <button type="button" id="cancel-testimonial-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
+            <button type="submit" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">Add Testimonial</button>
+          </div>
+        </form>
       </div>
     </div>
 
