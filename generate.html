@@ -262,12 +262,42 @@
      <textarea class="form-input" id="towns" name="towns" placeholder="e.g., 'Springfield, Shelbyville, Capital City, North Haverbrook'" required="" rows="5"></textarea>
      <span class="input-error-message" id="towns-error">
      </span>
-     <div class="char-counter">
-      <span id="towns-char-count">
-       0
-      </span>
-      characters
-     </div>
+      <div class="char-counter">
+       <span id="towns-char-count">
+        0
+       </span>
+       characters
+      </div>
+      <!-- Geographic Proximity Clustering: Suggest Neighboring Towns -->
+      <div class="proximity-card" style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1.25rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px;">
+       <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 600; color: #cbd5e1; display: flex; align-items: center;">
+        <i class="fas fa-map-marked-alt" style="margin-right: 0.5rem; color: #3b82f6;"></i>
+        Geographic Proximity Clustering
+       </h4>
+       <p style="margin-top: 0; margin-bottom: 0.75rem; font-size: 0.85rem; color: #94a3b8; line-height: 1.4;">
+        Enter a base city to automatically suggest neighboring towns and add them to your target list.
+       </p>
+       <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <input type="text" id="base-city" class="form-input" placeholder="e.g., Austin" style="margin: 0; flex: 1; padding: 0.65rem 0.75rem;" />
+        <button type="button" id="btn-suggest-towns" class="button" style="width: auto; margin: 0; padding: 0.65rem 1.25rem; font-size: 0.9rem; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border: none; cursor: pointer;">
+         Find Towns
+        </button>
+       </div>
+       <div id="suggested-towns-loading" style="display: none; font-size: 0.85rem; color: #94a3b8; margin-top: 0.75rem; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-spinner fa-spin" style="color: #3b82f6;"></i> Finding neighboring towns...
+       </div>
+       <div id="suggested-towns-error" style="display: none; font-size: 0.85rem; color: #ef4444; margin-top: 0.75rem;"></div>
+       <div id="suggested-towns-container" style="display: none; margin-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+         <span style="font-size: 0.85rem; font-weight: 500; color: #cbd5e1;">Select neighboring towns to add:</span>
+         <button type="button" id="btn-add-selected-towns" class="button" style="width: auto; margin: 0; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: #10b981; border: none; cursor: pointer;">
+          Add Selected
+         </button>
+        </div>
+        <div id="suggested-towns-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem; max-height: 120px; overflow-y: auto; padding: 0.5rem; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px;">
+        </div>
+       </div>
+      </div>
      <div class="form-group" id="enable-ai-group">
       <input id="enableAICopy" name="enableAICopy" type="checkbox"/>
       <label data-i18n-key="generate_label_enable_ai_copy" for="enableAICopy" style="display: inline; margin-left: 0.5rem;">

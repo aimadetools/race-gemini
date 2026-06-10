@@ -221,4 +221,89 @@ document.addEventListener('DOMContentLoaded', () => {
             formErrorMessageDiv.classList.add('error-message');
         }
     });
+
+    // Geographic Proximity Clustering Elements
+    const baseCityInput = document.getElementById('base-city');
+    const btnSuggestTowns = document.getElementById('btn-suggest-towns');
+    const suggestedLoading = document.getElementById('suggested-towns-loading');
+    const suggestedError = document.getElementById('suggested-towns-error');
+    const suggestedContainer = document.getElementById('suggested-towns-container');
+    const suggestedList = document.getElementById('suggested-towns-list');
+    const btnAddSelectedTowns = document.getElementById('btn-add-selected-towns');
+
+    if (btnSuggestTowns && baseCityInput) {
+        btnSuggestTowns.addEventListener('click', async () => {
+            const city = baseCityInput.value.trim();
+            if (!city) {
+                suggestedError.textContent = 'Please enter a base city first.';
+                suggestedError.style.display = 'block';
+                suggestedContainer.style.display = 'none';
+                return;
+            }
+
+            suggestedError.style.display = 'none';
+            suggestedLoading.style.display = 'flex';
+            suggestedContainer.style.display = 'none';
+            btnSuggestTowns.disabled = true;
+
+            try {
+                const response = await fetch(`/api/suggest-towns?city=${encodeURIComponent(city)}`);
+                suggestedLoading.style.display = 'none';
+                btnSuggestTowns.disabled = false;
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const towns = data.towns || [];
+                    if (towns.length === 0) {
+                        suggestedError.textContent = 'No neighboring towns found.';
+                        suggestedError.style.display = 'block';
+                        return;
+                    }
+
+                    suggestedList.innerHTML = towns.map(town => `
+                        <label style="display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: #e2e8f0; cursor: pointer; user-select: none; margin: 0;">
+                            <input type="checkbox" class="suggested-town-checkbox" value="${town}" checked style="margin: 0; width: 14px; height: 14px; cursor: pointer;" />
+                            ${town}
+                        </label>
+                    `).join('');
+                    suggestedContainer.style.display = 'block';
+                } else {
+                    const errData = await response.json();
+                    suggestedError.textContent = errData.message || 'Failed to fetch neighboring towns.';
+                    suggestedError.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error fetching suggested towns:', err);
+                suggestedLoading.style.display = 'none';
+                btnSuggestTowns.disabled = false;
+                suggestedError.textContent = 'An error occurred while finding neighboring towns.';
+                suggestedError.style.display = 'block';
+            }
+        });
+
+        btnAddSelectedTowns.addEventListener('click', () => {
+            const checkedBoxes = document.querySelectorAll('.suggested-town-checkbox:checked');
+            const selectedTowns = Array.from(checkedBoxes).map(cb => cb.value);
+            
+            if (selectedTowns.length === 0) {
+                alert('Please select at least one town to add.');
+                return;
+            }
+
+            const currentTowns = townsInput.value
+                .split(',')
+                .map(t => t.trim())
+                .filter(t => t !== '');
+
+            const combined = [...new Set([...currentTowns, ...selectedTowns])];
+            townsInput.value = combined.join(', ');
+
+            // Trigger input events to update counters and credit estimations
+            townsInput.dispatchEvent(new Event('input'));
+
+            // Clear checkboxes and hide list
+            baseCityInput.value = '';
+            suggestedContainer.style.display = 'none';
+        });
+    }
 });
