@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 10, 2026:** Implemented a public review collection page, testimonials manager dashboard card, real-time SMS alerts/webhooks, and testimonials injection into generated local pages. Completed QA health verifications (Sessions 175-190) with all Jest and Python tests passing.
+- **June 10, 2026:** Implemented Stripe Customer Billing Portal, Google & Meta Ads purchase conversion tracking, public review collection page, testimonials manager dashboard card, real-time SMS alerts/webhooks, and testimonials injection. Completed QA health verifications (Sessions 175-191) with all Jest and Python tests passing.
 - **June 4, 2026:** Implemented client-side WebP logo upload conversion and lazy loading of agency logos on generated pages to optimize dynamic generated page layout loads. Also implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
@@ -14,6 +14,24 @@
 ---
 
 ## June 10, 2026
+
+### Session 191 (Stripe Customer Billing Portal & Google/Meta Conversion Tracking)
+- **Stripe Customer Billing Portal**:
+  - Created a database migration to add `stripe_customer_id` column to the `users` table.
+  - Implemented the serverless API endpoint `/api/create-portal-session` that authenticates users, resolves their Stripe Customer ID, and creates a hosted billing portal session.
+  - Added the "Manage Billing & Invoices" action to the subscription management UI in `agency-subscription.html` and `js/agency-subscription.js`.
+  - Linked the "Billing & Invoices" setting to trigger the customer portal redirect from `dashboard.html` and `js/dashboard.js`.
+  - Added unit and integration tests in `tests/api/create-portal-session.test.js` validating authentication, Stripe mocks, and database state updates.
+- **Conversion Tracking Integration**:
+  - Created serverless endpoint `/api/get-session-details` to safely retrieve transaction value and currency metadata for Stripe checkout sessions.
+  - Created serverless endpoint `/api/tracking-config` to expose tracking variables (`OWN_GA_TRACKING_ID`, `OWN_FB_PIXEL_ID`, `OWN_GOOGLE_ADS_CONVERSION_LABEL`).
+  - Developed a client-side library `js/conversion-tracking.js` that loads Google gtag and Meta Pixel tags dynamically, validates payment status, and fires Purchase conversion events.
+  - Integrated the tracking helper scripts on payment redirection targets `success.html` and `agency-subscription.html`.
+  - Authored a comprehensive integration manual `paid-ads-tracking-setup.md` detailing parameter structures, environment variables, and verification scripts.
+  - Developed unit tests under `tests/api/get-session-details.test.js` and `tests/api/tracking-config.test.js` (all tests passing).
+- **Maintenance & QA**:
+  - Executed production compilation and bundling via `npm run build`.
+  - Ran the complete test suite (49 passing Jest suites, 332 tests, 56 Python tests, 100% pass rate).
 
 ### Session 190 (Public Review Collection Page & Testimonials Manager)
 - **Feature Expansion & Dynamic Social Proof**:
