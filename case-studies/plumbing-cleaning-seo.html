@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Case Study: Local SEO Results for Contractors | LocalLeads</title>
+    <meta content="Explore interactive local SEO success stories. Toggle between plumbing and cleaning case studies to see real traffic growth, before-after layouts, and ranking results." name="description"/>
+    <meta content="local seo case study, plumbing seo, cleaning seo, dynamic case study, traffic growth chart, before after slider, local ranking simulator" name="keywords"/>
+    <meta content="Interactive Case Study: Local SEO Results for Contractors | LocalLeads" property="og:title"/>
+    <meta content="Explore interactive local SEO success stories. Toggle between plumbing and cleaning case studies to see real traffic growth, before-after layouts, and ranking results." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/interactive_case_study.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/case-studies/plumbing-cleaning-seo.html" property="og:url"/>
+    <meta content="summary_large_image" name="twitter:card"/>
+    <meta content="Interactive Case Study: Local SEO Results for Contractors | LocalLeads" name="twitter:title"/>
+    <meta content="Explore interactive local SEO success stories. Toggle between plumbing and cleaning case studies to see real traffic growth, before-after layouts, and ranking results." name="twitter:description"/>
+    <link rel="canonical" href="https://www.localseogen.com/case-studies/plumbing-cleaning-seo.html"/>
+    <link href="../style.css" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #00f0ff 0%, #7000ff 100%);
+            --glass-bg: rgba(15, 22, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-muted: #94a3b8;
+            --accent-cyan: #00f0ff;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+
+        .interactive-hero {
+            padding: 80px 0 40px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(112, 0, 255, 0.15) 0%, rgba(11, 15, 25, 0) 70%);
+        }
+
+        .interactive-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .interactive-hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-btn:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            background: rgba(0, 240, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .toggle-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
+        }
+
+        .case-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        @media (min-width: 992px) {
+            .case-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+            .interactive-hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 576px) {
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: scale(1.03);
+        }
+
+        .metric-val {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #00f0ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-lbl {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Before/After Split Slider */
+        .slider-section {
+            margin-bottom: 60px;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            user-select: none;
+        }
+
+        .slider-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .panel-before {
+            background: #1e293b;
+            color: var(--text-muted);
+            z-index: 1;
+        }
+
+        .panel-after {
+            background: #0f172a;
+            color: #fff;
+            z-index: 2;
+            width: 50%; /* Initial split */
+            border-right: 3px solid #00f0ff;
+            overflow: hidden;
+        }
+
+        .mock-page-content {
+            width: 80%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .panel-before .mock-page-content {
+            border-style: dashed;
+        }
+
+        .panel-after .mock-page-content {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border-color: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.05);
+        }
+
+        .mock-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+        }
+
+        .mock-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .mock-badge {
+            background: var(--accent-cyan);
+            color: #0b0f19;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .mock-hero-text {
+            height: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            width: 85%;
+        }
+
+        .mock-hero-title-main {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .panel-before .mock-hero-title-main {
+            color: var(--text-muted);
+        }
+
+        .mock-button {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .panel-before .mock-button {
+            background: #475569;
+        }
+
+        .slider-bar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #00f0ff;
+            left: 50%;
+            z-index: 3;
+            cursor: ew-resize;
+            pointer-events: none;
+            box-shadow: 0 0 15px #00f0ff;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            background: #00f0ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0f19;
+            cursor: ew-resize;
+            z-index: 4;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+            border: 3px solid #0b0f19;
+        }
+
+        .drag-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: 5;
+            cursor: ew-resize;
+        }
+
+        /* Google Rank SERP Simulator */
+        .serp-container {
+            background: #fff;
+            color: #202124;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            margin-top: 25px;
+        }
+
+        .serp-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e8eaed;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .serp-search-box {
+            flex-grow: 1;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .serp-search-box i {
+            color: #9aa0a6;
+        }
+
+        .serp-result {
+            margin-bottom: 25px;
+        }
+
+        .serp-url {
+            font-size: 0.85rem;
+            color: #202124;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .serp-title {
+            font-size: 1.25rem;
+            color: #1a0dab;
+            text-decoration: none;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .serp-title:hover {
+            text-decoration: underline;
+        }
+
+        .serp-snippet {
+            font-size: 0.9rem;
+            color: #4d5156;
+            line-height: 1.5;
+        }
+
+        .serp-badge {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .suburb-selectors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .suburb-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suburb-btn:hover, .suburb-btn.active {
+            background: var(--accent-cyan);
+            color: #0b0f19;
+            border-color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(112, 0, 255, 0.15) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 24px;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 65px;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-card h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .cta-card p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.25);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.4);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="mobile-menu-container">
+                <button class="close-menu-btn" id="close-menu-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+                <ul class="nav-links" id="nav-menu">
+                    <li><a data-i18n-key="header_generate_pages" href="../generate.html">Generate Pages</a></li>
+                    <li><a data-i18n-key="header_pricing" href="../pricing.html">Pricing</a></li>
+                    <li><a data-i18n-key="header_blog" href="../blog.html">Blog</a></li>
+                    <li><a data-i18n-key="header_about" href="../about.html">About</a></li>
+                    <li><a data-i18n-key="header_audit" href="../audit.html">Free Audit</a></li>
+                    <li><a data-i18n-key="header_contact" href="../contact.html">Contact</a></li>
+                    <li><a data-i18n-key="header_login_signup" href="../auth.html">Login/Signup</a></li>
+                    <li><a data-i18n-key="header_buy_credits" href="../buy-credits.html">Buy Credits</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="interactive-hero">
+            <h1>Dynamic Contractor SEO Results</h1>
+            <p>Compare the organic growth, keyword rankings, and landing page conversions of contractors who automated their local expansion using LocalLeads.</p>
+            
+            <div class="toggle-container">
+                <button class="toggle-btn active" id="toggle-plumbing" onclick="switchCase('plumbing')">
+                    <i class="fas fa-tools"></i> PipePerfect Plumbing (Seattle)
+                </button>
+                <button class="toggle-btn" id="toggle-cleaning" onclick="switchCase('cleaning')">
+                    <i class="fas fa-broom"></i> Sparkle Clean Services (Austin)
+                </button>
+            </div>
+        </section>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-val" id="metric-traffic">+180%</div>
+                <div class="metric-lbl">Organic Traffic</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" id="metric-leads">+25%</div>
+                <div class="metric-lbl">Monthly Leads</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" id="metric-conversion">+15%</div>
+                <div class="metric-lbl">Conversion Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" id="metric-keywords">50+</div>
+                <div class="metric-lbl">Top 3 Keywords</div>
+            </div>
+        </div>
+
+        <div class="case-grid">
+            <!-- Left Side: Interactive Traffic Chart -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-chart-line" style="color: var(--accent-cyan)"></i> 
+                    Organic Search Traffic Growth (6 Months)
+                </h3>
+                <div style="position: relative; height: 320px; width: 100%;">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Right Side: Details & Testimonial -->
+            <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h3 style="margin-bottom: 15px; font-weight: 700; color: var(--accent-cyan);" id="case-title">Seattle Plumbing Services</h3>
+                    <p style="margin-bottom: 20px; line-height: 1.6;" id="case-desc">PipePerfect Plumbing, a Seattle-based contractor, scaled neighborhood presence across the metro area using automated pages for terms like "Emergency Plumber Capitol Hill" and "Drain Cleaning Ballard".</p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--accent-cyan); padding: 20px; border-radius: 0 12px 12px 0; margin-top: 20px;">
+                    <p style="font-style: italic; margin-bottom: 15px; line-height: 1.5; font-size: 0.95rem;" id="testimonial-quote">"Before LocalLeads, the thought of building hundreds of neighborhood pages was daunting and expensive. Their Page Generator made it incredibly easy. The phones haven't stopped ringing!"</p>
+                    <span style="font-weight: 700; font-size: 0.9rem;" id="testimonial-author">Sarah Chen, Owner</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Before/After Slider Section -->
+        <section class="slider-section">
+            <h3 style="margin-bottom: 25px; font-weight: 700; text-align: center;">
+                <i class="fas fa-arrows-alt-h" style="color: var(--accent-cyan); margin-right: 10px;"></i>
+                Interactive Page Layout Comparison (Drag Slider)
+            </h3>
+            <div class="slider-wrapper" id="sliderWrapper">
+                <!-- Before Panel (Background) -->
+                <div class="slider-panel panel-before">
+                    <div class="mock-page-content">
+                        <div class="mock-nav">
+                            <span class="mock-logo" id="before-logo">PipePerfect Plumbing</span>
+                            <span style="font-size: 0.75rem;">Contact Us</span>
+                        </div>
+                        <div class="mock-hero-title-main" id="before-title">Plumbing Services in Seattle</div>
+                        <div class="mock-hero-text"></div>
+                        <div class="mock-hero-text" style="width: 60%"></div>
+                        <div class="mock-button">Contact Us</div>
+                    </div>
+                </div>
+
+                <!-- After Panel (Foreground, Adjustable Width) -->
+                <div class="slider-panel panel-after" id="panelAfter">
+                    <div class="mock-page-content">
+                        <div class="mock-nav">
+                            <span class="mock-logo" id="after-logo" style="color: var(--accent-cyan);">PipePerfect Plumbing</span>
+                            <span class="mock-badge">Local Services Verified</span>
+                        </div>
+                        <div class="mock-hero-title-main" id="after-title" style="color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.2);">Best Emergency Plumber in Capitol Hill, Seattle</div>
+                        <div class="mock-hero-text" style="background: rgba(0, 240, 255, 0.15)"></div>
+                        <div class="mock-hero-text" style="width: 75%"></div>
+                        <div style="display: flex; gap: 8px; margin: 15px 0;">
+                            <span style="font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 6px; border-radius: 4px;">✓ 24/7 Service</span>
+                            <span style="font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 6px; border-radius: 4px;">✓ Local Reviews Injected</span>
+                        </div>
+                        <div class="mock-button" style="box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);">Book 24/7 Plumbing Dispatch</div>
+                    </div>
+                </div>
+
+                <!-- Slider Controls -->
+                <div class="slider-bar" id="sliderBar"></div>
+                <div class="slider-handle" id="sliderHandle">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </div>
+                <input type="range" class="drag-input" id="dragInput" min="0" max="100" value="50">
+            </div>
+        </section>
+
+        <!-- Live Google SERP Simulator -->
+        <section class="serp-simulator glass-card" style="margin-bottom: 60px;">
+            <h3 style="margin-bottom: 15px; font-weight: 700;">
+                <i class="fab fa-google" style="color: var(--accent-cyan); margin-right: 10px;"></i>
+                Live Search Ranking Simulator
+            </h3>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Select a neighborhood or suburb to see how LocalLeads ranks the service provider at the top of Google organic results:</p>
+            
+            <div class="suburb-selectors" id="suburb-selectors">
+                <!-- Populated dynamically by JS -->
+            </div>
+
+            <div class="serp-container">
+                <div class="serp-header">
+                    <span style="font-weight: bold; color: #4285f4; font-size: 1.4rem;">G<span style="color: #ea4335;">o</span><span style="color: #fbbc05;">o</span>g<span style="color: #34a853;">l</span><span style="color: #ea4335;">e</span></span>
+                    <div class="serp-search-box">
+                        <span id="serp-query">emergency plumber capitol hill seattle</span>
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="serp-result">
+                    <div class="serp-url">
+                        <span>https://www.pipeperfectseattle.com</span> <i class="fas fa-ellipsis-v" style="font-size: 0.7rem; color: #70757a;"></i>
+                    </div>
+                    <a href="#" class="serp-title" id="serp-title-text">Best Emergency Plumber in Capitol Hill, Seattle | PipePerfect Plumbing</a>
+                    <span class="serp-badge" id="serp-badge-val">Rank #1</span>
+                    <div class="serp-snippet" id="serp-snippet-text">
+                        Need an emergency plumber in Capitol Hill, Seattle? PipePerfect Plumbing offers rapid response drain cleaning, pipe repairs, and water heater installs. Call now!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lead Capture CTA -->
+        <div class="cta-card">
+            <h2>Ready to Expand Your Service Area Coverage?</h2>
+            <p>Automate your local SEO strategy, create hyper-targeted pages, and grow your search traffic and bookings in minutes.</p>
+            <div class="cta-buttons">
+                <a href="../generate.html" class="cta-btn cta-primary" id="cta-link-generate">Generate Pages Now</a>
+                <a href="../audit.html" class="cta-btn cta-secondary">Get Free SEO Audit</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <strong>LocalLeads</strong>
+                    <p>Dominate your local market, effortlessly.</p>
+                    <div class="social-icons">
+                        <a aria-label="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://www.localseogen.com" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a aria-label="LinkedIn" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.localseogen.com&amp;title=LocalLeads - Get Found in Every Town" target="_blank">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <strong>Quick Links</strong>
+                    <ul>
+                        <li><a href="../about.html">About Us</a></li>
+                        <li><a href="../pricing.html">Pricing</a></li>
+                        <li><a href="../blog.html">Blog</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <strong>Legal</strong>
+                    <ul>
+                        <li><a href="../privacy.html">Privacy Policy</a></li>
+                        <li><a href="../terms.html">Terms of Service</a></li>
+                        <li><a href="../audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data configurations
+        const caseData = {
+            plumbing: {
+                metrics: {
+                    traffic: '+180%',
+                    leads: '+25%',
+                    conversion: '+15%',
+                    keywords: '50+'
+                },
+                title: 'Seattle Plumbing Services',
+                desc: 'PipePerfect Plumbing, a Seattle-based contractor, scaled neighborhood presence across the metro area using automated pages for terms like "Emergency Plumber Capitol Hill" and "Drain Cleaning Ballard".',
+                testimonial: {
+                    quote: '"Before LocalLeads, the thought of building hundreds of neighborhood pages was daunting and expensive. Their Page Generator made it incredibly easy. The phones haven\'t stopped ringing!"',
+                    author: 'Sarah Chen, Owner'
+                },
+                logo: 'PipePerfect Plumbing',
+                beforeTitle: 'Plumbing Services in Seattle',
+                afterTitle: 'Best Emergency Plumber in Capitol Hill, Seattle',
+                suburbs: ['Capitol Hill', 'Ballard', 'Queen Anne', 'Fremont', 'West Seattle'],
+                keywordTemplate: 'emergency plumber [suburb] seattle',
+                serpTitle: 'Best Emergency Plumber in [suburb], Seattle | PipePerfect Plumbing',
+                serpSnippet: 'Need an emergency plumber in [suburb], Seattle? PipePerfect Plumbing offers rapid response drain cleaning, pipe repairs, and water heater installs. Call now!',
+                url: 'https://www.pipeperfectseattle.com',
+                chartData: [450, 680, 890, 1020, 1180, 1260],
+                ctaParams: '?businessName=PipePerfect%20Plumbing&services=Emergency%20Plumber,%20Drain%20Cleaning,%20Water%20Heater%20Repair&towns=Capitol%20Hill,%20Ballard,%20Queen%20Anne,%20Fremont,%20West%20Seattle'
+            },
+            cleaning: {
+                metrics: {
+                    traffic: '+210%',
+                    leads: '+32%',
+                    conversion: '+20%',
+                    keywords: '45+'
+                },
+                title: 'Austin Cleaning Services',
+                desc: 'Sparkle Clean Services in Austin, TX, expanded rapidly into high-value suburbs (West Lake Hills, Round Rock, Lakeway) by instantly generating localized landing pages targeting residential and commercial cleaning searches.',
+                testimonial: {
+                    quote: '"LocalLeads solved our biggest growth bottleneck. We went from a local shop to serving the entire Austin metro area in weeks, and our bookings are up 32%!"',
+                    author: 'David Miller, Founder'
+                },
+                logo: 'Sparkle Clean Services',
+                beforeTitle: 'House Cleaning in Austin',
+                afterTitle: 'Premium Maid & House Cleaning in West Lake Hills, Austin',
+                suburbs: ['West Lake Hills', 'Round Rock', 'Lakeway', 'Pflugerville', 'Cedar Park'],
+                keywordTemplate: 'maid service [suburb] austin',
+                serpTitle: 'Premium Maid & House Cleaning in [suburb] | Sparkle Clean Services',
+                serpSnippet: 'Looking for a trusted maid service or house cleaning in [suburb], Austin? Sparkle Clean Services provides eco-friendly deep cleaning and recurring maids.',
+                url: 'https://www.sparkleclean-austin.com',
+                chartData: [320, 510, 780, 920, 980, 1040],
+                ctaParams: '?businessName=Sparkle%20Clean%20Services&services=Maid%20Service,%20House%20Cleaning,%20Deep%20Cleaning&towns=West%20Lake%20Hills,%20Round%20Rock,%20Lakeway,%20Pflugerville,%20Cedar%20Park'
+            }
+        };
+
+        let activeCase = 'plumbing';
+        let trafficChart = null;
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('trafficChart').getContext('2d');
+            const initialData = caseData.plumbing.chartData;
+            
+            trafficChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+                    datasets: [{
+                        label: 'Organic Monthly Visitors',
+                        data: initialData,
+                        borderColor: '#00f0ff',
+                        backgroundColor: 'rgba(0, 240, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#00f0ff',
+                        pointBorderColor: '#0b0f19',
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.03)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Before/After Slider Control
+        const dragInput = document.getElementById('dragInput');
+        const panelAfter = document.getElementById('panelAfter');
+        const sliderBar = document.getElementById('sliderBar');
+        const sliderHandle = document.getElementById('sliderHandle');
+
+        dragInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            panelAfter.style.width = `${val}%`;
+            sliderBar.style.left = `${val}%`;
+            sliderHandle.style.left = `${val}%`;
+        });
+
+        // Switch Case
+        function switchCase(caseType) {
+            if (activeCase === caseType) return;
+            activeCase = caseType;
+
+            // Update toggles
+            document.getElementById('toggle-plumbing').classList.toggle('active', caseType === 'plumbing');
+            document.getElementById('toggle-cleaning').classList.toggle('active', caseType === 'cleaning');
+
+            const data = caseData[caseType];
+
+            // Animate metrics
+            document.getElementById('metric-traffic').innerText = data.metrics.traffic;
+            document.getElementById('metric-leads').innerText = data.metrics.leads;
+            document.getElementById('metric-conversion').innerText = data.metrics.conversion;
+            document.getElementById('metric-keywords').innerText = data.metrics.keywords;
+
+            // Details
+            document.getElementById('case-title').innerText = data.title;
+            document.getElementById('case-desc').innerText = data.desc;
+            document.getElementById('testimonial-quote').innerText = data.testimonial.quote;
+            document.getElementById('testimonial-author').innerText = data.testimonial.author;
+
+            // Mock page
+            document.getElementById('before-logo').innerText = data.logo;
+            document.getElementById('after-logo').innerText = data.logo;
+            document.getElementById('before-title').innerText = data.beforeTitle;
+            document.getElementById('after-title').innerText = data.afterTitle;
+
+            // Update Chart
+            trafficChart.data.datasets[0].data = data.chartData;
+            trafficChart.data.datasets[0].borderColor = caseType === 'plumbing' ? '#00f0ff' : '#a855f7';
+            trafficChart.data.datasets[0].backgroundColor = caseType === 'plumbing' ? 'rgba(0, 240, 255, 0.1)' : 'rgba(168, 85, 247, 0.1)';
+            trafficChart.data.datasets[0].pointBackgroundColor = caseType === 'plumbing' ? '#00f0ff' : '#a855f7';
+            trafficChart.update();
+
+            // Rebuild suburb selectors
+            buildSuburbSelectors();
+
+            // Update CTA prepopulation link
+            document.getElementById('cta-link-generate').href = `../generate.html${data.ctaParams}`;
+        }
+
+        // Suburb selectors and SERP Mock
+        function buildSuburbSelectors() {
+            const container = document.getElementById('suburb-selectors');
+            container.innerHTML = '';
+            const data = caseData[activeCase];
+
+            data.suburbs.forEach((suburb, index) => {
+                const btn = document.createElement('button');
+                btn.className = `suburb-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = suburb;
+                btn.onclick = () => {
+                    document.querySelectorAll('.suburb-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateSerpMock(suburb);
+                };
+                container.appendChild(btn);
+            });
+
+            // Set initial mockup
+            updateSerpMock(data.suburbs[0]);
+        }
+
+        function updateSerpMock(suburb) {
+            const data = caseData[activeCase];
+            document.getElementById('serp-query').innerText = data.keywordTemplate.replace('[suburb]', suburb);
+            document.getElementById('serp-title-text').innerText = data.serpTitle.replace('[suburb]', suburb);
+            document.getElementById('serp-snippet-text').innerText = data.serpSnippet.replace('[suburb]', suburb);
+            document.querySelector('.serp-url span').innerText = data.url;
+        }
+
+        // Mobile Nav Hamburger Toggle
+        const hamburger = document.getElementById('hamburger-icon');
+        const closeMenu = document.getElementById('close-menu-btn');
+        const overlay = document.getElementById('mobile-nav-overlay');
+        const menu = document.querySelector('.mobile-menu-container');
+
+        if (hamburger) {
+            hamburger.onclick = () => {
+                menu.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+        }
+
+        if (closeMenu) {
+            closeMenu.onclick = () => {
+                menu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+        }
+
+        if (overlay) {
+            overlay.onclick = () => {
+                menu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+        }
+
+        window.onload = () => {
+            initChart();
+            buildSuburbSelectors();
+            // Initial cta link setup
+            document.getElementById('cta-link-generate').href = `../generate.html${caseData.plumbing.ctaParams}`;
+        };
+    </script>
+</body>
+</html>

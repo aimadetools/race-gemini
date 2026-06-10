@@ -15,6 +15,8 @@ We've found that marketing agencies like yours are perfectly positioned to lever
 
 Would you be open to a brief discussion or checking out our white-label program details here: https://www.localseogen.com/agency-white-label.html ?
 
+To help you get started, we are currently offering an exclusive **20% discount** on any of our agency packages and credit plans. Simply use coupon code **LOCAL20** at checkout to unlock your discount.
+
 Best regards,
 
 The LocalLeads Team
