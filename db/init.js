@@ -11,6 +11,7 @@ import { addCustomDomainToUsers } from './migrations/add_custom_domain_to_users.
 import { addWebhookAndTrackingColumnsToUsers } from './migrations/add_webhook_and_tracking_columns_to_users.js';
 import { addSmsColumnsToUsers } from './migrations/add_sms_columns_to_users.js';
 import { createTestimonialsTable } from './migrations/create_testimonials_table.js';
+import { addStripeCustomerIdToUsers } from './migrations/add_stripe_customer_id_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -53,11 +54,15 @@ export async function initializeDatabase() {
     console.log('Ensuring testimonials table exists...');
     await createTestimonialsTable();
 
+    console.log('Ensuring Stripe customer ID column exists in users table...');
+    await addStripeCustomerIdToUsers();
+
     console.log('Database initialization completed.');
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
   }
 }
+
 
 

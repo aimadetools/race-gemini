@@ -593,6 +593,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Billing Portal Click Handler
+    const billingPortalLink = document.getElementById('billing-portal-link');
+    if (billingPortalLink) {
+        billingPortalLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const originalText = billingPortalLink.innerHTML;
+            billingPortalLink.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening Portal...';
+            billingPortalLink.style.pointerEvents = 'none';
+
+            try {
+                const response = await fetch('/api/create-portal-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
+
+                const data = await response.json();
+                if (response.ok && data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert(data.message || 'Failed to open billing portal. Please purchase credits or a subscription first.');
+                    billingPortalLink.innerHTML = originalText;
+                    billingPortalLink.style.pointerEvents = 'auto';
+                }
+            } catch (error) {
+                console.error('Error opening billing portal:', error);
+                alert('An unexpected error occurred. Please try again.');
+                billingPortalLink.innerHTML = originalText;
+                billingPortalLink.style.pointerEvents = 'auto';
+            }
+        });
+    }
+
     // Export Leads Click Handler
     const exportLeadsBtn = document.getElementById('export-leads-btn');
     if (exportLeadsBtn) {

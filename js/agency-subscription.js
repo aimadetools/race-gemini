@@ -43,6 +43,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Handle billing portal button click
+    const manageBillingPortalButton = document.getElementById('manage-billing-portal-button');
+    if (manageBillingPortalButton) {
+        manageBillingPortalButton.addEventListener('click', async () => {
+            manageBillingPortalButton.disabled = true;
+            manageBillingPortalButton.textContent = 'Opening Portal...';
+            try {
+                const response = await fetch('/api/create-portal-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (response.ok && data.url) {
+                    window.location.href = data.url;
+                } else {
+                    alert(data.message || 'Failed to open billing portal.');
+                    manageBillingPortalButton.disabled = false;
+                    manageBillingPortalButton.textContent = 'Manage Billing & Invoices';
+                }
+            } catch (error) {
+                console.error('Error opening billing portal:', error);
+                alert('An unexpected error occurred. Please try again.');
+                manageBillingPortalButton.disabled = false;
+                manageBillingPortalButton.textContent = 'Manage Billing & Invoices';
+            }
+        });
+    }
+
     // Handle cancel subscription button click
     cancelSubscriptionButton.addEventListener('click', async () => {
         if (confirm('Are you sure you want to cancel your subscription? This action cannot be undone.')) {

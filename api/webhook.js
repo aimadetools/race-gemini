@@ -121,8 +121,8 @@ export default async (req, res) => { // Removed currentKvClient parameter
                     const creditsToAdd = getCreditsToAdd(priceId);
                     if (creditsToAdd > 0) {
                         const result = await query(
-                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_subscription_id = $3, is_agency = true WHERE id = $4 RETURNING credits',
-                            [creditsToAdd, 'active', session.subscription, userId]
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_subscription_id = $3, stripe_customer_id = $4, is_agency = true WHERE id = $5 RETURNING credits',
+                            [creditsToAdd, 'active', session.subscription, session.customer, userId]
                         );
 
                         if (result.rows.length === 0) {
@@ -206,8 +206,8 @@ export default async (req, res) => { // Removed currentKvClient parameter
                     }
 
                     const result = await query(
-                        'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
-                        [parsedCredits, userId]
+                        'UPDATE users SET credits = credits + $1, stripe_customer_id = $2 WHERE id = $3 RETURNING credits',
+                        [parsedCredits, session.customer, userId]
                     );
 
                     if (result.rows.length === 0) {
@@ -283,8 +283,8 @@ export default async (req, res) => { // Removed currentKvClient parameter
                 if (creditsToAdd > 0) {
                     try {
                         const result = await query(
-                            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
-                            [creditsToAdd, 'active', userId]
+                            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_customer_id = $3, is_agency = true WHERE id = $4 RETURNING credits',
+                            [creditsToAdd, 'active', invoice.customer, userId]
                         );
 
                         if (result.rows.length === 0) {

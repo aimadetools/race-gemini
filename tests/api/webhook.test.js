@@ -97,6 +97,8 @@ describe('Webhook API', () => {
             type: 'checkout.session.completed',
             data: {
                 object: {
+                    id: 'sess_123',
+                    customer: 'cus_123',
                     mode: 'payment',
                     amount_total: 1000,
                     metadata: {
@@ -119,23 +121,25 @@ describe('Webhook API', () => {
                 return { rows: [] };
             }
             if (textLower.includes('update users')) {
-                if (textLower.includes('stripe_subscription_id = $3')) {
+                if (textLower.includes('stripe_subscription_id = $3') || textLower.includes('stripe_subscription_id = $4')) {
                     // Subscription checkout completed
-                    const [creditsToAdd, status, subId, userId] = params;
+                    const [creditsToAdd, status, subId, custId, userId] = params;
                     const user = getMockUsers().find(u => u.id.toString() === userId.toString());
                     if (user) {
                         user.credits = (user.credits || 0) + creditsToAdd;
                         user.subscription_status = status;
                         user.stripe_subscription_id = subId;
+                        user.stripe_customer_id = custId;
                         return { rows: [{ credits: user.credits }] };
                     }
-                } else if (textLower.includes('subscription_status = $2')) {
+                } else if (textLower.includes('subscription_status = $2') || textLower.includes('stripe_customer_id = $3')) {
                     // Invoice payment succeeded
-                    const [creditsToAdd, status, userId] = params;
+                    const [creditsToAdd, status, custId, userId] = params;
                     const user = getMockUsers().find(u => u.id.toString() === userId.toString());
                     if (user) {
                         user.credits = (user.credits || 0) + creditsToAdd;
                         user.subscription_status = status;
+                        user.stripe_customer_id = custId;
                         return { rows: [{ credits: user.credits }] };
                     }
                 } else if (textLower.includes('subscription_status = $1')) {
@@ -148,10 +152,11 @@ describe('Webhook API', () => {
                     }
                 } else if (textLower.includes('credits = credits + $1')) {
                     // One-time payment
-                    const [creditsToAdd, userId] = params;
+                    const [creditsToAdd, custId, userId] = params;
                     const user = getMockUsers().find(u => u.id.toString() === userId.toString());
                     if (user) {
                         user.credits = (user.credits || 0) + creditsToAdd;
+                        user.stripe_customer_id = custId;
                         return { rows: [{ credits: user.credits }] };
                     }
                 }
@@ -201,8 +206,8 @@ describe('Webhook API', () => {
         expect(mockRes.statusCode).toBe(200);
         expect(mockRes._getData()).toEqual({ received: true });
         expect(mockQuery).toHaveBeenCalledWith(
-            'UPDATE users SET credits = credits + $1 WHERE id = $2 RETURNING credits',
-            [50, 'user123']
+            'UPDATE users SET credits = credits + $1, stripe_customer_id = $2 WHERE id = $3 RETURNING credits',
+            [50, 'cus_123', 'user123']
         );
         expect(getMockUsers()[0].credits).toBe(150);
         expect(sendEmail).toHaveBeenCalledWith('test@example.com', expect.any(String), expect.any(String));
@@ -279,6 +284,7 @@ describe('Webhook API', () => {
             data: {
                 object: {
                     subscription: 'sub_basic',
+                    customer: 'cus_basic',
                     amount_due: 500,
                 },
             },
@@ -292,8 +298,8 @@ describe('Webhook API', () => {
 
         expect(mockRes.statusCode).toBe(200);
         expect(mockQuery).toHaveBeenCalledWith(
-            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
-            [100, 'active', 'agency123']
+            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_customer_id = $3, is_agency = true WHERE id = $4 RETURNING credits',
+            [100, 'active', 'cus_basic', 'agency123']
         );
         expect(getMockUsers()[0].credits).toBe(100);
         expect(getMockUsers()[0].subscription_status).toBe('active');
@@ -310,6 +316,7 @@ describe('Webhook API', () => {
             data: {
                 object: {
                     subscription: 'sub_pro',
+                    customer: 'cus_pro',
                     amount_due: 1500,
                 },
             },
@@ -323,8 +330,8 @@ describe('Webhook API', () => {
 
         expect(mockRes.statusCode).toBe(200);
         expect(mockQuery).toHaveBeenCalledWith(
-            'UPDATE users SET credits = credits + $1, subscription_status = $2, is_agency = true WHERE id = $3 RETURNING credits',
-            [250, 'active', 'agency123']
+            'UPDATE users SET credits = credits + $1, subscription_status = $2, stripe_customer_id = $3, is_agency = true WHERE id = $4 RETURNING credits',
+            [250, 'active', 'cus_pro', 'agency123']
         );
         expect(getMockUsers()[0].credits).toBe(300);
         expect(getMockUsers()[0].subscription_status).toBe('active');
