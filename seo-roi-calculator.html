@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local SEO ROI & Lead Calculator | LocalLeads</title>
+    <meta content="Calculate your business's potential traffic, leads, revenue increase, and ROI from ranking in multiple towns with our interactive local SEO calculator." name="description"/>
+    <meta content="local seo calculator, lead calculator, local seo roi, local leads calculator, local business marketing roi" name="keywords"/>
+    <meta content="Free Local SEO ROI & Lead Calculator | LocalLeads" property="og:title"/>
+    <meta content="Calculate your business's potential traffic, leads, revenue increase, and ROI from ranking in multiple towns with our interactive local SEO calculator." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/seo-roi-calculator.html" property="og:url"/>
+    <link href="https://www.localseogen.com/seo-roi-calculator.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="style_calculator.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li>
+                        <a href="/generate.html">Generate Pages</a>
+                    </li>
+                    <li>
+                        <a href="/pricing.html">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="/blog.html">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/audit.html">Free Audit</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                    <li>
+                        <a href="/auth.html">Login/Signup</a>
+                    </li>
+                    <li>
+                        <a href="/buy-credits.html">Buy Credits</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Local SEO Lead &amp; ROI Calculator</h1>
+            <p>
+                How much new revenue is your business leaving on the table by only ranking in one town? 
+                Use our interactive tool to estimate the traffic, phone calls, and revenue you could capture by expanding your online footprint.
+            </p>
+        </section>
+
+        <div class="calculator-container">
+            <div class="calculator-grid">
+                <!-- Inputs Section -->
+                <div class="calc-card">
+                    <h3>Calculator Inputs</h3>
+                    
+                    <div class="form-group">
+                        <label for="calc-industry">Select Your Industry</label>
+                        <select class="calc-input" id="calc-industry">
+                            <option value="plumbing">Plumbing Services</option>
+                            <option value="electrical">Electrical Services</option>
+                            <option value="hvac">HVAC (Heating &amp; Air)</option>
+                            <option value="locksmith">Locksmith Services</option>
+                            <option value="cleaning">House Cleaning / Maid Services</option>
+                            <option value="roofing">Roofing Services</option>
+                            <option value="landscaping">Landscaping &amp; Lawn Care</option>
+                            <option value="custom">Other / Custom Niche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calc-job-value">Average Job / Order Value ($)</label>
+                        <input class="calc-input" id="calc-job-value" min="1" type="number" value="250"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calc-towns">
+                            Number of Target Towns / Cities
+                            <span class="label-value" id="calc-towns-val">50</span>
+                        </label>
+                        <div class="slider-container">
+                            <input class="calc-slider" id="calc-towns" max="1000" min="5" step="5" type="range" value="50"/>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Advanced Mode -->
+                    <div class="advanced-toggle" id="calc-advanced-toggle">
+                        <span>Advanced SEO &amp; Conversion Settings</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+
+                    <div class="advanced-fields" id="calc-advanced-fields">
+                        <div class="form-group">
+                            <label for="calc-success-rate">
+                                Page 1 Ranking Success Rate
+                                <i class="fas fa-info-circle" title="The percentage of generated pages that successfully rank on Page 1 of Google search results over 3-6 months."></i>
+                                <span class="label-value" id="calc-success-rate-val">40%</span>
+                            </label>
+                            <div class="slider-container">
+                                <input class="calc-slider" id="calc-success-rate" max="100" min="5" step="5" type="range" value="40"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="calc-ctr">
+                                Organic Click-Through Rate (CTR)
+                                <i class="fas fa-info-circle" title="The average percentage of users who click on your page link when they see it in search results."></i>
+                                <span class="label-value" id="calc-ctr-val">3%</span>
+                            </label>
+                            <div class="slider-container">
+                                <input class="calc-slider" id="calc-ctr" max="20" min="1" step="0.5" type="range" value="3"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="calc-conv-rate">
+                                Traffic-to-Lead Conversion Rate
+                                <i class="fas fa-info-circle" title="The percentage of website visitors who contact you (call, email, fill a quote form)."></i>
+                                <span class="label-value" id="calc-conv-rate-val">8%</span>
+                            </label>
+                            <div class="slider-container">
+                                <input class="calc-slider" id="calc-conv-rate" max="30" min="1" step="0.5" type="range" value="8"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="calc-close-rate">
+                                Lead Close Rate (Jobs Won)
+                                <i class="fas fa-info-circle" title="The percentage of incoming leads/phone calls that you successfully close and turn into paying jobs."></i>
+                                <span class="label-value" id="calc-close-rate-val">50%</span>
+                            </label>
+                            <div class="slider-container">
+                                <input class="calc-slider" id="calc-close-rate" max="95" min="5" step="5" type="range" value="50"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outputs Section -->
+                <div class="calc-card" style="border-color: rgba(52, 211, 153, 0.15);">
+                    <h3>Estimated Return</h3>
+                    
+                    <div class="output-hero-card">
+                        <div class="output-hero-label">Est. Annual Revenue Increase</div>
+                        <div class="output-hero-value" id="out-annual-rev">$0</div>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label">Est. Monthly Website Traffic</span>
+                        <span class="output-value" id="out-traffic">0</span>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label">Est. Monthly Leads (Calls/Forms)</span>
+                        <span class="output-value" id="out-leads">0</span>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label">Est. Booked Jobs / Month</span>
+                        <span class="output-value" id="out-jobs">0</span>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label">Est. Monthly Revenue Increase</span>
+                        <span class="output-value" id="out-monthly-rev">$0</span>
+                    </div>
+
+                    <div class="output-item" style="border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: 1.5rem; margin-bottom: 1rem;">
+                        <span class="output-label">One-Time Investment</span>
+                        <span class="output-value" id="out-investment">$0</span>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label" style="font-weight: 700; color: #f3f4f6;">Net Annual Profit</span>
+                        <span class="output-value highlight-green" id="out-net-return">$0</span>
+                    </div>
+
+                    <div class="output-item">
+                        <span class="output-label" style="font-weight: 700; color: #f3f4f6;">ROI Multiplier</span>
+                        <span class="output-value highlight-green" id="out-roi">0x ROI</span>
+                    </div>
+
+                    <!-- Recommended Plan -->
+                    <div class="package-suggestion-card">
+                        <div style="font-size: 0.85rem; text-transform: uppercase; color: #9ca3af; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: 0.05em;">Recommended Plan</div>
+                        <div class="package-name" id="recommended-package-name">Starter Pack (50 Pages)</div>
+                        <div class="package-cost" id="recommended-package-cost">$49 One-Time</div>
+                        <div class="package-roi-banner" id="recommended-package-roi">120x ROI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section with Lead Magnet -->
+            <section class="cta-lead-section">
+                <div class="cta-lead-card">
+                    <h3>Unlock Your Service Areas Today</h3>
+                    <p>
+                        Don't let competitors take the phone calls in neighboring towns. Generate professionally structured, search-optimized pages for every location you cover. Start now and get your first 5 pages completely free.
+                    </p>
+                    
+                    <form id="calculator-lead-form">
+                        <div class="lead-inline-form">
+                            <input class="calc-input" id="leadBusinessName" placeholder="Business Name" required="" type="text"/>
+                            <input class="calc-input" id="leadService" placeholder="Services (e.g. Plumbing, Drain Cleaning)" required="" type="text"/>
+                            <input class="calc-input" id="leadEmail" placeholder="Email Address" required="" type="email"/>
+                            <button class="button pulse-animation" type="submit">Get 5 Free Pages Now</button>
+                        </div>
+                    </form>
+                    <div class="message-box" id="calc-lead-message"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-cols" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; padding: 4rem 0 2rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="footer-col" style="flex: 1; min-width: 250px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">LocalLeads</h2>
+                    <p style="font-size: 0.95rem; color: #9ca3af; line-height: 1.6;">Dominate your local market, effortlessly.</p>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Quick Links</h2>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="referral-program.html">Referral Program</a></li>
+                        <li><a href="seo-roi-calculator.html" style="color: #007bff; font-weight: 600;">ROI Calculator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Legal</h2>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-size: 0.9rem;">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/seo-roi-calculator.js"></script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>

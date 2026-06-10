@@ -74,6 +74,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial count update
     updateCharCount(servicesInput, servicesCharCount);
     updateCharCount(townsInput, townsCharCount);
+
+    // Pre-populate fields from URL parameters if available
+    const urlParams = new URLSearchParams(window.location.search);
+    const businessNameParam = urlParams.get('businessName');
+    const servicesParam = urlParams.get('services');
+    const townsParam = urlParams.get('towns');
+    const businessNameInput = document.getElementById('businessName');
+
+    if (businessNameParam && businessNameInput) {
+        businessNameInput.value = businessNameParam;
+    }
+    if (servicesParam && servicesInput) {
+        servicesInput.value = servicesParam;
+        updateCharCount(servicesInput, servicesCharCount);
+    }
+    if (townsParam && townsInput) {
+        townsInput.value = townsParam;
+        updateCharCount(townsInput, townsCharCount);
+    }
     
     fetchUserCredits(); // Fetch credits on load
 
