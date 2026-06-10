@@ -539,6 +539,27 @@
             </div>
           </div>
           
+          <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="edit-enable-ai-copy" name="enableAICopy" style="width: auto; cursor: pointer;" />
+            <label for="edit-enable-ai-copy" style="font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-bottom: 0;">Enable AI Copy Generation</label>
+          </div>
+          
+          <div id="edit-ai-style-group" style="display: none; margin-bottom: 1rem;">
+            <div style="margin-bottom: 1rem;">
+              <label for="edit-ai-style" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">AI Content Style</label>
+              <select id="edit-ai-style" name="aiStyle" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem;">
+                <option value="professional">Professional</option>
+                <option value="casual">Casual</option>
+                <option value="friendly">Friendly</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="edit-ai-keywords" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Custom Keywords / Prompts (Optional)</label>
+              <textarea id="edit-ai-keywords" name="aiKeywords" placeholder="e.g. family-owned, 24/7 service, eco-friendly" rows="3" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; resize: vertical;"></textarea>
+            </div>
+          </div>
+          
           <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; margin-top: 1rem;">
             <button type="button" id="cancel-edit-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
             <button type="submit" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">Save Changes</button>

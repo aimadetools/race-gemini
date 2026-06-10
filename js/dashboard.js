@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const editForm = document.getElementById('edit-page-form');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
+    // Toggle AI Style group visibility on Edit Page modal
+    const editEnableAICopyCheckbox = document.getElementById('edit-enable-ai-copy');
+    const editAiStyleGroup = document.getElementById('edit-ai-style-group');
+    if (editEnableAICopyCheckbox && editAiStyleGroup) {
+        editEnableAICopyCheckbox.addEventListener('change', function () {
+            editAiStyleGroup.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+
     // Testimonials Elements
     const testimonialModal = document.getElementById('add-testimonial-modal');
     const addTestimonialBtn = document.getElementById('add-testimonial-btn');
@@ -413,6 +422,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('edit-telephone').value = page.telephone || '';
                 document.getElementById('edit-pricerange').value = page.priceRange || '';
                 document.getElementById('edit-openinghours').value = page.openingHours || '';
+                
+                const enableAICopyCheckbox = document.getElementById('edit-enable-ai-copy');
+                const aiStyleGroup = document.getElementById('edit-ai-style-group');
+                if (enableAICopyCheckbox) {
+                    enableAICopyCheckbox.checked = !!page.enableAICopy;
+                }
+                if (aiStyleGroup) {
+                    aiStyleGroup.style.display = page.enableAICopy ? 'block' : 'none';
+                }
+                const aiStyleInput = document.getElementById('edit-ai-style');
+                if (aiStyleInput) {
+                    aiStyleInput.value = page.aiStyle || 'professional';
+                }
+                const aiKeywordsInput = document.getElementById('edit-ai-keywords');
+                if (aiKeywordsInput) {
+                    aiKeywordsInput.value = page.aiKeywords || '';
+                }
+                
                 editModal.style.display = 'flex';
             }
         } else if (event.target.classList.contains('delete-page-btn')) {
@@ -499,6 +526,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const telephone = document.getElementById('edit-telephone').value;
             const priceRange = document.getElementById('edit-pricerange').value;
             const openingHours = document.getElementById('edit-openinghours').value;
+            const enableAICopy = document.getElementById('edit-enable-ai-copy') ? document.getElementById('edit-enable-ai-copy').checked : false;
+            const aiStyle = document.getElementById('edit-ai-style') ? document.getElementById('edit-ai-style').value : 'professional';
+            const aiKeywords = document.getElementById('edit-ai-keywords') ? document.getElementById('edit-ai-keywords').value : '';
 
             try {
                 const response = await fetch('/api/update-page', {
@@ -515,7 +545,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         zipCode,
                         telephone,
                         priceRange,
-                        openingHours
+                        openingHours,
+                        enableAICopy,
+                        aiStyle,
+                        aiKeywords
                     })
                 });
 

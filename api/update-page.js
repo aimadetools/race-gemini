@@ -10,6 +10,8 @@ import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { query } from '../db/index.js';
 import { getSchemaType } from '../lib/schema.js';
+import { parseOpeningHours } from '../lib/time-helpers.js';
+import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 
 function getGeminiModel() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -28,6 +30,51 @@ async function generateAIContent(geminiModel, prompt, defaultValue) {
         await logError(aiError, `Update Page API - Error generating AI content for prompt: "${prompt.substring(0, 50)}..."`);
         return defaultValue;
     }
+}
+
+function generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials = []) {
+    const schema = {
+        "@context": "http://schema.org",
+        "@type": getSchemaType(service),
+        "name": businessName,
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": town,
+        },
+        "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ' ' + town)}`,
+        "url": `https://www.localseogen.com/${slugify(service, { lower: true, strict: true })}-in-${slugify(town, { lower: true, strict: true })}.html`,
+        "telephone": telephone || "",
+        "priceRange": priceRange || "",
+        "openingHoursSpecification": openingHours ? parseOpeningHours(openingHours) : [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "17:00"
+            }
+        ],
+        "servesCuisine": service,
+        "description": `Expert ${service} services in ${town} by ${businessName}.`,
+        "image": "https://www.localseogen.com/images/logo.svg",
+        "areaServed": {
+            "@type": "State",
+            "name": town
+        }
+    };
+
+    if (testimonials && testimonials.length > 0) {
+        const schemaReviews = generateSchemaReviews(testimonials);
+        schema.review = schemaReviews.review;
+        schema.aggregateRating = schemaReviews.aggregateRating;
+    }
+
+    return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 }
 
 export default async function handler(req, res, currentKvClient) {
@@ -63,7 +110,8 @@ export default async function handler(req, res, currentKvClient) {
         priceRange,
         openingHours,
         enableAICopy,
-        aiStyle
+        aiStyle,
+        aiKeywords
     } = req.body;
 
     if (!pageId || !businessName || !service || !town || !zipCode) {
@@ -130,29 +178,66 @@ export default async function handler(req, res, currentKvClient) {
         const resolvedServiceSlug = slugify(escapedService, { lower: true, strict: true });
         const resolvedTownSlug = slugify(escapedTown, { lower: true, strict: true });
 
-        const metaDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
-        const ogDescription = metaDescription;
-        const twitterDescription = metaDescription;
+        // Fetch testimonials for the user
+        const testimonialsResult = await query(
+            'SELECT author_name, author_avatar, rating, review_text, review_date FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
+            [userId]
+        );
+        const testimonials = testimonialsResult.rows || [];
+        const testimonialsSectionHtml = renderTestimonialsSection(testimonials);
 
-        const localBusinessSchema = `
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "${getSchemaType(escapedService)}",
-  "name": "${escapedBusinessName}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "${escapedTown}"
-  },
-  "url": "https://www.localseogen.com/${resolvedServiceSlug}-in-${resolvedTownSlug}.html",
-  "description": "Expert ${escapedService} services in ${escapedTown} by ${escapedBusinessName}.",
-  "image": "${logoUrl || 'https://www.localseogen.com/images/logo.svg'}"
-}
-</script>
-        `.trim();
+        const geminiModel = getGeminiModel();
+
+        let aiContent = '';
+        let metaDescription = '';
+        let ogDescription = '';
+        let twitterDescription = '';
+
+        if (enableAICopy && geminiModel) {
+            try {
+                let prompt = `Write 2-3 paragraphs of marketing copy in a ${aiStyle || 'professional'} tone for a business called "${escapedBusinessName}" that provides "${escapedService}" in "${escapedTown}". Focus on why a customer should choose them.`;
+                if (aiKeywords) {
+                    prompt += ` Incorporate the following keywords/instructions: ${aiKeywords}.`;
+                }
+                aiContent = await generateAIContent(geminiModel, prompt, getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown));
+
+                const metaPrompt = `Write a concise and compelling meta description (around 150-160 characters) for a business called "${escapedBusinessName}" that offers "${escapedService}" in "${escapedTown}". Highlight key benefits and encourage clicks.`;
+                metaDescription = await generateAIContent(geminiModel, metaPrompt, `Find the best ${escapedService} services in ${escapedTown} with ${escapedBusinessName}. Quality service guaranteed.`);
+                if (metaDescription.length > 160) {
+                    metaDescription = metaDescription.substring(0, 157) + '...';
+                } else if (metaDescription.length < 50) {
+                    metaDescription = `Get expert ${escapedService} services in ${escapedTown} from ${escapedBusinessName}. Contact us today for a free quote!`;
+                }
+
+                const ogPrompt = `Craft an engaging Open Graph description (up to 200 characters) for a shared link about "${escapedBusinessName}'s ${escapedService} services in ${escapedTown}". Focus on attracting clicks on social media.`;
+                ogDescription = await generateAIContent(geminiModel, ogPrompt, `Discover ${escapedBusinessName}'s top-rated ${escapedService} services in ${escapedTown}. Click to learn more and get a free quote!`);
+                if (ogDescription.length > 200) {
+                    ogDescription = ogDescription.substring(0, 197) + '...';
+                }
+
+                const twitterPrompt = `Write a compelling Twitter card description (up to 200 characters) for a tweet promoting "${escapedBusinessName}'s ${escapedService} services in ${escapedTown}". Encourage retweets and engagement.`;
+                twitterDescription = await generateAIContent(geminiModel, twitterPrompt, `Need ${escapedService} in ${escapedTown}? ${escapedBusinessName} offers reliable service. Get a free quote today! #${resolvedServiceSlug} #${resolvedTownSlug}`);
+                if (twitterDescription.length > 200) {
+                    twitterDescription = twitterDescription.substring(0, 197) + '...';
+                }
+            } catch (aiError) {
+                console.error('Error generating AI content:', aiError);
+                await logError(aiError, 'Update Page - AI Content Generation Error', 'update_page_error.log');
+                aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
+                metaDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+                ogDescription = metaDescription;
+                twitterDescription = metaDescription;
+            }
+        } else {
+            aiContent = getFallbackMarketingCopy(escapedBusinessName, escapedService, escapedTown);
+            metaDescription = `Get expert ${escapedService} in ${escapedTown} from ${escapedBusinessName}. We provide top-quality ${escapedService} with reliable service. Contact us today for a free quote!`;
+            ogDescription = metaDescription;
+            twitterDescription = metaDescription;
+        }
+
+        const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
 
         const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName;
-        const aiContentValue = '<p>Contact us today for a free estimate!</p>';
 
         const resolvedPhone = telephone || '';
         const resolvedPriceRange = priceRange || 'Standard';
@@ -168,10 +253,11 @@ export default async function handler(req, res, currentKvClient) {
             .replace(/{{twitterDescription}}/g, twitterDescription)
             .replace(/{{primaryColor}}/g, primaryColorValue)
             .replace(/{{agencyLogo}}/g, agencyLogoHtml)
-            .replace(/{{ai_content}}/g, aiContentValue)
+            .replace(/{{ai_content}}/g, aiContent)
             .replace(/{{service_slug}}/g, resolvedServiceSlug)
             .replace(/{{town_slug}}/g, resolvedTownSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
+            .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
             .replace(/{{telephone}}/g, resolvedPhone)
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
@@ -191,8 +277,9 @@ export default async function handler(req, res, currentKvClient) {
                  opening_hours = $8, 
                  enable_ai_copy = $9, 
                  ai_style = $10,
+                 ai_keywords = $11,
                  updated_at = CURRENT_TIMESTAMP
-             WHERE id = $11`,
+             WHERE id = $12`,
             [
                 pageContent,
                 escapedBusinessName,
@@ -204,6 +291,7 @@ export default async function handler(req, res, currentKvClient) {
                 openingHours || null,
                 enableAICopy || false,
                 aiStyle || null,
+                aiKeywords || null,
                 pageId
             ]
         );
@@ -219,6 +307,7 @@ export default async function handler(req, res, currentKvClient) {
             openingHours: openingHours || null,
             enableAICopy: enableAICopy || false,
             aiStyle: aiStyle || null,
+            aiKeywords: aiKeywords || null,
             updatedAt: new Date().toISOString()
         };
 

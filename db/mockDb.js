@@ -412,7 +412,7 @@ export const originalMockQuery = async (text, params) => {
     }
 
     if (textLower.includes('update seo_pages')) {
-        if (textLower.includes('where id = $11')) {
+        if (textLower.includes('where id = $12')) {
             const [
                 content,
                 business_name,
@@ -424,6 +424,7 @@ export const originalMockQuery = async (text, params) => {
                 opening_hours,
                 enable_ai_copy,
                 ai_style,
+                ai_keywords,
                 id
             ] = params;
             const page = mockSeoPages.find(p => p.id === id);
@@ -438,6 +439,7 @@ export const originalMockQuery = async (text, params) => {
                 page.opening_hours = opening_hours;
                 page.enable_ai_copy = enable_ai_copy;
                 page.ai_style = ai_style;
+                page.ai_keywords = ai_keywords;
                 page.updated_at = new Date();
                 return { rows: [page] };
             }

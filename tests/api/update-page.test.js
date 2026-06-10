@@ -48,7 +48,8 @@ describe('Update Page API', () => {
                 priceRange: '$$',
                 openingHours: 'Mo-Fr 08:00-18:00',
                 enableAICopy: true,
-                aiStyle: 'friendly'
+                aiStyle: 'friendly',
+                aiKeywords: 'family-owned, 24/7 service'
             },
             headers: {},
         };
@@ -139,7 +140,10 @@ describe('Update Page API', () => {
                 businessName: 'Super Plumber',
                 service: 'Plumbing',
                 town: 'Austin',
-                zipCode: '78701'
+                zipCode: '78701',
+                enableAICopy: true,
+                aiStyle: 'friendly',
+                aiKeywords: 'family-owned, 24/7 service'
             })
         }));
     });
