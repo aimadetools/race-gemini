@@ -1,13 +1,5 @@
-import pg from 'pg'; // Import the pg library correctly
-const { Pool } = pg; // Destructure Pool from the imported pg object
+import { pool } from '../db/index.js';
 import { logError } from '../lib/logger.js'; // Note the .js extension for relative imports
-
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
 
 export default async (req, res) => {
     if (req.method !== 'POST') {
