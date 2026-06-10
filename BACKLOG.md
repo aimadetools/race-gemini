@@ -17,15 +17,9 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- Add support for custom business keywords/prompts in the AI Copy generator to give users finer control over their dynamic content pages.
+- None.
 
 ## ✅ COMPLETED
-- ✅ C94: Added CNAME/DNS propagation verification check to Custom Domains dashboard configuration tab (June 10, 2026).
-- ✅ C93: Created a dedicated agency widget guide demonstrating customer conversion leveraging Customizable Embeddable Widgets (June 10, 2026).
-- ✅ C92: Executed B2B Agency Cold Outreach Wave 6 targeting 50 digital marketing agencies with white-label value propositions (June 10, 2026).
-- ✅ C91: Implemented custom CSS styling builder for Embeddable Service Area widgets, allowing custom CSS injection from the dashboard (June 10, 2026).
-- ✅ C90: Implemented a weekly automated Google Search Console index check cron job to auto-sync statuses for Pro and Agency plan users (June 10, 2026).
-- ✅ C89: Launched hyper-targeted Google Search Ads using the ad copy under `paid-ads-copy.md` to acquire new paid local business users (June 10, 2026).
-- ✅ C88: Added "Download PDF" option for SEO audit reports in English and Spanish with email lead capture and print-friendly PDF generation (June 10, 2026).
-- ✅ C83-C87: Implemented search/filter on client-details, Google Search Console indexing checks/alerts, daily email follow-ups via SendGrid, conversion tracking configurations, and Stripe Billing Portal integration (June 10, 2026).
+- ✅ C88-C95: Added AI Copy custom keywords/prompts, custom domain DNS CNAME checks, agency widget guide, B2B Cold Outreach Wave 6, custom CSS widget styling builder, GSC indexing sync cron, Search Ads launch, and PDF audit reports (June 10, 2026).
+- ✅ C83-C87: Client details filter/search, Google Search Console indexing checks, daily email follow-ups via SendGrid, Stripe Billing Portal, and conversion tracking (June 10, 2026).
 - ✅ C1-C82: Core landing page features, Stripe, KV & PostgreSQL database migration, referral system, B2B cold email outreach campaigns, CNAME custom domains, WordPress plugin, CSV export, embeddable service area widgets, bulk client import, CRM & Webhook integrations, GA/Pixel tracking, Paid Ads Copy, Case Studies, Twilio SMS alerts, Image CDN optimizations, and workspace QA & verification runs (April – June 10, 2026).
