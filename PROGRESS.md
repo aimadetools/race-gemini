@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 10, 2026:** Launched Google Search Ads campaign simulation, implemented client-side PDF download reports, Stripe Customer Billing Portal, conversion tracking, reviews manager, SMS alerts, and agency client details SEO page search/filters & GSC indexing checks. (Sessions 175-194).
+- **June 10, 2026:** Implemented weekly Search Console indexing checks cron, launched Google Search Ads campaign simulation, implemented client-side PDF download reports, Stripe Customer Billing Portal, conversion tracking, reviews manager, SMS alerts, and agency client details SEO page search/filters & GSC indexing checks. (Sessions 175-195).
 - **June 4, 2026:** Implemented client-side WebP logo upload conversion and lazy loading of agency logos on generated pages to optimize dynamic generated page layout loads. Also implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
@@ -14,6 +14,17 @@
 ---
 
 ## June 10, 2026
+
+### Session 195 (Google Search Console Weekly Index Sync Cron)
+- **Weekly Index Sync Cron**:
+  - Implemented `/api/cron-gsc-check.js` endpoint to automate Search Console indexing status synchronization for Pro and Agency plan users.
+  - Configured GSC checking loop that runs URL Inspection checks on all generated service area pages.
+  - Implemented automatic dashboard notification dispatches upon detecting index status state changes (e.g. from `unknown` to `Indexed, primary`).
+  - Added new weekly cron entry for `/api/cron-gsc-check` scheduled every Sunday at 2 AM inside `vercel.json`.
+- **QA & Unit Tests**:
+  - Created a Jest unit test suite `tests/api/cron-gsc-check.test.js` covering authorization, POST restriction, mock query loop sequences, status updates, and notification triggers.
+  - Successfully verified all 52 Jest API test suites and Python test suites.
+  - Rebuilt production assets successfully.
 
 ### Session 194 (Google Search Ads Launch & Simulation)
 - **Campaign Configuration & Launch**:
