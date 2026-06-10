@@ -399,8 +399,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event delegation for Edit and Delete buttons
-    generatedPagesTableBody.addEventListener('click', (event) => {
+    // Event delegation for Edit, Delete, and Indexing Check buttons
+    generatedPagesTableBody.addEventListener('click', async (event) => {
         if (event.target.classList.contains('edit-page-btn')) {
             const pageId = event.target.getAttribute('data-id');
             const page = userPages.find(p => p.pageId === pageId);
@@ -419,6 +419,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const pageId = event.target.getAttribute('data-id');
             document.getElementById('delete-page-id').value = pageId;
             deleteModal.style.display = 'flex';
+        } else {
+            const checkBtn = event.target.closest('.check-indexing-btn');
+            if (checkBtn) {
+                const pageId = checkBtn.getAttribute('data-id');
+                const icon = checkBtn.querySelector('i');
+                
+                if (icon.classList.contains('fa-spin')) return; // already loading
+                
+                icon.classList.add('fa-spin');
+                checkBtn.disabled = true;
+                
+                try {
+                    const response = await fetch('/api/check-indexing-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${jwtToken}`
+                        },
+                        body: JSON.stringify({ pageId })
+                    });
+                    
+                    if (response.ok) {
+                        const resData = await response.json();
+                        
+                        const page = userPages.find(p => p.pageId === pageId);
+                        if (page) {
+                            page.indexingStatus = resData.indexingStatus;
+                            page.lastIndexingCheck = resData.lastIndexingCheck;
+                        }
+                        
+                        renderFilteredPages();
+                    } else {
+                        const errData = await response.json();
+                        alert(`Error checking indexing status: ${errData.message || 'Failed request.'}`);
+                        icon.classList.remove('fa-spin');
+                        checkBtn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error checking indexing status:', error);
+                    alert('An unexpected error occurred while checking indexing status.');
+                    icon.classList.remove('fa-spin');
+                    checkBtn.disabled = false;
+                }
+            }
         }
     });
 
@@ -814,12 +858,36 @@ document.addEventListener('DOMContentLoaded', () => {
         if (filtered.length > 0) {
             filtered.forEach(page => {
                 const row = generatedPagesTableBody.insertRow();
+                
+                const getIndexingBadge = (status) => {
+                    const statusLower = (status || '').toLowerCase();
+                    if (statusLower.includes('indexed') || statusLower === 'pass' || statusLower === 'indexed, primary') {
+                        return `<span class="badge badge-indexed" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> Indexed</span>`;
+                    }
+                    if (statusLower.includes('crawled') || statusLower === 'neutral') {
+                        return `<span class="badge badge-crawled" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-history"></i> Crawled</span>`;
+                    }
+                    if (statusLower.includes('excluded') || statusLower.includes('noindex') || statusLower === 'fail') {
+                        return `<span class="badge badge-excluded" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Excluded</span>`;
+                    }
+                    return `<span class="badge badge-unknown" style="background: rgba(156, 163, 175, 0.15); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-question-circle"></i> Unknown</span>`;
+                };
+
                 row.innerHTML = `
                     <td>${page.businessName}</td>
                     <td>${page.service}</td>
                     <td>${page.town}</td>
                     <td>${page.views || 0}</td>
                     <td>${page.uniqueVisitors || 0}</td>
+                    <td>
+                        <div style="display: inline-flex; align-items: center; flex-wrap: nowrap;">
+                            ${getIndexingBadge(page.indexingStatus)}
+                            <button class="check-indexing-btn" data-id="${page.pageId}" title="Check actual Google indexing status" style="background: none; border: none; color: #60a5fa; cursor: pointer; padding: 4px 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; transition: background 0.2s; margin-left: 6px;">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        ${page.lastIndexingCheck ? `<div style="font-size: 0.7rem; color: #6b7280; margin-top: 4px; white-space: nowrap;">Checked: ${new Date(page.lastIndexingCheck).toLocaleDateString()}</div>` : ''}
+                    </td>
                     <td>
                         <a href="${page.url}" target="_blank" class="button button-small">View</a>
                         <button class="button button-small button-secondary edit-page-btn" data-id="${page.pageId}">Edit</button>
@@ -828,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             });
         } else {
-            generatedPagesTableBody.innerHTML = '<tr><td colspan="6">No matching pages found. Try adjusting your filters.</td></tr>';
+            generatedPagesTableBody.innerHTML = '<tr><td colspan="7">No matching pages found. Try adjusting your filters.</td></tr>';
         }
         
         // Update active filter info bar

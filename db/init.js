@@ -11,8 +11,9 @@ import { addCustomDomainToUsers } from './migrations/add_custom_domain_to_users.
 import { addWebhookAndTrackingColumnsToUsers } from './migrations/add_webhook_and_tracking_columns_to_users.js';
 import { addSmsColumnsToUsers } from './migrations/add_sms_columns_to_users.js';
 import { createTestimonialsTable } from './migrations/create_testimonials_table.js';
-import { addStripeCustomerIdToUsers } from './migrations/add_stripe_customer_id_to_users.js';
 import { addFollowupColumnsToLeads } from './migrations/add_followup_columns_to_leads.js';
+import { addStripeCustomerIdToUsers } from './migrations/add_stripe_customer_id_to_users.js';
+import { addIndexingStatusToSeoPages } from './migrations/add_indexing_status_to_seo_pages.js';
 
 export async function initializeDatabase() {
   try {
@@ -60,6 +61,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring follow-up columns exist in leads table...');
     await addFollowupColumnsToLeads();
+
+    console.log('Ensuring indexing status columns exist in seo_pages table...');
+    await addIndexingStatusToSeoPages();
 
     console.log('Database initialization completed.');
   } catch (error) {
