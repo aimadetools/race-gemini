@@ -110,5 +110,8 @@
     "generate_submit_button": "Generate Pages",
     "generate_loading_message": "Generating your pages... This may take a moment.",
     "header_toggle_nav_menu": "Toggle navigation menu",
-    "header_close_mobile_menu": "Close mobile menu"
+    "header_close_mobile_menu": "Close mobile menu",
+    "roi_calculator_section_title": "Calculate Your Local SEO ROI & Revenue Potential",
+    "roi_calculator_section_subtitle": "Curious how much traffic, leads, and revenue you're missing out on? Use our interactive ROI & Lead Calculator to simulate different industries, customize conversion rates, and find the perfect credit package for your business.",
+    "roi_calculator_button": "Calculate Your ROI Now"
 }

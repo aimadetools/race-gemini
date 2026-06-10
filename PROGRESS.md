@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 10, 2026:** Implemented an interactive local SEO ROI & Lead Calculator, custom slider styling, collapsible settings, sitemap integration, and generator form redirect parameter mapping. Also implemented AI copy custom keywords, widget custom CSS styling builder, GSC indexing sync cron, Search Ads simulation, PDF reports, Stripe billing, SMS alerts, DNS verification, and B2B cold outreach wave 6, refactored capture-email API to use a centralized database pool, created a full unit test suite for email captures, and conducted workspace health and QA validation tests. (Sessions 175-205).
+- **June 10, 2026:** Implemented an interactive local SEO ROI & Lead Calculator, custom slider styling, collapsible settings, sitemap integration, and generator form redirect parameter mapping. Also implemented AI copy custom keywords, widget custom CSS styling builder, GSC indexing sync cron, Search Ads simulation, PDF reports, Stripe billing, SMS alerts, DNS verification, B2B cold outreach wave 6, refactored capture-email API to use a centralized database pool, created a full unit test suite for email captures, enabled Stripe checkout promo codes support, integrated homepage Local SEO ROI promo section, compiled Spanish static pages, and validated workspace health and unit test runs. (Sessions 175-207).
 - **June 4, 2026:** Implemented client-side WebP logo upload conversion and lazy loading of agency logos on generated pages to optimize dynamic generated page layout loads. Also implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
 - **May 30, 2026:** Decreased default signup credits from 50 to 5 to protect trial limits, and added 401 redirect logic to the referral dashboard.
@@ -14,6 +14,16 @@
 ---
 
 ## June 10, 2026
+
+### Session 207 (Stripe Promo Codes, Homepage ROI Section & Translation Compilation)
+- **Features & Growth**:
+  - Enabled Stripe promotion codes/coupons at checkout by adding `allow_promotion_codes: true` to Stripe Checkout session configurations in `api/checkout.js` (for both one-time credit pack purchases and recurring plans) and `api/create-subscription-checkout.js`.
+  - Added a highly prominent Local SEO ROI & Lead Calculator promotional section directly to the homepage (`index.html`) to increase client conversion.
+  - Added localization keys and translations for the new ROI homepage section in `locales/en.json` and `locales/es.json`.
+  - Compiled and synchronized all static HTML translation files (including `es/index.html`) by executing the `scripts/translate_static_html.py` build script.
+  - Re-compiled all production minified JS and CSS assets successfully via `npm run build`.
+- **QA Verification & Testing**:
+  - Executed all 55 Jest API and unit test suites (369 tests) successfully with a 100% pass rate.
 
 ### Session 206 (Workspace Health, QA Verification & Maintenance)
 - **Verification & Maintenance**:

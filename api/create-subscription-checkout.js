@@ -45,6 +45,7 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'subscription',
+                allow_promotion_codes: true,
                 success_url: `https://www.localseogen.com/agency-dashboard.html?subscription=success`,
                 cancel_url: `https://www.localseogen.com/agency-billing.html`,
                 metadata: {

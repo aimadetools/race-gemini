@@ -114,6 +114,7 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'payment',
+                allow_promotion_codes: true,
                 success_url: `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${baseUrl}/pricing.html`, // Redirect back to pricing page
                 client_reference_id: userId,
@@ -152,6 +153,7 @@ export default async (req, res) => {
                     },
                 ],
                 mode: 'subscription', // Use subscription mode for recurring payments
+                allow_promotion_codes: true,
                 success_url: `${baseUrl}/agency-subscription.html?session_id={CHECKOUT_SESSION_ID}`, // Redirect to agency success page
                 cancel_url: `${baseUrl}/agency-partnerships.html`, // Redirect back to agency pricing page
                 client_reference_id: userId,

@@ -110,5 +110,8 @@
     "generate_submit_button": "Generar Páginas",
     "generate_loading_message": "Generando tus páginas... Esto puede tardar un momento.",
     "header_toggle_nav_menu": "Alternar menú de navegación",
-    "header_close_mobile_menu": "Cerrar menú móvil"
+    "header_close_mobile_menu": "Cerrar menú móvil",
+    "roi_calculator_section_title": "Calcula tu ROI de SEO Local y Potencial de Ingresos",
+    "roi_calculator_section_subtitle": "¿Tiene curiosidad por saber cuánto tráfico, clientes potenciales e ingresos se está perdiendo? Utilice nuestra calculadora interactiva de ROI y clientes potenciales para simular diferentes industrias, personalizar las tasas de conversión y encontrar el paquete de créditos perfecto para su negocio.",
+    "roi_calculator_button": "Calcule su ROI ahora"
 }
