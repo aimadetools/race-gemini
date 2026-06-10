@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import slugify from 'slugify';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
+import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
+import { getSchemaType } from '../lib/schema.js';
 
 const templatePath = path.join(process.cwd(), 'page-template.html');
 
@@ -26,7 +28,7 @@ export default async (req, res) => {
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { businessName, service, town, primaryColor } = req.query;
+    const { businessName, service, town, primaryColor, telephone, priceRange, openingHours } = req.query;
 
     if (!businessName || !service || !town) {
         return res.status(400).send('<h1>Error: Missing required query parameters: businessName, service, town</h1>');
@@ -36,6 +38,10 @@ export default async (req, res) => {
     const escapedService = escapeHtml(service.trim());
     const escapedTown = escapeHtml(town.trim());
     const resolvedColor = escapeHtml(primaryColor ? primaryColor.trim() : '#3b82f6');
+    const escapedTelephone = escapeHtml(telephone ? telephone.trim() : '(555) 123-4567');
+    const escapedPriceRange = escapeHtml(priceRange ? priceRange.trim() : '$$');
+    const escapedOpeningHours = escapeHtml(openingHours ? openingHours.trim() : 'Mon-Fri: 9:00 AM - 5:00 PM');
+    const phoneCtaDisplay = 'inline-block';
 
     try {
         if (!fs.existsSync(templatePath)) {
@@ -52,19 +58,50 @@ export default async (req, res) => {
         const ogDescription = `Discover ${escapedBusinessName}'s premier ${escapedService} services in ${escapedTown}. Get a free estimate today!`;
         const twitterDescription = `Need ${escapedService} in ${escapedTown}? Choose ${escapedBusinessName} for expert service.`;
 
-        // Simple mock local business schema
-        const localBusinessSchema = `<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "LocalBusiness",
-  "name": "${escapedBusinessName}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "${escapedTown}"
-  },
-  "url": "https://www.localseogen.com/preview"
-}
-</script>`;
+        // Generate personalized mock testimonials
+        const defaultTestimonials = [
+            {
+                author_name: 'John D.',
+                author_avatar: '',
+                rating: 5,
+                review_text: `Excellent service! ${escapedBusinessName} resolved our ${escapedService} issue in ${escapedTown} quickly and professionally.`,
+                review_date: new Date().toISOString()
+            },
+            {
+                author_name: 'Sarah M.',
+                author_avatar: '',
+                rating: 5,
+                review_text: `Highly recommend ${escapedBusinessName} for anyone needing ${escapedService} in ${escapedTown}. Very prompt and fair pricing.`,
+                review_date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+            }
+        ];
+
+        const testimonialsSectionHtml = renderTestimonialsSection(defaultTestimonials);
+        const schemaReviews = generateSchemaReviews(defaultTestimonials);
+
+        // Simple mock local business schema with testimonials
+        const schema = {
+            "@context": "http://schema.org",
+            "@type": getSchemaType(escapedService),
+            "name": escapedBusinessName,
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": escapedTown
+            },
+            "url": "https://www.localseogen.com/preview",
+            "telephone": escapedTelephone,
+            "priceRange": escapedPriceRange,
+            "openingHours": escapedOpeningHours,
+            "description": `Expert ${escapedService} services in ${escapedTown} by ${escapedBusinessName}.`,
+            "image": "https://www.localseogen.com/images/logo.svg"
+        };
+
+        if (schemaReviews && schemaReviews.review) {
+            schema.review = schemaReviews.review;
+            schema.aggregateRating = schemaReviews.aggregateRating;
+        }
+
+        const localBusinessSchema = `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 
         let pageContent = template
             .replace(/{{businessName}}/g, escapedBusinessName)
@@ -78,7 +115,13 @@ export default async (req, res) => {
             .replace(/{{service_slug}}/g, serviceSlug)
             .replace(/{{town_slug}}/g, townSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
-            .replace(/{{pageId}}/g, 'preview-page');
+            .replace(/{{pageId}}/g, 'preview-page')
+            .replace(/{{agencyLogo}}/g, escapedBusinessName)
+            .replace(/{{telephone}}/g, escapedTelephone)
+            .replace(/{{priceRange}}/g, escapedPriceRange)
+            .replace(/{{openingHours}}/g, escapedOpeningHours)
+            .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+            .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml);
 
         // Inject the watermark banner right after <body> tag
         const bannerHtml = `
