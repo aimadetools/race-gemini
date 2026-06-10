@@ -43,6 +43,10 @@
     {
       "path": "/api/cron-followup",
       "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron-gsc-check",
+      "schedule": "0 2 * * 0"
     }
   ]
 }
