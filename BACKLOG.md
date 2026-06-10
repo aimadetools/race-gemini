@@ -14,10 +14,12 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Execute B2B Agency Cold Outreach Wave 6 targeting 50 digital marketing agencies with white-label value propositions.
+- Create a dedicated guide/post demonstrating how local agencies leverage the Customizable Embeddable Widgets for customer conversion.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Add a CNAME/DNS propagation verification check to the Custom Domains configuration tab to provide immediate feedback on domain mapping status.
+- Add support for custom business keywords/prompts in the AI Copy generator to give users finer control over their dynamic content pages.
 
 ## ✅ COMPLETED
 - ✅ C91: Implemented custom CSS styling builder for Embeddable Service Area widgets, allowing custom CSS injection from the dashboard (June 10, 2026).
