@@ -58,6 +58,20 @@ export const originalMockQuery = async (text, params) => {
                 const page = mockSeoPages.find(p => p.slug === slug || p.file_name === fileName);
                 return { rows: page ? [page] : [] };
             }
+            if (textLower.includes('where user_id = $1 and id != $2')) {
+                const userId = params[0]?.toString();
+                const excludeId = params[1];
+                const service = params[2];
+                let rows = mockSeoPages.filter(p => p.user_id?.toString() === userId && p.id !== excludeId);
+                rows.sort((a, b) => {
+                    const aMatch = a.service === service ? 0 : 1;
+                    const bMatch = b.service === service ? 0 : 1;
+                    if (aMatch !== bMatch) return aMatch - bMatch;
+                    return (b.created_at || 0) - (a.created_at || 0);
+                });
+                rows = rows.slice(0, 12);
+                return { rows };
+            }
             if (textLower.includes('where user_id = $1')) {
                 const userId = params[0]?.toString();
                 let rows = mockSeoPages.filter(p => p.user_id?.toString() === userId);

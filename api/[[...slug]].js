@@ -134,6 +134,82 @@ export default async (req, res, currentKvClient) => {
             openingHours: pageRow.opening_hours
         };
 
+        // Query up to 12 other pages for this user to build Nearby Service Areas link pool
+        const otherPagesResult = await query(
+            `SELECT service, town FROM seo_pages 
+             WHERE user_id = $1 AND id != $2 
+             ORDER BY CASE WHEN service = $3 THEN 0 ELSE 1 END, created_at DESC 
+             LIMIT 12`,
+            [resolvedClientId, pageIdToFind, page.service]
+        );
+
+        let nearbyAreasHtml = '';
+        if (otherPagesResult && otherPagesResult.rows && otherPagesResult.rows.length > 0) {
+            let linksHtml = '';
+            for (const row of otherPagesResult.rows) {
+                const rowServiceSlug = slugify(row.service, { lower: true, strict: true });
+                const rowTownSlug = slugify(row.town, { lower: true, strict: true });
+                const linkUrl = isCustomDomain 
+                    ? `/${rowServiceSlug}-in-${rowTownSlug}.html`
+                    : `/${resolvedClientId}/${rowServiceSlug}-in-${rowTownSlug}.html`;
+                
+                linksHtml += `
+      <a class="nearby-areas-link" href="${linkUrl}">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>${row.service} in ${row.town}</span>
+      </a>`;
+            }
+
+            nearbyAreasHtml = `
+<!-- Nearby Service Areas Internal Linking Pool -->
+<section class="nearby-areas">
+  <style>
+    .nearby-areas {
+      background-color: var(--bg-alt, #f9fafb);
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--border-color, #e5e7eb);
+      border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+    .nearby-areas h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: var(--text-color, #1f2937);
+    }
+    .nearby-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .nearby-areas-link {
+      color: var(--primary-color, #007bff);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .nearby-areas-link:hover {
+      color: #2563eb;
+      transform: translateX(4px);
+    }
+    .nearby-areas-link i {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+  </style>
+  <div class="container">
+    <h3>Nearby Service Areas</h3>
+    <div class="nearby-grid">
+      ${linksHtml.trim()}
+    </div>
+  </div>
+</section>
+`;
+        }
+
         let template;
         try {
             template = fs.readFileSync(path.join(process.cwd(), 'page-template.html'), 'utf8');
@@ -241,6 +317,10 @@ ${JSON.stringify(schemaObj, null, 2)}
         }
         if (client.fb_pixel_id) {
             trackingScripts += `\n<!-- Facebook Pixel Code -->\n<script>\n  !function(f,b,e,v,n,t,s)\n  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?\n  n.callMethod.apply(n,arguments):n.queue.push(arguments)};\n  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\n  n.queue=[];t=b.createElement(e);t.async=!0;\n  t.src=v;s=b.getElementsByTagName(e)[0];\n  s.parentNode.insertBefore(t,s)}(window, document,'script',\n  'https://connect.facebook.net/en_US/fbevents.js');\n  fbq('init', '${client.fb_pixel_id}');\n  fbq('track', 'PageView');\n</script>\n<noscript><img height="1" width="1" style="display:none"\n  src="https://www.facebook.com/tr?id=${client.fb_pixel_id}&ev=PageView&noscript=1"\n/></noscript>\n<!-- End Facebook Pixel Code -->\n`;
+        }
+
+        if (nearbyAreasHtml) {
+            pageContent = pageContent.replace('<footer>', `${nearbyAreasHtml}\n<footer>`);
         }
 
         if (trackingScripts) {

@@ -10,7 +10,7 @@ jest.mock('@vercel/kv', () => ({
 jest.mock('slugify', () => jest.fn((text) => text.toLowerCase().replace(/\s/g, '-')));
 
 jest.mock('fs', () => ({
-  readFileSync: jest.fn().mockReturnValue('<html>{{businessName}} {{service}} {{town}} {{metaDescription}} {{ogDescription}} {{twitterDescription}} {{primaryColor}} {{agencyLogo}} {{ai_content}} {{localBusinessSchema}}</html>'),
+  readFileSync: jest.fn().mockReturnValue('<html>{{businessName}} {{service}} {{town}} {{metaDescription}} {{ogDescription}} {{twitterDescription}} {{primaryColor}} {{agencyLogo}} {{ai_content}} {{localBusinessSchema}} <footer></footer></html>'),
 }));
 
 import handler from '../../api/[[...slug]].js';
@@ -214,4 +214,55 @@ describe('[[...slug]] API Wildcard Route', () => {
 
     expect(res.status).toHaveBeenCalledWith(404);
   });
+
+  test('should query other pages and render Nearby Service Areas linking section', async () => {
+    const clientId = 'client123';
+    req.query.slug = [clientId, 'plumbing-in-london.html'];
+
+    addMockUser({
+      id: clientId,
+      name: 'Test Client',
+      email: 'client@example.com',
+      is_agency: false,
+    });
+
+    addMockSeoPage({
+      id: 'page1',
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
+      service: 'Plumbing',
+      town: 'London',
+      file_name: 'plumbing-in-london.html',
+      created_at: new Date('2026-05-28T14:00:00Z'),
+    });
+
+    addMockSeoPage({
+      id: 'page2',
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
+      service: 'Plumbing',
+      town: 'Manchester',
+      file_name: 'plumbing-in-manchester.html',
+      created_at: new Date('2026-05-28T15:00:00Z'),
+    });
+
+    addMockSeoPage({
+      id: 'page3',
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
+      service: 'Heating',
+      town: 'Bristol',
+      file_name: 'heating-in-bristol.html',
+      created_at: new Date('2026-05-28T16:00:00Z'),
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Nearby Service Areas'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('/client123/plumbing-in-manchester.html'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('/client123/heating-in-bristol.html'));
+    expect(res.send).not.toHaveBeenCalledWith(expect.stringContaining('href="/client123/plumbing-in-london.html"'));
+  });
 });
+
