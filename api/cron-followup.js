@@ -1,5 +1,6 @@
 import { query } from '../db/index.js';
 import { sendEmail } from '../lib/email.js';
+import { kv } from '@vercel/kv';
 
 function buildFollowupEmailHtml(subject, bodyHtml, ctaText, ctaUrl) {
   return `
@@ -157,6 +158,110 @@ export default async function handler(req, res) {
         WHERE id = $1
       `, [lead.id]);
       sentCount++;
+    }
+
+    // Step 4: Drip sequence for unpaid signups with locked leads
+    const dripUsersResult = await query(`
+      SELECT u.id, u.email, u.created_at, MAX(l.created_at) as last_lead_at
+      FROM users u
+      JOIN leads l ON l.user_id = u.id
+      WHERE u.subscription_status != 'active'
+        AND u.is_agency = false
+        AND l.source = 'landing_page'
+      GROUP BY u.id, u.email, u.created_at
+    `);
+
+    for (const user of dripUsersResult.rows) {
+      const userId = user.id;
+      const userEmail = user.email;
+      const lastLeadAt = new Date(user.last_lead_at);
+
+      // Verify if the user has purchased credits
+      const transactionStrings = await kv.lrange(`user:${userId}:credittransactions`, 0, 100) || [];
+      const creditTransactions = transactionStrings.map(t => {
+        try {
+          return JSON.parse(t);
+        } catch {
+          return {};
+        }
+      });
+      const hasPurchasedCredits = creditTransactions.some(t => t.amount > 0);
+      if (hasPurchasedCredits) {
+        continue; // Paid user, skip
+      }
+
+      // Check user drip step and last drip timestamp in KV
+      const dripStepVal = await kv.get(`user:${userId}:drip_step`);
+      const dripStep = dripStepVal !== null ? parseInt(dripStepVal, 10) : 0;
+      const dripLastAtVal = await kv.get(`user:${userId}:drip_last_at`);
+      const dripLastAt = dripLastAtVal ? new Date(dripLastAtVal) : null;
+
+      let shouldSend = false;
+      let newStep = dripStep;
+      let subject = '';
+      let bodyHtml = '';
+      let ctaText = '';
+      let ctaUrl = '';
+
+      const now = new Date();
+
+      if (dripStep === 0) {
+        // Step 1: Send if the most recent locked lead was captured >= 1 day ago
+        const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        if (lastLeadAt <= oneDayAgo) {
+          shouldSend = true;
+          newStep = 1;
+          subject = `Unlocks waiting: You have new leads in your LocalLeads dashboard!`;
+          bodyHtml = `
+            <p>Hello,</p>
+            <p>We noticed that you have captured new customer leads through your service area landing pages, but your account is currently on the unpaid trial.</p>
+            <p>To view their contact information and start converting these leads into paying customers, you'll need to upgrade to one of our premium plans.</p>
+            <p>Each lead represents a real customer in your target towns looking for your services. Don't let them wait!</p>
+          `;
+          ctaText = 'Unlock My Leads Now';
+          ctaUrl = 'https://www.localseogen.com/dashboard.html';
+        }
+      } else if (dripStep === 1) {
+        // Step 2: Send if the last drip email was sent >= 3 days ago
+        const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+        if (dripLastAt && dripLastAt <= threeDaysAgo) {
+          shouldSend = true;
+          newStep = 2;
+          subject = `Don't let your captured leads go cold`;
+          bodyHtml = `
+            <p>Hello,</p>
+            <p>This is a quick reminder that you still have locked customer leads waiting in your LocalLeads dashboard.</p>
+            <p>In local business, response time is everything. Leads that are left uncontacted for more than a few days quickly go cold. By upgrading today, you can instantly unlock these leads and contact them before they reach out to your competitors.</p>
+            <p>Unlock your leads now and grow your business today.</p>
+          `;
+          ctaText = 'Upgrade & Reveal Leads';
+          ctaUrl = 'https://www.localseogen.com/pricing.html';
+        }
+      } else if (dripStep === 2) {
+        // Step 3: Send if the last drip email was sent >= 3 days ago
+        const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+        if (dripLastAt && dripLastAt <= threeDaysAgo) {
+          shouldSend = true;
+          newStep = 3;
+          subject = `Final reminder: Unlock your leads with 20% off`;
+          bodyHtml = `
+            <p>Hello,</p>
+            <p>We want to help you connect with your captured leads before they disappear. This is your final reminder to unlock your dashboard.</p>
+            <p>For the next 48 hours, we are offering an exclusive 20% discount on all premium plans. Use coupon code <strong>LOCAL20</strong> at checkout to unlock your leads and start ranking across all your local service areas.</p>
+            <p>Don't miss out on these customers.</p>
+          `;
+          ctaText = 'Claim 20% Off & Unlock';
+          ctaUrl = 'https://www.localseogen.com/pricing.html';
+        }
+      }
+
+      if (shouldSend) {
+        const emailHtml = buildFollowupEmailHtml(subject, bodyHtml, ctaText, ctaUrl);
+        await sendEmail(userEmail, subject, emailHtml);
+        await kv.set(`user:${userId}:drip_step`, newStep);
+        await kv.set(`user:${userId}:drip_last_at`, now.toISOString());
+        sentCount++;
+      }
     }
 
     return res.status(200).json({ message: `Success. Sent ${sentCount} follow-up emails.` });
