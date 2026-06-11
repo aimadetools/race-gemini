@@ -1117,6 +1117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initializeWidgetBuilder(data) {
+        const typeSelect = document.getElementById('widget-type-select');
         const layoutSelect = document.getElementById('widget-layout-select');
         const themeSelect = document.getElementById('widget-theme-select');
         const colorInput = document.getElementById('widget-color-input');
@@ -1130,6 +1131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const cssSuccessMsg = document.getElementById('widget-css-success-msg');
         const cssErrorMsg = document.getElementById('widget-css-error-msg');
         const configForm = document.getElementById('widget-config-form');
+
+        const layoutGroup = document.getElementById('service-area-layout-group');
+        const cssGroup = document.getElementById('service-area-css-group');
 
         if (!layoutSelect || !themeSelect || !colorInput || !colorText || !embedCodeTextarea || !previewBox) {
             return;
@@ -1162,6 +1166,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         layoutSelect.addEventListener('change', updateEmbedCodeAndPreview);
         themeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+        if (typeSelect) {
+            typeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+        }
         
         if (cssInput) {
             cssInput.addEventListener('input', updateCssPreview);
@@ -1415,27 +1422,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updateEmbedCodeAndPreview() {
-            const layout = layoutSelect.value;
+            const widgetType = typeSelect ? typeSelect.value : 'service-area';
             const theme = themeSelect.value;
             const color = colorInput.value.replace('#', '');
             const origin = window.location.origin;
 
-            const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}`;
-            
-            let embedCode = '';
-            if (layout === 'badge') {
-                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<script src="${scriptUrl}"></script>`;
+            if (widgetType === 'seo-audit') {
+                if (layoutGroup) layoutGroup.style.display = 'none';
+                if (cssGroup) cssGroup.style.display = 'none';
+
+                const iframeUrl = `${origin}/audit-widget.html?agencyId=${clientId}&theme=${theme}&color=${color}`;
+                embedCodeTextarea.value = `<!-- LocalLeads White-Label SEO Audit Widget Embed -->\n<iframe src="${iframeUrl}" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" title="Local SEO Audit"></iframe>`;
+
+                previewBox.innerHTML = `<iframe src="${iframeUrl}" style="width: 100%; height: 100%; min-height: 350px; border: none; border-radius: 8px;"></iframe>`;
             } else {
-                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+                if (layoutGroup) layoutGroup.style.display = 'flex';
+                if (cssGroup) cssGroup.style.display = 'flex';
+
+                const layout = layoutSelect.value;
+                const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}`;
+                
+                let embedCode = '';
+                if (layout === 'badge') {
+                    embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<script src="${scriptUrl}"></script>`;
+                } else {
+                    embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+                }
+                embedCodeTextarea.value = embedCode;
+
+                // Update style blocks
+                updateBaseCssPreview(theme, layout, colorInput.value);
+                updateCssPreview();
+
+                // Render live preview
+                renderPreview(pages, theme, layout, colorInput.value);
             }
-            embedCodeTextarea.value = embedCode;
-
-            // Update style blocks
-            updateBaseCssPreview(theme, layout, colorInput.value);
-            updateCssPreview();
-
-            // Render live preview
-            renderPreview(pages, theme, layout, colorInput.value);
         }
 
         function renderPreview(pagesList, theme, layout, baseColor) {
