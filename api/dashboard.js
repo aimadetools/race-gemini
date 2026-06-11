@@ -39,7 +39,7 @@ export default async function handler(req, res, currentKvClient) {
 
       // Retrieve generated pages for the user from PostgreSQL
       const pagesResult = await query(
-        `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, updated_at, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, indexing_status, last_indexing_check, primary_color 
+        `SELECT id, file_name, slug, business_name, service, town, zip_code, created_at, updated_at, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, indexing_status, last_indexing_check, primary_color, service_radius, latitude, longitude 
          FROM seo_pages WHERE user_id = $1`,
         [userId]
       );
@@ -68,6 +68,9 @@ export default async function handler(req, res, currentKvClient) {
           aiStyle: row.ai_style,
           aiKeywords: row.ai_keywords,
           primaryColor: row.primary_color,
+          serviceRadius: row.service_radius,
+          latitude: row.latitude,
+          longitude: row.longitude,
           url,
           views: parseInt(views),
           uniqueVisitors: parseInt(uniqueVisitors),

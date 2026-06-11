@@ -11,6 +11,8 @@ import { parseOpeningHours } from '../lib/time-helpers.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { getSchemaType } from '../lib/schema.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
+import { geocodeAddress } from '../lib/geocoding.js';
+import { renderMapSection } from '../lib/map-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -108,6 +110,7 @@ export default async (req, res) => {
         }
 
         const { businessName, services, towns, enableAICopy = false, aiStyle, aiKeywords, primaryColor, telephone, priceRange, openingHours } = req.body;
+        const serviceRadius = parseInt(req.body.serviceRadius || req.body.service_radius || 15, 10) || 15;
 
         if (!businessName || !services || !towns) {
             return res.status(400).json({ message: 'Missing required fields: businessName, services, and towns.' });
@@ -243,6 +246,20 @@ export default async (req, res) => {
                     const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
                     const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(resolvedPrimaryColor)}`;
 
+                    let lat = null;
+                    let lng = null;
+                    try {
+                        const coords = await geocodeAddress(town);
+                        if (coords) {
+                            lat = coords.lat;
+                            lng = coords.lng;
+                        }
+                    } catch (e) {
+                        console.error('Failed to geocode town:', town, e);
+                    }
+
+                    const mapSectionHtml = renderMapSection(businessName, town, resolvedPrimaryColor, serviceRadius, lat, lng);
+
                     let pageContent = template
                         .replace(/{{businessName}}/g, businessName)
                         .replace(/{{service}}/g, service)
@@ -261,6 +278,7 @@ export default async (req, res) => {
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)
                         .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+                        .replace(/{{mapSection}}/g, mapSectionHtml)
                         .replace(/{{agencyLogo}}/g, businessName);
                     
                     pageContent = pageContent.replace(/{{pageId}}/g, `static-seo-page-${serviceSlug}-${townSlug}`);
@@ -271,8 +289,8 @@ export default async (req, res) => {
                     // Save to database as well so it can be served dynamically in production Vercel
                     const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -285,6 +303,9 @@ export default async (req, res) => {
                            ai_style = EXCLUDED.ai_style,
                            ai_keywords = EXCLUDED.ai_keywords,
                            primary_color = EXCLUDED.primary_color,
+                           service_radius = EXCLUDED.service_radius,
+                           latitude = EXCLUDED.latitude,
+                           longitude = EXCLUDED.longitude,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             fileName,
@@ -300,7 +321,10 @@ export default async (req, res) => {
                             enableAICopy || false,
                             aiStyle || null,
                             aiKeywords || null,
-                            resolvedPrimaryColor
+                            resolvedPrimaryColor,
+                            serviceRadius,
+                            lat,
+                            lng
                         ]
                     );
 

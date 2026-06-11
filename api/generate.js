@@ -13,6 +13,8 @@ import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 import { getSchemaType } from '../lib/schema.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
+import { geocodeAddress } from '../lib/geocoding.js';
+import { renderMapSection } from '../lib/map-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -84,6 +86,7 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
 export default async (req, res) => {
     if (req.method === 'POST') {
         const { businessName, services, towns, zipCode, enableAICopy, 'ai-style': aiStyle, aiKeywords, telephone, priceRange, openingHours, primaryColor } = req.body;
+        const serviceRadius = parseInt(req.body.serviceRadius || req.body.service_radius || 15, 10) || 15;
 
         if (!businessName || !services || !towns || !zipCode) {
             await logError(new Error('Missing required fields'), 'Generate API - Missing Fields', 'generate_error.log');
@@ -246,6 +249,20 @@ export default async (req, res) => {
                     const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
                     const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(primaryColorValue)}`;
 
+                    let lat = null;
+                    let lng = null;
+                    try {
+                        const coords = await geocodeAddress(town);
+                        if (coords) {
+                            lat = coords.lat;
+                            lng = coords.lng;
+                        }
+                    } catch (e) {
+                        console.error('Failed to geocode town:', town, e);
+                    }
+
+                    const mapSectionHtml = renderMapSection(escapedBusinessName, escapedTown, primaryColorValue, serviceRadius, lat, lng);
+
                     const resolvedPhone = escapeHtml(telephone || '');
                     const resolvedPriceRange = escapeHtml(priceRange || 'Standard');
                     const resolvedOpeningHours = escapeHtml(openingHours || 'Mo-Fr 09:00-17:00');
@@ -270,6 +287,7 @@ export default async (req, res) => {
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)
                         .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+                        .replace(/{{mapSection}}/g, mapSectionHtml)
                         .replace(/{{pageId}}/g, pageId);
 
 
@@ -278,8 +296,8 @@ export default async (req, res) => {
                     // Store page in database
                     const pageSlug = `${userId}-${serviceSlug}-in-${townSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -293,6 +311,9 @@ export default async (req, res) => {
                            ai_style = EXCLUDED.ai_style,
                            ai_keywords = EXCLUDED.ai_keywords,
                            primary_color = EXCLUDED.primary_color,
+                           service_radius = EXCLUDED.service_radius,
+                           latitude = EXCLUDED.latitude,
+                           longitude = EXCLUDED.longitude,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             pageId,
@@ -310,7 +331,10 @@ export default async (req, res) => {
                             enableAICopy || false,
                             aiStyle || null,
                             aiKeywords || null,
-                            primaryColorValue
+                            primaryColorValue,
+                            serviceRadius,
+                            lat,
+                            lng
                         ]
                     );
                 }

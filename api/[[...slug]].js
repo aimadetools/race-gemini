@@ -7,6 +7,7 @@ import { logError } from '../lib/logger.js';
 import { getSchemaType } from '../lib/schema.js';
 import * as cheerio from 'cheerio';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
+import { renderMapSection } from '../lib/map-helper.js';
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
@@ -101,7 +102,7 @@ export default async (req, res, currentKvClient) => {
 
         // Fetch the page from PostgreSQL where user_id = resolvedClientId and file_name = fileName
         const pageResult = await query(
-            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content, primary_color 
+            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content, primary_color, service_radius, latitude, longitude 
              FROM seo_pages WHERE user_id = $1 AND file_name = $2`,
             [resolvedClientId, fileName]
         );
@@ -131,7 +132,10 @@ export default async (req, res, currentKvClient) => {
             town: pageRow.town,
             telephone: pageRow.telephone,
             priceRange: pageRow.price_range,
-            openingHours: pageRow.opening_hours
+            openingHours: pageRow.opening_hours,
+            serviceRadius: pageRow.service_radius,
+            latitude: pageRow.latitude,
+            longitude: pageRow.longitude
         };
 
         // Query up to 12 other pages for this user to build Nearby Service Areas link pool
@@ -338,6 +342,8 @@ ${JSON.stringify(schemaObj, null, 2)}
         const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
         const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(page.businessName)}&service=${encodeURIComponent(page.service)}&town=${encodeURIComponent(page.town)}&color=${encodeURIComponent(primaryColorValue)}`;
 
+        const mapSectionHtml = renderMapSection(page.businessName, page.town, primaryColorValue, page.serviceRadius, page.latitude, page.longitude);
+
         let pageContent = template
             .replace(/{{businessName}}/g, page.businessName)
             .replace(/{{service}}/g, page.service)
@@ -357,6 +363,7 @@ ${JSON.stringify(schemaObj, null, 2)}
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
             .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+            .replace(/{{mapSection}}/g, mapSectionHtml)
             .replace(/{{pageId}}/g, pageIdToFind);
 
         if (announcementHtml) {

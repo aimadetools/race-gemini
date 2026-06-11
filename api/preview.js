@@ -4,6 +4,8 @@ import slugify from 'slugify';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { getSchemaType } from '../lib/schema.js';
+import { geocodeAddress } from '../lib/geocoding.js';
+import { renderMapSection } from '../lib/map-helper.js';
 
 const templatePath = path.join(process.cwd(), 'page-template.html');
 
@@ -103,6 +105,21 @@ export default async (req, res) => {
 
         const localBusinessSchema = `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 
+        const serviceRadius = parseInt(req.query.serviceRadius || req.query.service_radius || 15, 10) || 15;
+        let lat = null;
+        let lng = null;
+        try {
+            const coords = await geocodeAddress(escapedTown);
+            if (coords) {
+                lat = coords.lat;
+                lng = coords.lng;
+            }
+        } catch (e) {
+            console.error('Failed to geocode town for preview:', escapedTown, e);
+        }
+
+        const mapSectionHtml = renderMapSection(escapedBusinessName, escapedTown, resolvedColor, serviceRadius, lat, lng);
+
         const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
         const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(resolvedColor)}`;
 
@@ -125,6 +142,7 @@ export default async (req, res) => {
             .replace(/{{priceRange}}/g, escapedPriceRange)
             .replace(/{{openingHours}}/g, escapedOpeningHours)
             .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+            .replace(/{{mapSection}}/g, mapSectionHtml)
             .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml);
 
         // Inject the watermark banner right after <body> tag

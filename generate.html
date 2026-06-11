@@ -412,6 +412,20 @@
               <span style="font-size: 0.9rem; color: #94a3b8;">Choose a theme color for call-to-actions, borders, and buttons.</span>
             </div>
           </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <div class="tooltip-container" style="margin-bottom: 0.4rem;">
+              <label for="serviceRadius" style="margin-bottom: 0;">Service Radius (miles):</label>
+              <i class="fas fa-info-circle tooltip-icon" title="The radius in miles around the center of target towns to display on the service area map."></i>
+            </div>
+            <select id="serviceRadius" name="serviceRadius" class="form-input" style="margin-top: 0;">
+              <option value="5">5 miles</option>
+              <option value="10">10 miles</option>
+              <option value="15" selected>15 miles (Default)</option>
+              <option value="25">25 miles</option>
+              <option value="50">50 miles</option>
+              <option value="100">100 miles</option>
+            </select>
+          </div>
         </div>
       </details>
      <button class="button" data-i18n-key="generate_submit_button" id="generate-pages-button" type="submit">

@@ -476,25 +476,58 @@ export const originalMockQuery = async (text, params) => {
     }
 
     if (textLower.includes('update seo_pages')) {
-        if (textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
-            const [
-                content,
-                business_name,
-                service,
-                town,
-                zip_code,
-                telephone,
-                price_range,
-                opening_hours,
-                enable_ai_copy,
-                ai_style,
-                ai_keywords,
-                primary_color_or_id,
-                maybe_id
-            ] = params;
+        if (textLower.includes('where id = $16') || textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
+            let id, content, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude;
             
-            const id = maybe_id || primary_color_or_id;
-            const primary_color = maybe_id ? primary_color_or_id : null;
+            if (textLower.includes('where id = $16')) {
+                [
+                    content,
+                    business_name,
+                    service,
+                    town,
+                    zip_code,
+                    telephone,
+                    price_range,
+                    opening_hours,
+                    enable_ai_copy,
+                    ai_style,
+                    ai_keywords,
+                    primary_color,
+                    service_radius,
+                    latitude,
+                    longitude,
+                    id
+                ] = params;
+            } else {
+                const [
+                    p_content,
+                    p_business_name,
+                    p_service,
+                    p_town,
+                    p_zip_code,
+                    p_telephone,
+                    p_price_range,
+                    p_opening_hours,
+                    p_enable_ai_copy,
+                    p_ai_style,
+                    p_ai_keywords,
+                    p_primary_color_or_id,
+                    p_maybe_id
+                ] = params;
+                content = p_content;
+                business_name = p_business_name;
+                service = p_service;
+                town = p_town;
+                zip_code = p_zip_code;
+                telephone = p_telephone;
+                price_range = p_price_range;
+                opening_hours = p_opening_hours;
+                enable_ai_copy = p_enable_ai_copy;
+                ai_style = p_ai_style;
+                ai_keywords = p_ai_keywords;
+                id = p_maybe_id || p_primary_color_or_id;
+                primary_color = p_maybe_id ? p_primary_color_or_id : null;
+            }
             
             const page = mockSeoPages.find(p => p.id === id);
             if (page) {
@@ -512,6 +545,9 @@ export const originalMockQuery = async (text, params) => {
                 if (primary_color) {
                     page.primary_color = primary_color;
                 }
+                if (service_radius !== undefined) page.service_radius = service_radius;
+                if (latitude !== undefined) page.latitude = latitude;
+                if (longitude !== undefined) page.longitude = longitude;
                 page.updated_at = new Date();
                 return { rows: [page] };
             }

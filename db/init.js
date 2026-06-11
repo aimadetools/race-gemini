@@ -19,6 +19,7 @@ import { addAiKeywordsToSeoPages } from './migrations/add_ai_keywords_to_seo_pag
 import { addPrimaryColorToSeoPages } from './migrations/add_primary_color_to_seo_pages.js';
 import { addExternalReviewLinksToUsers } from './migrations/add_external_review_links_to_users.js';
 import { addLocalUpdatesToUsers } from './migrations/add_local_updates_to_users.js';
+import { addRadiusAndCoordinatesToSeoPages } from './migrations/add_radius_and_coordinates_to_seo_pages.js';
 
 export async function initializeDatabase() {
   try {
@@ -84,6 +85,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring local updates columns exist in users table...');
     await addLocalUpdatesToUsers();
+
+    console.log('Ensuring radius and coordinates columns exist in seo_pages table...');
+    await addRadiusAndCoordinatesToSeoPages();
 
     console.log('Database initialization completed.');
   } catch (error) {

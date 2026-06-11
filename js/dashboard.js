@@ -486,6 +486,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('edit-pricerange').value = page.priceRange || '';
                 document.getElementById('edit-openinghours').value = page.openingHours || '';
                 
+                const serviceRadiusInput = document.getElementById('edit-service-radius');
+                if (serviceRadiusInput) {
+                    serviceRadiusInput.value = page.serviceRadius || '15';
+                }
+                
                 const enableAICopyCheckbox = document.getElementById('edit-enable-ai-copy');
                 const aiStyleGroup = document.getElementById('edit-ai-style-group');
                 if (enableAICopyCheckbox) {
@@ -596,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const enableAICopy = document.getElementById('edit-enable-ai-copy') ? document.getElementById('edit-enable-ai-copy').checked : false;
             const aiStyle = document.getElementById('edit-ai-style') ? document.getElementById('edit-ai-style').value : 'professional';
             const aiKeywords = document.getElementById('edit-ai-keywords') ? document.getElementById('edit-ai-keywords').value : '';
+            const serviceRadius = document.getElementById('edit-service-radius') ? document.getElementById('edit-service-radius').value : '15';
 
             try {
                 const response = await fetch('/api/update-page', {
@@ -615,7 +621,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         openingHours,
                         enableAICopy,
                         aiStyle,
-                        aiKeywords
+                        aiKeywords,
+                        serviceRadius
                     })
                 });
 

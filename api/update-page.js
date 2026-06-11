@@ -12,6 +12,8 @@ import { query } from '../db/index.js';
 import { getSchemaType } from '../lib/schema.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
+import { geocodeAddress } from '../lib/geocoding.js';
+import { renderMapSection } from '../lib/map-helper.js';
 
 function getGeminiModel() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -114,6 +116,7 @@ export default async function handler(req, res, currentKvClient) {
         aiKeywords,
         primaryColor
     } = req.body;
+    const serviceRadius = parseInt(req.body.serviceRadius || req.body.service_radius || 15, 10) || 15;
 
     if (!pageId || !businessName || !service || !town || !zipCode) {
         return res.status(400).json({ message: 'Missing required fields: pageId, businessName, service, town, zipCode' });
@@ -255,6 +258,20 @@ export default async function handler(req, res, currentKvClient) {
         const resolvedOpeningHours = openingHours || 'Mo-Fr 09:00-17:00';
         const phoneCtaDisplay = telephone ? 'inline-block' : 'none';
 
+        let lat = null;
+        let lng = null;
+        try {
+            const coords = await geocodeAddress(escapedTown);
+            if (coords) {
+                lat = coords.lat;
+                lng = coords.lng;
+            }
+        } catch (e) {
+            console.error('Failed to geocode town:', escapedTown, e);
+        }
+
+        const mapSectionHtml = renderMapSection(escapedBusinessName, escapedTown, primaryColorValue, serviceRadius, lat, lng);
+
         let pageContent = template
             .replace(/{{businessName}}/g, escapedBusinessName)
             .replace(/{{service}}/g, escapedService)
@@ -274,6 +291,7 @@ export default async function handler(req, res, currentKvClient) {
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
             .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
+            .replace(/{{mapSection}}/g, mapSectionHtml)
             .replace(/{{pageId}}/g, pageId);
 
         // Update database record
@@ -291,8 +309,11 @@ export default async function handler(req, res, currentKvClient) {
                  ai_style = $10,
                  ai_keywords = $11,
                  primary_color = $12,
+                 service_radius = $13,
+                 latitude = $14,
+                 longitude = $15,
                  updated_at = CURRENT_TIMESTAMP
-             WHERE id = $13`,
+             WHERE id = $16`,
             [
                 pageContent,
                 escapedBusinessName,
@@ -306,6 +327,9 @@ export default async function handler(req, res, currentKvClient) {
                 aiStyle || null,
                 aiKeywords || null,
                 primaryColorValue,
+                serviceRadius,
+                lat,
+                lng,
                 pageId
             ]
         );
@@ -323,6 +347,9 @@ export default async function handler(req, res, currentKvClient) {
             aiStyle: aiStyle || null,
             aiKeywords: aiKeywords || null,
             primaryColor: primaryColorValue,
+            serviceRadius,
+            latitude: lat,
+            longitude: lng,
             updatedAt: new Date().toISOString()
         };
 
