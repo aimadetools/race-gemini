@@ -76,6 +76,39 @@ describe('Capture Email API', () => {
         });
     });
 
+    it('should successfully store captured email as lead with userId, name, and source', async () => {
+        mockReq.body = {
+            email: 'agency_lead@example.com',
+            url: 'http://agencyclient.com',
+            userId: 123,
+            name: 'Client Business Name',
+            source: 'audit_widget'
+        };
+
+        const mockLead = {
+            id: 1000,
+            email: 'agency_lead@example.com',
+            url: 'http://agencyclient.com',
+            source: 'audit_widget',
+            user_id: 123,
+            name: 'Client Business Name'
+        };
+        mockQuery.mockResolvedValueOnce({ rows: [mockLead] });
+
+        await handler(mockReq, mockRes);
+
+        expect(mockQuery).toHaveBeenCalledWith(
+            expect.stringContaining('INSERT INTO leads (email, url, source, user_id, name)'),
+            ['agency_lead@example.com', 'http://agencyclient.com', 'audit_widget', 123, 'Client Business Name']
+        );
+
+        expect(mockRes.status).toHaveBeenCalledWith(201);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            message: 'Email captured successfully.',
+            data: mockLead
+        });
+    });
+
     it('should return 500 when database insertion fails', async () => {
         mockQuery.mockRejectedValueOnce(new Error('DB connection failed'));
 

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Local SEO Audit Widget</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --bg-color: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-color: #f3f4f6;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    body.light-theme {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-color: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --input-bg: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 1rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.5;
+    }
+
+    .widget-container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-color);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.85rem;
+      font-weight: 700;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Loading state */
+    .loading-container {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .spinner-box {
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .progress-list {
+      text-align: left;
+      max-width: 320px;
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+
+    .progress-step.active {
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .progress-step.completed {
+      color: #10b981;
+    }
+
+    .progress-step i {
+      font-size: 0.9rem;
+      width: 16px;
+      text-align: center;
+    }
+
+    .progress-step.completed i {
+      color: #10b981;
+    }
+
+    /* Results layout */
+    .results-container {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .audit-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    body.light-theme .result-card {
+      background: #f1f5f9;
+    }
+
+    .result-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-card ul {
+      margin: 0;
+      padding-left: 1.25rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .result-card li {
+      margin-bottom: 0.25rem;
+    }
+
+    .badge-pass {
+      color: #10b981;
+    }
+
+    .badge-warn {
+      color: #f59e0b;
+    }
+
+    .badge-fail {
+      color: #ef4444;
+    }
+
+    /* Email Capture Form */
+    .email-capture-box {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .email-capture-box h4 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .email-capture-box p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .email-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .email-row {
+        flex-direction: column;
+      }
+    }
+
+    .error-feedback {
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      display: none;
+    }
+
+    .success-feedback {
+      color: #10b981;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      display: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <div id="setup-view">
+      <h2 id="widget-title">Free Local SEO Audit</h2>
+      <p class="subtitle" id="widget-subtitle">Check your search presence in surrounding towns and find missed leads.</p>
+      
+      <form id="audit-url-form">
+        <div class="form-group">
+          <label for="audit-url">Website URL</label>
+          <input class="form-input" id="audit-url" placeholder="https://your-business.com" required="" type="url"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="audit-locations">Service Locations (comma-separated)</label>
+          <textarea class="form-input" id="audit-locations" placeholder="e.g., Austin, Round Rock, Georgetown" required=""></textarea>
+        </div>
+        
+        <button class="btn" id="start-audit-btn" type="submit">
+          <i class="fas fa-search"></i> Run Audit Now
+        </button>
+      </form>
+      <div class="error-feedback" id="form-error"></div>
+    </div>
+
+    <!-- Loading State View -->
+    <div class="loading-container" id="loading-view">
+      <div class="spinner-box">
+        <div class="spinner"></div>
+      </div>
+      <ul class="progress-list">
+        <li class="progress-step" id="step-0"><i class="fas fa-circle-notch fa-spin"></i> Fetching website content...</li>
+        <li class="progress-step" id="step-1"><i class="far fa-circle"></i> Auditing layout & titles...</li>
+        <li class="progress-step" id="step-2"><i class="far fa-circle"></i> Analyzing location coverage...</li>
+        <li class="progress-step" id="step-3"><i class="far fa-circle"></i> Checking alt attributes...</li>
+        <li class="progress-step" id="step-4"><i class="far fa-circle"></i> Compiling report...</li>
+      </ul>
+    </div>
+
+    <!-- Audit Results View -->
+    <div class="results-container" id="results-view">
+      <h2>Your Local SEO Score</h2>
+      <p class="subtitle" id="results-subtitle">We analyzed your site. Here are the opportunities we found:</p>
+      
+      <div class="audit-grid">
+        <div class="result-card">
+          <h3 class="badge-fail" id="missed-count-title"><i class="fas fa-exclamation-triangle"></i> Missed Locations</h3>
+          <ul id="missed-locations-list"></ul>
+        </div>
+        <div class="result-card">
+          <h3><i class="fas fa-info-circle"></i> Basic SEO Check</h3>
+          <ul id="seo-elements-list"></ul>
+        </div>
+      </div>
+
+      <div class="email-capture-box" id="capture-box">
+        <h4>Get Your Full PDF Audit Report</h4>
+        <p>Enter your email below to receive a detailed PDF containing the full checklist and action plan.</p>
+        <form id="widget-capture-form">
+          <div class="email-row">
+            <input class="form-input" id="capture-email" placeholder="you@example.com" required="" type="email" style="flex: 1;"/>
+            <button class="btn" id="submit-capture-btn" type="submit" style="width: auto; padding: 0.75rem 1.5rem; white-space: nowrap;">
+              Email Report
+            </button>
+          </div>
+        </form>
+        <div class="error-feedback" id="capture-error"></div>
+        <div class="success-feedback" id="capture-success"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Parse parameters
+      const params = new URLSearchParams(window.location.search);
+      const agencyId = params.get('agencyId') || params.get('clientId');
+      const primaryColor = params.get('primaryColor') || params.get('color');
+      const theme = params.get('theme') || 'dark';
+
+      // Apply theme
+      if (theme === 'light') {
+        document.body.classList.add('light-theme');
+      }
+
+      // Apply custom primary color
+      if (primaryColor) {
+        let cleanColor = primaryColor;
+        if (!cleanColor.startsWith('#')) {
+          cleanColor = '#' + cleanColor;
+        }
+        document.documentElement.style.setProperty('--primary-color', cleanColor);
+      }
+
+      const auditForm = document.getElementById('audit-url-form');
+      const setupView = document.getElementById('setup-view');
+      const loadingView = document.getElementById('loading-view');
+      const resultsView = document.getElementById('results-view');
+      const formError = document.getElementById('form-error');
+
+      let currentAuditResults = null;
+      let auditedUrl = '';
+
+      // Set up multi-step loading sequence
+      const steps = [
+        document.getElementById('step-0'),
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+        document.getElementById('step-4')
+      ];
+
+      let progressInterval;
+      function startLoadingProgress() {
+        let currentStepIdx = 0;
+        
+        // Update first step
+        steps[0].classList.add('active');
+        
+        progressInterval = setInterval(() => {
+          if (currentStepIdx < steps.length - 1) {
+            // Mark current completed
+            steps[currentStepIdx].classList.remove('active');
+            steps[currentStepIdx].classList.add('completed');
+            const icon = steps[currentStepIdx].querySelector('i');
+            icon.className = 'fas fa-check-circle';
+            
+            // Move to next step
+            currentStepIdx++;
+            steps[currentStepIdx].classList.add('active');
+            const nextIcon = steps[currentStepIdx].querySelector('i');
+            nextIcon.className = 'fas fa-circle-notch fa-spin';
+          }
+        }, 3000);
+      }
+
+      function stopLoadingProgress(success = true) {
+        clearInterval(progressInterval);
+        steps.forEach(step => {
+          step.classList.remove('active');
+          if (success) {
+            step.classList.add('completed');
+            const icon = step.querySelector('i');
+            icon.className = 'fas fa-check-circle';
+          }
+        });
+      }
+
+      auditForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        auditedUrl = document.getElementById('audit-url').value.trim();
+        const locationsStr = document.getElementById('audit-locations').value.trim();
+        const locations = locationsStr.split(',').map(l => l.trim()).filter(l => l);
+
+        if (!auditedUrl || locations.length === 0) {
+          formError.textContent = 'Please enter a valid website URL and at least one service location.';
+          formError.style.display = 'block';
+          return;
+        }
+
+        formError.textContent = '';
+        formError.style.display = 'none';
+
+        // Switch to loading view
+        setupView.style.display = 'none';
+        loadingView.style.display = 'block';
+        startLoadingProgress();
+
+        try {
+          const response = await fetch('/api/audit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: auditedUrl, locations: locations })
+          });
+
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.message || 'Audit execution failed.');
+          }
+
+          const results = await response.json();
+          currentAuditResults = results;
+
+          stopLoadingProgress(true);
+          setTimeout(() => {
+            loadingView.style.display = 'none';
+            resultsView.style.display = 'block';
+            displayAuditResults(results);
+          }, 800);
+
+        } catch (error) {
+          stopLoadingProgress(false);
+          loadingView.style.display = 'none';
+          setupView.style.display = 'block';
+          formError.textContent = error.message || 'An error occurred during the audit. Please try again.';
+          formError.style.display = 'block';
+        }
+      });
+
+      function displayAuditResults(results) {
+        const missedListEl = document.getElementById('missed-locations-list');
+        missedListEl.innerHTML = '';
+        const seoListEl = document.getElementById('seo-elements-list');
+        seoListEl.innerHTML = '';
+
+        // 1. Missed Locations
+        let missedCount = 0;
+        if (results.location_audit && results.location_audit.missed_locations) {
+          missedCount = results.location_audit.missed_locations.length;
+          results.location_audit.missed_locations.slice(0, 5).forEach(town => {
+            const li = document.createElement('li');
+            li.textContent = town;
+            missedListEl.appendChild(li);
+          });
+          if (missedCount > 5) {
+            const li = document.createElement('li');
+            li.style.fontStyle = 'italic';
+            li.textContent = `...and ${missedCount - 5} more towns`;
+            missedListEl.appendChild(li);
+          }
+        }
+        
+        if (missedCount === 0) {
+          document.getElementById('missed-count-title').className = 'badge-pass';
+          document.getElementById('missed-count-title').innerHTML = '<i class="fas fa-check-circle"></i> Locations Covered';
+          const li = document.createElement('li');
+          li.textContent = 'Excellent! Your site mentions all analyzed location areas.';
+          missedListEl.appendChild(li);
+        } else {
+          document.getElementById('missed-count-title').textContent = `Missed Locations (${missedCount})`;
+        }
+
+        // 2. Basic SEO Elements Check
+        // Mobile friend
+        const mobile = results['mobile-friendliness'] || {};
+        if (mobile.error) {
+          seoListEl.innerHTML += `<li><span class="badge-warn"><i class="fas fa-info-circle"></i> Mobile friendliness check skipped</span></li>`;
+        } else if (mobile.is_mobile_friendly !== undefined) {
+          const isF = mobile.is_mobile_friendly;
+          seoListEl.innerHTML += `<li><span class="${isF ? 'badge-pass' : 'badge-fail'}"><i class="fas ${isF ? 'fa-check-circle' : 'fa-times-circle'}"></i> ${isF ? 'Mobile Friendly' : 'Not Optimized for Mobile'}</span></li>`;
+        }
+
+        // Load times
+        const load = results['page-load-times'] || {};
+        if (load.load_time !== undefined) {
+          const ok = load.load_time < 3;
+          seoListEl.innerHTML += `<li><span class="${ok ? 'badge-pass' : 'badge-warn'}"><i class="fas ${ok ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> Load time: ${load.load_time}s</span></li>`;
+        }
+
+        // Broken Links
+        const links = results['broken-links'] || {};
+        if (links.broken_links) {
+          const ok = links.broken_links.length === 0;
+          seoListEl.innerHTML += `<li><span class="${ok ? 'badge-pass' : 'badge-fail'}"><i class="fas ${ok ? 'fa-check-circle' : 'fa-times-circle'}"></i> ${ok ? 'No Broken Links' : `${links.broken_links.length} Broken Links`}</span></li>`;
+        }
+
+        // Alt Attributes
+        const alts = results['alt-attributes'] || [];
+        const altOk = alts.length === 0;
+        seoListEl.innerHTML += `<li><span class="${altOk ? 'badge-pass' : 'badge-warn'}"><i class="fas ${altOk ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${altOk ? 'All Images Alt Tagged' : `${alts.length} Images Missing Alt Tags`}</span></li>`;
+      }
+
+      // Handle Email Capture & Report dispatch
+      const captureForm = document.getElementById('widget-capture-form');
+      const captureError = document.getElementById('capture-error');
+      const captureSuccess = document.getElementById('capture-success');
+      const submitCaptureBtn = document.getElementById('submit-capture-btn');
+
+      captureForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('capture-email').value.trim();
+
+        if (!email || !currentAuditResults) {
+          captureError.textContent = 'Please provide a valid email.';
+          captureError.style.display = 'block';
+          return;
+        }
+
+        captureError.textContent = '';
+        captureError.style.display = 'none';
+        submitCaptureBtn.disabled = true;
+        submitCaptureBtn.textContent = 'Sending...';
+
+        try {
+          // 1. Capture lead in database associated with agencyId
+          const captureBody = {
+            email: email,
+            url: auditedUrl,
+            source: 'agency_audit_widget',
+            name: new URL(auditedUrl).hostname
+          };
+          if (agencyId) {
+            captureBody.userId = parseInt(agencyId, 10);
+          }
+
+          const captureRes = await fetch('/api/capture-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(captureBody)
+          });
+
+          if (!captureRes.ok) {
+            console.error('Failed to capture lead internally.');
+          }
+
+          // 2. Email report using SendGrid report sender
+          const reportRes = await fetch('/api/send-audit-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              auditResults: currentAuditResults,
+              url: auditedUrl
+            })
+          });
+
+          if (!reportRes.ok) {
+            const repErr = await reportRes.json();
+            throw new Error(repErr.message || 'Failed to email the audit report.');
+          }
+
+          captureSuccess.textContent = 'Audit report successfully sent to your inbox!';
+          captureSuccess.style.display = 'block';
+          document.getElementById('capture-email').value = '';
+          captureForm.style.display = 'none';
+
+        } catch (error) {
+          captureError.textContent = error.message || 'An error occurred sending the report. Please try again.';
+          captureError.style.display = 'block';
+          submitCaptureBtn.disabled = false;
+          submitCaptureBtn.textContent = 'Email Report';
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>

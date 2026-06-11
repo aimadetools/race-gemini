@@ -397,6 +397,13 @@
                         <h3 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Widget Configurations</h3>
                         <form id="widget-config-form" style="display: flex; flex-direction: column; gap: 12px;">
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="widget-type-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Widget Type</label>
+                                <select id="widget-type-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%;">
+                                    <option value="service-area">Service Area Listing Widget</option>
+                                    <option value="seo-audit">White-Label SEO Audit Widget</option>
+                                </select>
+                            </div>
+                            <div id="service-area-layout-group" class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
                                 <label for="widget-layout-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Layout</label>
                                 <select id="widget-layout-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%;">
                                     <option value="badge">Floating Badge (Recommended)</option>
@@ -419,15 +426,17 @@
                                     <input id="widget-color-text" type="text" value="#3b82f6" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100px; text-align: center; font-family: monospace;" />
                                 </div>
                             </div>
-                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
-                                <label for="widget-css-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Custom CSS Styling</label>
-                                <textarea id="widget-css-input" placeholder="/* Add your custom CSS here */&#10;.ll-widget-title-1 { color: #f43f5e; }" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; height: 100px; font-family: monospace; font-size: 0.85rem; resize: vertical; box-sizing: border-box;"></textarea>
+                            <div id="service-area-css-group" style="display: flex; flex-direction: column; gap: 12px;">
+                                <div class="form-group" style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
+                                    <label for="widget-css-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Custom CSS Styling</label>
+                                    <textarea id="widget-css-input" placeholder="/* Add your custom CSS here */&#10;.ll-widget-title-1 { color: #f43f5e; }" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; height: 100px; font-family: monospace; font-size: 0.85rem; resize: vertical; box-sizing: border-box;"></textarea>
+                                </div>
+                                <button class="button button-small" type="submit" id="save-widget-css-btn" style="align-self: flex-start; padding: 0.4rem 1rem; margin-top: 5px;">
+                                    <i class="fas fa-save" style="margin-right: 4px;"></i> Save Styles
+                                </button>
+                                <p id="widget-css-success-msg" style="color: #10b981; margin-top: 5px; display: none; font-size: 0.85rem; font-weight: bold; margin-bottom: 0;"></p>
+                                <p id="widget-css-error-msg" style="color: #ef4444; margin-top: 5px; display: none; font-size: 0.85rem; font-weight: bold; margin-bottom: 0;"></p>
                             </div>
-                            <button class="button button-small" type="submit" id="save-widget-css-btn" style="align-self: flex-start; padding: 0.4rem 1rem; margin-top: 5px;">
-                                <i class="fas fa-save" style="margin-right: 4px;"></i> Save Styles
-                            </button>
-                            <p id="widget-css-success-msg" style="color: #10b981; margin-top: 5px; display: none; font-size: 0.85rem; font-weight: bold; margin-bottom: 0;"></p>
-                            <p id="widget-css-error-msg" style="color: #ef4444; margin-top: 5px; display: none; font-size: 0.85rem; font-weight: bold; margin-bottom: 0;"></p>
                         </form>
                         <div style="margin-top: 1.5rem;">
                             <label style="display: block; font-weight: bold; font-size: 0.85rem; color: #ccc; margin-bottom: 5px;">Copy Embed Code</label>

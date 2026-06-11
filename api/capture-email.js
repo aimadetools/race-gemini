@@ -16,7 +16,7 @@ export default async (req, res) => {
         return res.status(405).json({ message: 'Only POST requests are allowed.' });
     }
 
-    const { email, url } = req.body;
+    const { email, url, userId, agencyId, name, source } = req.body;
 
     if (!email || !url) {
         await logError(new Error('Email and URL are required.'), 'Capture Email - Validation Error', 'capture_email_error.log');
@@ -25,10 +25,22 @@ export default async (req, res) => {
 
     try {
         const client = await pool.connect();
-        const result = await client.query(
-            'INSERT INTO leads (email, url, source) VALUES ($1, $2, $3) RETURNING *',
-            [email, url, 'free-audit']
-        );
+        const resolvedUserId = userId || agencyId || null;
+        const resolvedName = name || null;
+        const resolvedSource = source || 'free-audit';
+
+        let result;
+        if (resolvedUserId || resolvedName) {
+            result = await client.query(
+                'INSERT INTO leads (email, url, source, user_id, name) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                [email, url, resolvedSource, resolvedUserId, resolvedName]
+            );
+        } else {
+            result = await client.query(
+                'INSERT INTO leads (email, url, source) VALUES ($1, $2, $3) RETURNING *',
+                [email, url, resolvedSource]
+            );
+        }
         client.release();
         res.status(201).json({ message: 'Email captured successfully.', data: result.rows[0] });
     } catch (error) {
