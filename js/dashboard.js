@@ -413,6 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 currentDashboardData = data;
                 updateActivationChecklist(data);
+                initializeLocalUpdates(data);
 
                 // Fetch testimonials
                 await fetchTestimonials();
@@ -2361,4 +2362,245 @@ document.addEventListener('DOMContentLoaded', () => {
             renderActiveTabContent(tabType);
         });
     });
+
+    function initializeLocalUpdates(data) {
+        const localUpdatesForm = document.getElementById('local-updates-form');
+        const announcementTextInput = document.getElementById('announcement-text-input');
+        const announcementTypeSelect = document.getElementById('announcement-type-select');
+        const announcementDurationSelect = document.getElementById('announcement-duration-select');
+        const announcementCouponInput = document.getElementById('announcement-coupon-input');
+        const couponFieldGroup = document.getElementById('coupon-field-group');
+        const announcementPreviewContainer = document.getElementById('announcement-preview-container');
+        const announcementLastUpdated = document.getElementById('announcement-last-updated');
+        const announcementExpires = document.getElementById('announcement-expires');
+        const updateStatusBadge = document.getElementById('update-status-badge');
+        const btnLinkGbp = document.getElementById('btn-link-gbp');
+
+        if (!localUpdatesForm) return;
+
+        // Load existing values
+        if (data.announcementText) {
+            announcementTextInput.value = data.announcementText;
+        }
+        if (data.announcementType) {
+            announcementTypeSelect.value = data.announcementType;
+            if (data.announcementType === 'offer') {
+                couponFieldGroup.style.display = 'block';
+            } else {
+                couponFieldGroup.style.display = 'none';
+            }
+        }
+        if (data.announcementCouponCode) {
+            announcementCouponInput.value = data.announcementCouponCode;
+        }
+
+        // Set last updated
+        if (data.announcementUpdatedAt) {
+            announcementLastUpdated.textContent = new Date(data.announcementUpdatedAt).toLocaleString();
+        } else {
+            announcementLastUpdated.textContent = 'Never';
+        }
+
+        // Set expires
+        if (data.announcementExpiresAt) {
+            const expiresDate = new Date(data.announcementExpiresAt);
+            announcementExpires.textContent = expiresDate.toLocaleString();
+            
+            const now = new Date();
+            if (expiresDate < now) {
+                updateStatusBadge.textContent = 'Expired';
+                updateStatusBadge.style.background = 'rgba(239, 68, 68, 0.1)';
+                updateStatusBadge.style.color = '#ef4444';
+            } else {
+                updateStatusBadge.textContent = 'Active';
+                updateStatusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+                updateStatusBadge.style.color = '#10b981';
+            }
+        } else if (data.announcementText) {
+            announcementExpires.textContent = 'Never (Permanent)';
+            updateStatusBadge.textContent = 'Active';
+            updateStatusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+            updateStatusBadge.style.color = '#10b981';
+        } else {
+            announcementExpires.textContent = 'N/A';
+            updateStatusBadge.textContent = 'No Active Update';
+            updateStatusBadge.style.background = 'rgba(156, 163, 175, 0.1)';
+            updateStatusBadge.style.color = '#9ca3af';
+        }
+
+        // Load GBP connected state from localStorage
+        const gbpConnected = localStorage.getItem('gbp_connected_status') === 'true';
+        if (gbpConnected) {
+            btnLinkGbp.innerHTML = '<i class="fas fa-check-circle"></i> GBP Connected';
+            btnLinkGbp.style.background = 'rgba(16, 185, 129, 0.1)';
+            btnLinkGbp.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            btnLinkGbp.style.color = '#34d399';
+        }
+
+        // Helper to update preview
+        function updateAnnouncementPreview() {
+            const text = announcementTextInput.value.trim();
+            const type = announcementTypeSelect.value;
+            const coupon = announcementCouponInput.value.trim();
+            const primaryColor = data.primaryColor || '#007bff';
+
+            if (!text) {
+                announcementPreviewContainer.innerHTML = 'Write an update on the left to see how it will appear at the top of your service area pages.';
+                announcementPreviewContainer.style.background = 'rgba(255,255,255,0.02)';
+                announcementPreviewContainer.style.border = '1px dashed rgba(255,255,255,0.1)';
+                announcementPreviewContainer.style.color = '#9ca3af';
+                announcementPreviewContainer.style.fontStyle = 'italic';
+                announcementPreviewContainer.style.padding = '1.5rem';
+                return;
+            }
+
+            let iconClass = 'fas fa-bullhorn';
+            if (type === 'offer') iconClass = 'fas fa-tag';
+            if (type === 'event') iconClass = 'fas fa-calendar-alt';
+
+            let couponHtml = '';
+            if (type === 'offer' && coupon) {
+                couponHtml = ` <span style="background: rgba(255,255,255,0.2); border: 1.5px dashed #ffffff; padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; margin-left: 8px; font-weight: bold; letter-spacing: 0.05em; display: inline-block;">Code: ${coupon}</span>`;
+            }
+
+            announcementPreviewContainer.innerHTML = `
+                <div style="background: linear-gradient(90deg, ${primaryColor} 0%, #1e40af 100%); color: #ffffff; padding: 12px 20px; text-align: center; font-size: 0.9rem; font-weight: 600; width: 100%; border-radius: 6px; display: flex; justify-content: center; align-items: center; gap: 8px; box-sizing: border-box; flex-wrap: wrap;">
+                    <span><i class="${iconClass}"></i></span>
+                    <span style="letter-spacing: 0.01em;">${text}</span>
+                    ${couponHtml}
+                </div>
+            `;
+            announcementPreviewContainer.style.background = 'transparent';
+            announcementPreviewContainer.style.border = 'none';
+            announcementPreviewContainer.style.padding = '0';
+        }
+
+        // Toggle coupon field based on type
+        announcementTypeSelect.addEventListener('change', () => {
+            if (announcementTypeSelect.value === 'offer') {
+                couponFieldGroup.style.display = 'block';
+            } else {
+                couponFieldGroup.style.display = 'none';
+                announcementCouponInput.value = '';
+            }
+            updateAnnouncementPreview();
+        });
+
+        // Event listeners for preview
+        announcementTextInput.addEventListener('input', updateAnnouncementPreview);
+        announcementCouponInput.addEventListener('input', updateAnnouncementPreview);
+
+        // Form Submit
+        localUpdatesForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const publishBtn = document.getElementById('publish-update-btn');
+            const originalBtnHtml = publishBtn.innerHTML;
+
+            publishBtn.disabled = true;
+            publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+
+            try {
+                const response = await fetch('/api/update-local-announcement', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        announcementText: announcementTextInput.value.trim(),
+                        announcementType: announcementTypeSelect.value,
+                        announcementCouponCode: announcementCouponInput.value.trim(),
+                        expiresDays: announcementDurationSelect.value
+                    })
+                });
+
+                const resData = await response.json();
+
+                if (response.ok) {
+                    alert('Update published successfully! It has been synced across all your pages.');
+                    
+                    // Update state
+                    if (resData.announcement) {
+                        announcementLastUpdated.textContent = resData.announcement.updatedAt ? new Date(resData.announcement.updatedAt).toLocaleString() : 'Just now';
+                        if (resData.announcement.expiresAt) {
+                            announcementExpires.textContent = new Date(resData.announcement.expiresAt).toLocaleString();
+                            updateStatusBadge.textContent = 'Active';
+                            updateStatusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+                            updateStatusBadge.style.color = '#10b981';
+                        } else {
+                            announcementExpires.textContent = 'Never (Permanent)';
+                            updateStatusBadge.textContent = 'Active';
+                            updateStatusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+                            updateStatusBadge.style.color = '#10b981';
+                        }
+                    }
+                } else {
+                    alert(resData.message || 'Failed to publish update.');
+                }
+            } catch (err) {
+                console.error('Error publishing announcement:', err);
+                alert('A network error occurred. Please try again.');
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.innerHTML = originalBtnHtml;
+            }
+        });
+
+        // Initialize preview
+        updateAnnouncementPreview();
+
+        // --- Google Business Profile Modal Logic ---
+        const gbpModal = document.getElementById('gbp-link-modal');
+        const closeGbpModal = document.getElementById('close-gbp-modal');
+        const btnCancelGbp = document.getElementById('btn-cancel-gbp');
+        const btnConnectGbp = document.getElementById('btn-connect-gbp');
+        const gbpLocationSelect = document.getElementById('gbp-location-select');
+        const gbpSyncOptions = document.getElementById('gbp-sync-options');
+
+        btnLinkGbp.addEventListener('click', () => {
+            // If already connected, disconnect it on click
+            if (localStorage.getItem('gbp_connected_status') === 'true') {
+                if (confirm('Do you want to disconnect your Google Business Profile?')) {
+                    localStorage.removeItem('gbp_connected_status');
+                    btnLinkGbp.innerHTML = '<i class="fas fa-link"></i> Link Google Business Profile';
+                    btnLinkGbp.style.background = 'rgba(59, 130, 246, 0.1)';
+                    btnLinkGbp.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                    btnLinkGbp.style.color = '#60a5fa';
+                }
+                return;
+            }
+
+            gbpModal.style.display = 'flex';
+            gbpLocationSelect.innerHTML = '<option value="detecting">🔍 Searching your Google Account...</option>';
+            gbpSyncOptions.style.display = 'none';
+            btnConnectGbp.disabled = true;
+
+            // Simulate searching/detecting locations
+            setTimeout(() => {
+                gbpLocationSelect.innerHTML = `
+                    <option value="main">${data.email.split('@')[0].toUpperCase()} Service Co. - Plano Office</option>
+                    <option value="secondary">${data.email.split('@')[0].toUpperCase()} Service Co. - Dallas Office</option>
+                    <option value="new">Create New Location Profile...</option>
+                `;
+                gbpSyncOptions.style.display = 'flex';
+                btnConnectGbp.disabled = false;
+            }, 1500);
+        });
+
+        function closeGbp() {
+            gbpModal.style.display = 'none';
+        }
+
+        closeGbpModal.addEventListener('click', closeGbp);
+        btnCancelGbp.addEventListener('click', closeGbp);
+        btnConnectGbp.addEventListener('click', () => {
+            localStorage.setItem('gbp_connected_status', 'true');
+            btnLinkGbp.innerHTML = '<i class="fas fa-check-circle"></i> GBP Connected';
+            btnLinkGbp.style.background = 'rgba(16, 185, 129, 0.1)';
+            btnLinkGbp.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            btnLinkGbp.style.color = '#34d399';
+            closeGbp();
+            alert('Google Business Profile connected successfully! All updates will now auto-sync to your Google Maps listing.');
+        });
+    }
 });

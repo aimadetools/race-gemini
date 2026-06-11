@@ -18,6 +18,7 @@ import { addWidgetCssToUsers } from './migrations/add_widget_css_to_users.js';
 import { addAiKeywordsToSeoPages } from './migrations/add_ai_keywords_to_seo_pages.js';
 import { addPrimaryColorToSeoPages } from './migrations/add_primary_color_to_seo_pages.js';
 import { addExternalReviewLinksToUsers } from './migrations/add_external_review_links_to_users.js';
+import { addLocalUpdatesToUsers } from './migrations/add_local_updates_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -80,6 +81,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring external review links exist in users table...');
     await addExternalReviewLinksToUsers();
+
+    console.log('Ensuring local updates columns exist in users table...');
+    await addLocalUpdatesToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

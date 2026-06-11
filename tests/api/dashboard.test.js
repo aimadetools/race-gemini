@@ -252,7 +252,12 @@ describe('dashboard API', () => {
       widgetCss: null,
       googleReviewLink: null,
       facebookReviewLink: null,
-      yelpReviewLink: null
+      yelpReviewLink: null,
+      announcementText: null,
+      announcementType: 'news',
+      announcementCouponCode: null,
+      announcementUpdatedAt: null,
+      announcementExpiresAt: null
     });
   });
 
@@ -309,7 +314,12 @@ describe('dashboard API', () => {
       widgetCss: null,
       googleReviewLink: null,
       facebookReviewLink: null,
-      yelpReviewLink: null
+      yelpReviewLink: null,
+      announcementText: null,
+      announcementType: 'news',
+      announcementCouponCode: null,
+      announcementUpdatedAt: null,
+      announcementExpiresAt: null
     });
   });
 

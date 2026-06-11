@@ -79,7 +79,7 @@ export default async (req, res, currentKvClient) => {
         const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
         // Fetch client and their parent agency from PostgreSQL
-        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id FROM users WHERE id = $1', [resolvedClientId]);
+        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id, announcement_text, announcement_type, announcement_coupon_code, announcement_expires_at, announcement_updated_at FROM users WHERE id = $1', [resolvedClientId]);
         if (clientResult.rows.length === 0) {
             return res.status(404).send('Not Found');
         }
@@ -276,11 +276,55 @@ export default async (req, res, currentKvClient) => {
           schemaObj.aggregateRating = schemaReviews.aggregateRating;
         }
 
-        const localBusinessSchema = `
+        let localBusinessSchema = `
 <script type="application/ld+json">
 ${JSON.stringify(schemaObj, null, 2)}
 </script>
         `.trim();
+
+        // Generate dynamic Local Announcement Bar and SpecialAnnouncement schema
+        let announcementHtml = '';
+        if (client.announcement_text) {
+          const now = new Date();
+          const isExpired = client.announcement_expires_at && new Date(client.announcement_expires_at) < now;
+          if (!isExpired) {
+            let iconClass = 'fas fa-bullhorn';
+            if (client.announcement_type === 'offer') iconClass = 'fas fa-tag';
+            if (client.announcement_type === 'event') iconClass = 'fas fa-calendar-alt';
+
+            let couponHtml = '';
+            if (client.announcement_coupon_code) {
+              couponHtml = ` <span class="coupon-badge" style="background: rgba(255,255,255,0.2); border: 1.5px dashed #ffffff; padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; margin-left: 8px; font-weight: bold; letter-spacing: 0.05em; display: inline-block;">Code: ${client.announcement_coupon_code}</span>`;
+            }
+
+            announcementHtml = `
+              <div class="local-announcement-bar" style="background: linear-gradient(90deg, ${primaryColorValue} 0%, #1e40af 100%); color: #ffffff; padding: 12px 20px; text-align: center; font-size: 0.95rem; font-weight: 600; position: relative; z-index: 1000; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-family: 'Inter', sans-serif; flex-wrap: wrap;">
+                <span class="announcement-icon"><i class="${iconClass}"></i></span>
+                <span class="announcement-text" style="letter-spacing: 0.01em;">${client.announcement_text}</span>
+                ${couponHtml}
+              </div>
+            `.trim();
+
+            const specialAnnouncementSchema = {
+              "@context": "http://schema.org",
+              "@type": "SpecialAnnouncement",
+              "name": `Local Update from ${page.businessName}`,
+              "text": client.announcement_text,
+              "datePosted": client.announcement_updated_at || new Date().toISOString(),
+              "expires": client.announcement_expires_at || null,
+              "provider": {
+                "@type": getSchemaType(page.service),
+                "name": page.businessName,
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": page.town
+                }
+              }
+            };
+
+            localBusinessSchema += `\n<script type="application/ld+json">\n${JSON.stringify(specialAnnouncementSchema, null, 2)}\n</script>`;
+          }
+        }
 
         const testimonialsSectionHtml = renderTestimonialsSection(testimonials);
 
@@ -314,6 +358,10 @@ ${JSON.stringify(schemaObj, null, 2)}
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
             .replace(/{{phoneCtaDisplay}}/g, phoneCtaDisplay)
             .replace(/{{pageId}}/g, pageIdToFind);
+
+        if (announcementHtml) {
+            pageContent = pageContent.replace(/<body([^>]*)>/i, `<body$1>\n${announcementHtml}`);
+        }
 
         let trackingScripts = '';
         if (client.ga_tracking_id) {

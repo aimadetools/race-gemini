@@ -373,6 +373,126 @@
                 </div>
             </div>
 
+            <!-- Google Business Profile Sync & Local Updates Card -->
+            <div class="card" id="local-updates-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(31, 41, 55, 0.85) 0%, rgba(17, 24, 39, 0.85) 100%); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <i class="fab fa-google" style="color: #3b82f6;"></i> GBP Sync & Local Updates Publisher
+                        </h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Publish announcements, news, or coupons across all your generated service area landing pages and sync to search engines in real-time.</p>
+                    </div>
+                    <div>
+                        <button type="button" id="btn-link-gbp" class="button" style="padding: 6px 12px; font-size: 0.8rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-link"></i> Link Google Business Profile
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; flex-wrap: wrap; text-align: left;" class="updates-grid-layout">
+                    <!-- Left: Form -->
+                    <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px;">
+                        <form id="local-updates-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label for="announcement-text-input" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.4rem; font-weight: bold;">Update Announcement Text</label>
+                                <textarea id="announcement-text-input" placeholder="e.g. Winter pipe freeze special! Get 15% off all emergency plumbing services this week." required rows="3" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; transition: all 0.3s ease; box-sizing: border-box; resize: vertical;"></textarea>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" class="updates-subfields">
+                                <div>
+                                    <label for="announcement-type-select" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.4rem; font-weight: bold;">Update Type</label>
+                                    <select id="announcement-type-select" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; height: 43px;">
+                                        <option value="news">Local News</option>
+                                        <option value="offer">Special Offer / Sale</option>
+                                        <option value="event">Promo Event</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="announcement-duration-select" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.4rem; font-weight: bold;">Duration</label>
+                                    <select id="announcement-duration-select" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; height: 43px;">
+                                        <option value="0">Keep Active Forever</option>
+                                        <option value="7">Active for 7 Days</option>
+                                        <option value="30">Active for 30 Days</option>
+                                        <option value="90">Active for 90 Days</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="coupon-field-group" style="display: none;">
+                                <label for="announcement-coupon-input" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.4rem; font-weight: bold;">Coupon / Promo Code</label>
+                                <input type="text" id="announcement-coupon-input" placeholder="e.g. COLD15" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;" />
+                            </div>
+
+                            <button type="submit" id="publish-update-btn" class="button" style="width: 100%; padding: 0.75rem 1rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border: none; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); height: 45px; box-sizing: border-box;">
+                                <i class="fas fa-paper-plane"></i> Publish & Sync Update
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Preview and Status -->
+                    <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <h4 style="margin: 0 0 0.75rem 0; color: #fff; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                <span><i class="fas fa-eye" style="color: #60a5fa; margin-right: 6px;"></i> Live Page Preview</span>
+                                <span id="update-status-badge" class="badge" style="background: rgba(156, 163, 175, 0.1); color: #9ca3af; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 12px;">No Active Update</span>
+                            </h4>
+                            
+                            <!-- Announcement Bar Mock -->
+                            <div id="announcement-preview-container" style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 1.5rem; text-align: center; color: #9ca3af; font-style: italic; font-size: 0.9rem; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+                                Write an update on the left to see how it will appear at the top of your service area pages.
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem; font-size: 0.85rem; color: #9ca3af; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Last Published:</span>
+                                <span id="announcement-last-updated" style="color: #fff; font-weight: 500;">Never</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Expires On:</span>
+                                <span id="announcement-expires" style="color: #fff; font-weight: 500;">N/A</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Search Engine Sync:</span>
+                                <span id="announcement-sync-status" style="color: #10b981; font-weight: 600;"><i class="fas fa-check-circle"></i> Automatic (SpecialAnnouncement Schema)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for GBP Link Simulation -->
+            <div id="gbp-link-modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+                <div style="background: #111827; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; width: 100%; max-width: 480px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); padding: 2rem; box-sizing: border-box; color: #fff; text-align: left;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 8px;"><i class="fab fa-google" style="color: #3b82f6;"></i> Link Google Business Profile</h3>
+                        <span id="close-gbp-modal" style="font-size: 1.5rem; cursor: pointer; color: #9ca3af; font-weight: bold;">&times;</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #d1d5db; line-height: 1.5; margin-bottom: 1.5rem;">
+                        Sync announcements and special offers directly to your Google Business Profile (Google Maps) posts! When you publish a local update here, we will automatically push it to Google.
+                    </p>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                        <label for="gbp-location-select" style="display: block; font-size: 0.8rem; color: #ccc; margin-bottom: 0.4rem; font-weight: bold;">Google Business Location</label>
+                        <select id="gbp-location-select" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; margin-bottom: 1rem; box-sizing: border-box; height: 43px;">
+                            <option value="detecting">🔍 Searching your Google Account...</option>
+                        </select>
+                        
+                        <div id="gbp-sync-options" style="display: none; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked id="chk-sync-posts" /> Auto-sync updates as Google Updates
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" checked id="chk-sync-offers" /> Auto-sync offers as Google Product Posts
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button id="btn-cancel-gbp" class="button" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);">Cancel</button>
+                        <button id="btn-connect-gbp" class="button" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border: none;">Connect Account</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="card" id="captured-leads-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
                     <div>

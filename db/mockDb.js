@@ -136,6 +136,11 @@ export const originalMockQuery = async (text, params) => {
                     google_review_link: user.google_review_link || user.googleReviewLink || null,
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
+                    announcement_text: user.announcement_text || user.announcementText || null,
+                    announcement_type: user.announcement_type || user.announcementType || 'news',
+                    announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
+                    announcement_updated_at: user.announcement_updated_at || user.announcementUpdatedAt || null,
+                    announcement_expires_at: user.announcement_expires_at || user.announcementExpiresAt || null,
                 };
                 return { rows: [u] };
             }
@@ -174,6 +179,11 @@ export const originalMockQuery = async (text, params) => {
                     google_review_link: user.google_review_link || user.googleReviewLink || null,
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
+                    announcement_text: user.announcement_text || user.announcementText || null,
+                    announcement_type: user.announcement_type || user.announcementType || 'news',
+                    announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
+                    announcement_updated_at: user.announcement_updated_at || user.announcementUpdatedAt || null,
+                    announcement_expires_at: user.announcement_expires_at || user.announcementExpiresAt || null,
                 };
                 return { rows: [u] };
             }
@@ -337,6 +347,19 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('announcement_text = $1')) {
+            const [text, type, coupon, expiresAt, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.announcement_text = text;
+                user.announcement_type = type;
+                user.announcement_coupon_code = coupon;
+                user.announcement_expires_at = expiresAt;
+                user.announcement_updated_at = new Date();
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('widget_css = $1')) {
             const [widgetCss, userId] = params;
             const user = mockUsers.find(u => u.id.toString() === userId.toString());
