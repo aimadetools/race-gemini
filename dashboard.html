@@ -493,6 +493,69 @@
                 </div>
             </div>
 
+            <!-- AI Local Keyword Research Card -->
+            <div class="card" id="keyword-research-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(31, 41, 55, 0.85) 0%, rgba(17, 24, 39, 0.85) 100%); border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.5rem; font-weight: 700;">
+                            <i class="fas fa-search-location" style="color: #8b5cf6;"></i> AI Local Keyword Research
+                        </h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Automatically suggest top search queries for town + service combinations to boost your local landing pages SEO.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; text-align: left;">
+                    <!-- Input Form Column -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <form id="keyword-research-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <div>
+                                <label for="research-service" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #e5e7eb;">Target Service</label>
+                                <input type="text" id="research-service" placeholder="e.g. AC Repair" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; outline: none;" />
+                            </div>
+                            <div>
+                                <label for="research-town" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #e5e7eb;">Target Town / City</label>
+                                <input type="text" id="research-town" placeholder="e.g. Austin" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; outline: none;" />
+                            </div>
+                            <button class="button" type="submit" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); align-self: flex-start; display: flex; align-items: center; gap: 8px; height: 45px; justify-content: center; box-sizing: border-box;">
+                                <i class="fas fa-magic"></i> Suggest Keywords
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Results Column -->
+                    <div style="flex: 1.5; min-width: 300px; background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; min-height: 250px;">
+                        <h3 style="margin-top: 0; margin-bottom: 1rem; color: #fff; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-list-ul" style="color: #8b5cf6;"></i> Recommended Search Queries
+                        </h3>
+                        
+                        <!-- Loading State -->
+                        <div id="keyword-loading" style="display: none; flex-direction: column; justify-content: center; align-items: center; flex: 1; gap: 15px; color: #9ca3af; padding: 2rem 0;">
+                            <i class="fas fa-spinner fa-spin fa-2x" style="color: #8b5cf6;"></i>
+                            <span>Analyzing search patterns and generating suggestions...</span>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="keyword-empty" style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; gap: 10px; color: #6b7280; text-align: center; padding: 2rem 0;">
+                            <i class="fas fa-search fa-2x" style="opacity: 0.5;"></i>
+                            <span>Enter a service and town to generate keyword recommendations.</span>
+                        </div>
+
+                        <!-- Results Content -->
+                        <div id="keyword-results" style="display: none; flex-direction: column; gap: 1rem; flex: 1;">
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;" id="keyword-list-container">
+                                <!-- Dynamically populated list of keyword cards -->
+                            </div>
+                            <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                <span style="font-size: 0.85rem; color: #9ca3af;" id="keyword-meta-count"></span>
+                                <button class="button button-secondary button-small" id="copy-keywords-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem;">
+                                    <i class="far fa-copy"></i> Copy to Clipboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card" id="captured-leads-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
                     <div>

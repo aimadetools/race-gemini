@@ -2610,4 +2610,99 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Google Business Profile connected successfully! All updates will now auto-sync to your Google Maps listing.');
         });
     }
+
+    // --- AI Local Keyword Research Logic ---
+    const keywordForm = document.getElementById('keyword-research-form');
+    const keywordLoading = document.getElementById('keyword-loading');
+    const keywordEmpty = document.getElementById('keyword-empty');
+    const keywordResults = document.getElementById('keyword-results');
+    const keywordListContainer = document.getElementById('keyword-list-container');
+    const keywordMetaCount = document.getElementById('keyword-meta-count');
+    const copyKeywordsBtn = document.getElementById('copy-keywords-btn');
+    let currentKeywords = [];
+
+    if (keywordForm) {
+        keywordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const service = document.getElementById('research-service').value.trim();
+            const town = document.getElementById('research-town').value.trim();
+
+            if (!service || !town) return;
+
+            keywordEmpty.style.display = 'none';
+            keywordResults.style.display = 'none';
+            keywordLoading.style.display = 'flex';
+
+            try {
+                const response = await fetch('/api/suggest-keywords', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ service, town })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentKeywords = data.keywords || [];
+                    
+                    keywordListContainer.innerHTML = '';
+                    if (currentKeywords.length > 0) {
+                        currentKeywords.forEach(item => {
+                            const kwCard = document.createElement('div');
+                            kwCard.style.cssText = 'background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 10px;';
+                            kwCard.innerHTML = `
+                                <div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">
+                                    <span style="font-weight: 600; color: #fff; font-size: 0.95rem;">${item.query}</span>
+                                    <span style="font-size: 0.8rem; color: #9ca3af;">${item.explanation || ''}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                                    <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: #c084fc; font-size: 0.75rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(139, 92, 246, 0.2);">${item.intent}</span>
+                                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #34d399; font-size: 0.75rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.2);">${item.volume}</span>
+                                </div>
+                            `;
+                            keywordListContainer.appendChild(kwCard);
+                        });
+
+                        keywordMetaCount.textContent = `Suggested ${currentKeywords.length} keywords (${data.source === 'ai' ? 'AI Generated' : 'Standard Fallback'})`;
+                        keywordLoading.style.display = 'none';
+                        keywordResults.style.display = 'flex';
+                    } else {
+                        keywordLoading.style.display = 'none';
+                        keywordEmpty.style.display = 'flex';
+                    }
+                } else {
+                    const errData = await response.json();
+                    alert(`Error: ${errData.message}`);
+                    keywordLoading.style.display = 'none';
+                    keywordEmpty.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error fetching keywords:', error);
+                alert('Failed to Suggest Keywords. Please try again.');
+                keywordLoading.style.display = 'none';
+                keywordEmpty.style.display = 'flex';
+            }
+        });
+    }
+
+    if (copyKeywordsBtn) {
+        copyKeywordsBtn.addEventListener('click', () => {
+            if (currentKeywords.length === 0) return;
+            const kwText = currentKeywords.map(item => item.query).join('\n');
+            navigator.clipboard.writeText(kwText)
+                .then(() => {
+                    const originalBtnHtml = copyKeywordsBtn.innerHTML;
+                    copyKeywordsBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyKeywordsBtn.innerHTML = originalBtnHtml;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy keywords:', err);
+                    alert('Failed to copy keywords to clipboard.');
+                });
+        });
+    }
 });
