@@ -76,6 +76,90 @@
     </header>
     <main>
         <div class="dashboard-container">
+            <div class="card" id="activation-checklist-card" style="grid-column: 1 / -1; text-align: left; background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.9) 100%); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); display: block;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 style="margin: 0; color: #fff; display: flex; align-items: center; gap: 10px; font-size: 1.5rem;">
+                            <i class="fas fa-rocket" style="color: #3b82f6;"></i> SEO Activation Checklist
+                        </h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Complete these 5 steps to successfully set up your local SEO engine and start capturing leads.</p>
+                    </div>
+                    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+                        <div style="font-size: 0.9rem; font-weight: bold; color: #3b82f6; margin-bottom: 5px;" id="activation-progress-text">0% Completed</div>
+                        <div style="width: 150px; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden;">
+                            <div id="activation-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%); transition: width 0.5s ease;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;" id="checklist-items-container">
+                    <!-- Item 1 -->
+                    <div class="checklist-item" id="chk-generate" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 8px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px; box-sizing: border-box;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;"><i class="fas fa-map-marked-alt" style="color: #60a5fa;"></i></span>
+                                <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">Todo</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; text-align: left;">1. Create SEO Pages</h4>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4; text-align: left;">Generate landing pages for your business service towns.</p>
+                        </div>
+                        <a href="/generate.html" class="button button-small" style="margin-top: 15px; width: 100%; text-align: center; justify-content: center; text-decoration: none;">Go to Generator</a>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="checklist-item" id="chk-widget" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 8px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px; box-sizing: border-box;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;"><i class="fas fa-code" style="color: #a78bfa;"></i></span>
+                                <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">Todo</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; text-align: left;">2. Add to Website</h4>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4; text-align: left;">Embed our widget or install the WordPress plugin.</p>
+                        </div>
+                        <button onclick="document.getElementById('embeddable-widget-card').scrollIntoView({behavior: 'smooth'})" class="button button-small" style="margin-top: 15px; width: 100%; text-align: center; justify-content: center;">Get Embed Code</button>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="checklist-item" id="chk-domain" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 8px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px; box-sizing: border-box;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;"><i class="fas fa-globe" style="color: #34d399;"></i></span>
+                                <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">Todo</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; text-align: left;">3. Custom Domain</h4>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4; text-align: left;">Map a branded subdomain for your service area pages.</p>
+                        </div>
+                        <button onclick="document.getElementById('custom-domain-card').scrollIntoView({behavior: 'smooth'})" class="button button-small" style="margin-top: 15px; width: 100%; text-align: center; justify-content: center;">Set Domain</button>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="checklist-item" id="chk-alerts" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 8px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px; box-sizing: border-box;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;"><i class="fas fa-bell" style="color: #fbbf24;"></i></span>
+                                <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">Todo</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; text-align: left;">4. Enable Lead Alerts</h4>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4; text-align: left;">Configure SMS or Webhook notifications for new leads.</p>
+                        </div>
+                        <button onclick="document.getElementById('integrations-card').scrollIntoView({behavior: 'smooth'})" class="button button-small" style="margin-top: 15px; width: 100%; text-align: center; justify-content: center;">Set Up Alerts</button>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="checklist-item" id="chk-reviews" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 8px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px; box-sizing: border-box;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;"><i class="fas fa-star" style="color: #f472b6;"></i></span>
+                                <span class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">Todo</span>
+                            </div>
+                            <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 0.95rem; text-align: left;">5. Reputation Booster</h4>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4; text-align: left;">Configure review funneling to drive Google/Yelp reviews.</p>
+                        </div>
+                        <button onclick="document.getElementById('testimonials-card').scrollIntoView({behavior: 'smooth'})" class="button button-small" style="margin-top: 15px; width: 100%; text-align: center; justify-content: center;">Setup Booster</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <h2>Welcome, User!</h2>
                 <p>Here's an overview of your account.</p>

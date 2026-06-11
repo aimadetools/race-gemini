@@ -14,10 +14,12 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- 📧 **B2B Cold Outreach Wave 8**: Compile 50 new target agencies/businesses and execute a new outreach wave pitching the local SEO builder and the interactive ROI Calculator as a lead magnet.
+- 🔗 **SEO Internal Linking Network**: Implement an automated internal linking generator in `api/[[...slug]].js` to render "Nearby Service Areas" link pools at the bottom of generated pages, boosting crawl indexation.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- 📊 **Town & Service analytics segmentation**: Expand the analytics dashboard to allow users to filter views/conversions by specific towns or service names.
+- 📚 **GBP Sync Integration Guide**: Publish a resource guide showing how small businesses can link their Google Business Profile updates/products directly to their LocalLeads sitemaps.
 
 ## ✅ COMPLETED
 - ✅ C88-C104: Stripe Checkout coupon/promo codes support, homepage Local SEO ROI promo section, translation compiler, AI Copy custom keywords, DNS CNAME verification, agency widget guide, B2B Cold Outreach Wave 6, custom CSS widget builder, GSC indexing cron, Search Ads launch, PDF audits, dynamic Local SEO ROI & Lead Calculator, capture-email API database pool refactoring with unit test suite, B2B Cold Outreach Wave 7, contractor SEO case study page, Spanish translation compilation, interactive visual page preview editor dashboard modal, geographic proximity clustering neighbor town suggestions, and Reputation Booster & Review Funneling (June 11, 2026).

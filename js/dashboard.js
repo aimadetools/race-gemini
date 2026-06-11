@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeServiceFilters = new Set();
     let activeTownFilters = new Set();
     let searchQuery = '';
+    let currentDashboardData = null;
+
 
     async function fetchDashboardData() {
         try {
@@ -360,6 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
                 }
 
+                currentDashboardData = data;
+                updateActivationChecklist(data);
+
                 // Fetch testimonials
                 await fetchTestimonials();
             } else if (response.status === 401) {
@@ -617,6 +622,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             window.location.href = '/api/download-wp-plugin';
             
+            localStorage.setItem('localleads_integrated', 'true');
+            if (currentDashboardData) {
+                updateActivationChecklist(currentDashboardData);
+            }
+            
             setTimeout(() => {
                 downloadWpPluginBtn.disabled = false;
                 downloadWpPluginBtn.innerHTML = originalText;
@@ -654,6 +664,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         customDomainSuccessMsg.textContent = resData.message;
                         customDomainSuccessMsg.style.display = 'block';
                     }
+                    await fetchDashboardData();
                 } else {
                     if (customDomainErrorMsg) {
                         customDomainErrorMsg.textContent = resData.message || 'Failed to update settings.';
@@ -1137,6 +1148,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             cssSuccessMsg.style.display = 'block';
                         }
                         data.widgetCss = cssInput.value;
+                        if (currentDashboardData) {
+                            currentDashboardData.widgetCss = cssInput.value;
+                            updateActivationChecklist(currentDashboardData);
+                        }
                     } else {
                         if (cssErrorMsg) {
                             cssErrorMsg.textContent = result.message || 'Failed to save styles.';
@@ -1481,6 +1496,12 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.clipboard.writeText(embedCodeTextarea.value).then(() => {
                 const originalText = copyBtn.innerHTML;
                 copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                
+                localStorage.setItem('localleads_integrated', 'true');
+                if (currentDashboardData) {
+                    updateActivationChecklist(currentDashboardData);
+                }
+
                 setTimeout(() => {
                     copyBtn.innerHTML = originalText;
                 }, 2000);
@@ -2006,4 +2027,124 @@ document.addEventListener('DOMContentLoaded', () => {
             exportHtmlBtn.innerHTML = originalText;
         }
     });
+
+    function updateActivationChecklist(data) {
+        const checklistCard = document.getElementById('activation-checklist-card');
+        if (!checklistCard) return;
+
+        let completedSteps = 0;
+        const totalSteps = 5;
+
+        // Helper to update status badge
+        function updateStep(itemId, isCompleted, linkText = '') {
+            const item = document.getElementById(itemId);
+            if (!item) return;
+
+            const badge = item.querySelector('.status-badge');
+            const button = item.querySelector('.button');
+
+            if (isCompleted) {
+                completedSteps++;
+                item.classList.add('completed');
+                if (badge) {
+                    badge.style.background = 'rgba(16, 185, 129, 0.1)';
+                    badge.style.color = '#10b981';
+                    badge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    badge.innerHTML = '<i class="fas fa-check-circle"></i> Done';
+                }
+                if (button) {
+                    button.textContent = linkText || 'Manage';
+                    button.classList.add('button-secondary');
+                }
+            } else {
+                item.classList.remove('completed');
+                if (badge) {
+                    badge.style.background = 'rgba(239, 68, 68, 0.1)';
+                    badge.style.color = '#ef4444';
+                    badge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                    badge.textContent = 'Todo';
+                }
+                if (button) {
+                    if (itemId === 'chk-generate') {
+                        button.textContent = 'Go to Generator';
+                    } else if (itemId === 'chk-widget') {
+                        button.textContent = 'Get Embed Code';
+                    } else if (itemId === 'chk-domain') {
+                        button.textContent = 'Set Domain';
+                    } else if (itemId === 'chk-alerts') {
+                        button.textContent = 'Set Up Alerts';
+                    } else if (itemId === 'chk-reviews') {
+                        button.textContent = 'Setup Booster';
+                    }
+                    button.classList.remove('button-secondary');
+                }
+            }
+        }
+
+        // Step 1: Create SEO Pages
+        const pagesCompleted = data.generatedPages && data.generatedPages.length > 0;
+        updateStep('chk-generate', pagesCompleted, 'Generate More');
+
+        // Step 2: Add to Website (Widget CSS styling is configured OR client clicked wp plugin/widget button and has views)
+        let totalViews = 0;
+        if (data.generatedPages) {
+            totalViews = data.generatedPages.reduce((acc, p) => acc + (p.views || 0), 0);
+        }
+        const integratedLocal = localStorage.getItem('localleads_integrated') === 'true';
+        const widgetCompleted = !!((data.widgetCss && data.widgetCss.trim().length > 0) || totalViews > 0 || integratedLocal);
+        updateStep('chk-widget', widgetCompleted, 'Widget Settings');
+
+        // Step 3: Custom Domain
+        const domainCompleted = !!(data.customDomain && data.customDomain.trim().length > 0);
+        updateStep('chk-domain', domainCompleted, 'Domain Details');
+
+        // Step 4: Lead Alerts
+        const alertsCompleted = !!(data.webhookEnabled || data.smsEnabled);
+        updateStep('chk-alerts', alertsCompleted, 'Alerts Config');
+
+        // Step 5: Reputation Booster
+        const reviewsCompleted = !!(data.googleReviewLink || data.facebookReviewLink || data.yelpReviewLink);
+        updateStep('chk-reviews', reviewsCompleted, 'Booster Config');
+
+        // Update progress bar
+        const progressPercent = Math.round((completedSteps / totalSteps) * 100);
+        const progressBar = document.getElementById('activation-progress-bar');
+        const progressText = document.getElementById('activation-progress-text');
+
+        if (progressBar) {
+            progressBar.style.width = `${progressPercent}%`;
+        }
+        if (progressText) {
+            progressText.textContent = `${progressPercent}% Completed`;
+        }
+
+        // Add visual celebration if 100% complete
+        if (progressPercent === 100) {
+            const title = checklistCard.querySelector('h2');
+            if (title && !document.getElementById('chk-activated-badge')) {
+                const badge = document.createElement('span');
+                badge.id = 'chk-activated-badge';
+                badge.style.cssText = `
+                    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+                    color: #000;
+                    font-size: 0.75rem;
+                    font-weight: 900;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-left: 10px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+                `;
+                badge.innerHTML = '<i class="fas fa-crown"></i> Fully Activated';
+                title.appendChild(badge);
+            }
+        } else {
+            const badge = document.getElementById('chk-activated-badge');
+            if (badge) badge.remove();
+        }
+    }
 });
