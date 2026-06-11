@@ -1,7 +1,7 @@
 # Progress Log
  
 ## 🏆 Key Milestones
-- **June 11, 2026:** Compiled targets and executed B2B Cold Outreach Wave 8 pitching the local SEO builder and interactive ROI Calculator, and developed/integrated an automated internal linking generator in `api/[[...slug]].js` to render "Nearby Service Areas" link pools (Session 216). Also designed, built, and integrated an interactive SEO Activation Checklist & Onboarding Wizard, verified and finalized the Reputation Booster & Review Funneling system, ran all Jest/Python tests (100% pass), and compiled minified assets (Sessions 214-215).
+- **June 11, 2026:** Expanded the analytics dashboard to support Town & Service views/conversions filtering via select controls on the frontend and SQL joins on the backend, and published a Google Business Profile (GBP) Sync Integration Guide in the blog to show small businesses how to link GBP updates directly to their LocalLeads sitemaps (Session 217). Also executed B2B Cold Outreach Wave 8, integrated Nearby Service Areas link pools, built an interactive SEO Onboarding Checklist, verified the Reputation Booster system, ran all tests (100% pass), and compiled assets (Sessions 214-216).
 - **June 10, 2026:** Designed and built a fully interactive Visual Page Preview Editor modal on the dashboard featuring live text updates, custom/preset theme color selections, desktop/mobile responsive viewport previews, watermark-free raw HTML export, custom primary color database schema/migration, and minified production asset compilation. Also executed B2B Cold Outreach Wave 7, created contractor case study pages, compiled Spanish static translations, and designed and integrated a Geographic Proximity Clustering tool in the page generator to automatically suggest neighboring towns using OpenCage geocoding data fallbacks and the OpenStreetMap Overpass API. (Sessions 175-213).
 - **June 4, 2026:** Implemented client-side WebP logo upload conversion and lazy loading of agency logos on generated pages to optimize dynamic generated page layout loads. Also implemented CSV export functionality, premium lockout modals, CNAME domain mapping, embeddable service area widgets, bulk client CSV imports, CRM & Webhook integrations, Google Analytics / Facebook Pixel tracking configurations, paid advertising ad copy configurations, case study pages, and Twilio SMS notification integrations.
 - **June 3, 2026:** Implemented custom white-label branding configurations with logo file upload support and live previews, executed B2B Cold Outreach Wave 4, integrated Google Business Profile category schema matching, unified page storage in PostgreSQL, built an interactive dual-axis visual analytics chart, and created the Captured Leads dashboard and monetization lock-out flow.
@@ -15,6 +15,20 @@
 ---
 
 ## June 11, 2026
+
+### Session 217 (Analytics Segmentation & GBP Sync Guide)
+- **Features & Analytics**:
+  - **Town & Service analytics segmentation**: Expanded the analytics overview card on the main dashboard (`dashboard.html` / `js/dashboard.js`) with new select dropdowns to filter views/conversions by specific towns or services.
+  - **API Filtering Integration**: Updated the `/api/dashboard` API handler (`api/dashboard.js`) to parse `town` and `service` query parameters and apply them dynamically via SQL joins on `seo_pages` for daily stats.
+  - **Dropdown Population**: Implemented automatic client-side extraction of unique towns/services from generated pages to populate filter dropdowns.
+- **Resource Guides**:
+  - **GBP Sync Integration Guide**: Authored and published a resource guide `blog/google-business-profile-sitemap-sync-guide.html` detailing how small businesses can link GBP updates and products directly to LocalLeads dynamic sitemaps.
+  - **Blog & Sitemap Registration**: Listed the guide in the blog listing `blog.html` and registered it in the XML sitemap `sitemap.xml`.
+- **QA Verification & Testing**:
+  - Authored a new integration unit test in `tests/api/dashboard.test.js` validating the filtering behavior of the dashboard query handler.
+  - Executed all 56 Jest unit/integration test suites (379 tests) successfully with a 100% pass rate.
+  - Executed the Python test suite (56 tests) successfully with a 100% pass rate.
+  - Minified all production JavaScript and CSS assets successfully using `npm run build`.
 
 ### Session 216 (B2B Cold Outreach Wave 8 & SEO Internal Linking Network)
 - **Marketing & Growth**:

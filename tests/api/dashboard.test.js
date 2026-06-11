@@ -312,4 +312,44 @@ describe('dashboard API', () => {
       yelpReviewLink: null
     });
   });
+
+  test('should apply town and service filters to daily stats queries when provided', async () => {
+    const userId = 'user123';
+    const userEmail = 'test@example.com';
+    const user = { id: userId, email: userEmail, credits: 50 };
+    addMockUser(user);
+
+    req.query = { town: 'Dallas', service: 'Plumbing' };
+    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    jwt.verify.mockReturnValue({ userId });
+    mockKv.lrange.mockResolvedValue([]);
+
+    const capturedQueries = [];
+    setQueryDelegate(async (text, params) => {
+      capturedQueries.push({ text, params });
+      if (text.toLowerCase().includes('select email, credits')) {
+        return { rows: [user] };
+      }
+      return { rows: [] };
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+
+    const viewsQuery = capturedQueries.find(q => q.text.includes('user_events') && q.text.includes('DATE(ue.timestamp)'));
+    const leadsQuery = capturedQueries.find(q => q.text.includes('leads') && q.text.includes('DATE(l.created_at)'));
+
+    expect(viewsQuery).toBeDefined();
+    expect(viewsQuery.text).toContain('sp.town = $2');
+    expect(viewsQuery.text).toContain('sp.service = $3');
+    expect(viewsQuery.params).toContain('Dallas');
+    expect(viewsQuery.params).toContain('Plumbing');
+
+    expect(leadsQuery).toBeDefined();
+    expect(leadsQuery.text).toContain('sp.town = $2');
+    expect(leadsQuery.text).toContain('sp.service = $3');
+    expect(leadsQuery.params).toContain('Dallas');
+    expect(leadsQuery.params).toContain('Plumbing');
+  });
 });

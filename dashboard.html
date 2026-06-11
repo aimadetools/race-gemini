@@ -183,6 +183,23 @@
             <div class="card" id="analytics-overview-card">
                 <h2>Analytics Overview</h2>
                 <p style="margin-bottom: 1.5rem; color: #9ca3af; font-size: 0.95rem;">Daily page views and lead conversions over the last 30 days.</p>
+                
+                <!-- Town & Service analytics segmentation filters -->
+                <div class="analytics-filters" style="display: flex; gap: 15px; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <label for="analytics-town-select" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.5rem; font-weight: bold;">Filter by Town</label>
+                        <select id="analytics-town-select" style="width: 100%; padding: 0.5rem 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; cursor: pointer;">
+                            <option value="">All Towns</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <label for="analytics-service-select" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.5rem; font-weight: bold;">Filter by Service</label>
+                        <select id="analytics-service-select" style="width: 100%; padding: 0.5rem 0.75rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box; cursor: pointer;">
+                            <option value="">All Services</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div style="position: relative; height: 320px; width: 100%;">
                     <canvas id="analyticsChart"></canvas>
                 </div>

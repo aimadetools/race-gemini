@@ -42,6 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewLinkInput = document.getElementById('review-link-input');
     const copyReviewLinkBtn = document.getElementById('copy-review-link-btn');
 
+    const analyticsTownSelect = document.getElementById('analytics-town-select');
+    const analyticsServiceSelect = document.getElementById('analytics-service-select');
+    if (analyticsTownSelect && analyticsServiceSelect) {
+        analyticsTownSelect.addEventListener('change', () => fetchDashboardData());
+        analyticsServiceSelect.addEventListener('change', () => fetchDashboardData());
+    }
+
     let userPages = [];
     let activeServiceFilters = new Set();
     let activeTownFilters = new Set();
@@ -51,7 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchDashboardData() {
         try {
-            const response = await fetch('/api/dashboard', {
+            const townVal = analyticsTownSelect ? analyticsTownSelect.value : '';
+            const serviceVal = analyticsServiceSelect ? analyticsServiceSelect.value : '';
+            let url = '/api/dashboard';
+            const queryParams = [];
+            if (townVal) queryParams.push(`town=${encodeURIComponent(townVal)}`);
+            if (serviceVal) queryParams.push(`service=${encodeURIComponent(serviceVal)}`);
+            if (queryParams.length > 0) {
+                url += '?' + queryParams.join('&');
+            }
+
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
                 }
@@ -102,6 +119,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 populateTagFilters();
                 renderFilteredPages();
+
+                // Populate analytics filter dropdowns based on userPages
+                if (analyticsTownSelect && analyticsServiceSelect) {
+                    const uniqueTownsList = [...new Set(userPages.map(p => p.town).filter(Boolean))].sort();
+                    const uniqueServicesList = [...new Set(userPages.map(p => p.service).filter(Boolean))].sort();
+
+                    if (analyticsTownSelect.options.length <= 1 || analyticsTownSelect.dataset.pagesCount !== String(userPages.length)) {
+                        analyticsTownSelect.dataset.pagesCount = userPages.length;
+                        const currentTownVal = analyticsTownSelect.value;
+                        analyticsTownSelect.innerHTML = '<option value="">All Towns</option>';
+                        uniqueTownsList.forEach(t => {
+                            const opt = document.createElement('option');
+                            opt.value = t;
+                            opt.textContent = t;
+                            if (t === currentTownVal) opt.selected = true;
+                            analyticsTownSelect.appendChild(opt);
+                        });
+                    }
+
+                    if (analyticsServiceSelect.options.length <= 1 || analyticsServiceSelect.dataset.pagesCount !== String(userPages.length)) {
+                        analyticsServiceSelect.dataset.pagesCount = userPages.length;
+                        const currentServiceVal = analyticsServiceSelect.value;
+                        analyticsServiceSelect.innerHTML = '<option value="">All Services</option>';
+                        uniqueServicesList.forEach(s => {
+                            const opt = document.createElement('option');
+                            opt.value = s;
+                            opt.textContent = s;
+                            if (s === currentServiceVal) opt.selected = true;
+                            analyticsServiceSelect.appendChild(opt);
+                        });
+                    }
+                }
 
                 // Populate captured leads
                 const leadsTableBody = document.querySelector('#captured-leads tbody');

@@ -121,25 +121,50 @@ export default async function handler(req, res, currentKvClient) {
           }
       });
 
+      const { town, service } = req.query || {};
+
       let dailyStats = [];
       try {
-        const viewsAnalyticsResult = await query(
-          `SELECT DATE(timestamp) as date, COUNT(*) as count
-           FROM user_events
-           WHERE user_id = $1::text AND event_name = 'page_view' AND timestamp >= NOW() - INTERVAL '30 days'
-           GROUP BY DATE(timestamp)
-           ORDER BY DATE(timestamp) ASC`,
-          [userId]
-        );
+        let viewsQuery = `
+          SELECT DATE(ue.timestamp) as date, COUNT(*) as count
+          FROM user_events ue
+          LEFT JOIN seo_pages sp ON sp.id::text = ue.event_data->>'pageId'
+          WHERE (ue.user_id = $1::text OR sp.user_id::text = $1::text)
+            AND ue.event_name = 'page_view'
+            AND ue.timestamp >= NOW() - INTERVAL '30 days'
+        `;
+        const viewsParams = [userId];
 
-        const leadsAnalyticsResult = await query(
-          `SELECT DATE(created_at) as date, COUNT(*) as count
-           FROM leads
-           WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '30 days'
-           GROUP BY DATE(created_at)
-           ORDER BY DATE(created_at) ASC`,
-          [userId]
-        );
+        let leadsQuery = `
+          SELECT DATE(l.created_at) as date, COUNT(*) as count
+          FROM leads l
+          LEFT JOIN seo_pages sp ON sp.id::text = l.page_id
+          WHERE l.user_id = $1
+            AND l.created_at >= NOW() - INTERVAL '30 days'
+        `;
+        const leadsParams = [userId];
+
+        let paramIndex = 2;
+        if (town) {
+          viewsQuery += ` AND sp.town = $${paramIndex}`;
+          viewsParams.push(town);
+          leadsQuery += ` AND sp.town = $${paramIndex}`;
+          leadsParams.push(town);
+          paramIndex++;
+        }
+        if (service) {
+          viewsQuery += ` AND sp.service = $${paramIndex}`;
+          viewsParams.push(service);
+          leadsQuery += ` AND sp.service = $${paramIndex}`;
+          leadsParams.push(service);
+          paramIndex++;
+        }
+
+        viewsQuery += ` GROUP BY DATE(ue.timestamp) ORDER BY DATE(ue.timestamp) ASC`;
+        leadsQuery += ` GROUP BY DATE(l.created_at) ORDER BY DATE(l.created_at) ASC`;
+
+        const viewsAnalyticsResult = await query(viewsQuery, viewsParams);
+        const leadsAnalyticsResult = await query(leadsQuery, leadsParams);
 
         const now = new Date();
         for (let i = 29; i >= 0; i--) {
