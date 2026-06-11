@@ -291,6 +291,9 @@ ${JSON.stringify(schemaObj, null, 2)}
         const resolvedOpeningHours = page.openingHours || 'Mo-Fr 09:00-17:00';
         const phoneCtaDisplay = page.telephone ? 'inline-block' : 'none';
 
+        const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
+        const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(page.businessName)}&service=${encodeURIComponent(page.service)}&town=${encodeURIComponent(page.town)}&color=${encodeURIComponent(primaryColorValue)}`;
+
         let pageContent = template
             .replace(/{{businessName}}/g, page.businessName)
             .replace(/{{service}}/g, page.service)
@@ -298,6 +301,7 @@ ${JSON.stringify(schemaObj, null, 2)}
             .replace(/{{metaDescription}}/g, metaDescription)
             .replace(/{{ogDescription}}/g, ogDescription)
             .replace(/{{twitterDescription}}/g, twitterDescription)
+            .replace(/{{ogImage}}/g, ogImageUrl)
             .replace(/{{primaryColor}}/g, primaryColorValue)
             .replace(/{{agencyLogo}}/g, agencyLogoHtml)
             .replace(/{{ai_content}}/g, aiContentValue)

@@ -103,6 +103,9 @@ export default async (req, res) => {
 
         const localBusinessSchema = `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;
 
+        const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
+        const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(resolvedColor)}`;
+
         let pageContent = template
             .replace(/{{businessName}}/g, escapedBusinessName)
             .replace(/{{service}}/g, escapedService)
@@ -112,6 +115,7 @@ export default async (req, res) => {
             .replace(/{{metaDescription}}/g, metaDescription)
             .replace(/{{ogDescription}}/g, ogDescription)
             .replace(/{{twitterDescription}}/g, twitterDescription)
+            .replace(/{{ogImage}}/g, ogImageUrl)
             .replace(/{{service_slug}}/g, serviceSlug)
             .replace(/{{town_slug}}/g, townSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)

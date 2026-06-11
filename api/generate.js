@@ -243,6 +243,9 @@ export default async (req, res) => {
                     const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
                     const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
 
+                    const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
+                    const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(primaryColorValue)}`;
+
                     const resolvedPhone = escapeHtml(telephone || '');
                     const resolvedPriceRange = escapeHtml(priceRange || 'Standard');
                     const resolvedOpeningHours = escapeHtml(openingHours || 'Mo-Fr 09:00-17:00');
@@ -258,6 +261,7 @@ export default async (req, res) => {
                         .replace(/{{metaDescription}}/g, metaDescription)
                         .replace(/{{ogDescription}}/g, ogDescription)
                         .replace(/{{twitterDescription}}/g, twitterDescription)
+                        .replace(/{{ogImage}}/g, ogImageUrl)
                         .replace(/{{service_slug}}/g, serviceSlug)
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)

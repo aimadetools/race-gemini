@@ -245,6 +245,9 @@ export default async function handler(req, res, currentKvClient) {
 
         const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
 
+        const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
+        const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(primaryColorValue)}`;
+
         const agencyLogoHtml = logoUrl ? `<img src="${logoUrl}" alt="${agencyName} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName;
 
         const resolvedPhone = telephone || '';
@@ -259,6 +262,7 @@ export default async function handler(req, res, currentKvClient) {
             .replace(/{{metaDescription}}/g, metaDescription)
             .replace(/{{ogDescription}}/g, ogDescription)
             .replace(/{{twitterDescription}}/g, twitterDescription)
+            .replace(/{{ogImage}}/g, ogImageUrl)
             .replace(/{{primaryColor}}/g, primaryColorValue)
             .replace(/{{agencyLogo}}/g, agencyLogoHtml)
             .replace(/{{ai_content}}/g, aiContent)
