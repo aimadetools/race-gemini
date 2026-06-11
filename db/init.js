@@ -17,6 +17,7 @@ import { addIndexingStatusToSeoPages } from './migrations/add_indexing_status_to
 import { addWidgetCssToUsers } from './migrations/add_widget_css_to_users.js';
 import { addAiKeywordsToSeoPages } from './migrations/add_ai_keywords_to_seo_pages.js';
 import { addPrimaryColorToSeoPages } from './migrations/add_primary_color_to_seo_pages.js';
+import { addExternalReviewLinksToUsers } from './migrations/add_external_review_links_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -76,6 +77,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring primary color column exists in seo_pages table...');
     await addPrimaryColorToSeoPages();
+
+    console.log('Ensuring external review links exist in users table...');
+    await addExternalReviewLinksToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

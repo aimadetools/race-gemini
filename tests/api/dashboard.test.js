@@ -249,7 +249,10 @@ describe('dashboard API', () => {
       fbPixelId: null,
       smsEnabled: false,
       smsPhone: null,
-      widgetCss: null
+      widgetCss: null,
+      googleReviewLink: null,
+      facebookReviewLink: null,
+      yelpReviewLink: null
     });
   });
 
@@ -303,7 +306,10 @@ describe('dashboard API', () => {
       fbPixelId: null,
       smsEnabled: false,
       smsPhone: null,
-      widgetCss: null
+      widgetCss: null,
+      googleReviewLink: null,
+      facebookReviewLink: null,
+      yelpReviewLink: null
     });
   });
 });

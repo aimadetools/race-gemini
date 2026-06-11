@@ -19,7 +19,7 @@ export default async (req, res) => {
     }
 
     try {
-        const userResult = await query('SELECT name, logo_url, is_agency, agency_id FROM users WHERE id = $1', [userIdNum]);
+        const userResult = await query('SELECT name, logo_url, is_agency, agency_id, google_review_link, facebook_review_link, yelp_review_link FROM users WHERE id = $1', [userIdNum]);
         if (userResult.rows.length === 0) {
             return res.status(404).json({ message: 'Business not found.' });
         }
@@ -44,7 +44,10 @@ export default async (req, res) => {
         return res.status(200).json({
             businessName,
             logoUrl,
-            pagesCount
+            pagesCount,
+            googleReviewLink: user.google_review_link,
+            facebookReviewLink: user.facebook_review_link,
+            yelpReviewLink: user.yelp_review_link
         });
     } catch (error) {
         await logError(error, 'Public Business Info Fetch Error');

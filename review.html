@@ -271,6 +271,25 @@
     <i class="fas fa-check-circle success-icon"></i>
     <h1>Thank You!</h1>
     <p class="subtitle" id="success-message-text">Your review has been successfully submitted. We appreciate your feedback!</p>
+    <div id="funnel-links" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+      <p style="font-size: 0.95rem; margin-bottom: 1.25rem; color: #cbd5e1;">Since you had a great experience, could you also share your review on Google, Facebook, or Yelp? We've copied it to your clipboard!</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+        <button id="copy-text-btn" class="submit-btn" type="button" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: none; padding: 0.75rem; width: auto; min-width: 200px;">
+          <i class="far fa-copy"></i> Copy Review Text
+        </button>
+        <div id="external-buttons" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; width: 100%;">
+          <a id="google-btn" href="#" target="_blank" class="submit-btn" style="display: none; width: auto; background: #ea4335; box-shadow: none; padding: 0.75rem 1.25rem; text-decoration: none;">
+            <i class="fab fa-google"></i> Post on Google
+          </a>
+          <a id="facebook-btn" href="#" target="_blank" class="submit-btn" style="display: none; width: auto; background: #1877f2; box-shadow: none; padding: 0.75rem 1.25rem; text-decoration: none;">
+            <i class="fab fa-facebook-f"></i> Post on Facebook
+          </a>
+          <a id="yelp-btn" href="#" target="_blank" class="submit-btn" style="display: none; width: auto; background: #d32323; box-shadow: none; padding: 0.75rem 1.25rem; text-decoration: none;">
+            <i class="fab fa-yelp"></i> Post on Yelp
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -281,6 +300,10 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const clientId = urlParams.get('client');
+
+      let googleReviewLink = null;
+      let facebookReviewLink = null;
+      let yelpReviewLink = null;
 
       if (!clientId) {
         document.getElementById('form-card').innerHTML = `
@@ -299,6 +322,10 @@
           document.getElementById('business-title').textContent = `Review ${data.businessName}`;
           document.getElementById('business-subtitle').textContent = `How was your experience with ${data.businessName}? Leave your feedback below.`;
           
+          googleReviewLink = data.googleReviewLink || null;
+          facebookReviewLink = data.facebookReviewLink || null;
+          yelpReviewLink = data.yelpReviewLink || null;
+
           if (data.logoUrl) {
             const logoImg = document.getElementById('business-logo');
             logoImg.src = data.logoUrl;
@@ -344,6 +371,48 @@
           if (res.ok) {
             document.getElementById('form-card').style.display = 'none';
             document.getElementById('success-card').style.display = 'block';
+
+            // Review Funneling: positive rating (4 or 5) and at least one external link configured
+            const numericRating = parseInt(ratingVal, 10);
+            if (numericRating >= 4 && (googleReviewLink || facebookReviewLink || yelpReviewLink)) {
+              // Copy review text to clipboard
+              try {
+                await navigator.clipboard.writeText(reviewText);
+              } catch (clipErr) {
+                console.warn('Clipboard write failed:', clipErr);
+              }
+
+              const copyBtn = document.getElementById('copy-text-btn');
+              copyBtn.addEventListener('click', async () => {
+                try {
+                  await navigator.clipboard.writeText(reviewText);
+                  copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                  setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy Review Text';
+                  }, 2000);
+                } catch (btnClipErr) {
+                  console.error('Manual clipboard copy failed:', btnClipErr);
+                }
+              });
+
+              if (googleReviewLink) {
+                const gBtn = document.getElementById('google-btn');
+                gBtn.href = googleReviewLink;
+                gBtn.style.display = 'inline-flex';
+              }
+              if (facebookReviewLink) {
+                const fBtn = document.getElementById('facebook-btn');
+                fBtn.href = facebookReviewLink;
+                fBtn.style.display = 'inline-flex';
+              }
+              if (yelpReviewLink) {
+                const yBtn = document.getElementById('yelp-btn');
+                yBtn.href = yelpReviewLink;
+                yBtn.style.display = 'inline-flex';
+              }
+
+              document.getElementById('funnel-links').style.display = 'block';
+            }
           } else {
             const errData = await res.json();
             throw new Error(errData.message || 'Failed to submit review. Please try again.');

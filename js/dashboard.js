@@ -347,6 +347,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (smsPhoneInput) smsPhoneInput.value = data.smsPhone || '';
                 if (smsEnabledCheckbox) smsEnabledCheckbox.checked = !!data.smsEnabled;
 
+                // Populate review links
+                const googleReviewLinkInput = document.getElementById('google-review-link-input');
+                const facebookReviewLinkInput = document.getElementById('facebook-review-link-input');
+                const yelpReviewLinkInput = document.getElementById('yelp-review-link-input');
+                if (googleReviewLinkInput) googleReviewLinkInput.value = data.googleReviewLink || '';
+                if (facebookReviewLinkInput) facebookReviewLinkInput.value = data.facebookReviewLink || '';
+                if (yelpReviewLinkInput) yelpReviewLinkInput.value = data.yelpReviewLink || '';
+
                 // Populate review link
                 if (reviewLinkInput && data.clientId) {
                     reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
@@ -1503,6 +1511,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const fbPixelId = document.getElementById('fb-pixel-id-input').value;
             const smsPhone = document.getElementById('sms-phone-input') ? document.getElementById('sms-phone-input').value : '';
             const smsEnabled = document.getElementById('sms-enabled-checkbox') ? document.getElementById('sms-enabled-checkbox').checked : false;
+            const googleReviewLink = document.getElementById('google-review-link-input') ? document.getElementById('google-review-link-input').value : '';
+            const facebookReviewLink = document.getElementById('facebook-review-link-input') ? document.getElementById('facebook-review-link-input').value : '';
+            const yelpReviewLink = document.getElementById('yelp-review-link-input') ? document.getElementById('yelp-review-link-input').value : '';
 
             try {
                 const response = await fetch('/api/update-integrations', {
@@ -1511,7 +1522,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink })
                 });
 
                 const resData = await response.json();

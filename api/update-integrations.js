@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone } = req.body;
+    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink } = req.body;
 
     // Validate inputs
     let cleanWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
@@ -36,6 +36,9 @@ export default async function handler(req, res) {
     let cleanFbPixelId = fbPixelId ? fbPixelId.trim() : null;
     let cleanSmsPhone = smsPhone ? smsPhone.trim() : null;
     let isSmsEnabled = !!smsEnabled;
+    let cleanGoogleReviewLink = googleReviewLink ? googleReviewLink.trim() : null;
+    let cleanFacebookReviewLink = facebookReviewLink ? facebookReviewLink.trim() : null;
+    let cleanYelpReviewLink = yelpReviewLink ? yelpReviewLink.trim() : null;
 
     if (isWebhookEnabled && cleanWebhookUrl) {
       try {
@@ -47,6 +50,29 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Invalid Webhook URL format.' });
       }
     }
+
+    const validateReviewUrl = (url, name) => {
+      if (url) {
+        try {
+          const urlObj = new URL(url);
+          if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+            return `${name} must use http or https protocol.`;
+          }
+        } catch (e) {
+          return `Invalid ${name} format.`;
+        }
+      }
+      return null;
+    };
+
+    const googleErr = validateReviewUrl(cleanGoogleReviewLink, 'Google Review Link');
+    if (googleErr) return res.status(400).json({ message: googleErr });
+
+    const facebookErr = validateReviewUrl(cleanFacebookReviewLink, 'Facebook Review Link');
+    if (facebookErr) return res.status(400).json({ message: facebookErr });
+
+    const yelpErr = validateReviewUrl(cleanYelpReviewLink, 'Yelp Review Link');
+    if (yelpErr) return res.status(400).json({ message: yelpErr });
 
     if (isSmsEnabled) {
       if (!cleanSmsPhone) {
@@ -71,6 +97,15 @@ export default async function handler(req, res) {
     if (cleanSmsPhone && cleanSmsPhone.length > 50) {
       return res.status(400).json({ message: 'Phone number must be under 50 characters.' });
     }
+    if (cleanGoogleReviewLink && cleanGoogleReviewLink.length > 500) {
+      return res.status(400).json({ message: 'Google Review Link must be under 500 characters.' });
+    }
+    if (cleanFacebookReviewLink && cleanFacebookReviewLink.length > 500) {
+      return res.status(400).json({ message: 'Facebook Review Link must be under 500 characters.' });
+    }
+    if (cleanYelpReviewLink && cleanYelpReviewLink.length > 500) {
+      return res.status(400).json({ message: 'Yelp Review Link must be under 500 characters.' });
+    }
 
     // Update in PostgreSQL
     await query(
@@ -81,9 +116,12 @@ export default async function handler(req, res) {
            fb_pixel_id = $4,
            sms_enabled = $5,
            sms_phone = $6,
+           google_review_link = $7,
+           facebook_review_link = $8,
+           yelp_review_link = $9,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $7`,
-      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, userId]
+       WHERE id = $10`,
+      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, userId]
     );
 
     return res.status(200).json({ message: 'Integration settings updated successfully.' });

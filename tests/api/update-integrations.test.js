@@ -186,4 +186,45 @@ describe('update-integrations API', () => {
     expect(updatedUser.sms_enabled).toBe(true);
     expect(updatedUser.sms_phone).toBe('+15551234567');
   });
+
+  test('should return 400 if Google Review Link has invalid URL format', async () => {
+    req.body.googleReviewLink = 'not-a-valid-url';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid Google Review Link format.' });
+  });
+
+  test('should return 400 if Facebook Review URL has non http/https protocol', async () => {
+    req.body.facebookReviewLink = 'ftp://facebook.com/reviews';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Facebook Review Link must use http or https protocol.' });
+  });
+
+  test('should update external review links successfully and return 200', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      google_review_link: null,
+      facebook_review_link: null,
+      yelp_review_link: null,
+    };
+    addMockUser(user);
+
+    req.body.googleReviewLink = 'https://g.page/r/123/review';
+    req.body.facebookReviewLink = 'https://facebook.com/biz/reviews';
+    req.body.yelpReviewLink = 'https://yelp.com/biz/123';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const updatedUser = getMockUsers().find(u => u.id === '123');
+    expect(updatedUser.google_review_link).toBe('https://g.page/r/123/review');
+    expect(updatedUser.facebook_review_link).toBe('https://facebook.com/biz/reviews');
+    expect(updatedUser.yelp_review_link).toBe('https://yelp.com/biz/123');
+  });
 });
