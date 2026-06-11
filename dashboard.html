@@ -267,6 +267,112 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Competitor SEO Gap Analyzer Card -->
+            <div class="card" id="competitor-gap-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(31, 41, 55, 0.85) 0%, rgba(17, 24, 39, 0.85) 100%); border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                <style>
+                    .comp-gap-tab {
+                        background: transparent;
+                        border: none;
+                        border-bottom: 2px solid transparent;
+                        color: #9ca3af;
+                        padding: 0.75rem 1.25rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        font-size: 0.9rem;
+                        outline: none;
+                    }
+                    .comp-gap-tab.active {
+                        border-bottom: 2px solid #10b981;
+                        color: #fff;
+                    }
+                    .comp-gap-tab:hover {
+                        color: #fff;
+                    }
+                    .gap-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 0.75rem 1rem;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                        transition: all 0.2s ease;
+                    }
+                    .gap-item:last-child {
+                        border-bottom: none;
+                    }
+                    .gap-item:hover {
+                        background: rgba(255, 255, 255, 0.02);
+                    }
+                </style>
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-chart-bar" style="color: #10b981;"></i> Local Competitor SEO Gap Analyzer
+                        </h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Compare your service coverage against a competitor's domain to discover uncontested target towns.</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <form id="competitor-gap-form" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                        <div style="flex: 2; min-width: 250px; text-align: left;">
+                            <label for="competitor-url-input" style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 0.5rem; font-weight: bold;">Competitor Website or Domain</label>
+                            <div style="position: relative; width: 100%;">
+                                <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.95rem;">
+                                    <i class="fas fa-globe"></i>
+                                </span>
+                                <input type="text" id="competitor-url-input" placeholder="e.g. competitorplumbing.com" required style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;" />
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 160px;">
+                            <button type="submit" id="analyze-competitor-btn" class="button" style="width: 100%; padding: 0.75rem 1rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); height: 45px; box-sizing: border-box;">
+                                <i class="fas fa-search-location"></i> Analyze Gap
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="competitor-gap-loading" style="display: none; text-align: center; padding: 1.5rem 0;">
+                        <p style="color: #9ca3af; margin-bottom: 0.75rem; font-size: 0.9rem;"><i class="fas fa-spinner fa-spin" style="color: #10b981; margin-right: 8px;"></i> Auditing competitor website and comparing service areas...</p>
+                        <div style="width: 100%; max-width: 300px; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; margin: 0 auto; overflow: hidden; position: relative;">
+                            <div class="progress-bar-fill" style="width: 10%; height: 100%; background: linear-gradient(90deg, #10b981, #3b82f6); transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="competitor-gap-error" style="display: none; color: #ef4444; margin-top: 1rem; text-align: center; font-size: 0.95rem; font-weight: 500;"></div>
+                </div>
+
+                <div id="competitor-gap-results" style="display: none; text-align: left;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.15); padding: 1rem; border-radius: 10px; text-align: center;">
+                            <h4 style="margin: 0; color: #9ca3af; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Your Advantage</h4>
+                            <div id="comp-gap-advantage-count" style="font-size: 2rem; font-weight: 700; color: #10b981; margin: 0.25rem 0;">0</div>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.75rem;">Towns you target that they don't</p>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.15); padding: 1rem; border-radius: 10px; text-align: center;">
+                            <h4 style="margin: 0; color: #9ca3af; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Missed Opportunities</h4>
+                            <div id="comp-gap-missed-count" style="font-size: 2rem; font-weight: 700; color: #ef4444; margin: 0.25rem 0;">0</div>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.75rem;">Towns they target that you don't</p>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.06); border: 1px solid rgba(59, 130, 246, 0.15); padding: 1rem; border-radius: 10px; text-align: center;">
+                            <h4 style="margin: 0; color: #9ca3af; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Shared Battles</h4>
+                            <div id="comp-gap-shared-count" style="font-size: 2rem; font-weight: 700; color: #3b82f6; margin: 0.25rem 0;">0</div>
+                            <p style="margin: 0; color: #9ca3af; font-size: 0.75rem;">Towns you both target</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; gap: 4px; overflow-x: auto;">
+                        <button class="comp-gap-tab active" data-tab="uncontested">Uncontested Towns (<span id="tab-uncontested-count">0</span>)</button>
+                        <button class="comp-gap-tab" data-tab="missed">Missed Opportunities (<span id="tab-missed-count">0</span>)</button>
+                        <button class="comp-gap-tab" data-tab="shared">Shared Battles (<span id="tab-shared-count">0</span>)</button>
+                    </div>
+
+                    <div id="comp-gap-list-container" style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 0.5rem; max-height: 300px; overflow-y: auto;">
+                        <!-- Dynamically filled list -->
+                    </div>
+                </div>
+            </div>
+
             <div class="card" id="captured-leads-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
                     <div>

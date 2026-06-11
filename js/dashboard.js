@@ -2217,4 +2217,148 @@ document.addEventListener('DOMContentLoaded', () => {
             if (badge) badge.remove();
         }
     }
+
+    // --- Competitor SEO Gap Analyzer ---
+    const competitorGapForm = document.getElementById('competitor-gap-form');
+    const competitorUrlInput = document.getElementById('competitor-url-input');
+    const competitorGapLoading = document.getElementById('competitor-gap-loading');
+    const competitorGapError = document.getElementById('competitor-gap-error');
+    const competitorGapResults = document.getElementById('competitor-gap-results');
+    const analyzeCompetitorBtn = document.getElementById('analyze-competitor-btn');
+
+    let gapAnalysisData = null;
+
+    if (competitorGapForm) {
+        competitorGapForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = competitorUrlInput.value.trim();
+            if (!url) return;
+
+            // Reset UI states
+            competitorGapLoading.style.display = 'block';
+            competitorGapError.style.display = 'none';
+            competitorGapResults.style.display = 'none';
+            analyzeCompetitorBtn.disabled = true;
+
+            const progressBarFill = competitorGapLoading.querySelector('.progress-bar-fill');
+            if (progressBarFill) progressBarFill.style.width = '10%';
+
+            // Smooth progress bar simulation
+            let progress = 10;
+            const progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += 8;
+                    if (progressBarFill) progressBarFill.style.width = `${progress}%`;
+                }
+            }, 300);
+
+            try {
+                const response = await fetch('/api/competitor-gap', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ competitorUrl: url })
+                });
+
+                clearInterval(progressInterval);
+                if (progressBarFill) progressBarFill.style.width = '100%';
+
+                const resData = await response.json();
+
+                if (response.ok) {
+                    gapAnalysisData = resData;
+                    renderGapAnalysisResults();
+                    competitorGapResults.style.display = 'block';
+                } else {
+                    competitorGapError.textContent = resData.message || 'An error occurred during analysis.';
+                    competitorGapError.style.display = 'block';
+                }
+            } catch (err) {
+                clearInterval(progressInterval);
+                console.error('Error running gap analysis:', err);
+                competitorGapError.textContent = 'A network error occurred. Please try again.';
+                competitorGapError.style.display = 'block';
+            } finally {
+                setTimeout(() => {
+                    competitorGapLoading.style.display = 'none';
+                    analyzeCompetitorBtn.disabled = false;
+                }, 400);
+            }
+        });
+    }
+
+    function renderGapAnalysisResults() {
+        if (!gapAnalysisData) return;
+
+        // Populate summary metrics
+        document.getElementById('comp-gap-advantage-count').textContent = gapAnalysisData.summary.advantageCount;
+        document.getElementById('comp-gap-missed-count').textContent = gapAnalysisData.summary.opportunityCount;
+        document.getElementById('comp-gap-shared-count').textContent = gapAnalysisData.summary.sharedCount;
+
+        // Populate tab badges
+        document.getElementById('tab-uncontested-count').textContent = gapAnalysisData.summary.advantageCount;
+        document.getElementById('tab-missed-count').textContent = gapAnalysisData.summary.opportunityCount;
+        document.getElementById('tab-shared-count').textContent = gapAnalysisData.summary.sharedCount;
+
+        // Default to active uncontested/advantage tab
+        const activeTab = document.querySelector('.comp-gap-tab.active');
+        const tabType = activeTab ? activeTab.getAttribute('data-tab') : 'uncontested';
+        renderActiveTabContent(tabType);
+    }
+
+    function renderActiveTabContent(tabType) {
+        const container = document.getElementById('comp-gap-list-container');
+        if (!container) return;
+
+        container.innerHTML = '';
+        let list = [];
+
+        if (tabType === 'uncontested') {
+            list = gapAnalysisData.uncontestedLocations || [];
+        } else if (tabType === 'missed') {
+            list = gapAnalysisData.missedLocations || [];
+        } else if (tabType === 'shared') {
+            list = gapAnalysisData.sharedLocations || [];
+        }
+
+        if (list.length === 0) {
+            container.innerHTML = `<div style="text-align: center; color: #6b7280; padding: 2rem 0; font-style: italic; font-size: 0.9rem;">No locations found in this category.</div>`;
+            return;
+        }
+
+        list.forEach(town => {
+            const item = document.createElement('div');
+            item.className = 'gap-item';
+            
+            let actionHtml = '';
+            if (tabType === 'uncontested') {
+                actionHtml = `<span style="color: #10b981; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-shield-alt"></i> You Dominate</span>`;
+            } else if (tabType === 'shared') {
+                actionHtml = `<span style="color: #3b82f6; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-exchange-alt"></i> Active Battle</span>`;
+            } else if (tabType === 'missed') {
+                const encodedTown = encodeURIComponent(town);
+                actionHtml = `<a href="generate.html?town=${encodedTown}" class="button button-small" style="padding: 4px 10px; font-size: 0.75rem; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: none; font-weight: bold;"><i class="fas fa-plus-circle"></i> Target Town</a>`;
+            }
+
+            item.innerHTML = `
+                <span style="color: #f3f4f6; font-weight: 500; font-size: 0.95rem;">${town}</span>
+                ${actionHtml}
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    // Handle Tab Switcher Events
+    const tabButtons = document.querySelectorAll('.comp-gap-tab');
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const tabType = btn.getAttribute('data-tab');
+            renderActiveTabContent(tabType);
+        });
+    });
 });
