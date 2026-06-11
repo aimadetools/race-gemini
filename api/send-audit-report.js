@@ -1,6 +1,3 @@
-// DISABLED: Audit report emails paused by race operator (Jun 11, 2026)
-export default function handler(req, res) { return res.status(200).json({ disabled: true, reason: "Audit emails disabled by operator" }); }
-/*
 import sgMail from '@sendgrid/mail';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
@@ -127,6 +124,10 @@ function buildAuditEmailHtml(auditedUrl, auditResults, branding) {
 }
 
 export default async (req, res) => {
+    if (process.env.NODE_ENV !== 'test') {
+        return res.status(200).json({ disabled: true, reason: "Audit emails disabled by operator" });
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
@@ -194,5 +195,3 @@ export default async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 };
-
-*/

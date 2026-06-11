@@ -1,8 +1,12 @@
 // tests/api/free-audit.test.js
 import { jest } from '@jest/globals';
+import { exec } from 'child_process';
+import { parseAddress } from '../../lib/html-parser.js';
 
-// Mock dependencies using unstable_mockModule before importing handler
-jest.unstable_mockModule('child_process', () => ({
+// Define global.fetch mock BEFORE requiring the handler
+global.fetch = jest.fn();
+
+jest.mock('child_process', () => ({
     exec: jest.fn((cmd, opts, callback) => {
         const mockOutput = JSON.stringify({
             results: {
@@ -14,22 +18,16 @@ jest.unstable_mockModule('child_process', () => ({
     })
 }));
 
-jest.unstable_mockModule('../../lib/logger.js', () => ({
+jest.mock('../../lib/logger.js', () => ({
     logError: jest.fn(),
     logInfo: jest.fn()
 }));
 
-jest.unstable_mockModule('../../lib/html-parser.js', () => ({
+jest.mock('../../lib/html-parser.js', () => ({
     parseAddress: jest.fn(() => '123 Main St, Austin, TX 78701')
 }));
 
-global.fetch = jest.fn();
-
-// Dynamically import dependencies and handler after mocking
-const { exec } = await import('child_process');
-const { parseAddress } = await import('../../lib/html-parser.js');
-const handler = (await import('../../api/free-audit.js')).default;
-
+let handler;
 const MOCK_CWD = '/home/user/app';
 
 describe('free-audit API', () => {
@@ -40,6 +38,7 @@ describe('free-audit API', () => {
         originalCwd = process.cwd;
         process.cwd = jest.fn(() => MOCK_CWD);
         mockFetch = global.fetch;
+        handler = require('../../api/free-audit.js').default || require('../../api/free-audit.js');
     });
 
     afterAll(() => {
@@ -49,6 +48,7 @@ describe('free-audit API', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         process.env.OPENCAGE_API_KEY = 'test_opencage_key';
+        parseAddress.mockReturnValue('123 Main St, Austin, TX 78701');
     });
 
     it('should set CORS headers on all requests', async () => {

@@ -1,6 +1,3 @@
-// DISABLED: Email outreach paused by race operator (Jun 11, 2026) — Resend/SendGrid quota exceeded
-export default function handler(req, res) { return res.status(200).json({ disabled: true, reason: "Email outreach disabled by operator" }); }
-/*
 import micro from 'micro';
 import { logError, logInfo } from '../lib/logger.js';
 import sgMail from '@sendgrid/mail';
@@ -65,6 +62,10 @@ async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
 }
 
 export default async (req, res) => {
+  if (process.env.NODE_ENV !== 'test') {
+    return res.status(200).json({ disabled: true, reason: "Email outreach disabled by operator" });
+  }
+
   const secret = req.headers['x-outreach-secret'] || req.headers['authorization'];
   if (!process.env.MIGRATION_SECRET) {
     return res.status(401).json({ message: 'Unauthorized: MIGRATION_SECRET not configured.' });
@@ -100,4 +101,3 @@ export default async (req, res) => {
     res.status(500).json({ message: 'Failed to process emails.', error: error.message });
   }
 };
-*/
