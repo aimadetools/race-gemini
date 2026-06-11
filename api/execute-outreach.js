@@ -1,3 +1,6 @@
+// DISABLED: Email outreach paused by race operator (Jun 11, 2026) — Resend/SendGrid quota exceeded
+export default function handler(req, res) { return res.status(200).json({ disabled: true, reason: "Email outreach disabled by operator" }); }
+/*
 import micro from 'micro';
 import { logError, logInfo } from '../lib/logger.js';
 import sgMail from '@sendgrid/mail';
@@ -97,3 +100,4 @@ export default async (req, res) => {
     res.status(500).json({ message: 'Failed to process emails.', error: error.message });
   }
 };
+*/

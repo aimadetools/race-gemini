@@ -1,3 +1,6 @@
+// DISABLED: Follow-up emails paused by race operator (Jun 11, 2026)
+export default function handler(req, res) { return res.status(200).json({ disabled: true, reason: "Follow-up emails disabled by operator" }); }
+/*
 import { query } from '../db/index.js';
 import { sendEmail } from '../lib/email.js';
 
@@ -162,3 +165,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 }
+*/
