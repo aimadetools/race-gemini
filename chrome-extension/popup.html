@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalLeads SEO Audit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <img src="icon48.png" alt="LocalLeads" class="logo-icon">
+        <span class="logo-text">LocalLeads</span>
+      </div>
+      <span class="badge">Local SEO</span>
+    </header>
+
+    <!-- Main View -->
+    <main class="main-content" id="main-view">
+      <div class="intro-section">
+        <h3>Audit Website Reach</h3>
+        <p class="description">Scan this site's coverage and identify high-value nearby towns where they are missing search visibility.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="site-url">Website URL to Audit</label>
+        <div class="input-wrapper">
+          <input type="url" id="site-url" placeholder="https://example.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="service-type">Service / Niche</label>
+        <select id="service-type">
+          <option value="plumbing">Plumbing</option>
+          <option value="cleaning">House Cleaning</option>
+          <option value="electrical">Electrical</option>
+          <option value="hvac">HVAC / Heating & Air</option>
+          <option value="landscaping">Landscaping</option>
+          <option value="roofing">Roofing</option>
+          <option value="locksmith">Locksmith</option>
+          <option value="painting">Painting</option>
+          <option value="pest-control">Pest Control</option>
+        </select>
+      </div>
+
+      <button id="run-audit-btn" class="btn btn-primary">
+        <span>Run Local SEO Audit</span>
+        <svg class="icon-spin btn-loader" viewBox="0 0 24 24" style="display: none;">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="32" stroke-linecap="round"></circle>
+        </svg>
+      </button>
+
+      <div class="footer-note">
+        Powered by <a href="https://www.localseogen.com" target="_blank">localseogen.com</a>
+      </div>
+    </main>
+
+    <!-- Loading View -->
+    <div class="loading-view" id="loading-view" style="display: none;">
+      <div class="loader-container">
+        <div class="pulse-ring"></div>
+        <div class="loader-core">
+          <img src="icon128.png" alt="Scanning" class="spinning-logo">
+        </div>
+      </div>
+      <h4>Analyzing local search coverage...</h4>
+      <p>Scanning domain, geocoding location, and computing market reach.</p>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Results View -->
+    <div class="results-view" id="results-view" style="display: none;">
+      <button id="back-btn" class="btn-back">
+        &larr; Audit Another Site
+      </button>
+
+      <div class="score-card">
+        <div class="score-ring-container">
+          <svg class="score-ring" viewBox="0 0 36 36">
+            <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="ring-fill" id="score-fill" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="score-text">
+            <span id="score-percent">0%</span>
+            <span class="score-label">Coverage</span>
+          </div>
+        </div>
+        <div class="score-summary">
+          <h4 id="score-headline">Unoptimized</h4>
+          <p id="score-sub">Missing most nearby search markets.</p>
+        </div>
+      </div>
+
+      <div class="lists-container">
+        <div class="list-section">
+          <h5>Covered Towns (<span id="found-count">0</span>)</h5>
+          <div class="town-list scrollable" id="found-towns">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="list-section">
+          <h5 class="warning-header">Missed Towns (<span id="missed-count">0</span>)</h5>
+          <div class="town-list scrollable" id="missed-towns">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Capture Lead -->
+      <div class="cta-card" id="lead-capture-card">
+        <h5>Download PDF SEO Report</h5>
+        <p>Get a detailed list of all missing local landing page structures.</p>
+        <form id="lead-form" class="lead-form-inline">
+          <input type="email" id="lead-email" placeholder="owner@business.com" required>
+          <button type="submit" class="btn btn-secondary">Get Report</button>
+        </form>
+        <div id="lead-success" style="display: none;" class="success-message">
+          ✓ PDF Report request sent to your email!
+        </div>
+      </div>
+
+      <!-- Action CTA -->
+      <div class="action-footer">
+        <a id="generate-pages-cta" href="#" target="_blank" class="btn btn-primary btn-pulse">
+          Generate SEO Pages for Missed Towns
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

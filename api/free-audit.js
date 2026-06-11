@@ -4,6 +4,17 @@ import { parseAddress } from '../lib/html-parser.js';
 import { exec } from 'child_process';
 
 export default async (req, res) => {
+    // Enable CORS
+    if (res.setHeader) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    }
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     const { url } = req.query;
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
 

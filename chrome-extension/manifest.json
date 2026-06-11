@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "LocalLeads - 1-Click Local SEO Audit",
+  "version": "1.0.0",
+  "description": "Run instant local SEO audits on any website. Scan for missed town landing pages and capture more search leads.",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
