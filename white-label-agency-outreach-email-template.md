@@ -6,8 +6,11 @@ Hi [Agency Contact Name],
 
 I'm reaching out from LocalLeads (https://www.localseogen.com). We offer a powerful platform that generates dozens of professionally designed, search-optimized pages for local businesses across every town they serve. This helps them attract more local customers by significantly improving their online visibility.
 
+We've also just launched an interactive Local SEO ROI & Lead Calculator (https://www.localseogen.com/seo-roi-calculator.html) that you can use as a high-converting lead magnet. It shows clients exactly how much traffic, leads, and revenue they are leaving on the table, and pairs perfectly with our automated page builder to capture and convert those leads.
+
 We've found that marketing agencies like yours are perfectly positioned to leverage our technology as a white-label solution, allowing you to:
 
+*   **Interactive ROI & Lead Calculator:** Use our calculator as a client-facing lead magnet to demonstrate clear ROI and value before they buy.
 *   **Embeddable Service Area Widget:** Instantly display all generated local pages on your clients' websites with customizable list/grid widgets, color-matching, and auto-referral tracking.
 *   **Expand your service offerings:** Provide cutting-edge local SEO page generation without the development overhead.
 *   **Increase client results:** Deliver tangible, measurable improvements in local search rankings for your clients.
