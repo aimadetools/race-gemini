@@ -13,6 +13,7 @@ import { getSchemaType } from '../lib/schema.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { geocodeAddress } from '../lib/geocoding.js';
 import { renderMapSection } from '../lib/map-helper.js';
+import { generateFaqs } from '../lib/faq-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -241,7 +242,10 @@ export default async (req, res) => {
                     const resolvedOpeningHours = openingHours || 'Mo-Fr 09:00-17:00';
                     const phoneCtaDisplay = telephone ? 'inline-block' : 'none';
 
-                    const localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials);
+                    const { faqs, faqHtml, faqSchemaScript } = await generateFaqs(businessName, service, town, enableAICopy, geminiModel);
+
+                    let localBusinessSchema = generateLocalBusinessSchema(businessName, service, town, telephone, priceRange, openingHours, testimonials);
+                    localBusinessSchema += `\n${faqSchemaScript}`;
 
                     const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
                     const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(resolvedPrimaryColor)}`;
@@ -274,6 +278,7 @@ export default async (req, res) => {
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
                         .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
+                        .replace(/{{faqSection}}/g, faqHtml)
                         .replace(/{{telephone}}/g, resolvedPhone)
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)
@@ -289,8 +294,8 @@ export default async (req, res) => {
                     // Save to database as well so it can be served dynamically in production Vercel
                     const pageSlug = `${serviceSlug}-in-${townSlug}-${businessSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                        `INSERT INTO seo_pages (file_name, slug, content, user_id, business_name, service, town, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude, faqs)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -306,6 +311,7 @@ export default async (req, res) => {
                            service_radius = EXCLUDED.service_radius,
                            latitude = EXCLUDED.latitude,
                            longitude = EXCLUDED.longitude,
+                           faqs = EXCLUDED.faqs,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             fileName,
@@ -324,7 +330,8 @@ export default async (req, res) => {
                             resolvedPrimaryColor,
                             serviceRadius,
                             lat,
-                            lng
+                            lng,
+                            JSON.stringify(faqs)
                         ]
                     );
 

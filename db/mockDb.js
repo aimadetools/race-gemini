@@ -562,10 +562,30 @@ export const originalMockQuery = async (text, params) => {
     }
 
     if (textLower.includes('update seo_pages')) {
-        if (textLower.includes('where id = $16') || textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
-            let id, content, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude;
+        if (textLower.includes('where id = $17') || textLower.includes('where id = $16') || textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
+            let id, content, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude, faqs;
             
-            if (textLower.includes('where id = $16')) {
+            if (textLower.includes('where id = $17')) {
+                [
+                    content,
+                    business_name,
+                    service,
+                    town,
+                    zip_code,
+                    telephone,
+                    price_range,
+                    opening_hours,
+                    enable_ai_copy,
+                    ai_style,
+                    ai_keywords,
+                    primary_color,
+                    service_radius,
+                    latitude,
+                    longitude,
+                    faqs,
+                    id
+                ] = params;
+            } else if (textLower.includes('where id = $16')) {
                 [
                     content,
                     business_name,
@@ -630,6 +650,9 @@ export const originalMockQuery = async (text, params) => {
                 page.ai_keywords = ai_keywords;
                 if (primary_color) {
                     page.primary_color = primary_color;
+                }
+                if (faqs !== undefined) {
+                    page.faqs = faqs;
                 }
                 if (service_radius !== undefined) page.service_radius = service_radius;
                 if (latitude !== undefined) page.latitude = latitude;

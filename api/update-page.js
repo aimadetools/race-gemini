@@ -14,6 +14,7 @@ import { parseOpeningHours } from '../lib/time-helpers.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { geocodeAddress } from '../lib/geocoding.js';
 import { renderMapSection } from '../lib/map-helper.js';
+import { generateFaqs } from '../lib/faq-helper.js';
 
 function getGeminiModel() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -246,7 +247,10 @@ export default async function handler(req, res, currentKvClient) {
             twitterDescription = metaDescription;
         }
 
-        const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
+        const { faqs, faqHtml, faqSchemaScript } = await generateFaqs(escapedBusinessName, escapedService, escapedTown, enableAICopy, geminiModel);
+
+        let localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
+        localBusinessSchema += `\n${faqSchemaScript}`;
 
         const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
         const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(primaryColorValue)}`;
@@ -287,6 +291,7 @@ export default async function handler(req, res, currentKvClient) {
             .replace(/{{town_slug}}/g, resolvedTownSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
             .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
+            .replace(/{{faqSection}}/g, faqHtml)
             .replace(/{{telephone}}/g, resolvedPhone)
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)
@@ -312,8 +317,9 @@ export default async function handler(req, res, currentKvClient) {
                  service_radius = $13,
                  latitude = $14,
                  longitude = $15,
+                 faqs = $16,
                  updated_at = CURRENT_TIMESTAMP
-             WHERE id = $16`,
+             WHERE id = $17`,
             [
                 pageContent,
                 escapedBusinessName,
@@ -330,6 +336,7 @@ export default async function handler(req, res, currentKvClient) {
                 serviceRadius,
                 lat,
                 lng,
+                JSON.stringify(faqs),
                 pageId
             ]
         );

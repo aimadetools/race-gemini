@@ -8,6 +8,7 @@ import { getSchemaType } from '../lib/schema.js';
 import * as cheerio from 'cheerio';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { renderMapSection } from '../lib/map-helper.js';
+import { generateFaqs } from '../lib/faq-helper.js';
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
@@ -121,7 +122,7 @@ export default async (req, res, currentKvClient) => {
 
         // Fetch the page from PostgreSQL where user_id = resolvedClientId and file_name = fileName
         const pageResult = await query(
-            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content, primary_color, service_radius, latitude, longitude 
+            `SELECT id, business_name, service, town, telephone, price_range, opening_hours, content, primary_color, service_radius, latitude, longitude, faqs 
              FROM seo_pages WHERE user_id = $1 AND file_name = $2`,
             [resolvedClientId, fileName]
         );
@@ -305,6 +306,154 @@ ${JSON.stringify(schemaObj, null, 2)}
 </script>
         `.trim();
 
+        // Extract and format FAQs
+        let faqsList = [];
+        if (pageRow.faqs) {
+            try {
+                faqsList = typeof pageRow.faqs === 'string' ? JSON.parse(pageRow.faqs) : pageRow.faqs;
+            } catch (e) {
+                console.error('Failed to parse pageRow.faqs:', e);
+            }
+        }
+        
+        let faqHtml = '';
+        let faqSchemaScript = '';
+        
+        if (faqsList && faqsList.length >= 3) {
+            const accordionItemsHtml = faqsList.map((faq) => `
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>${faq.question}</span>
+        </div>
+        <div class="faq-answer">
+          <p>${faq.answer}</p>
+        </div>
+      </div>`).join('\n');
+
+            faqHtml = `
+<!-- Frequently Asked Questions Accordion Section -->
+<section class="faq-section" id="faq-section">
+  <style>
+    .faq-section {
+      padding: 5rem 0;
+      background-color: var(--bg-alt, #f9fafb);
+      border-top: 1px solid var(--border-color, #e5e7eb);
+      border-bottom: 1px solid var(--border-color, #e5e7eb);
+    }
+    .faq-section h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #111827;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 3rem;
+    }
+    .faq-accordion {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .faq-item {
+      background: #ffffff;
+      border: 1px solid var(--border-color, #e5e7eb);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      transition: all 0.25s ease;
+    }
+    .faq-item:hover {
+      box-shadow: 0 6px 12px -1px rgba(0,0,0,0.04);
+      border-color: var(--primary-color, #007bff);
+    }
+    .faq-question {
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #111827;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .faq-question::after {
+      content: '\\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.9rem;
+      color: var(--primary-color, #007bff);
+      transition: transform 0.3s ease;
+    }
+    .faq-item.active .faq-question::after {
+      transform: rotate(180deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+      padding: 0 1.5rem;
+      color: var(--text-muted, #4b5563);
+      line-height: 1.6;
+      font-size: 0.975rem;
+    }
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+  </style>
+  <div class="container">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-accordion">
+      ${accordionItemsHtml.trim()}
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqSection = document.getElementById('faq-section');
+      if (faqSection) {
+        const faqItems = faqSection.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+          const question = item.querySelector('.faq-question');
+          question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            faqItems.forEach(otherItem => otherItem.classList.remove('active'));
+            if (!isActive) {
+              item.classList.add('active');
+            }
+          });
+        });
+      }
+    });
+  </script>
+</section>`.trim();
+
+            const schemaObjFaq = {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": faqsList.map(faq => ({
+                "@type": "Question",
+                "name": faq.question,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.acceptedAnswer?.text || faq.answer
+                }
+              }))
+            };
+
+            faqSchemaScript = `
+<script type="application/ld+json">
+${JSON.stringify(schemaObjFaq, null, 2)}
+</script>`.trim();
+        } else {
+            const generated = await generateFaqs(page.businessName, page.service, page.town, false, null);
+            faqHtml = generated.faqHtml;
+            faqSchemaScript = generated.faqSchemaScript;
+        }
+
+        localBusinessSchema += `\n${faqSchemaScript}`;
+
         // Generate dynamic Local Announcement Bar and SpecialAnnouncement schema
         let announcementHtml = '';
         if (client.announcement_text) {
@@ -378,6 +527,7 @@ ${JSON.stringify(schemaObj, null, 2)}
             .replace(/{{town_slug}}/g, resolvedTownSlug)
             .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
             .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
+            .replace(/{{faqSection}}/g, faqHtml)
             .replace(/{{telephone}}/g, resolvedPhone)
             .replace(/{{priceRange}}/g, resolvedPriceRange)
             .replace(/{{openingHours}}/g, resolvedOpeningHours)

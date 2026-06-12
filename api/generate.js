@@ -15,6 +15,7 @@ import { getSchemaType } from '../lib/schema.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { geocodeAddress } from '../lib/geocoding.js';
 import { renderMapSection } from '../lib/map-helper.js';
+import { generateFaqs } from '../lib/faq-helper.js';
 
 // Define the path to the page template
 const templatePath = path.join(process.cwd(), 'page-template.html');
@@ -244,7 +245,11 @@ export default async (req, res) => {
 
                     const agencyLogoHtml = (agency && agency.logoUrl) ? `<img src="${escapeHtml(agency.logoUrl)}" alt="${escapeHtml(agency.agencyName)} Logo" style="max-height: 50px;" loading="lazy">` : escapedBusinessName; // Escape agency data
                     const primaryColorValue = escapeHtml(primaryColor || (agency && agency.primaryColor) || '#007bff');
-                    const localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
+                    
+                    const { faqs, faqHtml, faqSchemaScript } = await generateFaqs(escapedBusinessName, escapedService, escapedTown, enableAICopy, geminiModel);
+
+                    let localBusinessSchema = generateLocalBusinessSchema(escapedBusinessName, escapedService, escapedTown, telephone, priceRange, openingHours, testimonials);
+                    localBusinessSchema += `\n${faqSchemaScript}`;
 
                     const domain = process.env.DOMAIN_URL || 'https://www.localseogen.com';
                     const ogImageUrl = `${domain}/api/og-image?businessName=${encodeURIComponent(businessName)}&service=${encodeURIComponent(service)}&town=${encodeURIComponent(town)}&color=${encodeURIComponent(primaryColorValue)}`;
@@ -283,6 +288,7 @@ export default async (req, res) => {
                         .replace(/{{town_slug}}/g, townSlug)
                         .replace(/{{localBusinessSchema}}/g, localBusinessSchema)
                         .replace(/{{testimonialsSection}}/g, testimonialsSectionHtml)
+                        .replace(/{{faqSection}}/g, faqHtml)
                         .replace(/{{telephone}}/g, resolvedPhone)
                         .replace(/{{priceRange}}/g, resolvedPriceRange)
                         .replace(/{{openingHours}}/g, resolvedOpeningHours)
@@ -296,8 +302,8 @@ export default async (req, res) => {
                     // Store page in database
                     const pageSlug = `${userId}-${serviceSlug}-in-${townSlug}`;
                     await query(
-                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude)
-                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+                        `INSERT INTO seo_pages (id, file_name, slug, content, user_id, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude, faqs)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
                          ON CONFLICT (slug) DO UPDATE SET 
                            content = EXCLUDED.content,
                            business_name = EXCLUDED.business_name,
@@ -314,6 +320,7 @@ export default async (req, res) => {
                            service_radius = EXCLUDED.service_radius,
                            latitude = EXCLUDED.latitude,
                            longitude = EXCLUDED.longitude,
+                           faqs = EXCLUDED.faqs,
                            updated_at = CURRENT_TIMESTAMP`,
                         [
                             pageId,
@@ -334,7 +341,8 @@ export default async (req, res) => {
                             primaryColorValue,
                             serviceRadius,
                             lat,
-                            lng
+                            lng,
+                            JSON.stringify(faqs)
                         ]
                     );
                 }
