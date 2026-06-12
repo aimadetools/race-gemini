@@ -264,5 +264,41 @@ describe('[[...slug]] API Wildcard Route', () => {
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('/client123/heating-in-bristol.html'));
     expect(res.send).not.toHaveBeenCalledWith(expect.stringContaining('href="/client123/plumbing-in-london.html"'));
   });
+
+  test('should serve Google Search Console HTML verification file for custom domains when matches', async () => {
+    const clientId = 'client123';
+    req.headers.host = 'seo.mybusiness.com';
+    req.query.slug = ['custom', 'googlee1a2b3c4d5e6f7.html'];
+
+    addMockUser({
+      id: clientId,
+      email: 'client@example.com',
+      custom_domain: 'seo.mybusiness.com',
+      google_verification_code: 'googlee1a2b3c4d5e6f7.html',
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith('google-site-verification: googlee1a2b3c4d5e6f7.html');
+  });
+
+  test('should return 404 for GSC HTML verification file if it does not match user code', async () => {
+    const clientId = 'client123';
+    req.headers.host = 'seo.mybusiness.com';
+    req.query.slug = ['custom', 'googlee1a2b3c4d5e6f7.html'];
+
+    addMockUser({
+      id: clientId,
+      email: 'client@example.com',
+      custom_domain: 'seo.mybusiness.com',
+      google_verification_code: 'googleothercode.html',
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
 });
 

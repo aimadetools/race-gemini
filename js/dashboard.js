@@ -387,11 +387,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const webhookEnabledCheckbox = document.getElementById('webhook-enabled-checkbox');
                 const gaTrackingIdInput = document.getElementById('ga-tracking-id-input');
                 const fbPixelIdInput = document.getElementById('fb-pixel-id-input');
+                const gscVerificationInput = document.getElementById('gsc-verification-input');
 
                 if (webhookUrlInput) webhookUrlInput.value = data.webhookUrl || '';
                 if (webhookEnabledCheckbox) webhookEnabledCheckbox.checked = !!data.webhookEnabled;
                 if (gaTrackingIdInput) gaTrackingIdInput.value = data.gaTrackingId || '';
                 if (fbPixelIdInput) fbPixelIdInput.value = data.fbPixelId || '';
+                if (gscVerificationInput) gscVerificationInput.value = data.googleVerificationCode || '';
 
                 const smsPhoneInput = document.getElementById('sms-phone-input');
                 const smsEnabledCheckbox = document.getElementById('sms-enabled-checkbox');
@@ -1608,6 +1610,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const webhookEnabled = document.getElementById('webhook-enabled-checkbox').checked;
             const gaTrackingId = document.getElementById('ga-tracking-id-input').value;
             const fbPixelId = document.getElementById('fb-pixel-id-input').value;
+            const googleVerificationCode = document.getElementById('gsc-verification-input') ? document.getElementById('gsc-verification-input').value : '';
             const smsPhone = document.getElementById('sms-phone-input') ? document.getElementById('sms-phone-input').value : '';
             const smsEnabled = document.getElementById('sms-enabled-checkbox') ? document.getElementById('sms-enabled-checkbox').checked : false;
             const googleReviewLink = document.getElementById('google-review-link-input') ? document.getElementById('google-review-link-input').value : '';
@@ -1621,7 +1624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode })
                 });
 
                 const resData = await response.json();

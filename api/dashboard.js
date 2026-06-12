@@ -31,7 +31,7 @@ export default async function handler(req, res, currentKvClient) {
       const userId = decoded.userId;
 
       // Fetch user from PostgreSQL
-      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at FROM users WHERE id = $1', [userId]);
+      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at FROM users WHERE id = $1', [userId]);
       if (userResult.rows.length === 0) {
           return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
@@ -216,6 +216,7 @@ export default async function handler(req, res, currentKvClient) {
         webhookEnabled: user.webhook_enabled,
         gaTrackingId: user.ga_tracking_id,
         fbPixelId: user.fb_pixel_id,
+        googleVerificationCode: user.google_verification_code,
         smsEnabled: user.sms_enabled,
         smsPhone: user.sms_phone,
         widgetCss: user.widget_css,

@@ -21,6 +21,7 @@ import { addExternalReviewLinksToUsers } from './migrations/add_external_review_
 import { addLocalUpdatesToUsers } from './migrations/add_local_updates_to_users.js';
 import { addRadiusAndCoordinatesToSeoPages } from './migrations/add_radius_and_coordinates_to_seo_pages.js';
 import { createAgencyDirectoryTable } from './migrations/create_agency_directory.js';
+import { addGoogleVerificationCodeToUsers } from './migrations/add_google_verification_code_to_users.js';
 
 export async function initializeDatabase() {
   try {
@@ -92,6 +93,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring agency directory table exists and is seeded...');
     await createAgencyDirectoryTable();
+
+    console.log('Ensuring google_verification_code column exists in users table...');
+    await addGoogleVerificationCodeToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

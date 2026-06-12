@@ -227,4 +227,30 @@ describe('update-integrations API', () => {
     expect(updatedUser.facebook_review_link).toBe('https://facebook.com/biz/reviews');
     expect(updatedUser.yelp_review_link).toBe('https://yelp.com/biz/123');
   });
+
+  test('should return 400 if Google GSC Verification File format is invalid', async () => {
+    req.body.googleVerificationCode = 'invalid-code-123%';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid Google GSC Verification File format. Should match google[a-zA-Z0-9].html' });
+  });
+
+  test('should update google GSC verification code successfully (normalizing and saving) and return 200', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      google_verification_code: null,
+    };
+    addMockUser(user);
+
+    req.body.googleVerificationCode = 'e1a2b3c4d5e6f7'; // raw code
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const updatedUser = getMockUsers().find(u => u.id === '123');
+    expect(updatedUser.google_verification_code).toBe('googlee1a2b3c4d5e6f7.html');
+  });
 });

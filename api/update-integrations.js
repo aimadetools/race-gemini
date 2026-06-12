@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink } = req.body;
+    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode } = req.body;
 
     // Validate inputs
     let cleanWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
@@ -39,6 +39,24 @@ export default async function handler(req, res) {
     let cleanGoogleReviewLink = googleReviewLink ? googleReviewLink.trim() : null;
     let cleanFacebookReviewLink = facebookReviewLink ? facebookReviewLink.trim() : null;
     let cleanYelpReviewLink = yelpReviewLink ? yelpReviewLink.trim() : null;
+    let cleanGoogleVerificationCode = googleVerificationCode ? googleVerificationCode.trim() : null;
+
+    if (cleanGoogleVerificationCode) {
+      // Normalize: if it doesn't end in .html, and it starts with google, append .html
+      // Or if it's just alphanumeric code, format it as google<code>.html if it looks like a verification code
+      if (!cleanGoogleVerificationCode.endsWith('.html')) {
+        if (!cleanGoogleVerificationCode.toLowerCase().startsWith('google')) {
+          cleanGoogleVerificationCode = 'google' + cleanGoogleVerificationCode + '.html';
+        } else {
+          cleanGoogleVerificationCode = cleanGoogleVerificationCode + '.html';
+        }
+      }
+      
+      const verificationRegex = /^google[a-zA-Z0-9]+\.html$/;
+      if (!verificationRegex.test(cleanGoogleVerificationCode)) {
+        return res.status(400).json({ message: 'Invalid Google GSC Verification File format. Should match google[a-zA-Z0-9].html' });
+      }
+    }
 
     if (isWebhookEnabled && cleanWebhookUrl) {
       try {
@@ -106,6 +124,9 @@ export default async function handler(req, res) {
     if (cleanYelpReviewLink && cleanYelpReviewLink.length > 500) {
       return res.status(400).json({ message: 'Yelp Review Link must be under 500 characters.' });
     }
+    if (cleanGoogleVerificationCode && cleanGoogleVerificationCode.length > 100) {
+      return res.status(400).json({ message: 'Google GSC Verification File name must be under 100 characters.' });
+    }
 
     // Update in PostgreSQL
     await query(
@@ -119,9 +140,10 @@ export default async function handler(req, res) {
            google_review_link = $7,
            facebook_review_link = $8,
            yelp_review_link = $9,
+           google_verification_code = $10,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $10`,
-      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, userId]
+       WHERE id = $11`,
+      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, cleanGoogleVerificationCode, userId]
     );
 
     return res.status(200).json({ message: 'Integration settings updated successfully.' });

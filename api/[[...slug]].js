@@ -28,20 +28,39 @@ export default async (req, res, currentKvClient) => {
         const primaryDomains = ['localseogen.com', 'www.localseogen.com', 'localhost', '127.0.0.1'];
         const isPrimaryDomain = primaryDomains.some(d => cleanHost === d || cleanHost.includes(d));
 
+        let domainResult;
         if (clientId === 'custom') {
             if (isPrimaryDomain && !cleanHost.includes('localhost') && !cleanHost.includes('127.0.0.1')) {
                 return res.status(404).send('Not Found');
             }
             isCustomDomain = true;
             // Lookup user by cleanHost
-            const domainResult = await query(
-                'SELECT id, name, email, is_agency, logo_url, primary_color, custom_domain_redirect FROM users WHERE LOWER(custom_domain) = $1',
+            domainResult = await query(
+                'SELECT id, name, email, is_agency, logo_url, primary_color, custom_domain_redirect, google_verification_code FROM users WHERE LOWER(custom_domain) = $1',
                 [cleanHost]
             );
             if (domainResult.rows.length === 0) {
                 return res.status(404).send('Not Found: Custom domain not configured');
             }
             resolvedClientId = domainResult.rows[0].id.toString();
+        }
+
+        if (fileName && fileName.toLowerCase().startsWith('google') && fileName.toLowerCase().endsWith('.html')) {
+            let userVerificationCode = null;
+            if (isCustomDomain && domainResult) {
+                userVerificationCode = domainResult.rows[0].google_verification_code;
+            } else {
+                const clientResult = await query('SELECT google_verification_code FROM users WHERE id = $1', [resolvedClientId]);
+                if (clientResult.rows.length > 0) {
+                    userVerificationCode = clientResult.rows[0].google_verification_code;
+                }
+            }
+
+            if (userVerificationCode && userVerificationCode.toLowerCase() === fileName.toLowerCase()) {
+                res.setHeader('Content-Type', 'text/html');
+                return res.status(200).send(`google-site-verification: ${fileName}`);
+            }
+            return res.status(404).send('Not Found');
         }
 
         if (fileName === 'sitemap.xml') {
