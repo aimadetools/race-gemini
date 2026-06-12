@@ -1181,6 +1181,235 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Onboarding Wizard Logic ---
+    const wizardModal = document.getElementById('onboarding-wizard-modal');
+    const skipWizardBtn = document.getElementById('skip-wizard-btn');
+    const triggerWizardBtn = document.getElementById('trigger-onboarding-wizard-btn');
+    const prevBtn = document.getElementById('wizard-prev-btn');
+    const nextBtn = document.getElementById('wizard-next-btn');
+
+    let currentStep = 1;
+    let selectedColor = '#3b82f6';
+
+    function initWizard() {
+        if (!wizardModal) return;
+
+        const completed = localStorage.getItem('dashboard-wizard-completed');
+        if (completed !== 'true') {
+            openWizard();
+        }
+
+        // Event listeners
+        if (skipWizardBtn) {
+            skipWizardBtn.addEventListener('click', closeWizard);
+        }
+        if (triggerWizardBtn) {
+            triggerWizardBtn.addEventListener('click', () => {
+                currentStep = 1;
+                openWizard();
+            });
+        }
+        if (prevBtn) {
+            prevBtn.addEventListener('click', goToPrevStep);
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', goToNextStep);
+        }
+
+        // Color buttons event binding
+        const colorBtns = document.querySelectorAll('.wiz-color-btn');
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                colorBtns.forEach(b => {
+                    b.style.border = '3px solid transparent';
+                    b.style.boxShadow = 'none';
+                    b.classList.remove('active');
+                });
+                btn.style.border = '3px solid #fff';
+                btn.style.boxShadow = `0 0 10px ${btn.dataset.color}`;
+                btn.classList.add('active');
+                selectedColor = btn.dataset.color;
+                const customColorPicker = document.getElementById('wiz-custom-color');
+                if (customColorPicker) {
+                    customColorPicker.value = selectedColor;
+                }
+                updateMockupPreview();
+            });
+        });
+
+        // Custom color picker event binding
+        const customColorPicker = document.getElementById('wiz-custom-color');
+        if (customColorPicker) {
+            customColorPicker.addEventListener('input', (e) => {
+                colorBtns.forEach(b => {
+                    b.style.border = '3px solid transparent';
+                    b.style.boxShadow = 'none';
+                    b.classList.remove('active');
+                });
+                selectedColor = e.target.value;
+                updateMockupPreview();
+            });
+        }
+
+        // Step 1 inputs real-time live preview update
+        const bizNameInput = document.getElementById('wiz-business-name');
+        const servicesInput = document.getElementById('wiz-services');
+        const townsInput = document.getElementById('wiz-towns');
+
+        if (bizNameInput) bizNameInput.addEventListener('input', updateMockupPreview);
+        if (servicesInput) servicesInput.addEventListener('input', updateMockupPreview);
+        if (townsInput) townsInput.addEventListener('input', updateMockupPreview);
+    }
+
+    function openWizard() {
+        if (!wizardModal) return;
+        currentStep = 1;
+        showStep(currentStep);
+        wizardModal.style.display = 'flex';
+    }
+
+    function closeWizard() {
+        if (!wizardModal) return;
+        localStorage.setItem('dashboard-wizard-completed', 'true');
+        wizardModal.style.display = 'none';
+    }
+
+    function showStep(step) {
+        // Hide all steps
+        const steps = document.querySelectorAll('.wizard-step');
+        steps.forEach(s => s.style.display = 'none');
+
+        // Show current step
+        const stepEl = document.getElementById(`wizard-step-${step}`);
+        if (stepEl) {
+            stepEl.style.display = 'flex';
+        }
+
+        // Update progress dots
+        const dots = document.querySelectorAll('.wizard-progress-dot');
+        dots.forEach(dot => {
+            const dotStep = parseInt(dot.dataset.step);
+            if (dotStep === step) {
+                dot.style.background = '#3b82f6';
+                dot.classList.add('active');
+            } else if (dotStep < step) {
+                dot.style.background = '#10b981';
+                dot.classList.remove('active');
+            } else {
+                dot.style.background = 'rgba(255, 255, 255, 0.1)';
+                dot.classList.remove('active');
+            }
+        });
+
+        // Update navigation buttons
+        if (prevBtn) {
+            prevBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
+        }
+
+        if (nextBtn) {
+            if (step === 4) {
+                nextBtn.innerHTML = 'Launch & Generate Pages <i class="fas fa-rocket"></i>';
+                nextBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                nextBtn.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+                nextBtn.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+                nextBtn.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.3)';
+            }
+        }
+
+        if (step === 2) {
+            updateMockupPreview();
+        } else if (step === 4) {
+            updateSummary();
+        }
+    }
+
+    function goToPrevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+
+    function goToNextStep() {
+        if (currentStep < 4) {
+            // Validate step 1 before proceeding
+            if (currentStep === 1) {
+                const bizName = document.getElementById('wiz-business-name').value.trim();
+                const towns = document.getElementById('wiz-towns').value.trim();
+                const services = document.getElementById('wiz-services').value.trim();
+                
+                if (!bizName || !towns || !services) {
+                    alert('Please fill in all the details about your business to help us tailor your experience!');
+                    return;
+                }
+            }
+            currentStep++;
+            showStep(currentStep);
+        } else {
+            // Step 4 - Finish & Launch!
+            const bizName = document.getElementById('wiz-business-name').value.trim();
+            const towns = document.getElementById('wiz-towns').value.trim();
+            const services = document.getElementById('wiz-services').value.trim();
+            
+            closeWizard();
+            
+            // Redirect to generator with query params
+            window.location.href = `/generate.html?businessName=${encodeURIComponent(bizName)}&towns=${encodeURIComponent(towns)}&services=${encodeURIComponent(services)}&primaryColor=${encodeURIComponent(selectedColor)}`;
+        }
+    }
+
+    function updateMockupPreview() {
+        const bizName = document.getElementById('wiz-business-name').value.trim() || 'Apex Plumbing';
+        const service = document.getElementById('wiz-services').value.trim().split(',')[0].trim() || 'Leak Repair';
+        const town = document.getElementById('wiz-towns').value.trim().split(',')[0].trim() || 'Austin';
+
+        const previewBiz = document.getElementById('wiz-preview-business');
+        const previewService = document.getElementById('wiz-preview-service');
+        const previewTown = document.getElementById('wiz-preview-town');
+        const previewHeaderBtn = document.getElementById('wiz-preview-header-btn');
+        const previewCta = document.getElementById('wiz-preview-cta');
+
+        if (previewBiz) previewBiz.textContent = bizName;
+        if (previewService) {
+            previewService.textContent = service;
+            previewService.style.color = selectedColor;
+        }
+        if (previewTown) {
+            previewTown.textContent = town;
+            previewTown.style.color = selectedColor;
+        }
+        if (previewHeaderBtn) {
+            previewHeaderBtn.style.backgroundColor = selectedColor;
+        }
+        if (previewCta) {
+            previewCta.style.backgroundColor = selectedColor;
+        }
+    }
+
+    function updateSummary() {
+        const bizName = document.getElementById('wiz-business-name').value.trim();
+        const towns = document.getElementById('wiz-towns').value.trim();
+        const services = document.getElementById('wiz-services').value.trim();
+
+        const summaryName = document.getElementById('wiz-summary-name');
+        const summaryTowns = document.getElementById('wiz-summary-towns');
+        const summaryServices = document.getElementById('wiz-summary-services');
+        const summaryColor = document.getElementById('wiz-summary-color');
+
+        if (summaryName) summaryName.textContent = bizName;
+        if (summaryTowns) summaryTowns.textContent = towns;
+        if (summaryServices) summaryServices.textContent = services;
+        if (summaryColor) {
+            summaryColor.textContent = selectedColor;
+            summaryColor.style.color = selectedColor;
+        }
+    }
+
+    // Call wizard initialization
+    initWizard();
+
     function initializeWidgetBuilder(data) {
         const typeSelect = document.getElementById('widget-type-select');
         const layoutSelect = document.getElementById('widget-layout-select');

@@ -80,7 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const businessNameParam = urlParams.get('businessName');
     const servicesParam = urlParams.get('services');
     const townsParam = urlParams.get('towns');
+    const primaryColorParam = urlParams.get('primaryColor');
     const businessNameInput = document.getElementById('businessName');
+    const primaryColorInput = document.getElementById('primaryColor');
 
     if (businessNameParam && businessNameInput) {
         businessNameInput.value = businessNameParam;
@@ -92,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (townsParam && townsInput) {
         townsInput.value = townsParam;
         updateCharCount(townsInput, townsCharCount);
+    }
+    if (primaryColorParam && primaryColorInput) {
+        primaryColorInput.value = primaryColorParam;
     }
     
     fetchUserCredits(); // Fetch credits on load
