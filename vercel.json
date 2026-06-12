@@ -51,6 +51,10 @@
     {
       "path": "/api/cron-gsc-check",
       "schedule": "0 2 * * 0"
+    },
+    {
+      "path": "/api/cron-seo-report",
+      "schedule": "0 8 * * 1"
     }
   ]
 }

@@ -14,10 +14,13 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- **Weekly SEO Performance Report Customization**: Add a dashboard toggle (with db column `weekly_report_enabled`) and email unsubscribe handler to let users control report delivery.
+- **Google Indexing API Integration**: Implement direct Google Indexing API ping requests using a service account JSON env variable to trigger instant crawls when new local pages are generated.
+- **Google Business Profile Review Sync**: Automate pulling actual user reviews from Google Business Profile locations to showcase real-time testimonials on local landing pages.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- **Interactive Visual Onboarding Wizard**: Develop a step-by-step guided setup walkthrough on the user dashboard to onboard new signups.
+- **Competitor SEO Gap Visual Overlap Chart**: Integrate a Venn diagram or visual overlap chart in the competitor analyzer card.
 
 ## ✅ COMPLETED
 - ✅ C117-C121: Implemented single lead unlock feature, database migration, backend endpoint, unit tests, and dashboard UI logic; configured localized case studies for HVAC, Hair Salons, and Electricians; built agency profile claims tracking and admin monitoring dashboard; set up Week 9 Google/Meta ads; and completed audit-to-signup conversion funnel drop-off analysis (June 12, 2026).
