@@ -1,5 +1,10 @@
 import { jest } from '@jest/globals';
 
+// Mock jsonwebtoken
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn(() => 'mocked-jwt-token'),
+}));
+
 // Mock @vercel/kv
 jest.mock('@vercel/kv', () => ({
   kv: {
@@ -24,7 +29,7 @@ jest.mock('../../lib/logger.js', () => ({
   logInfo: jest.fn(),
 }));
 
-import { submitSitemapToSearchEngines, updateStaticSitemapAndPing } from '../../lib/indexing.js';
+import { submitSitemapToSearchEngines, updateStaticSitemapAndPing, submitToGoogleIndexing } from '../../lib/indexing.js';
 import { promises as fs } from 'fs';
 import { kv } from '@vercel/kv';
 import path from 'path';
@@ -187,6 +192,146 @@ describe('Indexing Lib', () => {
       
       // Still pings the main sitemap and IndexNow (3 pings)
       expect(mockFetch).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('submitToGoogleIndexing', () => {
+    let originalEnv;
+
+    beforeEach(() => {
+      originalEnv = { ...process.env };
+      delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+      delete process.env.GOOGLE_CLIENT_EMAIL;
+      delete process.env.GOOGLE_PRIVATE_KEY;
+    });
+
+    afterEach(() => {
+      process.env = originalEnv;
+    });
+
+    it('should skip if credentials are not configured', async () => {
+      const urls = ['https://www.testdomain.com/page1.html'];
+      await submitToGoogleIndexing('12345', urls);
+      
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('should notify error if GOOGLE_SERVICE_ACCOUNT_JSON is invalid JSON', async () => {
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = 'invalid-json';
+      const urls = ['https://www.testdomain.com/page1.html'];
+      
+      await submitToGoogleIndexing('12345', urls);
+      
+      expect(kv.lpush).toHaveBeenCalled();
+      const notification = JSON.parse(kv.lpush.mock.calls[0][1]);
+      expect(notification.message).toContain('Failed to parse Google Indexing credentials');
+      expect(notification.status).toBe('error');
+    });
+
+    it('should successfully submit URLs when GOOGLE_SERVICE_ACCOUNT_JSON is configured', async () => {
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = JSON.stringify({
+        client_email: 'test@service-account.iam.gserviceaccount.com',
+        private_key: 'dummy-private-key'
+      });
+      
+      const urls = ['https://www.testdomain.com/page1.html', 'https://www.testdomain.com/page2.html'];
+      
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ access_token: 'mock-access-token' })
+        })
+        .mockResolvedValue({
+          ok: true
+        });
+
+      await submitToGoogleIndexing('12345', urls);
+
+      expect(mockFetch).toHaveBeenCalledTimes(3);
+      
+      const oauthCall = mockFetch.mock.calls[0];
+      expect(oauthCall[0]).toBe('https://oauth2.googleapis.com/token');
+      expect(oauthCall[1].method).toBe('POST');
+      expect(oauthCall[1].body).toContain('assertion=mocked-jwt-token');
+
+      const publishCall1 = mockFetch.mock.calls[1];
+      expect(publishCall1[0]).toBe('https://indexing.googleapis.com/v3/urlNotifications:publish');
+      expect(publishCall1[1].method).toBe('POST');
+      expect(publishCall1[1].headers.Authorization).toBe('Bearer mock-access-token');
+      expect(JSON.parse(publishCall1[1].body).url).toBe(urls[0]);
+
+      expect(kv.lpush).toHaveBeenCalled();
+      const notification = JSON.parse(kv.lpush.mock.calls[0][1]);
+      expect(notification.message).toContain('Successfully submitted 2 pages directly to Google Indexing API');
+      expect(notification.status).toBe('success');
+    });
+
+    it('should successfully submit URLs when direct email and key are configured', async () => {
+      process.env.GOOGLE_CLIENT_EMAIL = 'direct@service-account.com';
+      process.env.GOOGLE_PRIVATE_KEY = 'direct-private-key-with-\\n-escapes';
+      
+      const urls = ['https://www.testdomain.com/page1.html'];
+      
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ access_token: 'direct-access-token' })
+        })
+        .mockResolvedValue({
+          ok: true
+        });
+
+      await submitToGoogleIndexing('12345', urls);
+
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(mockFetch.mock.calls[1][1].headers.Authorization).toBe('Bearer direct-access-token');
+    });
+
+    it('should handle OAuth endpoint errors gracefully', async () => {
+      process.env.GOOGLE_CLIENT_EMAIL = 'direct@service-account.com';
+      process.env.GOOGLE_PRIVATE_KEY = 'key';
+      
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        statusText: 'Bad Request',
+        text: () => Promise.resolve('Invalid assertion')
+      });
+
+      const urls = ['https://www.testdomain.com/page1.html'];
+      await submitToGoogleIndexing('12345', urls);
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(kv.lpush).toHaveBeenCalled();
+      const notification = JSON.parse(kv.lpush.mock.calls[0][1]);
+      expect(notification.message).toContain('Error during Google Indexing submission');
+      expect(notification.status).toBe('error');
+    });
+
+    it('should handle publish API errors gracefully', async () => {
+      process.env.GOOGLE_CLIENT_EMAIL = 'direct@service-account.com';
+      process.env.GOOGLE_PRIVATE_KEY = 'key';
+      
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ access_token: 'access-token' })
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 403,
+          statusText: 'Forbidden',
+          text: () => Promise.resolve('Permission denied')
+        });
+
+      const urls = ['https://www.testdomain.com/page1.html'];
+      await submitToGoogleIndexing('12345', urls);
+
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(kv.lpush).toHaveBeenCalled();
+      const notification = JSON.parse(kv.lpush.mock.calls[0][1]);
+      expect(notification.message).toContain('Failed to submit 1 pages to Google Indexing API');
+      expect(notification.status).toBe('error');
     });
   });
 });
