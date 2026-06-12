@@ -14,10 +14,12 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- **B2B Cold Outreach Wave 10**: Target 50 additional Digital Marketing Agencies using White-Label features and the new AI Local Business Schema Generator as major selling points.
+- **Conversion Quiz/Onboarding**: Build a "Local SEO Visibility Grader" questionnaire on the homepage that scores a prospect's visibility across 10 neighboring towns and captures their email.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- **Google Business Profile OAuth Integration**: Research and design the Google OAuth flow to allow users to automatically authorize local review syncing without manual credentials.
+- **AI Local Social Post Generator**: Add a feature to allow users to generate localized social posts optimized for Google Updates and Facebook using their captured customer reviews.
 
 ## ✅ COMPLETED
 - ✅ C127: Designed, tested, and implemented the AI-powered Local FAQ Generator and Google FAQPage structured JSON-LD schema markup for all generated SEO pages, with postgres database persistence for custom FAQs (June 12, 2026).

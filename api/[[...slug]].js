@@ -100,7 +100,8 @@ export default async (req, res, currentKvClient) => {
         const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
         // Fetch client and their parent agency from PostgreSQL
-        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id, announcement_text, announcement_type, announcement_coupon_code, announcement_expires_at, announcement_updated_at FROM users WHERE id = $1', [resolvedClientId]);
+        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id, announcement_text, announcement_type, announcement_coupon_code, announcement_expires_at, announcement_updated_at, business_profile FROM users WHERE id = $1', [resolvedClientId]);
+
         if (clientResult.rows.length === 0) {
             return res.status(404).send('Not Found');
         }
@@ -281,7 +282,7 @@ export default async (req, res, currentKvClient) => {
         const hostHeader = req.headers.host || 'localseogen.com';
         const protocol = hostHeader.includes('localhost') || hostHeader.includes('127.0.0.1') ? 'http' : 'https';
 
-        const schemaObj = {
+        let schemaObj = {
           "@context": "http://schema.org",
           "@type": getSchemaType(page.service),
           "name": page.businessName,
@@ -293,6 +294,56 @@ export default async (req, res, currentKvClient) => {
           "description": `Expert ${page.service} services in ${page.town} by ${page.businessName}.`,
           "image": logoUrl || 'https://www.localseogen.com/images/logo.svg'
         };
+
+        try {
+            const businessProfile = client.business_profile;
+            const bp = typeof businessProfile === 'string' ? JSON.parse(businessProfile) : businessProfile;
+            if (bp && typeof bp === 'object') {
+                schemaObj = {
+                    "@context": "http://schema.org",
+                    "@type": bp.type || getSchemaType(page.service),
+                    "name": bp.name || page.businessName,
+                    "url": `${protocol}://${cleanHost}${isCustomDomain ? '' : '/' + resolvedClientId}/${resolvedServiceSlug}-in-${resolvedTownSlug}.html`,
+                    "description": bp.description || `Expert ${page.service} services in ${page.town} by ${page.businessName}.`,
+                    "image": logoUrl || 'https://www.localseogen.com/images/logo.svg',
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": bp.address?.streetAddress || "",
+                        "addressLocality": page.town || bp.address?.addressLocality || "",
+                        "addressRegion": bp.address?.addressRegion || "",
+                        "postalCode": bp.address?.postalCode || "",
+                        "addressCountry": bp.address?.addressCountry || "US"
+                    }
+                };
+
+                if (bp.phone) schemaObj.telephone = bp.phone;
+                if (bp.email) schemaObj.email = bp.email;
+                if (bp.priceRange) schemaObj.priceRange = bp.priceRange;
+                
+                if (bp.coordinates && bp.coordinates.latitude && bp.coordinates.longitude) {
+                    schemaObj.geo = {
+                        "@type": "GeoCoordinates",
+                        "latitude": bp.coordinates.latitude,
+                        "longitude": bp.coordinates.longitude
+                    };
+                }
+
+                if (bp.hours && bp.hours.length > 0) {
+                    schemaObj.openingHoursSpecification = bp.hours.map(h => ({
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": h.dayOfWeek,
+                        "opens": h.opens,
+                        "closes": h.closes
+                    }));
+                }
+
+                if (bp.socials && bp.socials.length > 0) {
+                    schemaObj.sameAs = bp.socials;
+                }
+            }
+        } catch (bpError) {
+            console.error('Failed to parse or map business_profile in schema builder:', bpError);
+        }
 
         if (testimonials && testimonials.length > 0) {
           const schemaReviews = generateSchemaReviews(testimonials);

@@ -157,8 +157,10 @@ export const originalMockQuery = async (text, params) => {
                     gbp_sync_enabled: user.gbp_sync_enabled || user.gbpSyncEnabled || false,
                     gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
                     gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
+                    business_profile: user.business_profile || user.businessProfile || null,
                 };
                 return { rows: [u] };
+
             }
             return { rows: [] };
         }
@@ -205,8 +207,10 @@ export const originalMockQuery = async (text, params) => {
                     gbp_sync_enabled: user.gbp_sync_enabled || user.gbpSyncEnabled || false,
                     gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
                     gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
+                    business_profile: user.business_profile || user.businessProfile || null,
                 };
                 return { rows: [u] };
+
             }
             return { rows: [] };
         }
@@ -422,6 +426,16 @@ export const originalMockQuery = async (text, params) => {
             }
             return { rows: [] };
         }
+        if (textLower.includes('business_profile = $1')) {
+            const [businessProfile, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.business_profile = typeof businessProfile === 'string' ? JSON.parse(businessProfile) : businessProfile;
+                return { rows: [{ id: user.id }] };
+            }
+            return { rows: [] };
+        }
+
         if (textLower.includes('logo_url = $1') && textLower.includes('primary_color = $2')) {
             const [logoUrl, primaryColor, agencyId] = params;
             const user = mockUsers.find(u => u.id.toString() === agencyId.toString() && u.is_agency === true);

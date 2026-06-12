@@ -760,6 +760,131 @@
                     4. Click "Load unpacked" and select the extracted folder.
                 </p>
             </div>
+            <!-- AI Local Business Schema Generator -->
+            <div class="card" id="schema-generator-card">
+                <h2>AI Local Business Schema Generator</h2>
+                <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">Configure your rich local business details. We automatically generate a valid JSON-LD schema markup block for search engines. This schema is automatically injected into all your generated landing pages and can also be copied/pasted to your main external website.</p>
+                
+                <form id="schema-profile-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="schema-biz-name" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Business Legal Name</label>
+                            <input type="text" id="schema-biz-name" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group">
+                            <label for="schema-biz-type" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Business Category Type</label>
+                            <select id="schema-biz-type" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                                <option value="LocalBusiness">Generic LocalBusiness</option>
+                                <option value="Plumber">Plumber</option>
+                                <option value="HVACBusiness">HVAC / Heating / AC</option>
+                                <option value="Electrician">Electrician</option>
+                                <option value="LandscapingService">Landscaping & Lawn Service</option>
+                                <option value="HousekeepingService">Housecleaning & Maid Service</option>
+                                <option value="RoofingContractor">Roofing Contractor</option>
+                                <option value="HousePainter">House Painter</option>
+                                <option value="PestControlService">Pest Control Service</option>
+                                <option value="Locksmith">Locksmith</option>
+                                <option value="MovingCompany">Moving Company</option>
+                                <option value="AutoRepair">Auto Repair & Service</option>
+                                <option value="GeneralContractor">General Contractor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="schema-phone" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Telephone Number</label>
+                            <input type="tel" id="schema-phone" placeholder="e.g. +1 555-0199" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group">
+                            <label for="schema-email" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Public Email Address</label>
+                            <input type="email" id="schema-email" placeholder="e.g. info@company.com" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="schema-desc" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Business SEO Description</label>
+                        <div style="position: relative;">
+                            <textarea id="schema-desc" rows="3" placeholder="Describe your service areas, expertise, and what makes you unique..." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box; resize: vertical; padding-right: 140px;"></textarea>
+                            <button type="button" id="schema-ai-desc-btn" class="button button-secondary" style="position: absolute; right: 8px; bottom: 12px; padding: 6px 12px; font-size: 0.75rem; background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer;">
+                                <i class="fas fa-magic"></i> AI Optimize
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; background: rgba(255,255,255,0.02); margin-bottom: 1.5rem;">
+                        <h4 style="margin-top: 0; margin-bottom: 0.75rem; color: #fff; font-size: 0.95rem; font-weight: 600;">Location & Physical Address</h4>
+                        
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label for="schema-street" style="display: block; color: #aaa; font-size: 0.8rem; margin-bottom: 3px;">Street Address</label>
+                                <input type="text" id="schema-street" placeholder="e.g. 120 Oak Street" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; box-sizing: border-box;">
+                            </div>
+                            <div class="form-group">
+                                <label for="schema-city" style="display: block; color: #aaa; font-size: 0.8rem; margin-bottom: 3px;">City</label>
+                                <input type="text" id="schema-city" placeholder="e.g. Austin" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; box-sizing: border-box;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group">
+                                <label for="schema-region" style="display: block; color: #aaa; font-size: 0.8rem; margin-bottom: 3px;">State / Region</label>
+                                <input type="text" id="schema-region" placeholder="e.g. TX" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; box-sizing: border-box;">
+                            </div>
+                            <div class="form-group">
+                                <label for="schema-zip" style="display: block; color: #aaa; font-size: 0.8rem; margin-bottom: 3px;">Zip / Postal Code</label>
+                                <input type="text" id="schema-zip" placeholder="e.g. 78701" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; box-sizing: border-box;">
+                            </div>
+                            <div class="form-group">
+                                <label for="schema-country" style="display: block; color: #aaa; font-size: 0.8rem; margin-bottom: 3px;">Country Code</label>
+                                <input type="text" id="schema-country" value="US" placeholder="e.g. US" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; color: #fff; box-sizing: border-box;">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; padding: 10px; margin-top: 1rem;">
+                            <button type="button" id="schema-geocode-btn" class="button" style="padding: 6px 12px; font-size: 0.8rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff;">
+                                <i class="fas fa-map-marker-alt"></i> Geocode coordinates
+                            </button>
+                            <div style="font-size: 0.8rem; color: #9ca3af; display: flex; gap: 10px;">
+                                <span>Lat: <strong id="schema-lat-label">N/A</strong></span>
+                                <span>Lng: <strong id="schema-lng-label">N/A</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Social Profiles (SameAs Links, one per line)</label>
+                            <textarea id="schema-socials" rows="2" placeholder="e.g. https://www.facebook.com/mybusiness&#10;https://www.yelp.com/biz/mybusiness" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box; resize: vertical; font-family: monospace; font-size: 0.85rem;"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                        <button type="submit" class="button" id="save-schema-btn" style="background: #3b82f6;">
+                            <i class="fas fa-save" style="margin-right: 6px;"></i> Save & Apply Schema
+                        </button>
+                        <button type="button" class="button" id="preview-schema-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff;">
+                            <i class="fas fa-code" style="margin-right: 6px;"></i> Code View
+                        </button>
+                        <button type="button" class="button" id="validator-schema-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff;">
+                            <i class="fas fa-external-link-alt" style="margin-right: 6px;"></i> Google Schema Validator
+                        </button>
+                    </div>
+                </form>
+
+                <p id="schema-success-msg" style="color: #34d399; font-weight: bold; margin-top: 10px; display: none;"></p>
+                <p id="schema-error-msg" style="color: #f87171; font-weight: bold; margin-top: 10px; display: none;"></p>
+
+                <!-- Code block preview overlay -->
+                <div id="schema-preview-block" style="display: none; margin-top: 1.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; background: #0f172a;">
+                    <div style="background: #1e293b; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">Generated JSON-LD Schema Markup</span>
+                        <button type="button" id="schema-copy-code-btn" class="button" style="padding: 4px 10px; font-size: 0.75rem; background: #3b82f6; border: none; cursor: pointer;">Copy Code</button>
+                    </div>
+                    <pre style="margin: 0; padding: 1rem; overflow-x: auto; max-height: 300px;"><code id="schema-code-content" style="font-family: monospace; font-size: 0.85rem; color: #38bdf8; display: block; white-space: pre-wrap;"></code></pre>
+                </div>
+            </div>
+
             <div class="card" id="embeddable-widget-card">
                 <h2>Embeddable Service Area Widget</h2>
                 <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">

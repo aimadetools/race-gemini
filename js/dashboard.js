@@ -1167,6 +1167,285 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load
     fetchDashboardData();
+    loadBusinessProfile();
+
+    // ----------------------------------------------------
+    // AI Schema Generator Logic
+    // ----------------------------------------------------
+    const schemaBizName = document.getElementById('schema-biz-name');
+    const schemaBizType = document.getElementById('schema-biz-type');
+    const schemaPhone = document.getElementById('schema-phone');
+    const schemaEmail = document.getElementById('schema-email');
+    const schemaDesc = document.getElementById('schema-desc');
+    const schemaStreet = document.getElementById('schema-street');
+    const schemaCity = document.getElementById('schema-city');
+    const schemaRegion = document.getElementById('schema-region');
+    const schemaZip = document.getElementById('schema-zip');
+    const schemaCountry = document.getElementById('schema-country');
+    
+    const schemaLatLabel = document.getElementById('schema-lat-label');
+    const schemaLngLabel = document.getElementById('schema-lng-label');
+    
+    const schemaSocials = document.getElementById('schema-socials');
+    const schemaProfileForm = document.getElementById('schema-profile-form');
+    const schemaSuccessMsg = document.getElementById('schema-success-msg');
+    const schemaErrorMsg = document.getElementById('schema-error-msg');
+    
+    const previewSchemaBtn = document.getElementById('preview-schema-btn');
+    const validatorSchemaBtn = document.getElementById('validator-schema-btn');
+    const schemaPreviewBlock = document.getElementById('schema-preview-block');
+    const schemaCodeContent = document.getElementById('schema-code-content');
+    const schemaCopyCodeBtn = document.getElementById('schema-copy-code-btn');
+    const schemaGeocodeBtn = document.getElementById('schema-geocode-btn');
+    const schemaAiDescBtn = document.getElementById('schema-ai-desc-btn');
+
+    let currentCoordinates = null;
+
+    function generateLocalJsonLd() {
+        const name = schemaBizName ? schemaBizName.value : '';
+        const type = schemaBizType ? schemaBizType.value : 'LocalBusiness';
+        const phone = schemaPhone ? schemaPhone.value : '';
+        const email = schemaEmail ? schemaEmail.value : '';
+        const desc = schemaDesc ? schemaDesc.value : '';
+        const street = schemaStreet ? schemaStreet.value : '';
+        const city = schemaCity ? schemaCity.value : '';
+        const region = schemaRegion ? schemaRegion.value : '';
+        const zip = schemaZip ? schemaZip.value : '';
+        const country = schemaCountry ? schemaCountry.value : 'US';
+        const socialsText = schemaSocials ? schemaSocials.value : '';
+        const socials = socialsText.split('\n').map(s => s.trim()).filter(Boolean);
+
+        const schema = {
+            "@context": "https://schema.org",
+            "@type": type,
+            "name": name,
+            "description": desc,
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": street,
+                "addressLocality": city,
+                "addressRegion": region,
+                "postalCode": zip,
+                "addressCountry": country
+            }
+        };
+
+        if (phone) schema.telephone = phone;
+        if (email) schema.email = email;
+        if (currentCoordinates && currentCoordinates.latitude && currentCoordinates.longitude) {
+            schema.geo = {
+                "@type": "GeoCoordinates",
+                "latitude": parseFloat(currentCoordinates.latitude),
+                "longitude": parseFloat(currentCoordinates.longitude)
+            };
+        }
+        if (socials.length > 0) {
+            schema.sameAs = socials;
+        }
+
+        return JSON.stringify(schema, null, 2);
+    }
+
+    async function loadBusinessProfile() {
+        try {
+            const response = await fetch('/api/business-profile', {
+                headers: { 'Authorization': `Bearer ${jwtToken}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.profile) {
+                    const bp = data.profile;
+                    if (schemaBizName) schemaBizName.value = bp.name || '';
+                    if (schemaBizType) schemaBizType.value = bp.type || 'LocalBusiness';
+                    if (schemaPhone) schemaPhone.value = bp.phone || '';
+                    if (schemaEmail) schemaEmail.value = bp.email || '';
+                    if (schemaDesc) schemaDesc.value = bp.description || '';
+                    if (schemaStreet) schemaStreet.value = bp.address?.streetAddress || '';
+                    if (schemaCity) schemaCity.value = bp.address?.addressLocality || '';
+                    if (schemaRegion) schemaRegion.value = bp.address?.addressRegion || '';
+                    if (schemaZip) schemaZip.value = bp.address?.postalCode || '';
+                    if (schemaCountry) schemaCountry.value = bp.address?.addressCountry || 'US';
+                    if (schemaSocials) schemaSocials.value = bp.socials ? bp.socials.join('\n') : '';
+                    
+                    if (bp.coordinates) {
+                        currentCoordinates = bp.coordinates;
+                        if (schemaLatLabel) schemaLatLabel.textContent = bp.coordinates.latitude;
+                        if (schemaLngLabel) schemaLngLabel.textContent = bp.coordinates.longitude;
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Error loading business profile:', err);
+        }
+    }
+
+    if (schemaProfileForm) {
+        schemaProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (schemaSuccessMsg) schemaSuccessMsg.style.display = 'none';
+            if (schemaErrorMsg) schemaErrorMsg.style.display = 'none';
+
+            const socialsText = schemaSocials ? schemaSocials.value : '';
+            const socials = socialsText.split('\n').map(s => s.trim()).filter(Boolean);
+
+            const profile = {
+                name: schemaBizName.value,
+                type: schemaBizType.value,
+                phone: schemaPhone.value,
+                email: schemaEmail.value,
+                description: schemaDesc.value,
+                address: {
+                    streetAddress: schemaStreet.value,
+                    addressLocality: schemaCity.value,
+                    addressRegion: schemaRegion.value,
+                    postalCode: schemaZip.value,
+                    addressCountry: schemaCountry.value
+                },
+                coordinates: currentCoordinates,
+                socials: socials
+            };
+
+            try {
+                const response = await fetch('/api/business-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify(profile)
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (schemaSuccessMsg) {
+                        schemaSuccessMsg.textContent = resData.message;
+                        schemaSuccessMsg.style.display = 'block';
+                    }
+                    if (resData.profile && resData.profile.coordinates) {
+                        currentCoordinates = resData.profile.coordinates;
+                        if (schemaLatLabel) schemaLatLabel.textContent = currentCoordinates.latitude;
+                        if (schemaLngLabel) schemaLngLabel.textContent = currentCoordinates.longitude;
+                    }
+                    if (schemaPreviewBlock && schemaPreviewBlock.style.display !== 'none') {
+                        if (schemaCodeContent) {
+                            schemaCodeContent.textContent = generateLocalJsonLd();
+                        }
+                    }
+                } else {
+                    if (schemaErrorMsg) {
+                        schemaErrorMsg.textContent = resData.message || 'Failed to save profile.';
+                        schemaErrorMsg.style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                console.error('Error saving schema profile:', err);
+                if (schemaErrorMsg) {
+                    schemaErrorMsg.textContent = 'An unexpected error occurred.';
+                    schemaErrorMsg.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    if (previewSchemaBtn) {
+        previewSchemaBtn.addEventListener('click', () => {
+            if (schemaPreviewBlock) {
+                if (schemaPreviewBlock.style.display === 'none') {
+                    schemaPreviewBlock.style.display = 'block';
+                    schemaCodeContent.textContent = generateLocalJsonLd();
+                } else {
+                    schemaPreviewBlock.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    if (schemaCopyCodeBtn) {
+        schemaCopyCodeBtn.addEventListener('click', () => {
+            const code = generateLocalJsonLd();
+            navigator.clipboard.writeText(`<script type="application/ld+json">\n${code}\n<\/script>`).then(() => {
+                const originalText = schemaCopyCodeBtn.textContent;
+                schemaCopyCodeBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    schemaCopyCodeBtn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text:', err);
+            });
+        });
+    }
+
+    if (schemaGeocodeBtn) {
+        schemaGeocodeBtn.addEventListener('click', async () => {
+            const originalText = schemaGeocodeBtn.innerHTML;
+            schemaGeocodeBtn.disabled = true;
+            schemaGeocodeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Geocoding...';
+            
+            // Trigger save which runs backend geocoding
+            schemaProfileForm.dispatchEvent(new Event('submit'));
+            
+            setTimeout(() => {
+                schemaGeocodeBtn.disabled = false;
+                schemaGeocodeBtn.innerHTML = originalText;
+            }, 1500);
+        });
+    }
+
+    if (schemaAiDescBtn) {
+        schemaAiDescBtn.addEventListener('click', async () => {
+            const businessName = schemaBizName ? schemaBizName.value.trim() : '';
+            const serviceType = schemaBizType ? schemaBizType.value.trim() : '';
+            const city = schemaCity ? schemaCity.value.trim() : '';
+            const state = schemaRegion ? schemaRegion.value.trim() : '';
+
+            if (!businessName || !serviceType || !city) {
+                alert('Please fill in Business Name, Category Type, and City first.');
+                return;
+            }
+
+            const originalText = schemaAiDescBtn.innerHTML;
+            schemaAiDescBtn.disabled = true;
+            schemaAiDescBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Optimizing...';
+
+            try {
+                const response = await fetch('/api/generate-schema-details', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ businessName, serviceType, city, state })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.details && data.details.description) {
+                        if (schemaDesc) {
+                            schemaDesc.value = data.details.description;
+                        }
+                        if (schemaSuccessMsg) {
+                            schemaSuccessMsg.textContent = 'AI Description generated successfully!';
+                            schemaSuccessMsg.style.display = 'block';
+                        }
+                    }
+                } else {
+                    alert('Failed to generate AI description. Using fallback values.');
+                }
+            } catch (err) {
+                console.error('Error generating AI description:', err);
+            } finally {
+                schemaAiDescBtn.disabled = false;
+                schemaAiDescBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    if (validatorSchemaBtn) {
+        validatorSchemaBtn.addEventListener('click', () => {
+            window.open('https://validator.schema.org/', '_blank');
+        });
+    }
+
 
     // Onboarding message logic
     if (onboardingMessage && dismissOnboardingButton) {
