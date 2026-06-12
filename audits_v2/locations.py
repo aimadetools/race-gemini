@@ -45,7 +45,7 @@ def _run_locations_audit(url, locations_db, max_depth, source_identifier="N/A"):
                             internal_links.add(normalized_link)
                             if depth + 1 <= current_max_depth:
                                 queue.append((normalized_link, depth + 1))
-            except requests.RequestException:
+            except requests.RequestException as e:
                 issues.append(
                     {
                         "type": "WARNING",

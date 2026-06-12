@@ -14,10 +14,12 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Track and monitor the claims and signups from the newly seeded agency directory profiles.
+- Set up target ad copy and structures for the Google Search & Facebook Ads campaign launch in Week 9.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Analyze user_events data to locate drop-off points in the audit-to-signup conversion funnel.
+- Configure additional localized case studies based on client responses.
 
 ## ✅ COMPLETED
 - ✅ C113-C116: Executed B2B Cold Outreach Wave 9, implemented the dashboard locked leads automated drip sequence, designed and integrated the interactive Google Maps Area Embed widget generator, and completed integration and full unit test coverage for the AI Local Keyword Research card (June 11, 2026).

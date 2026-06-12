@@ -62,7 +62,7 @@ async function sendEmails(emails, sendgridApiKey, sendgridFromEmail) {
 }
 
 export default async (req, res) => {
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.DISABLE_EMAIL_OUTREACH === 'true') {
     return res.status(200).json({ disabled: true, reason: "Email outreach disabled by operator" });
   }
 

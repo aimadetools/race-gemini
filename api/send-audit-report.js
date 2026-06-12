@@ -124,7 +124,7 @@ function buildAuditEmailHtml(auditedUrl, auditResults, branding) {
 }
 
 export default async (req, res) => {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.DISABLE_EMAIL_OUTREACH === 'true') {
         return res.status(200).json({ disabled: true, reason: "Audit emails disabled by operator" });
     }
 
