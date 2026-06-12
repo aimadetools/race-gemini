@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Admin panel for LocalLeads to track and monitor claimed agency directory profiles." name="description"/>
+  <title>Admin - Agency Claims - LocalLeads</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="/style.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+      --card-bg: rgba(31, 41, 55, 0.45);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #0b0f19;
+      color: #f3f4f6;
+    }
+
+    .admin-header-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .admin-nav-link {
+      color: #9ca3af;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+
+    .admin-nav-link:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-nav-link.active {
+      color: white;
+      background: var(--primary-gradient);
+    }
+
+    .data-table-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .data-table th {
+      background: rgba(17, 24, 39, 0.8);
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      color: #9ca3af;
+      border-bottom: 1px solid var(--border-color);
+      font-family: var(--font-title);
+    }
+
+    .data-table td {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+<div id="mobile-nav-overlay"></div>
+<header>
+  <nav>
+    <div class="container">
+      <a class="logo" href="/"><div class="pin"></div><span>LocalLeads</span></a>
+      <div class="hamburger-menu" id="hamburger-icon">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <ul class="nav-links" id="nav-menu">
+        <li class="close-menu-li">
+          <button id="close-menu-btn">×</button>
+        </li>
+        <li><a href="/generate.html">Generate Pages</a></li>
+        <li><a href="/pricing.html">Pricing</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/audit.html">Free Audit</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/auth.html">Login/Signup</a></li>
+        <li><a href="/buy-credits.html">Buy Credits</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<main style="padding-top: 4rem;">
+  <section class="hero">
+    <div class="container">
+      <h1 style="font-family: var(--font-title); background: linear-gradient(to right, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        Admin Dashboard
+      </h1>
+    </div>
+  </section>
+  <section>
+    <div class="container">
+      <div class="admin-header-nav">
+        <a href="#" class="admin-nav-link active" id="claims-tab">Agency Directory Claims</a>
+        <a href="/admin-agency-inquiries.html" class="admin-nav-link" id="inquiries-tab">Partnership Inquiries</a>
+      </div>
+
+      <h2 style="font-family: var(--font-title); margin-bottom: 1.5rem;">Seeded Agency Profile Claims</h2>
+      
+      <div id="agency-claims" class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Agency Name</th>
+              <th>Website</th>
+              <th>City</th>
+              <th>Slug</th>
+              <th>Claimed By</th>
+              <th>Credits</th>
+              <th>Claimed At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Loading claim records...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+<footer style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--border-color); text-align: center; color: #6b7280; font-size: 0.9rem;">
+  <div class="container">
+    <p>© 2026 LocalLeads. All rights reserved.</p>
+  </div>
+</footer>
+<button id="scrollToTopBtn" title="Go to top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+  // Dynamic sync of secret parameter across tabs
+  const urlParams = new URLSearchParams(window.location.search);
+  const secret = urlParams.get('secret');
+  if (secret) {
+    const inquiriesTab = document.getElementById('inquiries-tab');
+    inquiriesTab.href = `/admin-agency-inquiries.html?secret=${encodeURIComponent(secret)}`;
+    
+    const claimsTab = document.getElementById('claims-tab');
+    claimsTab.href = `/admin-agency-claims.html?secret=${encodeURIComponent(secret)}`;
+  }
+</script>
+<script src="/js/app.min.js"></script>
+</body>
+</html>

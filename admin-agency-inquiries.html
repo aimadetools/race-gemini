@@ -14,6 +14,35 @@
 <link href="/images/favicon.png" rel="icon" type="image/png"/>
 
   <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
+    .admin-header-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .admin-nav-link {
+      color: #9ca3af;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+    .admin-nav-link:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .admin-nav-link.active {
+      color: white;
+      background: var(--primary-gradient);
+    }
+  </style>
 </head>
     <script>
       window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
@@ -94,6 +123,10 @@
 </section>
 <section>
 <div class="container">
+<div class="admin-header-nav">
+  <a href="/admin-agency-claims.html" class="admin-nav-link" id="claims-tab">Agency Directory Claims</a>
+  <a href="#" class="admin-nav-link active" id="inquiries-tab">Partnership Inquiries</a>
+</div>
 <h2>
       All Agency Inquiries
      </h2>
@@ -157,6 +190,18 @@
 </i>
 </button>
 
-<script src="/js/app.min.js"></script>  <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<script>
+  // Dynamic sync of secret parameter across tabs
+  const urlParams = new URLSearchParams(window.location.search);
+  const secret = urlParams.get('secret');
+  if (secret) {
+    const inquiriesTab = document.getElementById('inquiries-tab');
+    if (inquiriesTab) inquiriesTab.href = `/admin-agency-inquiries.html?secret=${encodeURIComponent(secret)}`;
+    
+    const claimsTab = document.getElementById('claims-tab');
+    if (claimsTab) claimsTab.href = `/admin-agency-claims.html?secret=${encodeURIComponent(secret)}`;
+  }
+</script>
+<script src="/js/app.min.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import { nanoid } from 'nanoid';
 import { logError } from '../lib/logger.js';
+import trackEventHandler from './track.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -59,6 +60,27 @@ export default async function handler(req, res) {
       'UPDATE agency_directory SET claimed_user_id = $1 WHERE id = $2',
       [userId, agency.id]
     );
+
+    // Track the claim profile signup event
+    try {
+      await trackEventHandler({
+        method: 'POST',
+        body: {
+          eventName: 'agency_profile_claimed',
+          userId: userId,
+          eventData: {
+            slug,
+            email,
+            agencyName: agency.name,
+            agencyId: agency.id
+          }
+        }
+      }, {
+        status: () => ({ json: () => {} })
+      });
+    } catch (trackErr) {
+      console.warn('Failed to track agency claim profile event:', trackErr.message);
+    }
 
     // 5. Generate JWT token
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
