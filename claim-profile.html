@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claim Your Agency Profile | LocalLeads</title>
+  <meta name="description" content="Unlock your agency's profile and claim your free white-label local SEO audit widget on LocalLeads.">
+  
+  <!-- Styling -->
+  <link href="style.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+      --card-bg: rgba(31, 41, 55, 0.65);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 6rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .claim-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .claim-card h1 {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #fff, #9ca3af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .agency-detail-box {
+      background: rgba(17, 24, 39, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-label {
+      color: #6b7280;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+
+    .form-input {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    }
+
+    .button-primary {
+      background: var(--primary-gradient);
+      color: white;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    .button-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    header nav {
+      background: rgba(11, 15, 25, 0.8) !important;
+      backdrop-filter: blur(12px) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <div style="max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+          <img src="/images/logo.svg" alt="LocalLeads Logo" style="height: 32px;">
+        </a>
+        <a href="/directory.html" style="color: #9ca3af; text-decoration: none; font-size: 0.95rem;">Back to Directory</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="claim-card">
+      <div id="loadingState" style="text-align: center; padding: 2rem 0;">
+        <i class="fas fa-circle-notch fa-spin fa-2x" style="color: #8b5cf6; margin-bottom: 1rem;"></i>
+        <p style="color: #9ca3af;">Loading agency profile data...</p>
+      </div>
+
+      <div id="errorState" style="text-align: center; padding: 2rem 0; display: none;">
+        <i class="fas fa-exclamation-triangle fa-2x" style="color: #ef4444; margin-bottom: 1rem;"></i>
+        <p id="errorMessage" style="color: #f3f4f6; margin-bottom: 1.5rem;">Agency listing could not be found.</p>
+        <a href="/directory.html" class="button-primary" style="display: inline-flex; width: auto; padding: 10px 20px;">Browse Directory</a>
+      </div>
+
+      <div id="claimFormContainer" style="display: none;">
+        <h1>Claim Your Agency Profile</h1>
+        <p style="color: #9ca3af; font-size: 0.95rem; margin: 0;">Unlock GMB lead integrations and claim your free white-label widgets.</p>
+        
+        <div class="agency-detail-box">
+          <div class="detail-row">
+            <span class="detail-label">Agency Name:</span>
+            <span class="detail-value" id="agencyName">Boston SEO Geeks</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Target City:</span>
+            <span class="detail-value" id="agencyCity">Boston</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Website:</span>
+            <span class="detail-value" id="agencyWebsite">https://boston-seo.org</span>
+          </div>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="claimForm">
+          <div class="form-group">
+            <label for="emailInput">Verify / Update Email Address</label>
+            <input type="email" id="emailInput" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="passwordInput">Set Your Password</label>
+            <input type="password" id="passwordInput" class="form-input" placeholder="Min 6 characters" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="confirmPasswordInput">Confirm Password</label>
+            <input type="password" id="confirmPasswordInput" class="form-input" required minlength="6">
+          </div>
+          <button type="submit" class="button-primary">
+            <i class="fas fa-unlock"></i> Complete Claim &amp; Log In
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <footer style="background: #080b12; border-top: 1px solid var(--border-color); padding: 2rem 0; color: #6b7280; font-size: 0.9rem; text-align: center;">
+    <p style="margin: 0;">&copy; 2026 LocalLeads. All rights reserved.</p>
+  </footer>
+
+  <!-- Page Logic -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const agencySlug = urlParams.get('agency');
+
+    const loadingState = document.getElementById('loadingState');
+    const errorState = document.getElementById('errorState');
+    const errorMessage = document.getElementById('errorMessage');
+    const claimFormContainer = document.getElementById('claimFormContainer');
+    const alertBox = document.getElementById('alertBox');
+
+    const agencyNameNode = document.getElementById('agencyName');
+    const agencyCityNode = document.getElementById('agencyCity');
+    const agencyWebsiteNode = document.getElementById('agencyWebsite');
+    const emailInput = document.getElementById('emailInput');
+
+    async function loadAgencyInfo() {
+      if (!agencySlug) {
+        showError('No agency selected to claim. Please browse the directory to select an agency.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/agency-claim-info?slug=${encodeURIComponent(agencySlug)}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.isClaimed) {
+            showError('This agency profile has already been claimed and verified.');
+            return;
+          }
+
+          agencyNameNode.textContent = data.name;
+          agencyCityNode.textContent = data.city;
+          agencyWebsiteNode.textContent = data.website || 'N/A';
+          emailInput.value = data.email || '';
+
+          loadingState.style.display = 'none';
+          claimFormContainer.style.display = 'block';
+        } else {
+          showError(data.message || 'We could not fetch the details for this agency.');
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        showError('Failed to contact server. Please reload the page.');
+      }
+    }
+
+    function showError(msg) {
+      loadingState.style.display = 'none';
+      claimFormContainer.style.display = 'none';
+      errorState.style.display = 'block';
+      errorMessage.textContent = msg;
+    }
+
+    function showAlert(msg, isSuccess = false) {
+      alertBox.textContent = msg;
+      alertBox.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
+      alertBox.style.display = 'block';
+    }
+
+    document.getElementById('claimForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.style.display = 'none';
+
+      const email = emailInput.value.trim();
+      const password = document.getElementById('passwordInput').value;
+      const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+      if (password !== confirmPassword) {
+        showAlert('Passwords do not match.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/claim-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: agencySlug, email, password })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+          showAlert('Profile claimed successfully! Redirecting...', true);
+          setTimeout(() => {
+            window.location.href = '/dashboard.html?claimed=true';
+          }, 1500);
+        } else {
+          showAlert(data.message || 'An error occurred while claiming the profile.');
+        }
+      } catch (err) {
+        console.error('Submission error:', err);
+        showAlert('Network error. Please try again.');
+      }
+    });
+
+    // Run on load
+    loadAgencyInfo();
+  </script>
+</body>
+</html>

@@ -23,6 +23,10 @@
       "destination": "/api/serve-static-page?fileName=:fileName"
     },
     {
+      "source": "/agency/:slug",
+      "destination": "/api/agency-profile?slug=:slug"
+    },
+    {
       "source": "/:clientId(\\d+)/:fileName",
       "destination": "/api/[[...slug]]?slug=:clientId&slug=:fileName"
     },

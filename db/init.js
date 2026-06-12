@@ -20,6 +20,7 @@ import { addPrimaryColorToSeoPages } from './migrations/add_primary_color_to_seo
 import { addExternalReviewLinksToUsers } from './migrations/add_external_review_links_to_users.js';
 import { addLocalUpdatesToUsers } from './migrations/add_local_updates_to_users.js';
 import { addRadiusAndCoordinatesToSeoPages } from './migrations/add_radius_and_coordinates_to_seo_pages.js';
+import { createAgencyDirectoryTable } from './migrations/create_agency_directory.js';
 
 export async function initializeDatabase() {
   try {
@@ -88,6 +89,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring radius and coordinates columns exist in seo_pages table...');
     await addRadiusAndCoordinatesToSeoPages();
+
+    console.log('Ensuring agency directory table exists and is seeded...');
+    await createAgencyDirectoryTable();
 
     console.log('Database initialization completed.');
   } catch (error) {
