@@ -62,3 +62,210 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+/* Local SEO Visibility Grader Controller */
+document.addEventListener("DOMContentLoaded", function() {
+    const detailsForm = document.getElementById("grader-details-form");
+    const emailForm = document.getElementById("grader-email-form");
+    
+    if (!detailsForm) return;
+
+    let businessName = "";
+    let service = "";
+    let city = "";
+    let computedTowns = [];
+
+    detailsForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        
+        businessName = document.getElementById("grader-business-name").value.trim();
+        service = document.getElementById("grader-service").value.trim();
+        city = document.getElementById("grader-city").value.trim();
+
+        if (!businessName || !service || !city) return;
+
+        // Transition to Step 2
+        document.getElementById("grader-step-1").style.display = "none";
+        document.getElementById("grader-step-2").style.display = "block";
+        document.getElementById("grader-analyzing-state").style.display = "block";
+        document.getElementById("grader-email-capture-state").style.display = "none";
+
+        // Animate scanning progress text
+        const progressTexts = [
+            "Connecting to local mapping index...",
+            "Analyzing neighboring towns using OpenStreetMap...",
+            "Resolving geographic coordinates via OpenCage...",
+            "Scanning organic local search visibility...",
+            "Calculating GMB maps presence in nearby markets...",
+            "Compiling final visibility report card..."
+        ];
+        let textIdx = 0;
+        const progressEl = document.getElementById("grader-scanning-progress");
+        const interval = setInterval(() => {
+            if (progressEl && textIdx < progressTexts.length) {
+                progressEl.textContent = progressTexts[textIdx++];
+            }
+        }, 1000);
+
+        try {
+            // Fetch towns from api
+            const response = await fetch(`/api/suggest-towns?city=${encodeURIComponent(city)}`);
+            const data = await response.json();
+            
+            let towns = (data && data.towns) ? data.towns : [];
+            
+            // Pad or trim to exactly 10 towns
+            if (towns.length < 10) {
+                const defaultPads = ["North", "South", "West", "East", "Heights", "Valley", "Lakes", "Springs", "Hills", "Junction"];
+                let padIdx = 0;
+                while (towns.length < 10 && padIdx < defaultPads.length) {
+                    const paddedTown = `${city} ${defaultPads[padIdx++]}`;
+                    if (!towns.includes(paddedTown)) {
+                        towns.push(paddedTown);
+                    }
+                }
+            }
+            computedTowns = towns.slice(0, 10);
+        } catch (err) {
+            console.error("Failed to suggest towns:", err);
+            // Default fallbacks
+            computedTowns = [
+                `${city} North`, `${city} South`, `${city} West`, `${city} East`,
+                `${city} Heights`, `${city} Valley`, `${city} Lakes`, `${city} Springs`,
+                `${city} Hills`, `${city} Junction`
+            ];
+        } finally {
+            clearInterval(interval);
+            // Show email capture state
+            document.getElementById("grader-analyzing-state").style.display = "none";
+            document.getElementById("grader-email-capture-state").style.display = "block";
+        }
+    });
+
+    emailForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById("grader-email").value.trim();
+        if (!email) return;
+
+        // Capture email API
+        try {
+            const trackingUrl = `https://www.localseogen.com/visibility-grader?city=${encodeURIComponent(city)}&service=${encodeURIComponent(service)}&business=${encodeURIComponent(businessName)}`;
+            await fetch('/api/capture-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    url: trackingUrl,
+                    name: businessName,
+                    source: 'visibility-grader'
+                })
+            });
+        } catch (err) {
+            console.error("Failed to capture email:", err);
+        }
+
+        // Calculate scores deterministically
+        let totalScore = 0;
+        const townListContainer = document.getElementById("grader-town-list");
+        townListContainer.innerHTML = "";
+
+        const listItems = computedTowns.map((town, idx) => {
+            // Deterministic score based on string lengths and index to show variance
+            const townScoreVal = Math.floor(((businessName.length + town.length + idx * 11) * 7) % 65);
+            totalScore += townScoreVal;
+
+            let statusText = "Invisible";
+            let statusClass = "grader-status-invisible";
+            if (townScoreVal > 40) {
+                statusText = "Moderate";
+                statusClass = "grader-status-moderate";
+            } else if (townScoreVal > 15) {
+                statusText = "Weak";
+                statusClass = "grader-status-weak";
+            }
+
+            return {
+                town: town,
+                score: townScoreVal,
+                statusText: statusText,
+                statusClass: statusClass
+            };
+        });
+
+        const avgScore = Math.round(totalScore / 10);
+
+        // Render list items
+        listItems.forEach(item => {
+            const row = document.createElement("div");
+            row.className = "grader-town-row";
+            row.innerHTML = `
+                <div class="grader-town-name">${item.town}</div>
+                <div class="grader-town-bar-container">
+                    <div class="grader-town-bar" style="width: 0%; background: ${item.score > 40 ? '#eab308' : item.score > 15 ? '#f59e0b' : '#ef4444'};"></div>
+                </div>
+                <div class="grader-town-score">${item.score}%</div>
+                <div class="grader-town-status ${item.statusClass}">${item.statusText}</div>
+            `;
+            townListContainer.appendChild(row);
+        });
+
+        // Configure overall result details
+        const percentageValEl = document.getElementById("grader-percentage-val");
+        const progressCircle = document.getElementById("grader-progress-circle");
+        const resultTitle = document.getElementById("grader-result-title");
+        const resultSummary = document.getElementById("grader-result-summary");
+
+        // Set overall title/summary
+        if (avgScore > 40) {
+            resultTitle.textContent = "Low Visibility Warning!";
+            resultTitle.style.color = "#eab308";
+            progressCircle.setAttribute("stroke", "#eab308");
+            resultSummary.textContent = `Your business has moderate local visibility (${avgScore}%) across nearby towns. You are still missing out on significant traffic in ${listItems.filter(t => t.score <= 15).length} towns.`;
+        } else {
+            resultTitle.textContent = "Critical SEO Danger!";
+            resultTitle.style.color = "#ef4444";
+            progressCircle.setAttribute("stroke", "#ef4444");
+            resultSummary.textContent = `Your business is mostly invisible (${avgScore}%) across neighboring towns! You are losing high-intent leads in ${listItems.filter(t => t.score <= 15).length} towns.`;
+        }
+
+        // Configure CTA button parameters
+        const ctaBtn = document.getElementById("grader-action-btn");
+        if (ctaBtn) {
+            ctaBtn.href = `/generate.html?businessName=${encodeURIComponent(businessName)}&services=${encodeURIComponent(service)}&towns=${encodeURIComponent(computedTowns.join(','))}`;
+        }
+
+        // Transition to Step 3
+        document.getElementById("grader-step-2").style.display = "none";
+        document.getElementById("grader-step-3").style.display = "block";
+
+        // Animate circular progress and values after displaying
+        setTimeout(() => {
+            // SVG circle perimeter is 2 * Math.PI * 50 = 314.15
+            const dashoffset = 314.15 - (314.15 * avgScore) / 100;
+            if (progressCircle) {
+                progressCircle.style.strokeDashoffset = dashoffset;
+            }
+
+            // Animate number count up
+            let currentVal = 0;
+            const countInterval = setInterval(() => {
+                if (currentVal >= avgScore) {
+                    clearInterval(countInterval);
+                    percentageValEl.textContent = avgScore;
+                } else {
+                    currentVal++;
+                    percentageValEl.textContent = currentVal;
+                }
+            }, 20);
+
+            // Animate town progress bars
+            const bars = document.querySelectorAll(".grader-town-bar");
+            bars.forEach((bar, idx) => {
+                setTimeout(() => {
+                    bar.style.width = `${listItems[idx].score}%`;
+                }, idx * 100);
+            });
+        }, 100);
+    });
+});

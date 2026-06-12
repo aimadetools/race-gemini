@@ -1,24 +1,24 @@
-Subject: Expand Your Agency's Local SEO Services with Google Business Profile Sync
+Subject: Scale Your Agency's Local SEO with White-Label Pages & AI Schema Generation
 
 Hi [Agency Contact Name],
 
 {{ai_personalization}}
 
-I'm reaching out from LocalLeads (https://www.localseogen.com). We offer a powerful white-label platform that generates dozens of professionally designed, search-optimized pages for local contractors and home services businesses across every town they serve.
+I'm reaching out from LocalLeads (https://www.localseogen.com). We offer a powerful white-label platform that generates search-optimized local landing pages for contractors and home services businesses across every service area they target, completely branded under your agency's logo, colors, and custom domains.
 
-We have just launched our new **Google Business Profile (GBP) Sync & Automated Local Updates** feature. This allows your agency to automatically publish promotions, specials, and local news from a single dashboard directly onto all of your clients' local landing pages, boosting their local search signals and Google Maps visibility.
+We have just launched our new **AI-Powered Local Business Schema Generator**. This feature automatically generates and injects search-engine-optimized, Google-compliant `LocalBusiness` JSON-LD schema (with geocoded coordinates, hours, contact info, and social links) directly into all your clients' generated pages. This boosts their local organic search authority and Google Maps rankings on autopilot.
 
-We've found that marketing agencies like yours are perfectly positioned to leverage our technology as a white-label solution, allowing you to:
+Marketing agencies like yours leverage our platform to scale their offerings and capture more margin:
 
+*   **White-Label Custom Branding:** Upload your own logo, brand colors, and configure custom CNAME domains to resell the platform as your own.
+*   **AI Local Business Schema Generator:** Automatically injects highly optimized, structured schema to maximize local search visibility.
 *   **Google Business Profile (GBP) Sync:** Sync promotions, offers, and news across all local landing pages automatically.
-*   **Interactive ROI & Lead Calculator:** Use our calculator as a client-facing lead magnet to demonstrate clear ROI and value before they buy.
-*   **Embeddable Service Area Widget:** Instantly display all generated local pages on your clients' websites with customizable list/grid widgets.
-*   **Expand your service offerings:** Provide cutting-edge local SEO page generation without the development overhead.
-*   **Boost your agency's revenue:** Offer a high-demand service under your own brand, enhancing your profitability.
+*   **Interactive ROI & Lead Calculator:** Embed our calculator as a client-facing lead magnet to demonstrate clear ROI before they buy.
+*   **Embeddable Service Area Widget:** Display all generated local pages on your clients' main websites using beautiful, customizable list/grid widgets.
 
 Would you be open to a brief discussion or checking out our white-label program details here: https://www.localseogen.com/agency-white-label.html ?
 
-To help you get started, we are currently offering an exclusive **20% discount** on any of our agency packages and credit plans. Simply use coupon code **LOCAL20** at checkout to unlock your discount.
+To help your agency get started, we are offering an exclusive **20% discount** on any of our agency packages and credit plans. Simply use coupon code **LOCAL20** at checkout to unlock your discount.
 
 Best regards,
 
