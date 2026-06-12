@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 : (lead.phone ? `<a href="tel:${lead.phone}">${lead.phone}</a>` : 'N/A');
                             
                             const statusHtml = lead.isLocked 
-                                ? `<span class="credit-negative" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-lock" style="font-size: 0.75rem;"></i> Locked</span>` 
+                                ? `<button class="button unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #fbbf24; color: #000; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-unlock" style="font-size: 0.7rem;"></i> Unlock (1 Credit)</button>` 
                                 : `<span class="credit-positive" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle" style="font-size: 0.75rem;"></i> Active</span>`;
 
                             row.innerHTML = `
@@ -190,6 +190,45 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td>${formattedDate}</td>
                                 <td>${statusHtml}</td>
                             `;
+                        });
+
+                        // Bind unlock lead buttons
+                        document.querySelectorAll('.unlock-lead-btn').forEach(btn => {
+                            btn.addEventListener('click', async (e) => {
+                                const leadId = btn.dataset.leadId;
+                                const leadName = btn.dataset.leadName;
+                                if (!confirm(`Are you sure you want to unlock lead "${leadName}" for 1 credit?`)) {
+                                    return;
+                                }
+                                
+                                btn.disabled = true;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Unlocking...';
+                                
+                                try {
+                                    const res = await fetch('/api/unlock-lead', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ leadId })
+                                    });
+                                    
+                                    const result = await res.json();
+                                    if (res.ok) {
+                                        alert('Lead unlocked successfully!');
+                                        await fetchDashboardData();
+                                    } else {
+                                        alert(result.message || 'Failed to unlock lead.');
+                                        btn.disabled = false;
+                                        btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock (1 Credit)';
+                                    }
+                                } catch (err) {
+                                    console.error('Error unlocking lead:', err);
+                                    alert('A network error occurred. Please try again.');
+                                    btn.disabled = false;
+                                    btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock (1 Credit)';
+                                }
+                            });
                         });
 
                         if (!data.isPaidUser) {

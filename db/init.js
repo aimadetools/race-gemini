@@ -22,6 +22,7 @@ import { addLocalUpdatesToUsers } from './migrations/add_local_updates_to_users.
 import { addRadiusAndCoordinatesToSeoPages } from './migrations/add_radius_and_coordinates_to_seo_pages.js';
 import { createAgencyDirectoryTable } from './migrations/create_agency_directory.js';
 import { addGoogleVerificationCodeToUsers } from './migrations/add_google_verification_code_to_users.js';
+import { addIsUnlockedToLeads } from './migrations/add_is_unlocked_to_leads.js';
 
 export async function initializeDatabase() {
   try {
@@ -96,6 +97,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring google_verification_code column exists in users table...');
     await addGoogleVerificationCodeToUsers();
+
+    console.log('Ensuring is_unlocked column exists in leads table...');
+    await addIsUnlockedToLeads();
 
     console.log('Database initialization completed.');
   } catch (error) {

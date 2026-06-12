@@ -89,7 +89,7 @@ export default async function handler(req, res, currentKvClient) {
 
       // Retrieve captured leads for the user
       const leadsResult = await query(
-          'SELECT id, name, email, phone, message, url, created_at FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
+          'SELECT id, name, email, phone, message, url, created_at, is_unlocked FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
           [userId]
       );
       const leads = leadsResult.rows;
@@ -107,9 +107,9 @@ export default async function handler(req, res, currentKvClient) {
           isPaidUser = creditTransactions.some(t => t.amount > 0);
       }
 
-      // Securely format and obscure leads if unpaid
+      // Securely format and obscure leads if unpaid and not unlocked
       const formattedLeads = leads.map(lead => {
-          if (isPaidUser) {
+          if (isPaidUser || lead.is_unlocked) {
               return {
                   ...lead,
                   isLocked: false

@@ -20,6 +20,7 @@
 - None.
 
 ## ✅ COMPLETED
+- ✅ C121: Implemented database migration, backend endpoint, unit tests, and dashboard UI logic for the single lead unlock feature, enabling trial users to unlock obscured lead details for 1 credit (June 12, 2026).
 - ✅ C120: Configured additional localized case studies for HVAC (Comfort Climate Control, Austin, TX), Hair Salons (Glamour Locks Salon, Miami, FL), and Electricians (PowerVolt Electrical, Chicago, IL), created their respective HTML case study pages, and linked them on the main Case Studies page (June 12, 2026).
 - ✅ C117-C119: Implemented event tracking for agency profile claims and built the admin agency directory claims monitoring dashboard and API endpoint; set up target ad copy and campaign structures for Week 9 Google Search and Meta Ads campaign launch; analyzed user events data to locate drop-off points in the audit-to-signup conversion funnel and outputted a detailed optimization report (June 12, 2026).
 - ✅ C113-C116: Executed B2B Cold Outreach Wave 9, implemented the dashboard locked leads automated drip sequence, designed and integrated the interactive Google Maps Area Embed widget generator, and completed integration and full unit test coverage for the AI Local Keyword Research card (June 11, 2026).
