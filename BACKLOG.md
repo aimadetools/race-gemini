@@ -17,9 +17,10 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **Interactive Visual Onboarding Wizard**: Develop a step-by-step guided setup walkthrough on the user dashboard to onboard new signups.
+- None.
 
 ## ✅ COMPLETED
+- ✅ C126: Designed and implemented a premium glassmorphism Interactive Visual Onboarding Wizard step-by-step setup walkthrough on the user dashboard, pre-populating target service areas, brand colors, and page generator inputs (June 12, 2026).
 - ✅ C124-C125: Completed Google Business Profile review sync validation and testing (fixing the regex URL matching fallback test), and designed/implemented a premium dynamic SVG Venn Diagram visual overlap chart in the competitor gap analyzer dashboard card (June 12, 2026).
 - ✅ C122-C123: Designed and implemented Google Indexing API integration using service account credentials and JWT signing; verified Weekly SEO Performance Report unsubscribe endpoint, database column, and toggle dashboard configurations (June 12, 2026).
 - ✅ C117-C121: Implemented single lead unlock feature, database migration, backend endpoint, unit tests, and dashboard UI logic; configured localized case studies for HVAC, Hair Salons, and Electricians; built agency profile claims tracking and admin monitoring dashboard; set up Week 9 Google/Meta ads; and completed audit-to-signup conversion funnel drop-off analysis (June 12, 2026).
