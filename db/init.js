@@ -23,6 +23,8 @@ import { addRadiusAndCoordinatesToSeoPages } from './migrations/add_radius_and_c
 import { createAgencyDirectoryTable } from './migrations/create_agency_directory.js';
 import { addGoogleVerificationCodeToUsers } from './migrations/add_google_verification_code_to_users.js';
 import { addIsUnlockedToLeads } from './migrations/add_is_unlocked_to_leads.js';
+import { addWeeklyReportEnabledToUsers } from './migrations/add_weekly_report_enabled_to_users.js';
+
 
 export async function initializeDatabase() {
   try {
@@ -100,6 +102,10 @@ export async function initializeDatabase() {
 
     console.log('Ensuring is_unlocked column exists in leads table...');
     await addIsUnlockedToLeads();
+
+    console.log('Ensuring weekly_report_enabled column exists in users table...');
+    await addWeeklyReportEnabledToUsers();
+
 
     console.log('Database initialization completed.');
   } catch (error) {

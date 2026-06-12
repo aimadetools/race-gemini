@@ -447,6 +447,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (facebookReviewLinkInput) facebookReviewLinkInput.value = data.facebookReviewLink || '';
                 if (yelpReviewLinkInput) yelpReviewLinkInput.value = data.yelpReviewLink || '';
 
+                const weeklyReportEnabledCheckbox = document.getElementById('weekly-report-enabled-checkbox');
+                if (weeklyReportEnabledCheckbox) weeklyReportEnabledCheckbox.checked = data.weeklyReportEnabled !== false;
+
+
                 // Populate review link
                 if (reviewLinkInput && data.clientId) {
                     reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
@@ -1655,6 +1659,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const googleReviewLink = document.getElementById('google-review-link-input') ? document.getElementById('google-review-link-input').value : '';
             const facebookReviewLink = document.getElementById('facebook-review-link-input') ? document.getElementById('facebook-review-link-input').value : '';
             const yelpReviewLink = document.getElementById('yelp-review-link-input') ? document.getElementById('yelp-review-link-input').value : '';
+            const weeklyReportEnabled = document.getElementById('weekly-report-enabled-checkbox') ? document.getElementById('weekly-report-enabled-checkbox').checked : true;
 
             try {
                 const response = await fetch('/api/update-integrations', {
@@ -1663,8 +1668,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled })
                 });
+
 
                 const resData = await response.json();
                 if (response.ok) {

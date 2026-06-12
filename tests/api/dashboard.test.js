@@ -209,6 +209,11 @@ describe('dashboard API', () => {
           openingHours: null,
           enableAICopy: null,
           aiStyle: null,
+          aiKeywords: undefined,
+          primaryColor: undefined,
+          serviceRadius: undefined,
+          latitude: undefined,
+          longitude: undefined,
           url: `/user123/plumbing-in-dallas.html`,
           views: 10,
           uniqueVisitors: 5,
@@ -228,6 +233,11 @@ describe('dashboard API', () => {
           openingHours: null,
           enableAICopy: null,
           aiStyle: null,
+          aiKeywords: undefined,
+          primaryColor: undefined,
+          serviceRadius: undefined,
+          latitude: undefined,
+          longitude: undefined,
           url: `/user123/cleaning-in-houston.html`,
           views: 20,
           uniqueVisitors: 15,
@@ -258,7 +268,8 @@ describe('dashboard API', () => {
       announcementType: 'news',
       announcementCouponCode: null,
       announcementUpdatedAt: null,
-      announcementExpiresAt: null
+      announcementExpiresAt: null,
+      weeklyReportEnabled: true
     });
   });
 
@@ -321,7 +332,8 @@ describe('dashboard API', () => {
       announcementType: 'news',
       announcementCouponCode: null,
       announcementUpdatedAt: null,
-      announcementExpiresAt: null
+      announcementExpiresAt: null,
+      weeklyReportEnabled: true
     });
   });
 

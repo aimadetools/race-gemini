@@ -143,6 +143,10 @@ describe('cron-seo-report API', () => {
       emailsSent: 2
     });
 
+    // Verify the query filtered out unsubscribed users
+    const userSelectQuery = mockDbQuery.mock.calls[0][0];
+    expect(userSelectQuery).toContain('u.weekly_report_enabled IS NOT FALSE');
+
     // Verify emails were sent via sendEmail mock
     expect(mockSendEmail).toHaveBeenCalledTimes(2);
     
@@ -154,6 +158,7 @@ describe('cron-seo-report API', () => {
     expect(firstCall[2]).toContain('120'); // Views count
     expect(firstCall[2]).toContain('45');  // Visitors count
     expect(firstCall[2]).not.toContain('🔒 Action Required');
+    expect(firstCall[2]).toContain('unsubscribe-seo-report?email=paid%40example.com');
 
     // User 2 email checks
     const secondCall = mockSendEmail.mock.calls[1];
@@ -163,6 +168,7 @@ describe('cron-seo-report API', () => {
     expect(secondCall[2]).toContain('15'); // Views count
     expect(secondCall[2]).toContain('8');  // Visitors count
     expect(secondCall[2]).toContain('Unlock Leads Now');
+    expect(secondCall[2]).toContain('unsubscribe-seo-report?email=unpaid%40example.com');
   });
 
   it('should handle database query failures and return 500', async () => {

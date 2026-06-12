@@ -27,7 +27,8 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode } = req.body;
+    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled } = req.body;
+    let isWeeklyReportEnabled = weeklyReportEnabled !== false;
 
     // Validate inputs
     let cleanWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
@@ -141,10 +142,12 @@ export default async function handler(req, res) {
            facebook_review_link = $8,
            yelp_review_link = $9,
            google_verification_code = $10,
+           weekly_report_enabled = $11,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $11`,
-      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, cleanGoogleVerificationCode, userId]
+       WHERE id = $12`,
+      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, cleanGoogleVerificationCode, isWeeklyReportEnabled, userId]
     );
+
 
     return res.status(200).json({ message: 'Integration settings updated successfully.' });
 

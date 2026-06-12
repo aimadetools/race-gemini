@@ -31,7 +31,7 @@ export default async function handler(req, res, currentKvClient) {
       const userId = decoded.userId;
 
       // Fetch user from PostgreSQL
-      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at FROM users WHERE id = $1', [userId]);
+      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at, weekly_report_enabled FROM users WHERE id = $1', [userId]);
       if (userResult.rows.length === 0) {
           return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
@@ -227,7 +227,8 @@ export default async function handler(req, res, currentKvClient) {
         announcementType: user.announcement_type,
         announcementCouponCode: user.announcement_coupon_code,
         announcementUpdatedAt: user.announcement_updated_at ? user.announcement_updated_at.toISOString() : null,
-        announcementExpiresAt: user.announcement_expires_at ? user.announcement_expires_at.toISOString() : null
+        announcementExpiresAt: user.announcement_expires_at ? user.announcement_expires_at.toISOString() : null,
+        weeklyReportEnabled: user.weekly_report_enabled !== false
       });
 
     } catch (error) {

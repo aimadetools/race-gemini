@@ -137,6 +137,7 @@ export const originalMockQuery = async (text, params) => {
                     google_review_link: user.google_review_link || user.googleReviewLink || null,
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
+                    weekly_report_enabled: user.weekly_report_enabled !== false,
                     announcement_text: user.announcement_text || user.announcementText || null,
                     announcement_type: user.announcement_type || user.announcementType || 'news',
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
@@ -181,6 +182,7 @@ export const originalMockQuery = async (text, params) => {
                     google_review_link: user.google_review_link || user.googleReviewLink || null,
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
+                    weekly_report_enabled: user.weekly_report_enabled !== false,
                     announcement_text: user.announcement_text || user.announcementText || null,
                     announcement_type: user.announcement_type || user.announcementType || 'news',
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
@@ -426,7 +428,24 @@ export const originalMockQuery = async (text, params) => {
             }
         }
         if (textLower.includes('webhook_url = $1') && textLower.includes('webhook_enabled = $2')) {
-            if (textLower.includes('google_verification_code = $10')) {
+            if (textLower.includes('weekly_report_enabled = $11')) {
+                const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, userId] = params;
+                const user = mockUsers.find(u => u.id.toString() === userId.toString());
+                if (user) {
+                    user.webhook_url = webhookUrl;
+                    user.webhook_enabled = webhookEnabled;
+                    user.ga_tracking_id = gaTrackingId;
+                    user.fb_pixel_id = fbPixelId;
+                    user.sms_enabled = smsEnabled;
+                    user.sms_phone = smsPhone;
+                    user.google_review_link = googleReviewLink;
+                    user.facebook_review_link = facebookReviewLink;
+                    user.yelp_review_link = yelpReviewLink;
+                    user.google_verification_code = googleVerificationCode;
+                    user.weekly_report_enabled = weeklyReportEnabled;
+                    return { rows: [user] };
+                }
+            } else if (textLower.includes('google_verification_code = $10')) {
                 const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, userId] = params;
                 const user = mockUsers.find(u => u.id.toString() === userId.toString());
                 if (user) {

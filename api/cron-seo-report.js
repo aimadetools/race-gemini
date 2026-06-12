@@ -49,7 +49,9 @@ export default async function handler(req, res, currentKvClient) {
       SELECT DISTINCT u.id, u.email, u.name
       FROM users u
       INNER JOIN seo_pages sp ON sp.user_id = u.id
+      WHERE u.weekly_report_enabled IS NOT FALSE
     `);
+
 
     const users = usersResult.rows;
     let emailsSent = 0;
@@ -221,7 +223,9 @@ export default async function handler(req, res, currentKvClient) {
     
     <div class="footer" style="background: #f9fafb; padding: 25px 30px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb;">
       <p style="margin: 0 0 8px 0;">LocalLeads — Automated Local SEO Landing Pages</p>
-      <p style="margin: 0;">If you have any questions, reply to this email or visit our Help Center.</p>
+      <p style="margin: 0 0 8px 0;">If you have any questions, reply to this email or visit our Help Center.</p>
+      <p style="margin: 0;">No longer want to receive these reports? <a href="https://www.localseogen.com/api/unsubscribe-seo-report?email=${encodeURIComponent(userEmail)}" style="color: #3b82f6; text-decoration: underline;">Unsubscribe</a></p>
+
     </div>
   </div>
 </body>
