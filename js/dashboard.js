@@ -450,6 +450,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const weeklyReportEnabledCheckbox = document.getElementById('weekly-report-enabled-checkbox');
                 if (weeklyReportEnabledCheckbox) weeklyReportEnabledCheckbox.checked = data.weeklyReportEnabled !== false;
 
+                // Initialize GBP Sync settings
+                const gbpSyncEnabledCheckbox = document.getElementById('gbp-sync-enabled-checkbox');
+                const gbpPlaceIdInput = document.getElementById('gbp-place-id-input');
+                const gbpSyncStatus = document.getElementById('gbp-sync-status');
+
+                if (gbpSyncEnabledCheckbox) gbpSyncEnabledCheckbox.checked = !!data.gbpSyncEnabled;
+                if (gbpPlaceIdInput) gbpPlaceIdInput.value = data.gbpPlaceId || '';
+                if (gbpSyncStatus && data.gbpLastSyncedAt) {
+                    gbpSyncStatus.style.display = 'block';
+                    gbpSyncStatus.style.color = '#9ca3af';
+                    gbpSyncStatus.innerHTML = `Last synced: ${new Date(data.gbpLastSyncedAt).toLocaleString()}`;
+                }
 
                 // Populate review link
                 if (reviewLinkInput && data.clientId) {
@@ -2751,6 +2763,105 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Failed to copy keywords:', err);
                     alert('Failed to copy keywords to clipboard.');
                 });
+        });
+    }
+
+    // Google Business Profile Sync Settings and Actions
+    const gbpSyncForm = document.getElementById('gbp-sync-form');
+    const syncGbpNowBtn = document.getElementById('sync-gbp-now-btn');
+    const gbpSyncStatus = document.getElementById('gbp-sync-status');
+
+    if (gbpSyncForm) {
+        gbpSyncForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (gbpSyncStatus) {
+                gbpSyncStatus.style.display = 'none';
+                gbpSyncStatus.style.color = '#fff';
+            }
+
+            const gbpSyncEnabled = document.getElementById('gbp-sync-enabled-checkbox').checked;
+            const gbpPlaceId = document.getElementById('gbp-place-id-input').value;
+
+            try {
+                const response = await fetch('/api/update-gbp-settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ gbpSyncEnabled, gbpPlaceId })
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (gbpSyncStatus) {
+                        gbpSyncStatus.textContent = resData.message;
+                        gbpSyncStatus.style.color = '#10b981';
+                        gbpSyncStatus.style.display = 'block';
+                    }
+                    await fetchDashboardData();
+                } else {
+                    if (gbpSyncStatus) {
+                        gbpSyncStatus.textContent = resData.message || 'Failed to update settings.';
+                        gbpSyncStatus.style.color = '#ef4444';
+                        gbpSyncStatus.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating GBP settings:', error);
+                if (gbpSyncStatus) {
+                    gbpSyncStatus.textContent = 'An unexpected error occurred.';
+                    gbpSyncStatus.style.color = '#ef4444';
+                    gbpSyncStatus.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    if (syncGbpNowBtn) {
+        syncGbpNowBtn.addEventListener('click', async () => {
+            if (gbpSyncStatus) {
+                gbpSyncStatus.textContent = 'Syncing reviews... Please wait.';
+                gbpSyncStatus.style.color = '#60a5fa';
+                gbpSyncStatus.style.display = 'block';
+            }
+            syncGbpNowBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/sync-gbp-reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (gbpSyncStatus) {
+                        gbpSyncStatus.textContent = resData.message;
+                        gbpSyncStatus.style.color = '#10b981';
+                        gbpSyncStatus.style.display = 'block';
+                    }
+                    await fetchTestimonials();
+                    await fetchDashboardData();
+                } else {
+                    if (gbpSyncStatus) {
+                        gbpSyncStatus.textContent = resData.message || 'Failed to sync reviews.';
+                        gbpSyncStatus.style.color = '#ef4444';
+                        gbpSyncStatus.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error syncing GBP reviews:', error);
+                if (gbpSyncStatus) {
+                    gbpSyncStatus.textContent = 'An unexpected error occurred.';
+                    gbpSyncStatus.style.color = '#ef4444';
+                    gbpSyncStatus.style.display = 'block';
+                }
+            } finally {
+                syncGbpNowBtn.disabled = false;
+            }
         });
     }
 });

@@ -603,6 +603,26 @@
                     </div>
                 </div>
 
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem;">
+                    <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 8px;">Google Business Profile Review Sync</h3>
+                    <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.85rem;">Automatically import reviews from your Google Business Profile page to show on your landing pages.</p>
+                    <form id="gbp-sync-form" style="display: flex; flex-direction: column; gap: 12px; max-width: 500px;">
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                            <input id="gbp-sync-enabled-checkbox" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;" />
+                            <label for="gbp-sync-enabled-checkbox" style="font-weight: bold; font-size: 0.85rem; color: #ccc; cursor: pointer;">Enable Automated Review Sync</label>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                            <label for="gbp-place-id-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Google Place ID or Location Query</label>
+                            <input id="gbp-place-id-input" type="text" placeholder="e.g. ChIJN1t_tDeuEmsRUsoyG83RYdc or 'Plumbing Experts Chicago'" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.6rem; border-radius: 4px; font-size: 0.85rem;" />
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button class="button button-small" type="submit" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Save GBP Settings</button>
+                            <button class="button button-small button-secondary" id="sync-gbp-now-btn" type="button" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;">Sync Now</button>
+                        </div>
+                    </form>
+                    <p id="gbp-sync-status" style="margin-top: 10px; font-size: 0.85rem; display: none; font-weight: bold;"></p>
+                </div>
+
                 <div id="testimonials-list" class="table-responsive">
                     <table class="data-table">
                         <thead>

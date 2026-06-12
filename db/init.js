@@ -24,6 +24,7 @@ import { createAgencyDirectoryTable } from './migrations/create_agency_directory
 import { addGoogleVerificationCodeToUsers } from './migrations/add_google_verification_code_to_users.js';
 import { addIsUnlockedToLeads } from './migrations/add_is_unlocked_to_leads.js';
 import { addWeeklyReportEnabledToUsers } from './migrations/add_weekly_report_enabled_to_users.js';
+import { addGbpSyncToUsers } from './migrations/add_gbp_sync_to_users.js';
 
 
 export async function initializeDatabase() {
@@ -105,6 +106,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring weekly_report_enabled column exists in users table...');
     await addWeeklyReportEnabledToUsers();
+
+    console.log('Ensuring Google Business Profile sync columns exist in users table...');
+    await addGbpSyncToUsers();
 
 
     console.log('Database initialization completed.');

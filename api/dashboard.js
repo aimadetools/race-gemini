@@ -31,7 +31,7 @@ export default async function handler(req, res, currentKvClient) {
       const userId = decoded.userId;
 
       // Fetch user from PostgreSQL
-      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at, weekly_report_enabled FROM users WHERE id = $1', [userId]);
+      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at, weekly_report_enabled, gbp_sync_enabled, gbp_place_id, gbp_last_synced_at FROM users WHERE id = $1', [userId]);
       if (userResult.rows.length === 0) {
           return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
@@ -223,6 +223,9 @@ export default async function handler(req, res, currentKvClient) {
         googleReviewLink: user.google_review_link,
         facebookReviewLink: user.facebook_review_link,
         yelpReviewLink: user.yelp_review_link,
+        gbpSyncEnabled: user.gbp_sync_enabled || false,
+        gbpPlaceId: user.gbp_place_id || null,
+        gbpLastSyncedAt: user.gbp_last_synced_at ? user.gbp_last_synced_at.toISOString() : null,
         announcementText: user.announcement_text,
         announcementType: user.announcement_type,
         announcementCouponCode: user.announcement_coupon_code,

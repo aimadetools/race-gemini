@@ -90,6 +90,17 @@ export const originalMockQuery = async (text, params) => {
         }
 
         if (textLower.includes('from testimonials')) {
+            if (textLower.includes('author_name = $2') && textLower.includes('review_text = $3')) {
+                const userId = params[0]?.toString();
+                const authorName = params[1];
+                const reviewText = params[2];
+                const rows = mockTestimonials.filter(t => 
+                    t.user_id?.toString() === userId && 
+                    t.author_name === authorName && 
+                    t.review_text === reviewText
+                );
+                return { rows };
+            }
             if (textLower.includes('where user_id = $1')) {
                 const userId = params[0]?.toString();
                 const rows = mockTestimonials.filter(t => t.user_id?.toString() === userId);
@@ -143,6 +154,9 @@ export const originalMockQuery = async (text, params) => {
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
                     announcement_updated_at: user.announcement_updated_at || user.announcementUpdatedAt || null,
                     announcement_expires_at: user.announcement_expires_at || user.announcementExpiresAt || null,
+                    gbp_sync_enabled: user.gbp_sync_enabled || user.gbpSyncEnabled || false,
+                    gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
+                    gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
                 };
                 return { rows: [u] };
             }
@@ -188,12 +202,27 @@ export const originalMockQuery = async (text, params) => {
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
                     announcement_updated_at: user.announcement_updated_at || user.announcementUpdatedAt || null,
                     announcement_expires_at: user.announcement_expires_at || user.announcementExpiresAt || null,
+                    gbp_sync_enabled: user.gbp_sync_enabled || user.gbpSyncEnabled || false,
+                    gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
+                    gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
                 };
                 return { rows: [u] };
             }
             return { rows: [] };
         }
 
+        if (textLower.includes('where gbp_sync_enabled = true')) {
+            const rows = mockUsers.filter(u => u.gbp_sync_enabled === true || u.gbpSyncEnabled === true).map(user => ({
+                id: user.id,
+                email: user.email,
+                google_review_link: user.google_review_link || user.googleReviewLink || null,
+                gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
+                gbp_sync_enabled: true,
+                gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null
+            }));
+            return { rows };
+        }
+        
         if (textLower.includes('where referral_code = $1')) {
             const refCode = params[0];
             const user = mockUsers.find(u => u.referral_code === refCode);
@@ -352,6 +381,25 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('gbp_sync_enabled = $1') && textLower.includes('gbp_place_id = $2')) {
+            const [gbpSyncEnabled, gbpPlaceId, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_sync_enabled = gbpSyncEnabled;
+                user.gbp_place_id = gbpPlaceId;
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
+        if (textLower.includes('gbp_last_synced_at = current_timestamp')) {
+            const [userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_last_synced_at = new Date();
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('announcement_text = $1')) {
             const [text, type, coupon, expiresAt, userId] = params;
             const user = mockUsers.find(u => u.id.toString() === userId.toString());
