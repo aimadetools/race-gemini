@@ -49,7 +49,7 @@ describe('GBP Helper Lib', () => {
     });
 
     it('should fall back to regex matching if URL parsing fails', async () => {
-      const result = await resolvePlaceId('some-invalid-url-with-placeid=ChIJRegexMatch', null);
+      const result = await resolvePlaceId('some-invalid-url?placeid=ChIJRegexMatch', null);
       expect(result).toBe('ChIJRegexMatch');
     });
 

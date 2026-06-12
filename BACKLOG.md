@@ -14,13 +14,13 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- **Google Business Profile Review Sync**: Automate pulling actual user reviews from Google Business Profile locations to showcase real-time testimonials on local landing pages.
+- None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
 - **Interactive Visual Onboarding Wizard**: Develop a step-by-step guided setup walkthrough on the user dashboard to onboard new signups.
-- **Competitor SEO Gap Visual Overlap Chart**: Integrate a Venn diagram or visual overlap chart in the competitor analyzer card.
 
 ## ✅ COMPLETED
+- ✅ C124-C125: Completed Google Business Profile review sync validation and testing (fixing the regex URL matching fallback test), and designed/implemented a premium dynamic SVG Venn Diagram visual overlap chart in the competitor gap analyzer dashboard card (June 12, 2026).
 - ✅ C122-C123: Designed and implemented Google Indexing API integration using service account credentials and JWT signing; verified Weekly SEO Performance Report unsubscribe endpoint, database column, and toggle dashboard configurations (June 12, 2026).
 - ✅ C117-C121: Implemented single lead unlock feature, database migration, backend endpoint, unit tests, and dashboard UI logic; configured localized case studies for HVAC, Hair Salons, and Electricians; built agency profile claims tracking and admin monitoring dashboard; set up Week 9 Google/Meta ads; and completed audit-to-signup conversion funnel drop-off analysis (June 12, 2026).
 - ✅ C113-C116: Executed B2B Cold Outreach Wave 9, implemented the dashboard locked leads automated drip sequence, designed and integrated the interactive Google Maps Area Embed widget generator, and completed integration and full unit test coverage for the AI Local Keyword Research card (June 11, 2026).

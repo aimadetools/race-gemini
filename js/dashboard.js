@@ -2361,19 +2361,102 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!gapAnalysisData) return;
 
         // Populate summary metrics
-        document.getElementById('comp-gap-advantage-count').textContent = gapAnalysisData.summary.advantageCount;
-        document.getElementById('comp-gap-missed-count').textContent = gapAnalysisData.summary.opportunityCount;
-        document.getElementById('comp-gap-shared-count').textContent = gapAnalysisData.summary.sharedCount;
+        const advCount = gapAnalysisData.summary.advantageCount || 0;
+        const oppCount = gapAnalysisData.summary.opportunityCount || 0;
+        const shdCount = gapAnalysisData.summary.sharedCount || 0;
+
+        document.getElementById('comp-gap-advantage-count').textContent = advCount;
+        document.getElementById('comp-gap-missed-count').textContent = oppCount;
+        document.getElementById('comp-gap-shared-count').textContent = shdCount;
 
         // Populate tab badges
-        document.getElementById('tab-uncontested-count').textContent = gapAnalysisData.summary.advantageCount;
-        document.getElementById('tab-missed-count').textContent = gapAnalysisData.summary.opportunityCount;
-        document.getElementById('tab-shared-count').textContent = gapAnalysisData.summary.sharedCount;
+        document.getElementById('tab-uncontested-count').textContent = advCount;
+        document.getElementById('tab-missed-count').textContent = oppCount;
+        document.getElementById('tab-shared-count').textContent = shdCount;
+
+        // Update Venn Diagram visual overlap
+        updateVennDiagram(advCount, oppCount, shdCount);
 
         // Default to active uncontested/advantage tab
         const activeTab = document.querySelector('.comp-gap-tab.active');
         const tabType = activeTab ? activeTab.getAttribute('data-tab') : 'uncontested';
         renderActiveTabContent(tabType);
+    }
+
+    function updateVennDiagram(youCount, compCount, sharedCount) {
+        const circleYou = document.getElementById('venn-circle-you');
+        const circleComp = document.getElementById('venn-circle-comp');
+        const lens = document.getElementById('venn-intersection-lens');
+        const textYou = document.getElementById('venn-text-you');
+        const textComp = document.getElementById('venn-text-comp');
+        const textShared = document.getElementById('venn-text-shared');
+
+        if (!circleYou || !circleComp || !lens) return;
+
+        // Legend updates
+        const legendYou = document.getElementById('venn-legend-you');
+        const legendComp = document.getElementById('venn-legend-comp');
+        const legendShared = document.getElementById('venn-legend-shared');
+
+        if (legendYou) legendYou.textContent = youCount;
+        if (legendComp) legendComp.textContent = compCount;
+        if (legendShared) legendShared.textContent = sharedCount;
+
+        const total = youCount + compCount + sharedCount;
+        if (total === 0) {
+            circleYou.setAttribute('cx', '160');
+            circleComp.setAttribute('cx', '240');
+            lens.setAttribute('d', '');
+            lens.style.opacity = '0';
+            if (textShared) textShared.style.opacity = '0';
+            return;
+        }
+
+        const r = 70;
+        const cy = 100;
+
+        // Decide distance between circles:
+        // If no overlap: separate them completely (distance = 120)
+        // If complete overlap: make them very close (distance = 40)
+        let distance = 120;
+        if (sharedCount > 0) {
+            const overlapRatio = sharedCount / total;
+            distance = 120 - (overlapRatio * 85); // between 120 and 35
+        }
+
+        const cx1 = 200 - (distance / 2);
+        const cx2 = 200 + (distance / 2);
+
+        circleYou.setAttribute('cx', cx1.toString());
+        circleComp.setAttribute('cx', cx2.toString());
+
+        // Position texts
+        if (textYou) {
+            textYou.setAttribute('x', (cx1 - 10).toString());
+            textYou.textContent = youCount > 0 ? `YOU (${youCount})` : 'YOU';
+        }
+        if (textComp) {
+            textComp.setAttribute('x', (cx2 + 10).toString());
+            textComp.textContent = compCount > 0 ? `THEM (${compCount})` : 'THEM';
+        }
+
+        if (sharedCount > 0 && distance < 2 * r) {
+            const x = cx1 + (distance / 2);
+            const h = Math.sqrt(r * r - (distance / 2) * (distance / 2));
+            const dPath = `M ${x},${cy - h} A ${r},${r} 0 0,1 ${x},${cy + h} A ${r},${r} 0 0,1 ${x},${cy - h} Z`;
+            lens.setAttribute('d', dPath);
+            lens.style.opacity = '0.8';
+
+            if (textShared) {
+                textShared.setAttribute('x', x.toString());
+                textShared.textContent = sharedCount.toString();
+                textShared.style.opacity = '1';
+            }
+        } else {
+            lens.setAttribute('d', '');
+            lens.style.opacity = '0';
+            if (textShared) textShared.style.opacity = '0';
+        }
     }
 
     function renderActiveTabContent(tabType) {

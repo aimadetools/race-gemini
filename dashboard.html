@@ -304,6 +304,18 @@
                     .gap-item:hover {
                         background: rgba(255, 255, 255, 0.02);
                     }
+                    .comp-gap-layout {
+                        display: grid;
+                        grid-template-columns: 1fr 1.5fr;
+                        gap: 1.5rem;
+                        margin-top: 1rem;
+                        align-items: start;
+                    }
+                    @media (max-width: 768px) {
+                        .comp-gap-layout {
+                            grid-template-columns: 1fr;
+                        }
+                    }
                 </style>
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
                     <div>
@@ -361,14 +373,63 @@
                         </div>
                     </div>
 
-                    <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; gap: 4px; overflow-x: auto;">
-                        <button class="comp-gap-tab active" data-tab="uncontested">Uncontested Towns (<span id="tab-uncontested-count">0</span>)</button>
-                        <button class="comp-gap-tab" data-tab="missed">Missed Opportunities (<span id="tab-missed-count">0</span>)</button>
-                        <button class="comp-gap-tab" data-tab="shared">Shared Battles (<span id="tab-shared-count">0</span>)</button>
-                    </div>
+                    <div class="comp-gap-layout">
+                        <!-- Venn Diagram Container -->
+                        <div id="competitor-gap-chart-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; box-sizing: border-box;">
+                            <h3 style="color: #fff; font-size: 0.95rem; margin-top: 0; margin-bottom: 1rem; font-weight: 600; text-align: center; width: 100%;">SEO Coverage Visual Overlap</h3>
+                            <div style="position: relative; width: 100%; max-width: 320px; height: 180px; display: flex; justify-content: center; align-items: center;">
+                                <svg viewBox="0 0 400 200" width="100%" height="100%">
+                                    <defs>
+                                        <linearGradient id="grad-you" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#10b981" stop-opacity="0.65" />
+                                            <stop offset="100%" stop-color="#059669" stop-opacity="0.65" />
+                                        </linearGradient>
+                                        <linearGradient id="grad-comp" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#ef4444" stop-opacity="0.65" />
+                                            <stop offset="100%" stop-color="#b91c1c" stop-opacity="0.65" />
+                                        </linearGradient>
+                                        <linearGradient id="grad-intersection" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8" />
+                                            <stop offset="100%" stop-color="#2563eb" stop-opacity="0.8" />
+                                        </linearGradient>
+                                    </defs>
+                                    <g>
+                                        <circle id="venn-circle-you" cx="160" cy="100" r="70" fill="url(#grad-you)" stroke="#10b981" stroke-width="2" style="transition: all 0.5s ease;" />
+                                        <circle id="venn-circle-comp" cx="240" cy="100" r="70" fill="url(#grad-comp)" stroke="#ef4444" stroke-width="2" style="transition: all 0.5s ease;" />
+                                        <path id="venn-intersection-lens" fill="url(#grad-intersection)" stroke="#3b82f6" stroke-width="1.5" style="transition: all 0.5s ease; opacity: 0.8;" />
+                                    </g>
+                                    <text x="120" y="105" id="venn-text-you" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" style="transition: all 0.5s ease;">YOU</text>
+                                    <text x="280" y="105" id="venn-text-comp" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" style="transition: all 0.5s ease;">THEM</text>
+                                    <text x="200" y="105" id="venn-text-shared" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle" style="transition: all 0.5s ease; opacity: 0;">0</text>
+                                </svg>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 0.75rem; width: 100%; font-size: 0.8rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #10b981;">
+                                    <span><i class="fas fa-circle" style="font-size: 0.7rem;"></i> You Only (Advantage):</span>
+                                    <span id="venn-legend-you" style="font-weight: bold;">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #ef4444;">
+                                    <span><i class="fas fa-circle" style="font-size: 0.7rem;"></i> Competitor Only:</span>
+                                    <span id="venn-legend-comp" style="font-weight: bold;">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #3b82f6;">
+                                    <span><i class="fas fa-circle" style="font-size: 0.7rem;"></i> Shared Towns:</span>
+                                    <span id="venn-legend-shared" style="font-weight: bold;">0</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div id="comp-gap-list-container" style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 0.5rem; max-height: 300px; overflow-y: auto;">
-                        <!-- Dynamically filled list -->
+                        <!-- Tabs & List Container -->
+                        <div>
+                            <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1rem; gap: 4px; overflow-x: auto;">
+                                <button class="comp-gap-tab active" data-tab="uncontested">Uncontested Towns (<span id="tab-uncontested-count">0</span>)</button>
+                                <button class="comp-gap-tab" data-tab="missed">Missed Opportunities (<span id="tab-missed-count">0</span>)</button>
+                                <button class="comp-gap-tab" data-tab="shared">Shared Battles (<span id="tab-shared-count">0</span>)</button>
+                            </div>
+                            <div id="comp-gap-list-container" style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 0.5rem; max-height: 300px; overflow-y: auto;">
+                                <!-- Dynamically filled list -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
