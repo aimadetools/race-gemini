@@ -136,6 +136,45 @@ describe('sync-gbp-reviews API', () => {
     expect(updatedUser.gbp_last_synced_at).toBeInstanceOf(Date);
   });
 
+  test('should successfully sync reviews via Google Business Profile OAuth', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      google_review_link: null,
+      gbp_place_id: null,
+      gbp_sync_enabled: true,
+      gbp_last_synced_at: null,
+      gbp_oauth_refresh_token: 'mock-refresh-token',
+      gbp_oauth_access_token: 'mock-access-token',
+      gbp_oauth_token_expires_at: new Date(Date.now() + 3600 * 1000),
+      gbp_account_id: 'mock-account-id',
+      gbp_location_id: 'mock-location-id',
+    };
+    addMockUser(user);
+
+    addMockSeoPage({
+      id: 'page1',
+      user_id: '123',
+      business_name: 'Super Plumbers Chicago',
+      service: 'plumbing services',
+      town: 'Chicago',
+    });
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const mockResData = res.json.mock.calls[0][0];
+    expect(mockResData.message).toContain('Reviews synced successfully!');
+    expect(mockResData.syncedCount).toBe(2);
+    expect(mockResData.testimonials.length).toBe(2);
+
+    const testimonials = getMockTestimonials();
+    expect(testimonials.length).toBe(2);
+    expect(testimonials[0].author_name).toBe('Alice Cooper');
+    expect(testimonials[0].rating).toBe(5);
+    expect(testimonials[0].review_text).toContain('Super Plumbers Chicago');
+  });
+
   test('should not duplicate reviews on consecutive syncs', async () => {
     const user = {
       id: '123',

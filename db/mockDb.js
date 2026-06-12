@@ -167,6 +167,11 @@ export const originalMockQuery = async (text, params) => {
                     gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
                     gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
                     business_profile: user.business_profile || user.businessProfile || null,
+                    gbp_oauth_refresh_token: user.gbp_oauth_refresh_token || user.gbpOauthRefreshToken || null,
+                    gbp_oauth_access_token: user.gbp_oauth_access_token || user.gbpOauthAccessToken || null,
+                    gbp_oauth_token_expires_at: user.gbp_oauth_token_expires_at || user.gbpOauthTokenExpiresAt || null,
+                    gbp_account_id: user.gbp_account_id || user.gbpAccountId || null,
+                    gbp_location_id: user.gbp_location_id || user.gbpLocationId || null,
                 };
                 return { rows: [u] };
 
@@ -217,6 +222,11 @@ export const originalMockQuery = async (text, params) => {
                     gbp_place_id: user.gbp_place_id || user.gbpPlaceId || null,
                     gbp_last_synced_at: user.gbp_last_synced_at || user.gbpLastSyncedAt || null,
                     business_profile: user.business_profile || user.businessProfile || null,
+                    gbp_oauth_refresh_token: user.gbp_oauth_refresh_token || user.gbpOauthRefreshToken || null,
+                    gbp_oauth_access_token: user.gbp_oauth_access_token || user.gbpOauthAccessToken || null,
+                    gbp_oauth_token_expires_at: user.gbp_oauth_token_expires_at || user.gbpOauthTokenExpiresAt || null,
+                    gbp_account_id: user.gbp_account_id || user.gbpAccountId || null,
+                    gbp_location_id: user.gbp_location_id || user.gbpLocationId || null,
                 };
                 return { rows: [u] };
 
@@ -394,6 +404,51 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('gbp_oauth_refresh_token = null') || textLower.includes('gbp_oauth_refresh_token =  null') || textLower.includes('gbp_oauth_refresh_token = $1 and gbp_oauth_refresh_token = null') || (textLower.includes('gbp_oauth_refresh_token') && textLower.includes('null') && params.length === 1)) {
+            const [userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_oauth_refresh_token = null;
+                user.gbp_oauth_access_token = null;
+                user.gbp_oauth_token_expires_at = null;
+                user.gbp_account_id = null;
+                user.gbp_location_id = null;
+                user.gbp_sync_enabled = false;
+                return { rows: [{ id: user.id }] };
+            }
+            return { rows: [] };
+        }
+        if (textLower.includes('gbp_oauth_refresh_token = $1') || textLower.includes('gbp_oauth_refresh_token = $2') || textLower.includes('gbp_oauth_refresh_token = $3')) {
+            const [refreshVal, accessVal, expiresVal, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_oauth_refresh_token = refreshVal;
+                user.gbp_oauth_access_token = accessVal;
+                user.gbp_oauth_token_expires_at = expiresVal;
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
+        if (textLower.includes('gbp_oauth_access_token = $1') && textLower.includes('gbp_oauth_token_expires_at = $2') && !textLower.includes('gbp_oauth_refresh_token')) {
+            const [accessVal, expiresVal, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_oauth_access_token = accessVal;
+                user.gbp_oauth_token_expires_at = expiresVal;
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
+        if (textLower.includes('gbp_account_id = $1') || textLower.includes('gbp_location_id = $2') || textLower.includes('gbp_account_id = $2')) {
+            const [accountVal, locationVal, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.gbp_account_id = accountVal;
+                user.gbp_location_id = locationVal;
+                return { rows: [user] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('gbp_sync_enabled = $1') && textLower.includes('gbp_place_id = $2')) {
             const [gbpSyncEnabled, gbpPlaceId, userId] = params;
             const user = mockUsers.find(u => u.id.toString() === userId.toString());

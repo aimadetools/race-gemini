@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('gbp_connected')) {
+        alert('Google Business Profile connected successfully! All reviews and updates will now sync to your account.');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     const onboardingMessage = document.getElementById('dashboard-onboarding-message');
     const dismissOnboardingButton = document.getElementById('dismiss-dashboard-onboarding');
 
@@ -3219,13 +3225,20 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStatusBadge.style.color = '#9ca3af';
         }
 
-        // Load GBP connected state from localStorage
-        const gbpConnected = localStorage.getItem('gbp_connected_status') === 'true';
+        // Load GBP connected state from database response
+        const gbpConnected = !!data.gbpOauthConnected;
         if (gbpConnected) {
             btnLinkGbp.innerHTML = '<i class="fas fa-check-circle"></i> GBP Connected';
             btnLinkGbp.style.background = 'rgba(16, 185, 129, 0.1)';
             btnLinkGbp.style.border = '1px solid rgba(16, 185, 129, 0.3)';
             btnLinkGbp.style.color = '#34d399';
+            btnLinkGbp.setAttribute('data-connected', 'true');
+        } else {
+            btnLinkGbp.innerHTML = '<i class="fas fa-link"></i> Link Google Business Profile';
+            btnLinkGbp.style.background = 'rgba(59, 130, 246, 0.1)';
+            btnLinkGbp.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+            btnLinkGbp.style.color = '#60a5fa';
+            btnLinkGbp.removeAttribute('data-connected');
         }
 
         // Helper to update preview
@@ -3340,58 +3353,38 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initialize preview
         updateAnnouncementPreview();
 
-        // --- Google Business Profile Modal Logic ---
-        const gbpModal = document.getElementById('gbp-link-modal');
-        const closeGbpModal = document.getElementById('close-gbp-modal');
-        const btnCancelGbp = document.getElementById('btn-cancel-gbp');
-        const btnConnectGbp = document.getElementById('btn-connect-gbp');
-        const gbpLocationSelect = document.getElementById('gbp-location-select');
-        const gbpSyncOptions = document.getElementById('gbp-sync-options');
-
-        btnLinkGbp.addEventListener('click', () => {
-            // If already connected, disconnect it on click
-            if (localStorage.getItem('gbp_connected_status') === 'true') {
+        // --- Google Business Profile OAuth Integration ---
+        btnLinkGbp.addEventListener('click', async () => {
+            if (btnLinkGbp.getAttribute('data-connected') === 'true') {
                 if (confirm('Do you want to disconnect your Google Business Profile?')) {
-                    localStorage.removeItem('gbp_connected_status');
-                    btnLinkGbp.innerHTML = '<i class="fas fa-link"></i> Link Google Business Profile';
-                    btnLinkGbp.style.background = 'rgba(59, 130, 246, 0.1)';
-                    btnLinkGbp.style.border = '1px solid rgba(59, 130, 246, 0.3)';
-                    btnLinkGbp.style.color = '#60a5fa';
+                    const originalText = btnLinkGbp.innerHTML;
+                    btnLinkGbp.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Disconnecting...';
+                    btnLinkGbp.disabled = true;
+                    try {
+                        const response = await fetch('/api/auth/google/disconnect', {
+                            method: 'POST'
+                        });
+                        if (response.ok) {
+                            alert('Google Business Profile disconnected successfully.');
+                            await fetchDashboardData();
+                        } else {
+                            const errData = await response.json();
+                            alert(errData.message || 'Failed to disconnect Google Business Profile.');
+                            btnLinkGbp.innerHTML = originalText;
+                            btnLinkGbp.disabled = false;
+                        }
+                    } catch (err) {
+                        console.error('Error disconnecting GBP:', err);
+                        alert('A network error occurred. Please try again.');
+                        btnLinkGbp.innerHTML = originalText;
+                        btnLinkGbp.disabled = false;
+                    }
                 }
                 return;
             }
 
-            gbpModal.style.display = 'flex';
-            gbpLocationSelect.innerHTML = '<option value="detecting">🔍 Searching your Google Account...</option>';
-            gbpSyncOptions.style.display = 'none';
-            btnConnectGbp.disabled = true;
-
-            // Simulate searching/detecting locations
-            setTimeout(() => {
-                gbpLocationSelect.innerHTML = `
-                    <option value="main">${data.email.split('@')[0].toUpperCase()} Service Co. - Plano Office</option>
-                    <option value="secondary">${data.email.split('@')[0].toUpperCase()} Service Co. - Dallas Office</option>
-                    <option value="new">Create New Location Profile...</option>
-                `;
-                gbpSyncOptions.style.display = 'flex';
-                btnConnectGbp.disabled = false;
-            }, 1500);
-        });
-
-        function closeGbp() {
-            gbpModal.style.display = 'none';
-        }
-
-        closeGbpModal.addEventListener('click', closeGbp);
-        btnCancelGbp.addEventListener('click', closeGbp);
-        btnConnectGbp.addEventListener('click', () => {
-            localStorage.setItem('gbp_connected_status', 'true');
-            btnLinkGbp.innerHTML = '<i class="fas fa-check-circle"></i> GBP Connected';
-            btnLinkGbp.style.background = 'rgba(16, 185, 129, 0.1)';
-            btnLinkGbp.style.border = '1px solid rgba(16, 185, 129, 0.3)';
-            btnLinkGbp.style.color = '#34d399';
-            closeGbp();
-            alert('Google Business Profile connected successfully! All updates will now auto-sync to your Google Maps listing.');
+            // Redirect to real Google OAuth flow initiation endpoint
+            window.location.href = '/api/auth/google/init';
         });
     }
 

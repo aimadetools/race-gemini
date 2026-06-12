@@ -28,9 +28,9 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    // Verify if GBP Place ID or google_review_link is configured
+    // Verify if GBP Place ID, google_review_link, or Google OAuth is configured
     const userResult = await query(
-      'SELECT google_review_link, gbp_place_id FROM users WHERE id = $1',
+      'SELECT google_review_link, gbp_place_id, gbp_oauth_refresh_token, gbp_oauth_access_token FROM users WHERE id = $1',
       [userId]
     );
 
@@ -39,7 +39,9 @@ export default async function handler(req, res) {
     }
 
     const user = userResult.rows[0];
-    if (!user.google_review_link && !user.gbp_place_id) {
+    const hasOauth = !!(user.gbp_oauth_refresh_token && user.gbp_oauth_access_token);
+    
+    if (!user.google_review_link && !user.gbp_place_id && !hasOauth) {
       return res.status(400).json({ 
         message: 'Google Business Profile location is not configured. Please set a Google Review Link or Place ID/Location Search Term first.' 
       });

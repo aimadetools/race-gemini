@@ -27,7 +27,7 @@ import { addWeeklyReportEnabledToUsers } from './migrations/add_weekly_report_en
 import { addGbpSyncToUsers } from './migrations/add_gbp_sync_to_users.js';
 import { addFaqsToSeoPages } from './migrations/add_faqs_to_seo_pages.js';
 import { addBusinessProfileToUsers } from './migrations/add_business_profile_to_users.js';
-
+import { addGbpOauthToUsers } from './migrations/add_gbp_oauth_to_users.js';
 
 
 export async function initializeDatabase() {
@@ -119,7 +119,8 @@ export async function initializeDatabase() {
     console.log('Ensuring business_profile column exists in users table...');
     await addBusinessProfileToUsers();
 
-
+    console.log('Ensuring Google Business Profile OAuth columns exist in users table...');
+    await addGbpOauthToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {
