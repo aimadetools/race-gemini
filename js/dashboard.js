@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeTownFilters = new Set();
     let searchQuery = '';
     let currentDashboardData = null;
+    let userTestimonials = [];
 
 
     async function fetchDashboardData() {
@@ -499,6 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const data = await response.json();
+                userTestimonials = data.testimonials || [];
                 testimonialsBody.innerHTML = '';
 
                 if (data.testimonials && data.testimonials.length > 0) {
@@ -513,6 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.review_text}">${t.review_text}</td>
                             <td>${formattedDate}</td>
                             <td>
+                                <button class="button button-small generate-social-post-btn" data-id="${t.id}" style="margin-right: 5px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: inline-flex; align-items: center; justify-content: center;">Post Gen</button>
                                 <button class="button button-small button-danger delete-testimonial-btn" data-id="${t.id}">Delete</button>
                             </td>
                         `;
@@ -2349,7 +2352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Testimonials Card actions (delete review)
+    // Testimonials Card actions (delete review & generate social post)
     const testimonialsCard = document.getElementById('testimonials-card');
     if (testimonialsCard) {
         testimonialsCard.addEventListener('click', async (event) => {
@@ -2377,9 +2380,139 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert('An unexpected error occurred.');
                     }
                 }
+            } else if (event.target.classList.contains('generate-social-post-btn')) {
+                const testimonialId = event.target.getAttribute('data-id');
+                openSocialPostModal(testimonialId);
             }
         });
     }
+
+    // Social Post Generator Elements & Functions
+    const socialPostModal = document.getElementById('social-post-modal');
+    const closeSocialPostModal = document.getElementById('close-social-post-modal');
+    const cancelSocialPostBtn = document.getElementById('cancel-social-post-btn');
+    const socialPostForm = document.getElementById('social-post-form');
+    const generateSocialPostSubmit = document.getElementById('generate-social-post-submit');
+    const socialPostSpinner = document.getElementById('social-post-spinner');
+    const socialPostResults = document.getElementById('social-post-results');
+    const socialPostGoogleText = document.getElementById('social-post-google-text');
+    const socialPostFacebookText = document.getElementById('social-post-facebook-text');
+
+    function openSocialPostModal(testimonialId) {
+        const testimonial = userTestimonials.find(t => t.id.toString() === testimonialId.toString());
+        if (!testimonial) {
+            alert('Testimonial not found.');
+            return;
+        }
+
+        document.getElementById('social-post-review-id').value = testimonial.id;
+        document.getElementById('social-post-author-display').innerText = `Review by ${testimonial.author_name} (${'★'.repeat(testimonial.rating)}):`;
+        document.getElementById('social-post-text-display').innerText = `"${testimonial.review_text}"`;
+
+        // Prepopulate business details
+        let defaultBusiness = '';
+        let defaultService = '';
+        let defaultTown = '';
+
+        if (userPages && userPages.length > 0) {
+            defaultBusiness = userPages[0].business_name || userPages[0].businessName || '';
+            defaultService = userPages[0].service || '';
+            defaultTown = userPages[0].town || '';
+        } else if (currentDashboardData) {
+            const bp = currentDashboardData.businessProfile || currentDashboardData.profile;
+            if (bp) {
+                defaultBusiness = bp.name || '';
+                defaultService = bp.type || '';
+                if (bp.address) {
+                    defaultTown = bp.address.addressLocality || '';
+                }
+            }
+        }
+
+        document.getElementById('social-post-business').value = defaultBusiness;
+        document.getElementById('social-post-service').value = defaultService;
+        document.getElementById('social-post-town').value = defaultTown;
+
+        // Hide results
+        socialPostResults.style.display = 'none';
+        socialPostGoogleText.value = '';
+        socialPostFacebookText.value = '';
+
+        socialPostModal.style.display = 'flex';
+    }
+
+    if (closeSocialPostModal) {
+        closeSocialPostModal.addEventListener('click', () => {
+            socialPostModal.style.display = 'none';
+        });
+    }
+
+    if (cancelSocialPostBtn) {
+        cancelSocialPostBtn.addEventListener('click', () => {
+            socialPostModal.style.display = 'none';
+        });
+    }
+
+    if (socialPostForm) {
+        socialPostForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const reviewId = document.getElementById('social-post-review-id').value;
+            const businessName = document.getElementById('social-post-business').value.trim();
+            const service = document.getElementById('social-post-service').value.trim();
+            const town = document.getElementById('social-post-town').value.trim();
+
+            if (socialPostSpinner) socialPostSpinner.style.display = 'inline-block';
+            if (generateSocialPostSubmit) generateSocialPostSubmit.disabled = true;
+
+            try {
+                const response = await fetch('/api/generate-social-post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        reviewId,
+                        businessName,
+                        service,
+                        town
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.posts) {
+                        socialPostGoogleText.value = data.posts.googleUpdate || '';
+                        socialPostFacebookText.value = data.posts.facebookPost || '';
+                        socialPostResults.style.display = 'block';
+                    } else {
+                        alert('Failed to generate social posts.');
+                    }
+                } else {
+                    const err = await response.json();
+                    alert(err.message || 'Error generating social posts.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An unexpected error occurred.');
+            } finally {
+                if (socialPostSpinner) socialPostSpinner.style.display = 'none';
+                if (generateSocialPostSubmit) generateSocialPostSubmit.disabled = false;
+            }
+        });
+    }
+
+    window.copyToClipboard = (elementId) => {
+        const el = document.getElementById(elementId);
+        if (el) {
+            navigator.clipboard.writeText(el.value).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    };
 
     // Close testimonials modal on outside click
     window.addEventListener('click', (event) => {

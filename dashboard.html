@@ -1630,6 +1630,79 @@
       </div>
     </div>
 
+    <!-- Social Post Generator Modal -->
+    <div id="social-post-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; position: relative;">
+        <span class="close-modal" id="close-social-post-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af;">&times;</span>
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: #fff; font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-magic" style="color: #10b981;"></i> AI Local Social Post Generator
+        </h2>
+        
+        <div id="social-post-review-preview" style="background: rgba(17, 24, 39, 0.5); border-left: 4px solid #10b981; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+          <p style="margin: 0 0 0.5rem 0; font-weight: 600;" id="social-post-author-display"></p>
+          <p style="margin: 0; font-style: italic; font-size: 0.9rem;" id="social-post-text-display"></p>
+        </div>
+
+        <form id="social-post-form">
+          <input type="hidden" id="social-post-review-id" />
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <label for="social-post-business" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Business Name</label>
+              <input type="text" id="social-post-business" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;" placeholder="e.g. King Plumbers" />
+            </div>
+            <div>
+              <label for="social-post-service" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Service Type</label>
+              <input type="text" id="social-post-service" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;" placeholder="e.g. Plumbing" />
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <label for="social-post-town" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Target Town / City</label>
+            <input type="text" id="social-post-town" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.95rem; box-sizing: border-box;" placeholder="e.g. Austin" />
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-bottom: 1.5rem;">
+            <button type="button" id="cancel-social-post-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
+            <button type="submit" id="generate-social-post-submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+              <i class="fas fa-cog fa-spin" id="social-post-spinner" style="display: none; margin-right: 5px;"></i> Generate Social Posts
+            </button>
+          </div>
+        </form>
+
+        <!-- Social Posts Results -->
+        <div id="social-post-results" style="display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+          <h3 style="margin-top: 0; margin-bottom: 1rem; color: #fff; font-size: 1.1rem; font-weight: 600;">Generated Social Posts</h3>
+          
+          <!-- Google Updates -->
+          <div style="margin-bottom: 1.5rem; background: rgba(17, 24, 39, 0.4); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600; font-size: 0.9rem; color: #10b981; display: flex; align-items: center; gap: 6px;">
+                <i class="fab fa-google"></i> Google Business Profile Update
+              </span>
+              <button onclick="copyToClipboard('social-post-google-text')" class="button button-small" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; background: rgba(255,255,255,0.1);">
+                <i class="far fa-copy"></i> Copy
+              </button>
+            </div>
+            <textarea id="social-post-google-text" readonly style="width: 100%; min-height: 80px; padding: 0.5rem; border-radius: 6px; border: none; background: rgba(17, 24, 39, 0.6); color: #e5e7eb; font-size: 0.85rem; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+          </div>
+          
+          <!-- Facebook Post -->
+          <div style="margin-bottom: 1rem; background: rgba(17, 24, 39, 0.4); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-weight: 600; font-size: 0.9rem; color: #3b82f6; display: flex; align-items: center; gap: 6px;">
+                <i class="fab fa-facebook"></i> Facebook Post
+              </span>
+              <button onclick="copyToClipboard('social-post-facebook-text')" class="button button-small" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; background: rgba(255,255,255,0.1);">
+                <i class="far fa-copy"></i> Copy
+              </button>
+            </div>
+            <textarea id="social-post-facebook-text" readonly style="width: 100%; min-height: 120px; padding: 0.5rem; border-radius: 6px; border: none; background: rgba(17, 24, 39, 0.6); color: #e5e7eb; font-size: 0.85rem; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Add Testimonial Modal -->
     <div id="add-testimonial-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
       <div class="modal-content" style="background: rgba(31, 41, 55, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; position: relative;">

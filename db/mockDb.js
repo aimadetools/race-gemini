@@ -101,6 +101,15 @@ export const originalMockQuery = async (text, params) => {
                 );
                 return { rows };
             }
+            if (textLower.includes('where id = $1 and user_id = $2') || textLower.includes('where id = $1')) {
+                const id = params[0]?.toString();
+                const userId = params[1]?.toString();
+                const rows = mockTestimonials.filter(t => 
+                    t.id?.toString() === id && 
+                    (!userId || t.user_id?.toString() === userId)
+                );
+                return { rows };
+            }
             if (textLower.includes('where user_id = $1')) {
                 const userId = params[0]?.toString();
                 const rows = mockTestimonials.filter(t => t.user_id?.toString() === userId);
