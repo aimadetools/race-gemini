@@ -12,6 +12,11 @@
       "permanent": true
     },
     {
+      "source": "/signup.html",
+      "destination": "/auth.html",
+      "permanent": true
+    },
+    {
       "source": "/book-a-demo",
       "destination": "/contact.html?reason=demo",
       "permanent": false

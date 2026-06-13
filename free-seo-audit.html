@@ -23,6 +23,7 @@
     />
     <link href="style.css" rel="stylesheet" />
     <link href="style_scroll_to_top.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -74,23 +75,135 @@
         <a href="contact.html"> Contact </a>
       </nav>
     </header>
-    <main>
-      <section id="audit-tool">
-        <h2>Free Local SEO Audit</h2>
-        <p>
-          Discover how many local customers you're missing out on. Enter your
-          website URL to get started.
-        </p>
-        <form id="audit-form">
-          <input
-            id="website-url"
-            placeholder="https://your-business.com"
-            required=""
-            type="url"
-          />
-          <button type="submit">Audit My Website</button>
-        </form>
-        <div id="audit-results"></div>
+    <main class="audit-landing-page">
+      <section class="audit-hero-section">
+        <div class="audit-container">
+          <div class="glass-card audit-main-card">
+            <span class="badge">AI-POWERED AUDIT</span>
+            <h1>Free Local SEO Audit</h1>
+            <p class="subtitle">
+              Discover exactly how many local customers are searching for your services in your town and neighboring areas but finding your competitors instead.
+            </p>
+            
+            <form id="audit-form" class="premium-form">
+              <div class="input-wrapper">
+                <i class="fa-solid fa-globe input-icon"></i>
+                <input
+                  id="website-url"
+                  placeholder="https://your-business.com"
+                  required=""
+                  type="url"
+                />
+              </div>
+              <button type="submit" class="cta-button">Analyze My Site <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+            
+            <p class="secondary-cta">
+              Or <a href="/agency-signup.html">register as an agency</a> to generate white-labeled audit reports.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust Badges Section -->
+      <section class="trust-badges-section">
+        <div class="audit-container">
+          <div class="trust-badges-grid">
+            <div class="trust-badge-item">
+              <i class="fa-solid fa-shield-halved trust-icon"></i>
+              <h4>100% Confidential</h4>
+              <p>We do not share your website or email details.</p>
+            </div>
+            <div class="trust-badge-item">
+              <i class="fa-solid fa-bolt trust-icon"></i>
+              <h4>Instant Report</h4>
+              <p>AI scans local visibility in under 60 seconds.</p>
+            </div>
+            <div class="trust-badge-item">
+              <i class="fa-solid fa-magnifying-glass-location trust-icon"></i>
+              <h4>Nearby Towns Scan</h4>
+              <p>Scans coverage across 10 neighboring towns.</p>
+            </div>
+            <div class="trust-badge-item">
+              <i class="fa-solid fa-credit-card-slash trust-icon"></i>
+              <h4>No Card Required</h4>
+              <p>Run your initial audit completely free.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Audit Details / What we analyze section -->
+      <section class="audit-details-section">
+        <div class="audit-container">
+          <h2 class="section-title">What the Local SEO Audit Scans</h2>
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-icon-box blue"><i class="fa-solid fa-map-location-dot"></i></div>
+              <h3>Geographic Proximity Reach</h3>
+              <p>Scans if your service landing pages are correctly targeting searchers in neighboring towns and cities within a 15-mile radius.</p>
+            </div>
+            <div class="detail-card">
+              <div class="detail-icon-box purple"><i class="fa-solid fa-file-code"></i></div>
+              <h3>Structured Schema Markup</h3>
+              <p>Checks for Google-compliant LocalBusiness, FAQPage, and Article structured JSON-LD schemas to enable rich search snippets.</p>
+            </div>
+            <div class="detail-card">
+              <div class="detail-icon-box green"><i class="fa-solid fa-gauge-high"></i></div>
+              <h3>Performance & Speed</h3>
+              <p>Measures core web vitals, image optimization status, lazy-loading presence, and mobile responsive performance gaps.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Accordion Section -->
+      <section class="faq-accordion-section">
+        <div class="audit-container">
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <div class="faq-accordion">
+            <div class="faq-item">
+              <h3>How does the Local SEO Audit work?</h3>
+              <p>Our tool analyzes your site's content, meta tags, and structured schemas against local search patterns. It also evaluates if you are targeting searches in nearby towns, which is a major driver of local organic traffic for service-based businesses.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Is this audit really free?</h3>
+              <p>Yes, your initial local SEO audit is completely free. We will show you your current reach and a list of missed town-service keyword opportunities. You can then choose to use our platform to generate pages for these towns or use the data yourself.</p>
+            </div>
+            <div class="faq-item">
+              <h3>Will this audit affect my website's speed?</h3>
+              <p>Not at all. The audit runs asynchronously in the cloud and analyzes your publicly available page content, meaning it puts zero load on your web host and won't affect your visitors.</p>
+            </div>
+            <div class="faq-item">
+              <h3>How can I expand my reach to neighboring towns?</h3>
+              <p>LocalLeads helps you generate hyper-local, search-optimized landing pages for every town and service combination you offer, giving you dedicated local landing pages that rank on Google for long-tail search terms.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="audit-results-container">
+        <div class="audit-container">
+          <div id="audit-results"></div>
+        </div>
+      </section>
+
+      <!-- Bottom CTA Section -->
+      <section class="audit-cta-section">
+        <div class="audit-container">
+          <div class="glass-card cta-bottom-card animate-pulse-glow">
+            <h2>Ready to Dominate Your Local Search Markets?</h2>
+            <p>Don't let competitors take your local search traffic. Scan your website, identify missed town-service keyword opportunities, and start ranking today.</p>
+            <div class="cta-actions">
+              <button onclick="document.getElementById('website-url').focus(); window.scrollTo({top: 0, behavior: 'smooth'});" class="cta-button primary-cta">
+                Analyze My Website <i class="fa-solid fa-arrow-up"></i>
+              </button>
+              <a href="/agency-signup.html" class="cta-button secondary-cta">
+                Register as Agency <i class="fa-solid fa-building-user"></i>
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
     <footer>
