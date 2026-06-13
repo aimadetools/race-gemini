@@ -2443,6 +2443,15 @@ document.addEventListener('DOMContentLoaded', () => {
         socialPostResults.style.display = 'none';
         socialPostGoogleText.value = '';
         socialPostFacebookText.value = '';
+        
+        const btnPublishGbpPost = document.getElementById('btn-publish-gbp-post');
+        if (btnPublishGbpPost) {
+            btnPublishGbpPost.disabled = false;
+            const publishIcon = document.getElementById('publish-gbp-post-icon');
+            const publishText = document.getElementById('publish-gbp-post-text');
+            if (publishIcon) publishIcon.className = 'fas fa-paper-plane';
+            if (publishText) publishText.innerText = 'Publish to Google';
+        }
 
         socialPostModal.style.display = 'flex';
     }
@@ -2505,6 +2514,60 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 if (socialPostSpinner) socialPostSpinner.style.display = 'none';
                 if (generateSocialPostSubmit) generateSocialPostSubmit.disabled = false;
+            }
+        });
+    }
+
+    const btnPublishGbpPost = document.getElementById('btn-publish-gbp-post');
+    if (btnPublishGbpPost) {
+        btnPublishGbpPost.addEventListener('click', async () => {
+            const text = socialPostGoogleText.value.trim();
+            if (!text) {
+                alert('No post text available to publish.');
+                return;
+            }
+
+            const publishIcon = document.getElementById('publish-gbp-post-icon');
+            const publishText = document.getElementById('publish-gbp-post-text');
+
+            const originalIconClass = publishIcon ? publishIcon.className : 'fas fa-paper-plane';
+            const originalText = publishText ? publishText.innerText : 'Publish to Google';
+
+            // Set loading state
+            if (publishIcon) publishIcon.className = 'fas fa-spinner fa-spin';
+            if (publishText) publishText.innerText = 'Publishing...';
+            btnPublishGbpPost.disabled = true;
+
+            try {
+                const response = await fetch('/api/publish-gbp-post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ text })
+                });
+
+                const resData = await response.json();
+
+                if (response.ok) {
+                    alert(resData.message || 'Successfully published local update to your Google Business Profile listing!');
+                    if (publishIcon) publishIcon.className = 'fas fa-check-circle';
+                    if (publishText) publishText.innerText = 'Published!';
+                } else {
+                    alert(resData.message || 'Failed to publish to Google Business Profile.');
+                    // Reset state
+                    if (publishIcon) publishIcon.className = originalIconClass;
+                    if (publishText) publishText.innerText = originalText;
+                    btnPublishGbpPost.disabled = false;
+                }
+            } catch (err) {
+                console.error('Error publishing GBP post:', err);
+                alert('An unexpected error occurred while publishing.');
+                // Reset state
+                if (publishIcon) publishIcon.className = originalIconClass;
+                if (publishText) publishText.innerText = originalText;
+                btnPublishGbpPost.disabled = false;
             }
         });
     }
