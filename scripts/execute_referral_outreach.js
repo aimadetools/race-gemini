@@ -2,10 +2,14 @@ import { query } from '../db/index.js';
 import fetch from 'node-fetch';
 
 const MIGRATION_SECRET = process.env.MIGRATION_SECRET || "aff1a9985e3514da0fd6858485d2b955ef88cc0926740299";
-const API_URL = "https://www.localseogen.com/api/execute-outreach";
+const API_URL = process.env.OUTREACH_API_URL || "https://www.localseogen.com/api/execute-outreach";
+const DRY_RUN_EMAIL = process.env.DRY_RUN_EMAIL;
 
 async function main() {
   try {
+    if (DRY_RUN_EMAIL) {
+      console.log(`DRY RUN ENABLED: Sending all emails to ${DRY_RUN_EMAIL}`);
+    }
     console.log("Fetching top referrers from database...");
     const referrersRes = await query(`
       SELECT DISTINCT u.id, u.email, u.referral_code
@@ -23,7 +27,7 @@ async function main() {
     }
 
     const emailsToSend = referrers.map(user => {
-      const email = user.email;
+      const email = DRY_RUN_EMAIL || user.email;
       const refCode = user.referral_code;
 
       const subject = "Earn 20% Recurring Commission with the LocalLeads Referral Program!";
