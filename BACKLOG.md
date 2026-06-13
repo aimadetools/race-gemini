@@ -10,18 +10,16 @@
 ## 🔥 IMMEDIATE (P0)
 - None.
 
-## 📋 PENDING (from old backlogs)
-- None.
-
 ## 🚀 MARKETING & GROWTH (P1)
-- **Outreach Campaign Wave 11**: Target 100 new digital marketing agencies pitching the newly enabled Google Business Profile One-Click Local Updates Reseller capability.
-- **Referral Program Outreach**: Email existing top users to join the referral program offering a 20% recurring commission.
+- **Cold Outreach Follow-ups (Wave 11)**: Automate/execute follow-up email drips for agencies contacted in Wave 11 who haven't responded or logged in.
+- **Ad Landing Page Conversion Optimization**: Optimize `free-seo-audit.html` (the destination page for Search Ads) with clear CTAs, trust badges, and an interactive FAQ accordion to increase landing page conversions from ad traffic.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **GSC Index Notifications**: Send automated email alerts when Google Search Console inspects and indexes a client's newly generated pages.
-- **Custom Domain CNAME verification improvements**: Show clear step-by-step instructions for DNS configurations (Cloudflare, GoDaddy, Namecheap) in the dashboard domain modal.
+- **SendGrid Plan Upgrade Request**: File help request for upgrading the SendGrid plan from the remaining budget to lift the sending cap.
+- **Referral Code Auto-population**: Auto-populate the referral code field in the signup form if a visitor lands on the site via a referral link (e.g., `https://localseogen.com/signup.html?ref=CODE`).
 
 ## ✅ COMPLETED
+- ✅ C133-C136: B2B Outreach Wave 11 (100 agencies), Referral Program Outreach dispatch script execution, GSC index change automated email alerts, and interactive tabbed DNS configuration guides on the dashboard (Session 300 - June 13, 2026).
 - ✅ C132: One-Click Google Business Profile Updates Publisher integration, dashboard UI action buttons, and complete unit/E2E test suite alignment (June 13, 2026).
 - ✅ C117-C131: Google Business Profile OAuth 2.0 integration (token encryption, review sync), AI Local Social Post Generator, homepage Visibility Grader quiz, AI Local FAQ Generator, lead unlock, localized case studies, agency claims admin dashboard, Google Indexing API, weekly performance cron, dynamic SVG Venn overlap chart, and premium glassmorphic onboarding wizard (June 12, 2026).
 - ✅ C113-C116: Executed B2B Cold Outreach Wave 9, implemented the dashboard locked leads automated drip sequence, designed and integrated the interactive Google Maps Area Embed widget generator, and completed integration and full unit test coverage for the AI Local Keyword Research card (June 11, 2026).

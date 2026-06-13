@@ -15,6 +15,11 @@ jest.mock('../../lib/indexing.js', () => ({
   addIndexingNotification: (...args) => mockAddIndexingNotification(...args),
 }));
 
+const mockSendEmail = jest.fn();
+jest.mock('../../lib/email.js', () => ({
+  sendEmail: (...args) => mockSendEmail(...args),
+}));
+
 import handler from '../../api/cron-gsc-check.js';
 import httpMocks from 'node-mocks-http';
 
@@ -40,6 +45,7 @@ describe('cron-gsc-check API', () => {
     mockDbQuery.mockReset();
     mockCheckGscIndexingStatus.mockReset();
     mockAddIndexingNotification.mockReset();
+    mockSendEmail.mockReset();
   });
 
   afterAll(() => {
@@ -142,6 +148,11 @@ describe('cron-gsc-check API', () => {
     expect(mockAddIndexingNotification).toHaveBeenCalledTimes(1);
     expect(mockAddIndexingNotification.mock.calls[0][0]).toBe(1);
     expect(mockAddIndexingNotification.mock.calls[0][1]).toContain('changed from "unknown" to "Indexed, primary"');
+
+    // Verify email alert was sent to the user whose page got indexed
+    expect(mockSendEmail).toHaveBeenCalledTimes(1);
+    expect(mockSendEmail.mock.calls[0][0]).toBe('agency@example.com');
+    expect(mockSendEmail.mock.calls[0][1]).toContain('Page Indexed');
   });
 
   it('should handle failures on Search Console inspection gracefully', async () => {

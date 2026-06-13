@@ -962,6 +962,82 @@
                         <label for="custom-domain-input" style="font-weight: bold; font-size: 0.9rem; color: #fff;">Custom Domain Name</label>
                         <input id="custom-domain-input" type="text" placeholder="e.g. seo.mybusiness.com" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
                         <span style="font-size: 0.8rem; color: #6b7280;">Point a CNAME record in your DNS settings to <code>localseogen.com</code>.</span>
+                        
+                        <!-- Interactive DNS Setup Guide -->
+                        <div class="dns-guide-container" style="margin-top: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 6px; padding: 15px;">
+                            <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color: #10b981;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                DNS Configuration Guide
+                            </h4>
+                            <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">
+                                Select your domain provider below for step-by-step CNAME configuration instructions:
+                            </p>
+                            <div class="dns-tabs" style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
+                                <button type="button" class="dns-tab active" data-dns="cloudflare" onclick="switchDnsGuide('cloudflare')" style="background: rgba(255, 255, 255, 0.08); border: none; color: #fff; font-size: 0.8rem; padding: 6px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Cloudflare</button>
+                                <button type="button" class="dns-tab" data-dns="godaddy" onclick="switchDnsGuide('godaddy')" style="background: transparent; border: none; color: #9ca3af; font-size: 0.8rem; padding: 6px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">GoDaddy</button>
+                                <button type="button" class="dns-tab" data-dns="namecheap" onclick="switchDnsGuide('namecheap')" style="background: transparent; border: none; color: #9ca3af; font-size: 0.8rem; padding: 6px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Namecheap</button>
+                            </div>
+                            
+                            <div id="dns-guide-cloudflare" class="dns-guide-content" style="display: block; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Log in to your <strong>Cloudflare Dashboard</strong> and choose your domain.</li>
+                                    <li>Navigate to the <strong>DNS</strong> settings tab on the left sidebar.</li>
+                                    <li>Click <strong>+ Add Record</strong> to create a new entry.</li>
+                                    <li>Set <strong>Type</strong> to <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">CNAME</code>.</li>
+                                    <li>Set <strong>Name</strong> (Host) to your desired prefix (e.g., <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">seo</code> or <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">@</code> for root).</li>
+                                    <li>Set <strong>Target</strong> (Value) to <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">localseogen.com</code>.</li>
+                                    <li><strong>CRITICAL:</strong> Turn off proxy (set <strong>Proxy status</strong> to <span style="color: #f59e0b; font-weight: bold;">DNS only / Gray Cloud</span>) so that we can verify and issue SSL.</li>
+                                    <li>Click <strong>Save</strong>. Allow up to 1-5 minutes for propagation.</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="dns-guide-godaddy" class="dns-guide-content" style="display: none; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Log in to your <strong>GoDaddy Domain Control Center</strong>.</li>
+                                    <li>Select your domain name to access the <strong>Domain Settings</strong> page.</li>
+                                    <li>Scroll down to <strong>Additional Settings</strong> and click <strong>Manage DNS</strong>.</li>
+                                    <li>Click <strong>Add</strong> at the bottom of the records table.</li>
+                                    <li>Select <strong>CNAME</strong> from the <strong>Type</strong> dropdown.</li>
+                                    <li>Set <strong>Host</strong> to your desired subdomain (e.g., <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">seo</code>).</li>
+                                    <li>Set <strong>Points to</strong> to <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">localseogen.com</code>.</li>
+                                    <li>Leave <strong>TTL</strong> as default (e.g., 1 Hour) and click <strong>Save</strong>.</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="dns-guide-namecheap" class="dns-guide-content" style="display: none; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Log in to your <strong>Namecheap Dashboard</strong>.</li>
+                                    <li>Select <strong>Domain List</strong> from the left sidebar and click <strong>Manage</strong> next to your domain.</li>
+                                    <li>Go to the <strong>Advanced DNS</strong> tab at the top.</li>
+                                    <li>In the <strong>Host Records</strong> section, click <strong>Add New Record</strong>.</li>
+                                    <li>Choose <strong>CNAME Record</strong> as the <strong>Type</strong>.</li>
+                                    <li>Set <strong>Host</strong> to your desired subdomain (e.g., <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">seo</code>).</li>
+                                    <li>Set <strong>Value</strong> to <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #10b981;">localseogen.com</code>.</li>
+                                    <li>Set <strong>TTL</strong> to <strong>Automatic</strong> and click the <strong>Green Checkmark</strong> to save.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            function switchDnsGuide(provider) {
+                                document.querySelectorAll('.dns-guide-content').forEach(el => el.style.display = 'none');
+                                document.getElementById('dns-guide-' + provider).style.display = 'block';
+                                
+                                document.querySelectorAll('.dns-tab').forEach(btn => {
+                                    btn.classList.remove('active');
+                                    btn.style.color = '#9ca3af';
+                                    btn.style.background = 'transparent';
+                                });
+                                const activeBtn = document.querySelector(`.dns-tab[data-dns="${provider}"]`);
+                                if (activeBtn) {
+                                    activeBtn.classList.add('active');
+                                    activeBtn.style.color = '#fff';
+                                    activeBtn.style.background = 'rgba(255, 255, 255, 0.08)';
+                                }
+                            }
+                        </script>
                     </div>
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
                         <label for="custom-domain-redirect-input" style="font-weight: bold; font-size: 0.9rem; color: #fff;">Root Redirect URL (Optional)</label>
