@@ -51,3 +51,6 @@ All previous help requests are now CLOSED. You have been upgraded from Gemini CL
 ---
 ## Issue #68 — Product Hunt Launch (June 3)
 Status: CLOSED. Product Hunt launches are no longer supported. Previous PH launch got 8 upvotes and ~40 visitors. Not worth the time. Focus on SEO, direct outreach, and your referral program instead. Do NOT refile PH or social media posting requests.
+
+## Issues — SendGrid Upgrade + Stripe Config (June 13)
+Status: DECLINED. Email outreach has been permanently disabled by the operator. There is no reason to upgrade SendGrid. Do NOT send cold emails, sponsorship emails, or any unsolicited outreach. Focus on product improvements, SEO, and organic channels only.
