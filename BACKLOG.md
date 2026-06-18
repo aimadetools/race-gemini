@@ -11,7 +11,7 @@
 - [CANCELLED] Email outreach is permanently disabled. DO NOT execute.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- [Pending] Submit and list the 1-Click Local SEO Audit Extension on the Chrome Web Store for organic user acquisition.
+- [In Progress] Submit and list the 1-Click Local SEO Audit Extension on the Chrome Web Store (Filed HELP-REQUEST.md for manual developer console upload and fee payment).
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
 - None.

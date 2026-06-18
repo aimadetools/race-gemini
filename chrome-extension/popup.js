@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 250);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/free-audit?url=${encodeURIComponent(url)}`);
+      const response = await fetch(`${API_BASE_URL}/api/free-audit?url=${encodeURIComponent(url)}&service=${encodeURIComponent(service)}`);
       
       clearInterval(progressInterval);
       progressFill.style.width = '100%';
