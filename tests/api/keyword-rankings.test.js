@@ -225,4 +225,132 @@ describe('Keyword Rankings API', () => {
     const mockRankings = getMockKeywordRankings();
     expect(mockRankings.length).toBe(0);
   });
+
+  describe('Agency-Client Rankings Tracking Flow', () => {
+    beforeEach(() => {
+      clearMockUsers();
+      clearMockKeywordRankings();
+    });
+
+    test('should allow agency to GET client rankings if authorized', async () => {
+      addMockUser({ id: 1, email: 'agency@example.com', is_agency: true });
+      addMockUser({ id: 2, email: 'client@example.com', agency_id: 1 });
+
+      addMockKeywordRanking({
+        id: 'rank_abc',
+        user_id: '2',
+        keyword: 'best developer Austin',
+        town: 'Austin',
+        service: 'Development',
+        rank: 1,
+        previous_rank: 2,
+        last_checked: new Date(),
+        created_at: new Date()
+      });
+
+      req.method = 'GET';
+      req.query = { clientId: '2' };
+      parseCookie.mockReturnValue({ authToken: 'valid_token' });
+      jwt.verify.mockReturnValue({ userId: 1 });
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      const rankings = res.json.mock.calls[0][0].rankings;
+      expect(rankings.length).toBe(1);
+      expect(rankings[0].keyword).toBe('best developer Austin');
+    });
+
+    test('should fail with 403 if user is not an agency', async () => {
+      addMockUser({ id: 1, email: 'notagency@example.com', is_agency: false });
+      addMockUser({ id: 2, email: 'client@example.com', agency_id: 1 });
+
+      req.method = 'GET';
+      req.query = { clientId: '2' };
+      parseCookie.mockReturnValue({ authToken: 'valid_token' });
+      jwt.verify.mockReturnValue({ userId: 1 });
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'Unauthorized. Only agencies can manage client rankings.'
+      }));
+    });
+
+    test('should fail with 403 if target client does not belong to agency', async () => {
+      addMockUser({ id: 1, email: 'agency1@example.com', is_agency: true });
+      addMockUser({ id: 2, email: 'client@example.com', agency_id: 3 });
+
+      req.method = 'GET';
+      req.query = { clientId: '2' };
+      parseCookie.mockReturnValue({ authToken: 'valid_token' });
+      jwt.verify.mockReturnValue({ userId: 1 });
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'Unauthorized. Target client does not belong to this agency.'
+      }));
+    });
+
+    test('should allow agency to POST a ranking for client', async () => {
+      addMockUser({ id: 1, email: 'agency@example.com', is_agency: true });
+      addMockUser({ id: 2, email: 'client@example.com', agency_id: 1 });
+
+      req.method = 'POST';
+      req.body = {
+        keyword: 'roof repair',
+        town: 'Orlando',
+        service: 'Roofing',
+        clientId: '2'
+      };
+      parseCookie.mockReturnValue({ authToken: 'valid_token' });
+      jwt.verify.mockReturnValue({ userId: 1 });
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'Keyword added successfully for rank tracking.'
+      }));
+
+      const mockRankings = getMockKeywordRankings();
+      expect(mockRankings.length).toBe(1);
+      expect(mockRankings[0].user_id).toBe('2');
+      expect(mockRankings[0].keyword).toBe('roof repair');
+    });
+
+    test('should allow agency to DELETE a ranking for client', async () => {
+      addMockUser({ id: 1, email: 'agency@example.com', is_agency: true });
+      addMockUser({ id: 2, email: 'client@example.com', agency_id: 1 });
+
+      addMockKeywordRanking({
+        id: 'rank_xyz',
+        user_id: '2',
+        keyword: 'cleaning service',
+        town: 'Houston',
+        service: 'Cleaning'
+      });
+
+      req.method = 'DELETE';
+      req.body = {
+        rankingId: 'rank_xyz',
+        clientId: '2'
+      };
+      parseCookie.mockReturnValue({ authToken: 'valid_token' });
+      jwt.verify.mockReturnValue({ userId: 1 });
+
+      await handler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        message: 'Keyword ranking tracking removed successfully.'
+      }));
+
+      const mockRankings = getMockKeywordRankings();
+      expect(mockRankings.length).toBe(0);
+    });
+  });
 });

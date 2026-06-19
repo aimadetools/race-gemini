@@ -200,6 +200,98 @@
 </table>
 </section>
 
+<section class="dashboard" id="keyword-rankings-section" style="margin-top: 2rem;">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+    <div>
+        <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.5rem; font-weight: 700;">
+            <i class="fas fa-trophy" style="color: #10b981;"></i> Local Keyword Rankings Tracker
+        </h2>
+        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Monitor organic search positions, maps ranking, and visibility shifts for this client's service areas.</p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="button" id="export-rankings-csv-btn" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+            <i class="fas fa-file-csv"></i> Export CSV
+        </button>
+        <button class="button" id="sync-rankings-btn" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+            <i class="fas fa-sync-alt"></i> Refresh Positions
+        </button>
+    </div>
+</div>
+
+<div style="display: flex; gap: 1.5rem; flex-wrap: wrap; text-align: left;">
+    <!-- Add Keyword Form / CSV Import -->
+    <div style="flex: 0.3; min-width: 250px; background: rgba(17, 24, 39, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #fff; font-size: 1.1rem; font-weight: 600;">Track New Keyword</h3>
+            <form id="add-ranking-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label for="ranking-keyword" style="display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: #cbd5e1; font-weight: 500;">Search Keyword / Phrase</label>
+                    <input type="text" id="ranking-keyword" placeholder="e.g. emergency plumber" required style="width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; outline: none;" />
+                </div>
+                <div>
+                    <label for="ranking-town" style="display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: #cbd5e1; font-weight: 500;">Target Town / City</label>
+                    <input type="text" id="ranking-town" placeholder="e.g. Austin" required style="width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; outline: none;" />
+                </div>
+                <div>
+                    <label for="ranking-service" style="display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: #cbd5e1; font-weight: 500;">Service Category</label>
+                    <input type="text" id="ranking-service" placeholder="e.g. Plumbing" required style="width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; outline: none;" />
+                </div>
+                <button class="button" type="submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 0.65rem; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 0.9rem;">
+                    <i class="fas fa-plus"></i> Add Keyword
+                </button>
+            </form>
+            <div id="ranking-form-error" style="color: #ef4444; font-size: 0.8rem; margin-top: 0.5rem; display: none;"></div>
+        </div>
+
+        <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.25rem;">
+            <h3 style="margin-top: 0; margin-bottom: 0.5rem; color: #fff; font-size: 1.1rem; font-weight: 600;">Bulk Import via CSV</h3>
+            <p style="margin: 0 0 1rem 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.3;">Upload a CSV containing: <code>keyword, town, service</code> headers to track keywords in bulk.</p>
+            <div style="position: relative; display: inline-block; width: 100%;">
+                <input type="file" id="bulk-keywords-csv" accept=".csv" style="display: none;" />
+                <button onclick="document.getElementById('bulk-keywords-csv').click()" class="button" type="button" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #cbd5e1; padding: 0.65rem; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                    <i class="fas fa-upload"></i> Upload CSV File
+                </button>
+            </div>
+            <div id="bulk-keywords-status" style="margin-top: 0.5rem; font-size: 0.8rem; line-height: 1.3;"></div>
+        </div>
+    </div>
+
+    <!-- Rankings Table Column -->
+    <div style="flex: 0.7; min-width: 300px; display: flex; flex-direction: column;">
+        <!-- Loading State -->
+        <div id="rankings-loading" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 0; color: #9ca3af; gap: 10px;">
+            <i class="fas fa-spinner fa-spin fa-2x" style="color: #10b981;"></i>
+            <span>Fetching ranking reports...</span>
+        </div>
+
+        <!-- Empty State -->
+        <div id="rankings-empty" style="display: none; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 0; color: #6b7280; text-align: center; gap: 10px;">
+            <i class="fas fa-trophy fa-2x" style="opacity: 0.4;"></i>
+            <span>No keywords tracked. Add a keyword on the left or click Refresh to fetch defaults.</span>
+        </div>
+
+        <!-- Table Content -->
+        <div id="rankings-table-container" style="display: none; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #9ca3af;">
+                        <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Keyword / Town</th>
+                        <th style="padding: 0.75rem 0.5rem; font-weight: 600;">Service</th>
+                        <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Google Rank</th>
+                        <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">Trend</th>
+                        <th style="padding: 0.75rem 0.5rem; font-weight: 600; text-align: center;">7-Day History</th>
+                        <th style="padding: 0.75rem 0.5rem; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rankings-table-body">
+                    <!-- Dynamic rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</section>
+
 <section class="dashboard" id="captured-leads-section" style="margin-top: 2rem;">
 <h2>Captured Leads</h2>
 <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">Leads captured from forms on this client's generated landing pages.</p>
@@ -477,6 +569,7 @@ async function fetchClientDetails() {
         
         // Initialize Client Embeddable Widget Configurator
         initializeWidgetBuilder(data);
+        fetchRankings();
     } else {
         window.location.href = 'agency-dashboard.html';
     }
@@ -982,6 +1075,330 @@ document.getElementById('logout-link').addEventListener('click', async () => {
     await fetch('/api/logout', { method: 'POST' });
     window.location.href = 'index.html';
 });
+
+// --- Client Keyword Rankings Tracker Logic ---
+const addRankingForm = document.getElementById('add-ranking-form');
+const syncRankingsBtn = document.getElementById('sync-rankings-btn');
+const rankingsLoading = document.getElementById('rankings-loading');
+const rankingsEmpty = document.getElementById('rankings-empty');
+const rankingsTableContainer = document.getElementById('rankings-table-container');
+const rankingsTableBody = document.getElementById('rankings-table-body');
+const rankingFormError = document.getElementById('ranking-form-error');
+let currentKeywordRankings = [];
+
+async function fetchRankings() {
+    if (!rankingsTableBody || !currentClientId) return;
+    rankingsLoading.style.display = 'flex';
+    rankingsTableContainer.style.display = 'none';
+    rankingsEmpty.style.display = 'none';
+
+    try {
+        const response = await fetch(`/api/keyword-rankings?clientId=${currentClientId}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const rankings = data.rankings || [];
+            currentKeywordRankings = rankings;
+            renderRankings(rankings);
+        } else {
+            console.error('Failed to fetch rankings.');
+            rankingsLoading.style.display = 'none';
+            rankingsEmpty.style.display = 'flex';
+        }
+    } catch (err) {
+        console.error('Error fetching rankings:', err);
+        rankingsLoading.style.display = 'none';
+        rankingsEmpty.style.display = 'flex';
+    }
+}
+
+function renderRankings(rankings) {
+    rankingsLoading.style.display = 'none';
+    if (rankings.length === 0) {
+        rankingsEmpty.style.display = 'flex';
+        rankingsTableContainer.style.display = 'none';
+        return;
+    }
+
+    rankingsEmpty.style.display = 'none';
+    rankingsTableContainer.style.display = 'block';
+    rankingsTableBody.innerHTML = '';
+
+    rankings.forEach(item => {
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+
+        // Trend display
+        let trendHtml = `<span style="color: #9ca3af; font-size: 0.85rem;"><i class="fas fa-minus"></i> —</span>`;
+        if (item.trend > 0) {
+            trendHtml = `<span style="color: #10b981; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-up"></i> +${item.trend}</span>`;
+        } else if (item.trend < 0) {
+            trendHtml = `<span style="color: #ef4444; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-down"></i> ${item.trend}</span>`;
+        }
+
+        // Rank badge styling
+        let rankColor = '#9ca3af';
+        if (item.rank <= 3) rankColor = '#fbbf24'; // Gold
+        else if (item.rank <= 10) rankColor = '#3b82f6'; // Blue
+        else if (item.rank <= 20) rankColor = '#10b981'; // Green
+
+        const rankBadge = `<span style="display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid ${rankColor}; color: ${rankColor}; font-weight: bold; font-size: 0.85rem;">#${item.rank}</span>`;
+
+        // Mini Sparkline SVG
+        let sparklineHtml = '<span style="color: #6b7280; font-size: 0.8rem;">No history</span>';
+        if (item.history && item.history.length > 0) {
+            const pts = item.history;
+            const minRank = 1;
+            const maxRank = 50;
+            const width = 80;
+            const height = 25;
+            const step = width / (pts.length - 1);
+            
+            // Map points to SVG coordinates. Higher rank (lower number) should be higher visually (lower Y coordinate)
+            const pointsStr = pts.map((p, idx) => {
+                const x = idx * step;
+                // Normalize Y between 2 and height-2. Better rank (smaller value) -> lower Y coordinate
+                const val = p.rank;
+                const normalizedY = 2 + ((val - minRank) / (maxRank - minRank)) * (height - 4);
+                return `${x.toFixed(1)},${normalizedY.toFixed(1)}`;
+            }).join(' ');
+
+            sparklineHtml = `
+                <svg width="${width}" height="${height}" style="overflow: visible;">
+                    <polyline fill="none" stroke="#10b981" stroke-width="1.5" points="${pointsStr}" />
+                    <circle cx="${width}" cy="${(2 + ((item.rank - minRank) / (maxRank - minRank)) * (height - 4)).toFixed(1)}" r="2" fill="#10b981" />
+                </svg>
+            `;
+        }
+
+        row.innerHTML = `
+            <td style="padding: 0.75rem 0.5rem; text-align: left;">
+                <div style="font-weight: 600; color: #fff;">${item.keyword}</div>
+                <div style="font-size: 0.75rem; color: #9ca3af; display: flex; align-items: center; gap: 4px;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 0.7rem;"></i> ${item.town}
+                </div>
+            </td>
+            <td style="padding: 0.75rem 0.5rem; color: #cbd5e1; text-align: left;">${item.service}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: center;">${rankBadge}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: center;">${trendHtml}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: center; vertical-align: middle;">${sparklineHtml}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                <button class="delete-rank-btn button button-danger" data-id="${item.id}" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </td>
+        `;
+        rankingsTableBody.appendChild(row);
+    });
+
+    // Bind delete handlers
+    document.querySelectorAll('.delete-rank-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const rankingId = btn.dataset.id;
+            if (confirm('Are you sure you want to stop tracking this keyword?')) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                try {
+                    const response = await fetch('/api/keyword-rankings', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ rankingId, clientId: currentClientId })
+                    });
+                    if (response.ok) {
+                        fetchRankings();
+                    } else {
+                        const errData = await response.json();
+                        alert(errData.message || 'Failed to delete tracked keyword.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="far fa-trash-alt"></i>';
+                    }
+                } catch (err) {
+                    console.error('Error deleting tracked keyword:', err);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="far fa-trash-alt"></i>';
+                }
+            }
+        });
+    });
+}
+
+if (addRankingForm) {
+    addRankingForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        rankingFormError.style.display = 'none';
+        const keyword = document.getElementById('ranking-keyword').value.trim();
+        const town = document.getElementById('ranking-town').value.trim();
+        const service = document.getElementById('ranking-service').value.trim();
+
+        if (!keyword || !town || !service || !currentClientId) return;
+
+        const submitBtn = addRankingForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        try {
+            const response = await fetch('/api/keyword-rankings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ keyword, town, service, clientId: currentClientId })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('ranking-keyword').value = '';
+                document.getElementById('ranking-town').value = '';
+                document.getElementById('ranking-service').value = '';
+                fetchRankings();
+            } else {
+                rankingFormError.textContent = data.message || 'Failed to add keyword tracking.';
+                rankingFormError.style.display = 'block';
+            }
+        } catch (err) {
+            console.error('Error adding ranking:', err);
+            rankingFormError.textContent = 'An unexpected error occurred.';
+            rankingFormError.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Keyword';
+        }
+    });
+}
+
+if (syncRankingsBtn) {
+    syncRankingsBtn.addEventListener('click', () => {
+        fetchRankings();
+    });
+}
+
+// Export Keyword Rankings to CSV
+const exportRankingsCsvBtn = document.getElementById('export-rankings-csv-btn');
+if (exportRankingsCsvBtn) {
+    exportRankingsCsvBtn.addEventListener('click', () => {
+        if (currentKeywordRankings.length === 0) {
+            alert('No keyword rankings to export.');
+            return;
+        }
+
+        let csvContent = 'data:text/csv;charset=utf-8,';
+        csvContent += 'Keyword,Town,Service,Current Rank,Previous Rank,Trend,Last Checked\n';
+
+        currentKeywordRankings.forEach(item => {
+            const keywordEscaped = `"${item.keyword.replace(/"/g, '""')}"`;
+            const townEscaped = `"${item.town.replace(/"/g, '""')}"`;
+            const serviceEscaped = `"${item.service.replace(/"/g, '""')}"`;
+            const lastCheckedFormatted = new Date(item.last_checked || new Date()).toLocaleString().replace(/,/g, '');
+            
+            csvContent += `${keywordEscaped},${townEscaped},${serviceEscaped},${item.rank},${item.previousRank || ''},${item.trend || 0},${lastCheckedFormatted}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `client_${currentClientId}_keyword_rankings_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
+
+// Bulk Import Keyword Rankings via CSV
+const bulkKeywordsCsvInput = document.getElementById('bulk-keywords-csv');
+const bulkKeywordsStatus = document.getElementById('bulk-keywords-status');
+
+if (bulkKeywordsCsvInput) {
+    bulkKeywordsCsvInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file || !currentClientId) return;
+
+        bulkKeywordsStatus.innerHTML = '<span style="color: #60a5fa;"><i class="fas fa-spinner fa-spin"></i> Parsing CSV...</span>';
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const text = e.target.result;
+            const lines = text.split('\n');
+            
+            if (lines.length < 2) {
+                bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">CSV is empty or missing headers.</span>';
+                return;
+            }
+
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const keywordIdx = headers.indexOf('keyword');
+            const townIdx = headers.indexOf('town');
+            const serviceIdx = headers.indexOf('service');
+
+            if (keywordIdx === -1 || townIdx === -1) {
+                bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">CSV must contain "keyword" and "town" columns.</span>';
+                return;
+            }
+
+            const keywordsList = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const cols = [];
+                let inQuotes = false;
+                let currentVal = '';
+                for (let c = 0; c < line.length; c++) {
+                    const char = line[c];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        cols.push(currentVal.trim());
+                        currentVal = '';
+                    } else {
+                        currentVal += char;
+                    }
+                }
+                cols.push(currentVal.trim());
+
+                const keyword = cols[keywordIdx];
+                const town = cols[townIdx];
+                const service = serviceIdx !== -1 ? (cols[serviceIdx] || 'General') : 'General';
+
+                if (keyword && town) {
+                    keywordsList.push({ keyword, town, service });
+                }
+            }
+
+            if (keywordsList.length === 0) {
+                bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">No valid rows found in CSV.</span>';
+                return;
+            }
+
+            bulkKeywordsStatus.innerHTML = `<span style="color: #60a5fa;"><i class="fas fa-spinner fa-spin"></i> Uploading ${keywordsList.length} keywords...</span>`;
+
+            try {
+                const response = await fetch('/api/keyword-rankings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ keywords: keywordsList, clientId: currentClientId })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    bulkKeywordsStatus.innerHTML = `<span style="color: #10b981; font-weight: bold;"><i class="fas fa-check-circle"></i> Imported ${result.inserted?.length || 0} keywords successfully!</span>`;
+                    fetchRankings();
+                } else {
+                    bulkKeywordsStatus.innerHTML = `<span style="color: #ef4444;">Import failed: ${result.message}</span>`;
+                }
+            } catch (err) {
+                console.error('Error importing bulk keywords:', err);
+                bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">An unexpected error occurred during upload.</span>';
+            }
+        };
+        reader.readAsText(file);
+    });
+}
 
 fetchClientDetails();
   </script>

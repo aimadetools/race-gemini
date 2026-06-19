@@ -22,19 +22,43 @@ export default async function handler(req, res) {
 
   const userId = decoded.userId;
 
+  let targetUserId = userId;
+  const clientId = (req.query && req.query.clientId) || (req.body && req.body.clientId);
+
+  if (clientId && parseInt(clientId) !== userId) {
+    try {
+      // 1. Verify that the authenticated user is an agency
+      const agencyRes = await query('SELECT is_agency FROM users WHERE id = $1', [userId]);
+      if (agencyRes.rows.length === 0 || !agencyRes.rows[0].is_agency) {
+        return res.status(403).json({ message: 'Unauthorized. Only agencies can manage client rankings.' });
+      }
+
+      // 2. Verify that the client belongs to this agency
+      const clientRes = await query('SELECT agency_id FROM users WHERE id = $1', [clientId]);
+      if (clientRes.rows.length === 0 || clientRes.rows[0].agency_id !== userId) {
+        return res.status(403).json({ message: 'Unauthorized. Target client does not belong to this agency.' });
+      }
+
+      targetUserId = parseInt(clientId);
+    } catch (authError) {
+      await logError(authError, 'Keyword Rankings API - Auth Check Error', 'rankings_error.log');
+      return res.status(500).json({ message: 'Internal server error.' });
+    }
+  }
+
   if (req.method === 'GET') {
     try {
       // 1. Fetch tracked keywords from database
       let rankingsRes = await query(
         'SELECT id, keyword, town, service, rank, previous_rank, last_checked FROM keyword_rankings WHERE user_id = $1 ORDER BY created_at DESC',
-        [userId]
+        [targetUserId]
       );
 
       // 2. If no keywords are tracked yet, auto-populate from their generated pages
       if (rankingsRes.rows.length === 0) {
         const pagesRes = await query(
           'SELECT service, town FROM seo_pages WHERE user_id = $1 LIMIT 5',
-          [userId]
+          [targetUserId]
         );
 
         if (pagesRes.rows.length > 0) {
@@ -53,7 +77,7 @@ export default async function handler(req, res) {
               await query(
                 `INSERT INTO keyword_rankings (user_id, keyword, town, service, rank, previous_rank, last_checked)
                  VALUES ($1, $2, $3, $4, $5, $6, NOW() - INTERVAL '1 day')`,
-                [userId, kw, page.town, page.service, initialRank, prevRank]
+                [targetUserId, kw, page.town, page.service, initialRank, prevRank]
               );
             }
           }
@@ -61,7 +85,7 @@ export default async function handler(req, res) {
           // Fetch again after inserting
           rankingsRes = await query(
             'SELECT id, keyword, town, service, rank, previous_rank, last_checked FROM keyword_rankings WHERE user_id = $1 ORDER BY created_at DESC',
-            [userId]
+            [targetUserId]
           );
         }
       }
@@ -166,7 +190,7 @@ export default async function handler(req, res) {
 
           const checkRes = await query(
             'SELECT id FROM keyword_rankings WHERE user_id = $1 AND LOWER(keyword) = $2 AND LOWER(town) = $3',
-            [userId, cleanKeyword.toLowerCase(), cleanTown.toLowerCase()]
+            [targetUserId, cleanKeyword.toLowerCase(), cleanTown.toLowerCase()]
           );
 
           if (checkRes.rows.length > 0) {
@@ -181,7 +205,7 @@ export default async function handler(req, res) {
           const insertRes = await query(
             `INSERT INTO keyword_rankings (user_id, keyword, town, service, rank, previous_rank, last_checked)
              VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING id`,
-            [userId, cleanKeyword, cleanTown, cleanService, initialRank, prevRank]
+            [targetUserId, cleanKeyword, cleanTown, cleanService, initialRank, prevRank]
           );
 
           inserted.push({
@@ -216,7 +240,7 @@ export default async function handler(req, res) {
       // Check if keyword is already tracked for this user and location
       const checkRes = await query(
         'SELECT id FROM keyword_rankings WHERE user_id = $1 AND LOWER(keyword) = $2 AND LOWER(town) = $3',
-        [userId, cleanKeyword.toLowerCase(), cleanTown.toLowerCase()]
+        [targetUserId, cleanKeyword.toLowerCase(), cleanTown.toLowerCase()]
       );
 
       if (checkRes.rows.length > 0) {
@@ -231,7 +255,7 @@ export default async function handler(req, res) {
       const insertRes = await query(
         `INSERT INTO keyword_rankings (user_id, keyword, town, service, rank, previous_rank, last_checked)
          VALUES ($1, $2, $3, $4, $5, $6, NOW()) RETURNING id`,
-        [userId, cleanKeyword, cleanTown, cleanService, initialRank, prevRank]
+        [targetUserId, cleanKeyword, cleanTown, cleanService, initialRank, prevRank]
       );
 
       return res.status(200).json({
@@ -254,10 +278,10 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Ensure the ranking record belongs to the current user
+      // Ensure the ranking record belongs to the target user
       const checkRes = await query(
         'SELECT id FROM keyword_rankings WHERE id = $1 AND user_id = $2',
-        [rankingId, userId]
+        [rankingId, targetUserId]
       );
 
       if (checkRes.rows.length === 0) {
