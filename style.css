@@ -1868,6 +1868,225 @@ a.logo span {
   animation: pulse-glow 4s infinite ease-in-out;
 }
 
+/* Blog Page Styles */
+.blog-hero {
+  text-align: center;
+  padding: 6rem 1rem 4rem 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.blog-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.blog-hero p {
+  font-size: 1.15rem;
+  color: #94a3b8;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Blog Search and Filtering */
+.blog-controls {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.blog-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.blog-search-wrapper i {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+#blog-search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  color: #fff;
+  font-size: 1.05rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+#blog-search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.blog-filter-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-style: solid;
+}
+
+.filter-tab:hover {
+  background: rgba(30, 41, 59, 0.6);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.filter-tab.active {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+}
+
+/* Blog Cards Grid Layout */
+.blog-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)) !important;
+  gap: 2rem !important;
+  margin: 0 auto 5rem auto !important;
+  padding: 0 1rem;
+}
+
+.blog-preview {
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-preview:hover {
+  transform: translateY(-5px);
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), 0 0 25px rgba(56, 189, 248, 0.05);
+  background: rgba(30, 41, 59, 0.45);
+}
+
+.blog-meta-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.blog-tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.blog-tag.niche {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.15);
+}
+
+.blog-tag.update {
+  background: rgba(167, 139, 250, 0.1);
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.15);
+}
+
+.blog-date {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.blog-preview h2 {
+  font-size: 1.35rem;
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+  text-align: left;
+  font-weight: 700;
+}
+
+.blog-preview h2 a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.blog-preview h2 a:hover {
+  color: #38bdf8;
+}
+
+.blog-desc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.blog-preview .read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: gap 0.2s ease;
+  width: fit-content;
+}
+
+.blog-preview .read-more:hover {
+  gap: 0.75rem;
+  color: #7dd3fc;
+}
+
+@media (max-width: 768px) {
+  .blog-list {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
+
 
 
 
