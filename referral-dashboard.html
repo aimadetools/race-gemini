@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Referral Dashboard | LocalLeads</title>
+    <title>Affiliate Leaderboard & Referral Dashboard | LocalLeads</title>
     <meta
-      content="Track your referrals and earnings with the LocalLeads referral program."
+      content="Track your affiliate referrals, dynamic rank, commissions and compete in the LocalLeads affiliate program leaderboard."
       name="description"
     />
     <link href="style.min.css" rel="stylesheet" />
@@ -14,15 +14,445 @@
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
     <link href="/images/favicon.png" rel="icon" type="image/png" />
-  </head>
     <script>
       window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
     </script>
     <script src="/_vercel/insights/script.js" defer></script>
+    <style>
+      :root {
+        --bg-darker: #0b0f19;
+        --bg-dark: #111827;
+        --bg-card: #1f2937;
+        --border-color: #374151;
+        --text-primary: #f9fafb;
+        --text-secondary: #9ca3af;
+        --color-primary: #3b82f6;
+        --color-primary-hover: #2563eb;
+        --color-emerald: #10b981;
+        --color-gold: #fbbf24;
+      }
+
+      body {
+        background-color: var(--bg-darker);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        border-bottom: 1px solid var(--border-color);
+        background-color: rgba(17, 24, 39, 0.8);
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo img {
+        height: 2.25rem;
+        display: block;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+      }
+
+      .nav-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.925rem;
+        transition: color 0.2s ease;
+      }
+
+      .nav-link-btn:hover {
+        color: var(--text-primary);
+      }
+
+      .nav-link-btn.btn-outline {
+        border: 1px solid var(--border-color);
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.03);
+      }
+
+      .nav-link-btn.btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: var(--color-primary);
+      }
+
+      .referral-container {
+        max-width: 1200px;
+        margin: 2.5rem auto;
+        padding: 0 1.5rem;
+        flex-grow: 1;
+      }
+
+      .header-section {
+        margin-bottom: 2rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .page-subtitle {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      /* Stats Row */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+
+      @media (max-width: 992px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: border-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .stat-card:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+      }
+
+      .stat-value {
+        font-size: 1.85rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.35rem;
+        line-height: 1.2;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .stat-label i {
+        color: var(--color-primary);
+      }
+
+      .stat-card.earnings .stat-value {
+        color: var(--color-emerald);
+      }
+      .stat-card.earnings .stat-label i {
+        color: var(--color-emerald);
+      }
+
+      .stat-card.rank .stat-value {
+        color: var(--color-gold);
+      }
+      .stat-card.rank .stat-label i {
+        color: var(--color-gold);
+      }
+
+      /* Content Grid */
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 2rem;
+      }
+
+      .grid-left {
+        grid-column: span 8;
+      }
+
+      .grid-right {
+        grid-column: span 4;
+      }
+
+      @media (max-width: 992px) {
+        .grid-left, .grid-right {
+          grid-column: span 12;
+        }
+      }
+
+      .section-card {
+        background-color: var(--bg-dark);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .section-card-title i {
+        color: var(--color-primary);
+      }
+
+      .section-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+
+      /* Link Share Form */
+      .share-link-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .link-input-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .link-input {
+        flex-grow: 1;
+        background-color: var(--bg-darker);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        padding: 0.75rem 1rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease, color 0.2s ease;
+      }
+
+      .link-input:focus {
+        border-color: var(--color-primary);
+        color: var(--text-primary);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        font-size: 0.925rem;
+        cursor: pointer;
+        transition: opacity 0.2s ease, transform 0.1s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.95;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+
+      /* Tables styling */
+      .table-responsive {
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-darker);
+      }
+
+      table.premium-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.925rem;
+      }
+
+      table.premium-table th {
+        background-color: rgba(255, 255, 255, 0.02);
+        padding: 1rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      table.premium-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
+        vertical-align: middle;
+      }
+
+      table.premium-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      table.premium-table tbody tr {
+        transition: background-color 0.2s ease;
+      }
+
+      table.premium-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.015);
+      }
+
+      /* Leaderboard Ranks */
+      .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.85rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--text-secondary);
+      }
+
+      .rank-badge.top-1 {
+        background-color: rgba(251, 191, 36, 0.15);
+        color: var(--color-gold);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+      }
+
+      .rank-badge.top-2 {
+        background-color: rgba(209, 213, 219, 0.15);
+        color: #e5e7eb;
+        border: 1px solid rgba(209, 213, 219, 0.3);
+      }
+
+      .rank-badge.top-3 {
+        background-color: rgba(180, 83, 9, 0.15);
+        color: #f97316;
+        border: 1px solid rgba(180, 83, 9, 0.3);
+      }
+
+      tr.leaderboard-row-current {
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.01) 100%) !important;
+        border-left: 3px solid var(--color-primary);
+      }
+
+      .badge-you {
+        background-color: var(--color-primary);
+        color: #fff;
+        font-size: 0.725rem;
+        font-weight: 700;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-left: 0.5rem;
+      }
+
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.775rem;
+        font-weight: 600;
+      }
+
+      .badge-status.completed,
+      .badge-status.paid {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--color-emerald);
+      }
+
+      .badge-status.pending,
+      .badge-status.trial {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: var(--color-gold);
+      }
+
+      .badge-status.failed {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .empty-state {
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        color: var(--text-secondary);
+      }
+
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        opacity: 0.5;
+      }
+
+      footer {
+        border-top: 1px solid var(--border-color);
+        padding: 1.5rem 0;
+        margin-top: 4rem;
+        background-color: rgba(11, 15, 25, 0.5);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
   <body>
     <header>
       <nav>
@@ -35,46 +465,134 @@
             />
           </a>
         </div>
+        <div class="nav-actions">
+          <a href="/dashboard.html" class="nav-link-btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+          <a href="#" id="logoutBtn" class="nav-link-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
       </nav>
     </header>
-    <main class="section-padding">
-      <h1>Your Referral Dashboard</h1>
-      
-      <div class="card">
-        <h2>Your Unique Referral Link</h2>
-        <p>Share this link to start earning commissions.</p>
-        <input type="text" id="referralLink" readonly value="https://localseogen.com/signup?ref=YOUR_UNIQUE_CODE" />
-        <button id="copyButton">Copy Link</button>
+
+    <main class="referral-container">
+      <div class="header-section">
+        <h1 class="page-title">Affiliate & Referral Dashboard</h1>
+        <p class="page-subtitle">Compete on the leaderboard, invite partners, and earn 20% recurring commissions.</p>
       </div>
 
-      <div class="card">
-        <h2>Your Stats</h2>
-        <div id="referralStats">
-          <p><strong>Clicks:</strong> <span id="clicksCount">0</span></p>
-          <p><strong>Signups:</strong> <span id="signupsCount">0</span></p>
-          <p><strong>Total Earned:</strong> $<span id="totalEarned">0.00</span></p>
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card rank">
+          <div class="stat-value" id="rankValue">Loading...</div>
+          <div class="stat-label">
+            <i class="fas fa-trophy"></i> Current Rank
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="clicksCount">0</div>
+          <div class="stat-label">
+            <i class="fas fa-mouse-pointer"></i> Link Clicks
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="signupsCount">0</div>
+          <div class="stat-label">
+            <i class="fas fa-user-plus"></i> Referred Signups
+          </div>
+        </div>
+        <div class="stat-card earnings">
+          <div class="stat-value">$<span id="totalEarned">0.00</span></div>
+          <div class="stat-label">
+            <i class="fas fa-dollar-sign"></i> Total Commissions
+          </div>
         </div>
       </div>
-      
-      <div class="card">
-        <h2>Referred Users</h2>
-        <table id="referredUsersTable">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Commission</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be added dynamically -->
-            </tbody>
-        </table>
-      </div>
 
+      <!-- Content Grid -->
+      <div class="content-grid">
+        
+        <!-- Left: Leaderboard -->
+        <div class="grid-left">
+          <div class="section-card">
+            <h2 class="section-card-title">
+              <i class="fas fa-medal"></i> Top Affiliate Partners
+            </h2>
+            <p>Leaderboard ranks are sorted by referred signup volume and commission earnings.</p>
+            <div class="table-responsive">
+              <table class="premium-table" id="leaderboardTable">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">Rank</th>
+                    <th>Partner</th>
+                    <th style="text-align: center;">Signups</th>
+                    <th style="text-align: right;">Commissions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4" class="empty-state">
+                      <i class="fas fa-spinner fa-spin"></i> Loading Leaderboard...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Referral Link Share Card -->
+        <div class="grid-right">
+          <div class="section-card">
+            <h2 class="section-card-title">
+              <i class="fas fa-link"></i> Your Referral Link
+            </h2>
+            <p>Share your unique tracking link to recruit new agencies or users and earn recurring commissions.</p>
+            <div class="share-link-wrapper">
+              <div class="link-input-group">
+                <input type="text" id="referralLink" class="link-input" readonly value="Loading link..." />
+              </div>
+              <button id="copyButton" class="btn-primary">
+                <i class="fas fa-copy"></i> Copy Link
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full-width: Referred Users Detail -->
+        <div class="card-full">
+          <div class="section-card">
+            <h2 class="section-card-title">
+              <i class="fas fa-users"></i> Referrals History
+            </h2>
+            <p>A detailed breakdown of every user who has signed up using your link.</p>
+            <div class="table-responsive">
+              <table class="premium-table" id="referredUsersTable">
+                <thead>
+                  <tr>
+                    <th>User Email</th>
+                    <th>Date Joined</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Commission</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4" class="empty-state">
+                      <i class="fas fa-spinner fa-spin"></i> Loading Referrals...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </main>
-    <footer class="section-padding">
+
+    <footer>
       <div class="container">
         <div class="footer-bottom">
           <p>© 2026 LocalLeads. All rights reserved.</p>

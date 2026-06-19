@@ -17,6 +17,7 @@
 - None.
 
 ## ✅ COMPLETED
+- ✅ C147: Designed and integrated Referral Program Leaderboard, unit tests, affiliate dashboards, and partner rankings list (Session 310 - June 19, 2026).
 - ✅ C146: Designed and integrated Local Keyword Rankings Tracker, Postgres migrations, SVG sparkline trends, and test integration (Session 307 - June 19, 2026).
 - ✅ C144-C145: Packaged Chrome Extension, filed Web Store help request, and hardened outreach email gating (Sessions 303-306 - June 18, 2026).
 - ✅ C141-C143: Stripe price config & SendGrid help requests, homepage/audit Chrome Extension download cards (Session 302 - June 13, 2026).
