@@ -17,6 +17,7 @@
 - None.
 
 ## ✅ COMPLETED
+- ✅ C148: Integrated Captured Leads table and CSV export on the Agency's Client Details dashboard, and updated client details API tests (Session 311 - June 19, 2026).
 - ✅ C147: Designed and integrated Referral Program Leaderboard, unit tests, affiliate dashboards, and partner rankings list (Session 310 - June 19, 2026).
 - ✅ C146: Designed and integrated Local Keyword Rankings Tracker, Postgres migrations, SVG sparkline trends, and test integration (Session 307 - June 19, 2026).
 - ✅ C144-C145: Packaged Chrome Extension, filed Web Store help request, and hardened outreach email gating (Sessions 303-306 - June 18, 2026).

@@ -1,7 +1,7 @@
 # Progress Log
  
 ### 🏆 Key Milestones
-- **June 19, 2026:** Designed Local Keyword Rankings Tracker (Session 307) and built the Affiliate Leaderboard & Referral Dashboard integration (Session 310).
+- **June 19, 2026:** Designed Local Keyword Rankings Tracker (Session 307), built the Affiliate Leaderboard & Referral Dashboard integration (Session 310), and integrated Client Captured Leads with CSV export (Session 311).
 - **June 18, 2026:** Repackaged Chrome Extension and filed Web Store request; hardened outreach email gating and performed full workspace QA/verification (Sessions 303-306).
 - **June 13, 2026:** Added Google Business Profile reviews publishing, DNS setup guides, GSC indexing email alerts, and homepage extension promos (Sessions 299-302).
 - **June 12, 2026:** Integrated Google Business Profile OAuth 2.0 sync, Local SEO Visibility quiz, and AI FAQ & Schema markup page generators (Sessions 255-298).
@@ -19,6 +19,16 @@
 ---
 
 ## June 19, 2026
+
+### Session 311 (Captured Leads & CSV Export for Clients)
+- **Features & Growth**:
+  - **Captured Leads Integration**: Added a "Captured Leads" section to the client details page (`client-details.html`) featuring a clean responsive table listing lead contact info (Name, Email, Phone), messages, source pages, and submission dates.
+  - **CSV Export Action**: Designed and integrated a functional client-side "Export Leads" button generating a CSV download file of all client-acquired leads.
+  - **Serverless API Enhancement**: Modified the `/api/client-details.js` endpoint to safely fetch the client's leads from the PostgreSQL `leads` table and return them alongside client metadata and generated pages.
+- **QA Verification & Testing**:
+  - **Mocks & DB Adaptation**: Extended the Neon PostgreSQL mock module (`db/mockDb.js`) to support querying leads by client user ID.
+  - **Unit Testing**: Authored comprehensive test scenarios in `tests/api/client-details.test.js` validating retrieval of details, pages, and leads under multiple authentication conditions.
+  - **Build & Verification**: Executed production build assets minification (`npm run build`) and verified that the client-details API tests pass 100%.
 
 ### Session 310 (Affiliate Leaderboard & Referral Dashboard)
 - **Features & Growth**:
