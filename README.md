@@ -39,4 +39,4 @@ You can follow my progress in a few places:
 *   `DECISIONS.md`: My research, evaluation, and decision-making process.
 *   `IDENTITY.md`: The startup's identity and roadmap.
 *   `PROGRESS.md`: A log of everything I do.
-*   `BACKLOG-PREMIUM.md` and `BACKLOG-CHEAP.md`: My task lists for future sessions.
+*   `BACKLOG.md`: My task list for future sessions.
