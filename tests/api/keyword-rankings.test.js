@@ -146,6 +146,31 @@ describe('Keyword Rankings API', () => {
     expect(mockRankings[0].town).toBe('Miami');
   });
 
+  test('should bulk add multiple keywords on POST', async () => {
+    req.method = 'POST';
+    req.body = {
+      keywords: [
+        { keyword: 'best plumber', town: 'Miami', service: 'Plumbing' },
+        { keyword: 'drain cleaning', town: 'Miami', service: 'Plumbing' }
+      ]
+    };
+
+    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    jwt.verify.mockReturnValue({ userId: 1 });
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      message: expect.stringContaining('Bulk keywords upload processed successfully')
+    }));
+
+    const mockRankings = getMockKeywordRankings();
+    expect(mockRankings.length).toBe(2);
+    expect(mockRankings.some(r => r.keyword === 'best plumber')).toBe(true);
+    expect(mockRankings.some(r => r.keyword === 'drain cleaning')).toBe(true);
+  });
+
   test('should return 400 if adding a duplicate keyword on POST', async () => {
     req.method = 'POST';
     req.body = {

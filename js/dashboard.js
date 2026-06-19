@@ -3653,6 +3653,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rankingsTableContainer = document.getElementById('rankings-table-container');
     const rankingsTableBody = document.getElementById('rankings-table-body');
     const rankingFormError = document.getElementById('ranking-form-error');
+    let currentKeywordRankings = [];
 
     async function fetchRankings() {
         if (!rankingsTableBody) return;
@@ -3671,6 +3672,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const data = await response.json();
                 const rankings = data.rankings || [];
+                currentKeywordRankings = rankings;
                 renderRankings(rankings);
             } else {
                 console.error('Failed to fetch rankings.');
@@ -3845,6 +3847,131 @@ document.addEventListener('DOMContentLoaded', () => {
     if (syncRankingsBtn) {
         syncRankingsBtn.addEventListener('click', () => {
             fetchRankings();
+        });
+    }
+
+    // Export Keyword Rankings to CSV
+    const exportRankingsCsvBtn = document.getElementById('export-rankings-csv-btn');
+    if (exportRankingsCsvBtn) {
+        exportRankingsCsvBtn.addEventListener('click', () => {
+            if (currentKeywordRankings.length === 0) {
+                alert('No keyword rankings to export.');
+                return;
+            }
+
+            let csvContent = 'data:text/csv;charset=utf-8,';
+            csvContent += 'Keyword,Town,Service,Current Rank,Previous Rank,Trend,Last Checked\n';
+
+            currentKeywordRankings.forEach(item => {
+                const keywordEscaped = `"${item.keyword.replace(/"/g, '""')}"`;
+                const townEscaped = `"${item.town.replace(/"/g, '""')}"`;
+                const serviceEscaped = `"${item.service.replace(/"/g, '""')}"`;
+                const lastCheckedFormatted = new Date(item.last_checked || new Date()).toLocaleString().replace(/,/g, '');
+                
+                csvContent += `${keywordEscaped},${townEscaped},${serviceEscaped},${item.rank},${item.previousRank || ''},${item.trend || 0},${lastCheckedFormatted}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', `localleads_keyword_rankings_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    }
+
+    // Bulk Import Keyword Rankings via CSV
+    const bulkKeywordsCsvInput = document.getElementById('bulk-keywords-csv');
+    const bulkKeywordsStatus = document.getElementById('bulk-keywords-status');
+
+    if (bulkKeywordsCsvInput) {
+        bulkKeywordsCsvInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            bulkKeywordsStatus.innerHTML = '<span style="color: #60a5fa;"><i class="fas fa-spinner fa-spin"></i> Parsing CSV...</span>';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                
+                if (lines.length < 2) {
+                    bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">CSV is empty or missing headers.</span>';
+                    return;
+                }
+
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                const keywordIdx = headers.indexOf('keyword');
+                const townIdx = headers.indexOf('town');
+                const serviceIdx = headers.indexOf('service');
+
+                if (keywordIdx === -1 || townIdx === -1) {
+                    bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">CSV must contain "keyword" and "town" columns.</span>';
+                    return;
+                }
+
+                const keywordsList = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    const cols = [];
+                    let inQuotes = false;
+                    let currentVal = '';
+                    for (let c = 0; c < line.length; c++) {
+                        const char = line[c];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            cols.push(currentVal.trim());
+                            currentVal = '';
+                        } else {
+                            currentVal += char;
+                        }
+                    }
+                    cols.push(currentVal.trim());
+
+                    const keyword = cols[keywordIdx];
+                    const town = cols[townIdx];
+                    const service = serviceIdx !== -1 ? (cols[serviceIdx] || 'General') : 'General';
+
+                    if (keyword && town) {
+                        keywordsList.push({ keyword, town, service });
+                    }
+                }
+
+                if (keywordsList.length === 0) {
+                    bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">No valid rows found in CSV.</span>';
+                    return;
+                }
+
+                bulkKeywordsStatus.innerHTML = `<span style="color: #60a5fa;"><i class="fas fa-spinner fa-spin"></i> Uploading ${keywordsList.length} keywords...</span>`;
+
+                try {
+                    const response = await fetch('/api/keyword-rankings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${jwtToken}`
+                        },
+                        body: JSON.stringify({ keywords: keywordsList })
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        bulkKeywordsStatus.innerHTML = `<span style="color: #10b981; font-weight: bold;"><i class="fas fa-check-circle"></i> Imported ${result.inserted?.length || 0} keywords successfully!</span>`;
+                        fetchRankings();
+                    } else {
+                        bulkKeywordsStatus.innerHTML = `<span style="color: #ef4444;">Import failed: ${result.message}</span>`;
+                    }
+                } catch (err) {
+                    console.error('Error importing bulk keywords:', err);
+                    bulkKeywordsStatus.innerHTML = '<span style="color: #ef4444;">An unexpected error occurred during upload.</span>';
+                }
+            };
+            reader.readAsText(file);
         });
     }
 
