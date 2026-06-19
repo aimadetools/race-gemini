@@ -3644,4 +3644,210 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Local Keyword Rankings Tracker Logic ---
+    const addRankingForm = document.getElementById('add-ranking-form');
+    const syncRankingsBtn = document.getElementById('sync-rankings-btn');
+    const rankingsLoading = document.getElementById('rankings-loading');
+    const rankingsEmpty = document.getElementById('rankings-empty');
+    const rankingsTableContainer = document.getElementById('rankings-table-container');
+    const rankingsTableBody = document.getElementById('rankings-table-body');
+    const rankingFormError = document.getElementById('ranking-form-error');
+
+    async function fetchRankings() {
+        if (!rankingsTableBody) return;
+        rankingsLoading.style.display = 'flex';
+        rankingsTableContainer.style.display = 'none';
+        rankingsEmpty.style.display = 'none';
+
+        try {
+            const response = await fetch('/api/keyword-rankings', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const rankings = data.rankings || [];
+                renderRankings(rankings);
+            } else {
+                console.error('Failed to fetch rankings.');
+                rankingsLoading.style.display = 'none';
+                rankingsEmpty.style.display = 'flex';
+            }
+        } catch (err) {
+            console.error('Error fetching rankings:', err);
+            rankingsLoading.style.display = 'none';
+            rankingsEmpty.style.display = 'flex';
+        }
+    }
+
+    function renderRankings(rankings) {
+        rankingsLoading.style.display = 'none';
+        if (rankings.length === 0) {
+            rankingsEmpty.style.display = 'flex';
+            rankingsTableContainer.style.display = 'none';
+            return;
+        }
+
+        rankingsEmpty.style.display = 'none';
+        rankingsTableContainer.style.display = 'block';
+        rankingsTableBody.innerHTML = '';
+
+        rankings.forEach(item => {
+            const row = document.createElement('tr');
+            row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+
+            // Trend display
+            let trendHtml = `<span style="color: #9ca3af; font-size: 0.85rem;"><i class="fas fa-minus"></i> —</span>`;
+            if (item.trend > 0) {
+                trendHtml = `<span style="color: #10b981; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-up"></i> +${item.trend}</span>`;
+            } else if (item.trend < 0) {
+                trendHtml = `<span style="color: #ef4444; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-down"></i> ${item.trend}</span>`;
+            }
+
+            // Rank badge styling
+            let rankColor = '#9ca3af';
+            if (item.rank <= 3) rankColor = '#fbbf24'; // Gold
+            else if (item.rank <= 10) rankColor = '#3b82f6'; // Blue
+            else if (item.rank <= 20) rankColor = '#10b981'; // Green
+
+            const rankBadge = `<span style="display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid ${rankColor}; color: ${rankColor}; font-weight: bold; font-size: 0.85rem;">#${item.rank}</span>`;
+
+            // Mini Sparkline SVG
+            let sparklineHtml = '<span style="color: #6b7280; font-size: 0.8rem;">No history</span>';
+            if (item.history && item.history.length > 0) {
+                const pts = item.history;
+                const minRank = 1;
+                const maxRank = 50;
+                const width = 80;
+                const height = 25;
+                const step = width / (pts.length - 1);
+                
+                // Map points to SVG coordinates. Higher rank (lower number) should be higher visually (lower Y coordinate)
+                const pointsStr = pts.map((p, idx) => {
+                    const x = idx * step;
+                    // Normalize Y between 2 and height-2. Better rank (smaller value) -> lower Y coordinate
+                    const val = p.rank;
+                    const normalizedY = 2 + ((val - minRank) / (maxRank - minRank)) * (height - 4);
+                    return `${x.toFixed(1)},${normalizedY.toFixed(1)}`;
+                }).join(' ');
+
+                sparklineHtml = `
+                    <svg width="${width}" height="${height}" style="overflow: visible;">
+                        <polyline fill="none" stroke="#10b981" stroke-width="1.5" points="${pointsStr}" />
+                        <circle cx="${width}" cy="${(2 + ((item.rank - minRank) / (maxRank - minRank)) * (height - 4)).toFixed(1)}" r="2" fill="#10b981" />
+                    </svg>
+                `;
+            }
+
+            row.innerHTML = `
+                <td style="padding: 0.75rem 0.5rem; text-align: left;">
+                    <div style="font-weight: 600; color: #fff;">${item.keyword}</div>
+                    <div style="font-size: 0.75rem; color: #9ca3af; display: flex; align-items: center; gap: 4px;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 0.7rem;"></i> ${item.town}
+                    </div>
+                </td>
+                <td style="padding: 0.75rem 0.5rem; color: #cbd5e1; text-align: left;">${item.service}</td>
+                <td style="padding: 0.75rem 0.5rem; text-align: center;">${rankBadge}</td>
+                <td style="padding: 0.75rem 0.5rem; text-align: center;">${trendHtml}</td>
+                <td style="padding: 0.75rem 0.5rem; text-align: center; vertical-align: middle;">${sparklineHtml}</td>
+                <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                    <button class="delete-rank-btn button button-danger" data-id="${item.id}" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </td>
+            `;
+            rankingsTableBody.appendChild(row);
+        });
+
+        // Bind delete handlers
+        document.querySelectorAll('.delete-rank-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const rankingId = btn.dataset.id;
+                if (confirm('Are you sure you want to stop tracking this keyword?')) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    try {
+                        const response = await fetch('/api/keyword-rankings', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${jwtToken}`
+                            },
+                            body: JSON.stringify({ rankingId })
+                        });
+                        if (response.ok) {
+                            fetchRankings();
+                        } else {
+                            const errData = await response.json();
+                            alert(errData.message || 'Failed to delete tracked keyword.');
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="far fa-trash-alt"></i>';
+                        }
+                    } catch (err) {
+                        console.error('Error deleting tracked keyword:', err);
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="far fa-trash-alt"></i>';
+                    }
+                }
+            });
+        });
+    }
+
+    if (addRankingForm) {
+        addRankingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            rankingFormError.style.display = 'none';
+            const keyword = document.getElementById('ranking-keyword').value.trim();
+            const town = document.getElementById('ranking-town').value.trim();
+            const service = document.getElementById('ranking-service').value.trim();
+
+            if (!keyword || !town || !service) return;
+
+            const submitBtn = addRankingForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+            try {
+                const response = await fetch('/api/keyword-rankings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ keyword, town, service })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('ranking-keyword').value = '';
+                    document.getElementById('ranking-town').value = '';
+                    document.getElementById('ranking-service').value = '';
+                    fetchRankings();
+                } else {
+                    rankingFormError.textContent = data.message || 'Failed to add keyword tracking.';
+                    rankingFormError.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error adding ranking:', err);
+                rankingFormError.textContent = 'An unexpected error occurred.';
+                rankingFormError.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Keyword';
+            }
+        });
+    }
+
+    if (syncRankingsBtn) {
+        syncRankingsBtn.addEventListener('click', () => {
+            fetchRankings();
+        });
+    }
+
+    // Trigger rankings load
+    fetchRankings();
 });

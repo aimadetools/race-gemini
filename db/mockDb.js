@@ -4,7 +4,12 @@ const mockUsers = [];
 const mockSeoPages = [];
 const mockTestimonials = [];
 const mockLeads = [];
+const mockKeywordRankings = [];
 let nextId = 1;
+
+export const getMockKeywordRankings = () => mockKeywordRankings;
+export const addMockKeywordRanking = (r) => mockKeywordRankings.push(r);
+export const clearMockKeywordRankings = () => { mockKeywordRankings.length = 0; };
 
 let queryDelegate = null;
 export const setQueryDelegate = (fn) => {
@@ -35,6 +40,28 @@ export const originalMockQuery = async (text, params) => {
                 return { rows };
             }
             return { rows: mockLeads };
+        }
+
+        if (textLower.includes('from keyword_rankings')) {
+            if (textLower.includes('where id = $1 and user_id = $2')) {
+                const [id, userId] = params;
+                const rows = mockKeywordRankings.filter(r => r.id?.toString() === id?.toString() && r.user_id?.toString() === userId?.toString());
+                return { rows };
+            }
+            if (textLower.includes('lower(keyword) = $2 and lower(town) = $3')) {
+                const [userId, kw, town] = params;
+                const rows = mockKeywordRankings.filter(r => 
+                    r.user_id?.toString() === userId?.toString() && 
+                    r.keyword?.toLowerCase() === kw?.toLowerCase() && 
+                    r.town?.toLowerCase() === town?.toLowerCase()
+                );
+                return { rows };
+            }
+            if (textLower.includes('where user_id = $1')) {
+                const userId = params[0]?.toString();
+                const rows = mockKeywordRankings.filter(r => r.user_id?.toString() === userId);
+                return { rows };
+            }
         }
 
         if (textLower.includes('from seo_pages')) {
@@ -343,6 +370,26 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('insert into keyword_rankings')) {
+        const match = text.match(/insert\s+into\s+keyword_rankings\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newRanking = { id: (nextId++).toString(), last_checked: new Date(), created_at: new Date() };
+            cols.forEach((col, i) => {
+                let val = params[i];
+                if (col === 'user_id') newRanking.user_id = val?.toString();
+                else if (col === 'keyword') newRanking.keyword = val;
+                else if (col === 'town') newRanking.town = val;
+                else if (col === 'service') newRanking.service = val;
+                else if (col === 'rank') newRanking.rank = val;
+                else if (col === 'previous_rank') newRanking.previous_rank = val;
+                else newRanking[col] = val;
+            });
+            mockKeywordRankings.push(newRanking);
+            return { rows: [newRanking] };
+        }
+    }
+
     if (textLower.includes('insert into seo_pages')) {
         const match = text.match(/insert\s+into\s+seo_pages\s*\(([^)]+)\)/i);
         if (match) {
@@ -639,6 +686,19 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('update keyword_rankings')) {
+        if (textLower.includes('rank = $1') && textLower.includes('previous_rank = $2')) {
+            const [rank, prevRank, id] = params;
+            const ranking = mockKeywordRankings.find(r => r.id?.toString() === id?.toString());
+            if (ranking) {
+                ranking.rank = rank;
+                ranking.previous_rank = prevRank;
+                ranking.last_checked = new Date();
+                return { rows: [ranking] };
+            }
+        }
+    }
+
     if (textLower.includes('update seo_pages')) {
         if (textLower.includes('where id = $17') || textLower.includes('where id = $16') || textLower.includes('where id = $13') || textLower.includes('where id = $12')) {
             let id, content, business_name, service, town, zip_code, telephone, price_range, opening_hours, enable_ai_copy, ai_style, ai_keywords, primary_color, service_radius, latitude, longitude, faqs;
@@ -741,6 +801,17 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('delete from keyword_rankings')) {
+        if (textLower.includes('where id = $1')) {
+            const id = params[0]?.toString();
+            const idx = mockKeywordRankings.findIndex(r => r.id?.toString() === id);
+            if (idx !== -1) {
+                mockKeywordRankings.splice(idx, 1);
+            }
+            return { rows: [] };
+        }
+    }
+
     // 4. DELETE query
     if (textLower.includes('delete from seo_pages')) {
         if (textLower.includes('where id = $1')) {
@@ -797,6 +868,7 @@ export const clearMockUsers = () => {
     mockSeoPages.length = 0;
     mockTestimonials.length = 0;
     mockLeads.length = 0;
+    mockKeywordRankings.length = 0;
     nextId = 1;
 };
 
