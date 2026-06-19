@@ -252,6 +252,7 @@ describe('client-details API', () => {
           fileName: 'ppc-in-paris.html'
         },
       ],
+      leads: []
     });
   });
 

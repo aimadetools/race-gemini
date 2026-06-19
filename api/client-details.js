@@ -102,12 +102,29 @@ async function handler(req, res, currentKvClient) {
             });
         }
 
+        // Retrieve client leads from PostgreSQL
+        const leadsResult = await query(
+            'SELECT id, name, email, phone, message, url, created_at, is_unlocked FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
+            [id]
+        );
+        const leads = leadsResult.rows.map(row => ({
+            id: row.id,
+            name: row.name,
+            email: row.email,
+            phone: row.phone,
+            message: row.message,
+            url: row.url,
+            createdAt: row.created_at ? row.created_at.toISOString() : null,
+            isUnlocked: row.is_unlocked
+        }));
+
         return res.status(200).json({
             id: id,
             name: client.name,
             email: client.email,
             credits: client.credits || 0,
             pages,
+            leads
         });
 
     } catch (error) {

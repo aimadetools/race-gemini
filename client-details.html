@@ -199,6 +199,93 @@
 </tbody>
 </table>
 </section>
+
+<section class="dashboard" id="captured-leads-section" style="margin-top: 2rem;">
+<h2>Captured Leads</h2>
+<p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">Leads captured from forms on this client's generated landing pages.</p>
+<div style="margin-bottom: 1rem; display: flex; justify-content: flex-end;">
+    <button class="button button-small" id="export-leads-btn">
+        <i class="fas fa-file-csv" style="margin-right: 4px;"></i> Export Leads
+    </button>
+</div>
+<div id="captured-leads-empty" style="display: none; text-align: center; padding: 2rem 0; color: #6b7280;">
+    <p><i class="fas fa-user-friends fa-2x" style="margin-bottom: 10px; opacity: 0.5;"></i></p>
+    <p>No leads captured for this client yet.</p>
+</div>
+<div id="captured-leads-table-container" class="table-responsive">
+<table id="captured-leads-table">
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Message</th>
+    <th>Source Page</th>
+    <th>Date</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="dashboard" id="embeddable-widget-section" style="margin-top: 2rem;">
+<h2>Embeddable Client Widgets</h2>
+<p style="margin-bottom: 1.5rem; color: #9ca3af; font-size: 0.95rem;">
+    Generate and copy responsive widget code snippets to embed directly on your client's main website.
+</p>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;" id="widget-grid-container">
+    <div style="flex: 1; min-width: 280px;">
+        <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem;">Widget Configurations</h3>
+        <form id="widget-config-form" style="display: flex; flex-direction: column; gap: 12px;" onsubmit="return false;">
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label for="widget-type-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Widget Type</label>
+                <select id="widget-type-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.6rem; border-radius: 6px; width: 100%; font-size: 0.9rem; outline: none;">
+                    <option value="service-area">Service Area Listing Widget</option>
+                    <option value="seo-audit">White-Label SEO Audit Widget</option>
+                </select>
+            </div>
+            <div id="service-area-layout-group" class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label for="widget-layout-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Layout</label>
+                <select id="widget-layout-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.6rem; border-radius: 6px; width: 100%; font-size: 0.9rem; outline: none;">
+                    <option value="badge">Floating Badge (Recommended)</option>
+                    <option value="grid">Modern Card Grid</option>
+                    <option value="list">Pill/List Layout</option>
+                </select>
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label for="widget-theme-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Theme</label>
+                <select id="widget-theme-select" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.6rem; border-radius: 6px; width: 100%; font-size: 0.9rem; outline: none;">
+                    <option value="glassmorphic">Glassmorphic</option>
+                    <option value="light">Light Theme</option>
+                    <option value="dark">Dark Theme</option>
+                </select>
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                <label for="widget-color-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Brand Color</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input id="widget-color-input" type="color" value="#3b82f6" style="background: transparent; border: none; width: 45px; height: 38px; cursor: pointer; padding: 0;" />
+                    <input id="widget-color-text" type="text" value="#3B82F6" style="background: rgba(17, 24, 39, 0.8); color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 6px; width: 110px; text-align: center; font-family: monospace; font-size: 0.9rem;" />
+                </div>
+            </div>
+        </form>
+        <div style="margin-top: 1.5rem;">
+            <label style="display: block; font-weight: bold; font-size: 0.85rem; color: #ccc; margin-bottom: 5px;">Copy Embed Code</label>
+            <textarea id="widget-embed-code" readonly style="width: 100%; height: 90px; background: rgba(17, 24, 39, 0.9); color: #60a5fa; border: 1px solid #3b82f6; padding: 0.6rem; border-radius: 6px; font-family: monospace; font-size: 0.8rem; resize: none; box-sizing: border-box; outline: none;"></textarea>
+            <button class="button button-small" id="copy-widget-code-btn" style="margin-top: 8px; font-size: 0.8rem; padding: 0.4rem 1rem;">
+                <i class="far fa-copy" style="margin-right: 4px;"></i> Copy Code
+            </button>
+        </div>
+    </div>
+    <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column;">
+        <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 1rem;">Live Preview</h3>
+        <div id="widget-preview-box" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; height: 320px; padding: 1.5rem; overflow-y: auto; display: flex; align-items: center; justify-content: center; position: relative;">
+            <!-- Preview elements -->
+        </div>
+    </div>
+</div>
+</section>
 </main>
 <footer>
 <div class="container">
@@ -384,9 +471,328 @@ async function fetchClientDetails() {
         clientPages = data.pages || [];
         populateTagFilters();
         renderFilteredPages();
+        
+        // Render Captured Leads list
+        renderLeads(data.leads || []);
+        
+        // Initialize Client Embeddable Widget Configurator
+        initializeWidgetBuilder(data);
     } else {
         window.location.href = 'agency-dashboard.html';
     }
+}
+
+function renderLeads(leads) {
+    const tableBody = document.querySelector('#captured-leads-table tbody');
+    const emptyState = document.getElementById('captured-leads-empty');
+    const tableContainer = document.getElementById('captured-leads-table-container');
+    const exportBtn = document.getElementById('export-leads-btn');
+    
+    if (!tableBody || !emptyState || !tableContainer) return;
+    
+    tableBody.innerHTML = '';
+    
+    if (!leads || leads.length === 0) {
+        emptyState.style.display = 'block';
+        tableContainer.style.display = 'none';
+        if (exportBtn) exportBtn.disabled = true;
+        return;
+    }
+    
+    emptyState.style.display = 'none';
+    tableContainer.style.display = 'block';
+    if (exportBtn) exportBtn.disabled = false;
+    
+    leads.forEach(lead => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${lead.name || '—'}</td>
+            <td><a href="mailto:${lead.email}" style="color: #60a5fa; text-decoration: none;">${lead.email}</a></td>
+            <td>${lead.phone || '—'}</td>
+            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${lead.message || ''}">${lead.message || '—'}</td>
+            <td><a href="${lead.url || '#'}" target="_blank" style="color: #60a5fa; text-decoration: none;">${lead.url ? new URL(lead.url).pathname : '—'}</a></td>
+            <td>${lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : '—'}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+    
+    // Bind export button click handler
+    if (exportBtn) {
+        exportBtn.onclick = () => {
+            let csv = 'Name,Email,Phone,Message,Source Page,Date\n';
+            leads.forEach(l => {
+                const name = (l.name || '').replace(/"/g, '""');
+                const email = (l.email || '').replace(/"/g, '""');
+                const phone = (l.phone || '').replace(/"/g, '""');
+                const msg = (l.message || '').replace(/"/g, '""');
+                const url = (l.url || '').replace(/"/g, '""');
+                const date = l.createdAt ? new Date(l.createdAt).toLocaleDateString() : '';
+                csv += `"${name}","${email}","${phone}","${msg}","${url}","${date}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', `leads_client_${currentClientId}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    }
+}
+
+function initializeWidgetBuilder(data) {
+    const typeSelect = document.getElementById('widget-type-select');
+    const layoutSelect = document.getElementById('widget-layout-select');
+    const themeSelect = document.getElementById('widget-theme-select');
+    const colorInput = document.getElementById('widget-color-input');
+    const colorText = document.getElementById('widget-color-text');
+    const embedCodeTextarea = document.getElementById('widget-embed-code');
+    const copyBtn = document.getElementById('copy-widget-code-btn');
+    const previewBox = document.getElementById('widget-preview-box');
+
+    const layoutGroup = document.getElementById('service-area-layout-group');
+
+    if (!layoutSelect || !themeSelect || !colorInput || !colorText || !embedCodeTextarea || !previewBox) {
+        return;
+    }
+
+    const clientId = data.id;
+    const pages = data.pages || [];
+
+    // Keep color input and text in sync
+    colorInput.addEventListener('input', (e) => {
+        colorText.value = e.target.value.toUpperCase();
+        updateEmbedCodeAndPreview();
+    });
+
+    colorText.addEventListener('input', (e) => {
+        let val = e.target.value.trim();
+        if (val && !val.startsWith('#')) {
+            val = '#' + val;
+        }
+        if (/^#[0-9A-F]{6}$/i.test(val)) {
+            colorInput.value = val;
+            updateEmbedCodeAndPreview();
+        }
+    });
+
+    layoutSelect.addEventListener('change', updateEmbedCodeAndPreview);
+    themeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+    if (typeSelect) {
+        typeSelect.addEventListener('change', updateEmbedCodeAndPreview);
+    }
+
+    function updateEmbedCodeAndPreview() {
+        const widgetType = typeSelect ? typeSelect.value : 'service-area';
+        const theme = themeSelect.value;
+        const color = colorInput.value.replace('#', '');
+        const origin = window.location.origin;
+
+        if (widgetType === 'seo-audit') {
+            if (layoutGroup) layoutGroup.style.display = 'none';
+
+            const iframeUrl = `${origin}/audit-widget.html?agencyId=${clientId}&theme=${theme}&color=${color}`;
+            embedCodeTextarea.value = `<!-- LocalLeads White-Label SEO Audit Widget Embed -->\n<iframe src="${iframeUrl}" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" title="Local SEO Audit"></iframe>`;
+
+            previewBox.innerHTML = `<iframe src="${iframeUrl}" style="width: 100%; height: 100%; min-height: 280px; border: none; border-radius: 8px;"></iframe>`;
+        } else {
+            if (layoutGroup) layoutGroup.style.display = 'flex';
+
+            const layout = layoutSelect.value;
+            const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}`;
+            
+            let embedCode = '';
+            if (layout === 'badge') {
+                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<script src="${scriptUrl}"></script>`;
+            } else {
+                embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+            }
+            embedCodeTextarea.value = embedCode;
+
+            // Render live preview
+            renderPreview(pages, theme, layout, colorInput.value);
+        }
+    }
+
+    function renderPreview(pagesList, theme, layout, baseColor) {
+        previewBox.innerHTML = '';
+        
+        if (theme === 'light') {
+            previewBox.style.background = '#ffffff';
+            previewBox.style.color = '#1f2937';
+        } else if (theme === 'dark') {
+            previewBox.style.background = '#1f2937';
+            previewBox.style.color = '#f3f4f6';
+        } else { // glassmorphic
+            previewBox.style.background = 'rgba(31, 41, 55, 0.4)';
+            previewBox.style.backdropFilter = 'blur(10px)';
+            previewBox.style.color = '#f3f4f6';
+        }
+
+        if (pagesList.length === 0) {
+            previewBox.innerHTML = '<p style="font-size: 0.85rem; color: #9ca3af; margin: 0; text-align: center;">Generate pages first to preview the widget.</p>';
+            return;
+        }
+
+        // Add base styles to preview doc if needed
+        let style = document.getElementById('widget-client-preview-styles');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'widget-client-preview-styles';
+            document.head.appendChild(style);
+        }
+        style.textContent = `
+            .ll-preview-trigger-${clientId} {
+                background: ${baseColor};
+                color: #ffffff;
+                padding: 10px 18px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .ll-preview-grid-${clientId} {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 8px;
+                width: 100%;
+            }
+            .ll-preview-card-${clientId} {
+                border-radius: 6px;
+                padding: 10px;
+                text-decoration: none;
+                background: ${theme === 'light' ? '#ffffff' : 'rgba(255,255,255,0.05)'};
+                border: 1px solid ${theme === 'light' ? '#e5e7eb' : 'rgba(255,255,255,0.1)'};
+                color: inherit;
+            }
+            .ll-preview-card-town-${clientId} {
+                font-weight: bold;
+                font-size: 0.85rem;
+            }
+            .ll-preview-card-service-${clientId} {
+                font-size: 0.75rem;
+                opacity: 0.7;
+            }
+            .ll-preview-list-${clientId} {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .ll-preview-list-${clientId} li a {
+                display: inline-block;
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                text-decoration: none;
+                background: ${theme === 'light' ? '#f3f4f6' : 'rgba(255,255,255,0.05)'};
+                color: inherit;
+                border: 1px solid ${theme === 'light' ? '#e5e7eb' : 'rgba(255,255,255,0.1)'};
+            }
+        `;
+
+        if (layout === 'badge') {
+            previewBox.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; width: 100%;">
+                    <div class="ll-preview-trigger-${clientId}" id="preview-trigger-btn">
+                        📍 Serving ${pagesList.length} Areas
+                    </div>
+                    <p style="font-size: 0.75rem; color: #9ca3af; margin: 0; text-align: center;">Click badge to preview area listings modal.</p>
+                    
+                    <div id="preview-modal-box" style="display: none; flex-direction: column; width: 90%; max-height: 150px; background: ${theme === 'light' ? '#fff' : '#1f2937'}; border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; overflow: hidden; text-align: left; position: absolute; z-index: 10; bottom: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <div style="padding: 6px 10px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; justify-content: space-between; font-weight: bold; font-size: 0.8rem;">
+                            <span>Our Service Areas</span>
+                            <span id="preview-close-modal-btn" style="cursor: pointer;">&times;</span>
+                        </div>
+                        <div style="padding: 8px; overflow-y: auto; flex: 1;">
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${pagesList.slice(0, 3).map(p => `<li style="margin-bottom: 4px; font-size: 0.75rem; padding: 4px 8px; background: rgba(128,128,128,0.05); border-radius: 4px;">${p.service} in ${p.town}</li>`).join('')}
+                                ${pagesList.length > 3 ? `<li style="font-size: 0.7rem; color: #9ca3af; padding-left: 8px;">+ ${pagesList.length - 3} more...</li>` : ''}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const trigger = previewBox.querySelector('#preview-trigger-btn');
+            const modal = previewBox.querySelector('#preview-modal-box');
+            const closeBtn = previewBox.querySelector('#preview-close-modal-btn');
+
+            trigger.addEventListener('click', () => {
+                modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+            });
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                modal.style.display = 'none';
+            });
+        } else if (layout === 'grid') {
+            let gridItems = pagesList.slice(0, 4).map(p => `
+                <div class="ll-preview-card-${clientId}">
+                    <div class="ll-preview-card-town-${clientId}">${p.town}</div>
+                    <div class="ll-preview-card-service-${clientId}">${p.service}</div>
+                </div>
+            `).join('');
+            
+            if (pagesList.length > 4) {
+                gridItems += `
+                    <div style="border: 1px dashed rgba(128,128,128,0.3); border-radius: 6px; padding: 8px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
+                        + ${pagesList.length - 4} more
+                    </div>
+                `;
+            }
+
+            previewBox.innerHTML = `
+                <div style="width: 100%; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="font-weight: bold; font-size: 0.95rem; margin-bottom: 4px;">📍 Areas We Serve</div>
+                    <div class="ll-preview-grid-${clientId}">
+                        ${gridItems}
+                    </div>
+                </div>
+            `;
+        } else {
+            let listItems = pagesList.slice(0, 5).map(p => `
+                <li><a href="#" onclick="return false;">${p.service} in ${p.town}</a></li>
+            `).join('');
+
+            if (pagesList.length > 5) {
+                listItems += `<li style="font-size: 0.7rem; color: #9ca3af; padding: 4px 8px; display: inline-block;">+ ${pagesList.length - 5} more</li>`;
+            }
+
+            previewBox.innerHTML = `
+                <div style="width: 100%; text-align: left; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="font-weight: bold; font-size: 0.95rem; margin-bottom: 4px;">📍 Areas We Serve</div>
+                    <ul class="ll-preview-list-${clientId}">
+                        ${listItems}
+                    </ul>
+                </div>
+            `;
+        }
+    }
+
+    // Copy Code Button handler
+    copyBtn.addEventListener('click', () => {
+        embedCodeTextarea.select();
+        embedCodeTextarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(embedCodeTextarea.value).then(() => {
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy widget code:', err);
+            alert('Failed to copy to clipboard.');
+        });
+    });
+
+    // Initial load of embed code and preview
+    updateEmbedCodeAndPreview();
 }
 
 // Bind Search & Filter Event Listeners
