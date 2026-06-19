@@ -256,6 +256,101 @@ describe('client-details API', () => {
     });
   });
 
+  test('should successfully retrieve client details, pages, and leads', async () => {
+    const agencyId = 'agency123';
+    const clientId = 'client123';
+    const pageId1 = 'page1';
+
+    addMockUser({
+      id: agencyId,
+      email: 'agency@example.com',
+      is_agency: true,
+    });
+
+    const client = {
+      id: clientId,
+      name: 'Test Client',
+      email: 'client@example.com',
+      credits: 200,
+      agency_id: agencyId,
+      is_agency: false,
+    };
+    addMockUser(client);
+
+    const createdAt1 = new Date('2026-05-28T14:00:00Z');
+    const leadCreatedAt = new Date('2026-06-19T08:00:00Z');
+
+    addMockSeoPage({
+      id: pageId1,
+      user_id: clientId,
+      business_name: 'Plumbers R Us',
+      service: 'SEO',
+      town: 'London',
+      zip_code: '11111',
+      created_at: createdAt1,
+      telephone: undefined,
+      price_range: undefined,
+      opening_hours: undefined,
+    });
+
+    const { addMockLead } = await import('../../db/mockDb.js');
+    addMockLead({
+      id: 'lead1',
+      user_id: clientId,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+      message: 'Need plumbing service',
+      url: 'https://localseogen.com/client123/seo-in-london.html',
+      created_at: leadCreatedAt,
+      is_unlocked: true,
+    });
+
+    req.query.id = clientId;
+    cookie.parse.mockReturnValue({ token: 'valid_token' });
+    jwt.verify.mockReturnValue({ agencyId });
+    
+    await handler(req, res, mockKv);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      id: clientId,
+      name: client.name,
+      email: client.email,
+      credits: client.credits,
+      pages: [
+        {
+          pageId: pageId1,
+          businessName: 'Plumbers R Us',
+          service: 'SEO',
+          town: 'London',
+          zipCode: '11111',
+          createdAt: createdAt1.toISOString(),
+          telephone: undefined,
+          priceRange: undefined,
+          openingHours: undefined,
+          views: 0,
+          uniqueVisitors: 0,
+          indexingStatus: 'unknown',
+          lastIndexingCheck: null,
+          fileName: 'seo-in-london.html'
+        }
+      ],
+      leads: [
+        {
+          id: 'lead1',
+          name: 'John Doe',
+          email: 'john@example.com',
+          phone: '123456789',
+          message: 'Need plumbing service',
+          url: 'https://localseogen.com/client123/seo-in-london.html',
+          createdAt: leadCreatedAt.toISOString(),
+          isUnlocked: true,
+        }
+      ]
+    });
+  });
+
   test('should return 500 for internal server error during database operations', async () => {
     const agencyId = 'agency123';
     const clientId = 'client123';

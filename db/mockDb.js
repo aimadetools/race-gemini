@@ -39,6 +39,11 @@ export const originalMockQuery = async (text, params) => {
                 const rows = mockLeads.filter(l => l.source === source);
                 return { rows };
             }
+            if (textLower.includes('where user_id = $1')) {
+                const userId = params[0]?.toString();
+                const rows = mockLeads.filter(l => l.user_id?.toString() === userId);
+                return { rows };
+            }
             return { rows: mockLeads };
         }
 
