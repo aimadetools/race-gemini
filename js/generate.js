@@ -99,7 +99,40 @@ document.addEventListener('DOMContentLoaded', () => {
         primaryColorInput.value = primaryColorParam;
     }
     
+    async function fetchBusinessProfile() {
+        try {
+            const response = await fetch('/api/business-profile');
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.profile) {
+                    const profile = data.profile;
+                    if (profile.name && !businessNameInput.value) {
+                        businessNameInput.value = profile.name;
+                    }
+                    if (profile.address && profile.address.postalCode && !document.getElementById('zipCode').value) {
+                        document.getElementById('zipCode').value = profile.address.postalCode;
+                    }
+                    if (profile.phone && !document.getElementById('telephone').value) {
+                        document.getElementById('telephone').value = profile.phone;
+                    }
+                    if (profile.hours && !document.getElementById('openingHours').value) {
+                        let openingHoursStr = '';
+                        if (typeof profile.hours === 'string') {
+                            openingHoursStr = profile.hours;
+                        } else if (Array.isArray(profile.hours)) {
+                            openingHoursStr = profile.hours.join(', ');
+                        }
+                        document.getElementById('openingHours').value = openingHoursStr;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching business profile for prefill:', error);
+        }
+    }
+
     fetchUserCredits(); // Fetch credits on load
+    fetchBusinessProfile(); // Prefill business profile details if available
 
     // Event listeners for real-time credit estimation and char count
     servicesInput.addEventListener('input', () => {
