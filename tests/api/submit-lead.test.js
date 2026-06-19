@@ -202,4 +202,91 @@ describe('Submit Lead API', () => {
         // Restore original fetch
         globalThis.fetch = originalFetch;
     });
+
+    it('should successfully store directory lead for unclaimed agency directory profile', async () => {
+        mockReq.body = {
+            name: 'Directory prospect',
+            email: 'prospect@example.com',
+            message: 'Need marketing help',
+            agencyDirectoryId: '55',
+        };
+
+        // 1. Fetch agency directory details (returns unclaimed)
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                claimed_user_id: null,
+                name: 'Unclaimed SEO',
+                city: 'Miami',
+            }]
+        });
+        // 2. Insert lead
+        mockQuery.mockResolvedValueOnce({ rows: [{ id: 700 }] });
+        // 3. User check query (will return empty because userId is null)
+        mockQuery.mockResolvedValueOnce({ rows: [] });
+
+        await handler(mockReq, mockRes, mockKv);
+
+        expect(mockQuery).toHaveBeenNthCalledWith(1,
+            expect.stringContaining('SELECT claimed_user_id, name, city FROM agency_directory WHERE id = $1'),
+            [55]
+        );
+        expect(mockQuery).toHaveBeenNthCalledWith(2,
+            expect.stringContaining('INSERT INTO leads'),
+            ['Directory prospect', 'prospect@example.com', null, 'Need marketing help', null, null, null, 'agency_profile', 55]
+        );
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Lead submitted successfully.' });
+    });
+
+    it('should successfully store directory lead for claimed agency directory profile and notify owner', async () => {
+        mockReq.body = {
+            name: 'Directory prospect 2',
+            email: 'prospect2@example.com',
+            message: 'Need B2B local SEO',
+            agencyDirectoryId: '56',
+        };
+
+        // 1. Fetch agency directory details (returns claimed user id 888)
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                claimed_user_id: 888,
+                name: 'Claimed SEO Inc',
+                city: 'Dallas',
+            }]
+        });
+        // 2. Insert lead
+        mockQuery.mockResolvedValueOnce({ rows: [{ id: 701 }] });
+        // 3. Fetch user owner profile
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                email: 'owner-texas@example.com',
+                is_agency: true,
+                subscription_status: 'active',
+            }]
+        });
+
+        await handler(mockReq, mockRes, mockKv);
+
+        expect(mockQuery).toHaveBeenNthCalledWith(1,
+            expect.stringContaining('SELECT claimed_user_id, name, city FROM agency_directory WHERE id = $1'),
+            [56]
+        );
+        expect(mockQuery).toHaveBeenNthCalledWith(2,
+            expect.stringContaining('INSERT INTO leads'),
+            ['Directory prospect 2', 'prospect2@example.com', null, 'Need B2B local SEO', 888, null, null, 'agency_profile', 56]
+        );
+        expect(mockQuery).toHaveBeenNthCalledWith(3,
+            expect.stringContaining('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone FROM users WHERE id = $1'),
+            [888]
+        );
+
+        expect(sendEmail).toHaveBeenCalledWith(
+            'owner-texas@example.com',
+            expect.stringContaining('New Lead'),
+            expect.stringContaining('prospect2@example.com')
+        );
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+    });
 });
