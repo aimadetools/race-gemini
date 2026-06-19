@@ -106,6 +106,20 @@ async function handler(req, res, currentKvClient) {
         const totalClients = clients.length;
         const totalPagesGenerated = clients.reduce((total, client) => total + client.pagesGenerated, 0);
 
+        // Fetch direct agency profile leads from PostgreSQL
+        const agencyLeadsResult = await query(
+            'SELECT id, name, email, phone, message, created_at FROM leads WHERE user_id = $1 AND source = $2 ORDER BY created_at DESC',
+            [userId, 'agency_profile']
+        );
+        const agencyLeads = agencyLeadsResult.rows.map(row => ({
+            id: row.id,
+            name: row.name,
+            email: row.email,
+            phone: row.phone,
+            message: row.message,
+            createdAt: row.created_at ? row.created_at.toISOString() : new Date().toISOString()
+        }));
+
         return res.status(200).json({
             agencyName: agencyUser.name,
             email: agencyUser.email,
@@ -121,6 +135,7 @@ async function handler(req, res, currentKvClient) {
             totalPagesGenerated,
             customDomain: agencyUser.custom_domain,
             customDomainRedirect: agencyUser.custom_domain_redirect,
+            agencyLeads
         });
 
     } catch (error) {

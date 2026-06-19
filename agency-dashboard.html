@@ -126,6 +126,35 @@
 </table>
 </div>
 <h2>
+     Direct Directory Inquiries
+    </h2>
+<div class="table-responsive">
+<table id="directory-leads-list">
+<thead>
+<tr>
+<th>
+         Name
+        </th>
+<th>
+         Email
+        </th>
+<th>
+         Phone
+        </th>
+<th>
+         Message
+        </th>
+<th>
+         Date
+        </th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+<p id="directory-leads-empty-msg" style="color: #9ca3af; font-size: 0.95rem; margin-top: 10px; display: none;">No direct inquiries received yet from your directory profile.</p>
+<h2>
      Assign Credits
     </h2>
 <form id="assign-credits-form">
@@ -447,6 +476,30 @@ option.value = client.id;
 option.textContent = `${client.name} (${client.email})`;
 clientSelect.appendChild(option);
 });
+
+// Render direct directory inquiries
+const directoryLeadsListBody = document.querySelector('#directory-leads-list tbody');
+const directoryLeadsEmptyMsg = document.getElementById('directory-leads-empty-msg');
+
+if (directoryLeadsListBody) {
+    directoryLeadsListBody.innerHTML = '';
+    if (data.agencyLeads && data.agencyLeads.length > 0) {
+        directoryLeadsEmptyMsg.style.display = 'none';
+        data.agencyLeads.forEach(lead => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${lead.name}</td>
+                <td><a href="mailto:${lead.email}">${lead.email}</a></td>
+                <td>${lead.phone || 'N/A'}</td>
+                <td>${lead.message || 'N/A'}</td>
+                <td>${new Date(lead.createdAt).toLocaleDateString()}</td>
+            `;
+            directoryLeadsListBody.appendChild(row);
+        });
+    } else {
+        directoryLeadsEmptyMsg.style.display = 'block';
+    }
+}
 } else {
 window.location.href = 'agency-login.html';
 }

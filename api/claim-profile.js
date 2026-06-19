@@ -61,6 +61,12 @@ export default async function handler(req, res) {
       [userId, agency.id]
     );
 
+    // Associate any existing inquiries/leads submitted to this agency directory entry
+    await query(
+      'UPDATE leads SET user_id = $1 WHERE agency_directory_id = $2',
+      [userId, agency.id]
+    );
+
     // Track the claim profile signup event
     try {
       await trackEventHandler({

@@ -97,7 +97,7 @@ describe('Submit Lead API', () => {
         // Verify lead insertion query (it's the 2nd call now)
         expect(mockQuery).toHaveBeenNthCalledWith(2,
             expect.stringContaining('INSERT INTO leads'),
-            ['Jane Doe', 'jane@example.com', '123-456-7890', 'Hello, I want a quote.', 123, 'page:12345', 'http://localhost:3000/123/plumbing-in-springfield.html', 'landing_page']
+            ['Jane Doe', 'jane@example.com', '123-456-7890', 'Hello, I want a quote.', 123, 'page:12345', 'http://localhost:3000/123/plumbing-in-springfield.html', 'landing_page', null]
         );
 
         // Verify full email details sent

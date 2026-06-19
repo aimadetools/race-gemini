@@ -29,6 +29,7 @@ import { addFaqsToSeoPages } from './migrations/add_faqs_to_seo_pages.js';
 import { addBusinessProfileToUsers } from './migrations/add_business_profile_to_users.js';
 import { addGbpOauthToUsers } from './migrations/add_gbp_oauth_to_users.js';
 import { createKeywordRankingsTable } from './migrations/create_keyword_rankings_table.js';
+import { addAgencyDirectoryIdToLeads } from './migrations/add_agency_directory_id_to_leads.js';
 
 
 export async function initializeDatabase() {
@@ -125,6 +126,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring keyword rankings table exists...');
     await createKeywordRankingsTable();
+
+    console.log('Ensuring agency_directory_id column exists in leads table...');
+    await addAgencyDirectoryIdToLeads();
 
     console.log('Database initialization completed.');
   } catch (error) {

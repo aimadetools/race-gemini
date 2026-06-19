@@ -26,6 +26,15 @@ export default async function handler(req, res) {
 
     const agency = result.rows[0];
 
+    // Fetch inquiries/leads count for this agency directory
+    let leadsCount = 0;
+    try {
+      const countRes = await query('SELECT COUNT(*) FROM leads WHERE agency_directory_id = $1', [agency.id]);
+      leadsCount = parseInt(countRes.rows[0].count, 10) || 0;
+    } catch (countErr) {
+      console.error('Failed to query leads count for agency directory entry:', countErr);
+    }
+
     // Build Schema.org Structured Data
     const schema = {
       "@context": "http://schema.org",
@@ -360,6 +369,12 @@ export default async function handler(req, res) {
             Claim this verified listing to manage your local profile, update your service specialties, and deploy your 
             <strong>Free White-Label Local SEO Lead Capture Widget</strong> on your website. Captures leads, analyzes sitemaps, and suggests keywords.
           </p>
+          ${leadsCount > 0 ? `
+          <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; color: #fbbf24;">
+            <i class="fas fa-bell" style="font-size: 1.25rem; animation: pulse 2s infinite;"></i>
+            <span style="font-weight: 600; font-size: 0.95rem; text-align: left;">You have <strong>${leadsCount} pending client lead inquiries</strong> waiting for you! Claim your profile to unlock and view their contact details.</span>
+          </div>
+          ` : ''}
           <a href="/claim-profile.html?agency=${agency.slug}" class="button-primary"><i class="fas fa-unlock-alt"></i> Claim &amp; Unlock Widget</a>
         </div>
         ` : ''}
@@ -382,36 +397,53 @@ export default async function handler(req, res) {
           </div>
         </div>
 
-        <!-- Partnership widget -->
+        <!-- Direct Lead Capture Form -->
         <div class="profile-card">
-          <h2><i class="fas fa-terminal"></i> White-Label Interactive Widget Demo</h2>
+          <h2><i class="fas fa-envelope"></i> Send a Direct Inquiry</h2>
           <p style="color: #9ca3af; font-size: 0.95rem; margin: 0 0 1.5rem 0;">
-            See how the white-label lead capture widget functions on a partner agency's site. It allows clients to audit their SEO scores and instantly requests their email for follow-up report deliveries.
+            Interested in local SEO services? Fill out the form below to submit a direct project inquiry to ${agency.name}. 
           </p>
-          <div class="demo-widget-container">
-            <div class="widget-preview-header">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></span>
-                <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></span>
-                <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
-                <span style="color: #6b7280; font-size: 0.8rem; margin-left: 10px;">Audit Widget Preview</span>
+          
+          <div id="agency-lead-form-container" style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 2rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
+            <form id="agencyLeadForm" style="display: flex; flex-direction: column; gap: 15px; max-width: 480px; margin: 0 auto;">
+              <input type="hidden" name="agencyDirectoryId" value="${agency.id}">
+              ${agency.claimed_user_id ? `<input type="hidden" name="agencyId" value="${agency.claimed_user_id}">` : ''}
+              
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="leadName" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Your Name</label>
+                <input type="text" id="leadName" placeholder="John Doe" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;" required>
               </div>
-              <span style="color: #a78bfa; font-size: 0.85rem; font-weight: 600;">Powered by LocalLeads</span>
-            </div>
-            
-            <!-- Audit Form Mockup -->
-            <div id="mock-audit-form" style="padding: 1rem 0;">
-              <div style="text-align: center; margin-bottom: 1.5rem;">
-                <h3 style="margin: 0 0 0.5rem 0; color: #fff; font-family: var(--font-title); font-size: 1.3rem;">Check Your Local SEO Score Instantly</h3>
-                <p style="margin: 0; color: #9ca3af; font-size: 0.9rem;">Analyze how well your business ranks in surrounding towns.</p>
+              
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="leadEmail" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Email Address</label>
+                <input type="email" id="leadEmail" placeholder="john@example.com" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;" required>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: 0 auto;">
-                <input type="text" placeholder="Your Business Website" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;" disabled>
-                <input type="email" placeholder="Your Work Email" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px 14px; color: #fff; font-size: 0.95rem;" disabled>
-                <button type="button" style="background: var(--primary-gradient); color: #fff; border: none; padding: 11px; border-radius: 6px; font-weight: 600; cursor: not-allowed;" disabled>Run Free SEO Scan</button>
-              </div>
-            </div>
 
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="leadPhone" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Phone Number (Optional)</label>
+                <input type="text" id="leadPhone" placeholder="(555) 000-0000" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;">
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="leadWebsite" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Your Website URL (Optional)</label>
+                <input type="url" id="leadWebsite" placeholder="https://mybusiness.com" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;">
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label for="leadMessage" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Project Details / Message</label>
+                <textarea id="leadMessage" placeholder="Describe your marketing needs, service location, or questions..." rows="4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 14px; color: #fff; font-size: 0.95rem; outline: none; font-family: inherit; resize: vertical; transition: border-color 0.2s;" required></textarea>
+              </div>
+
+              <button type="submit" id="submitLeadBtn" style="background: var(--primary-gradient); color: #fff; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; margin-top: 10px; transition: all 0.2s ease;">
+                <i class="fas fa-paper-plane"></i> Submit Inquiry to Agency
+              </button>
+            </form>
+            
+            <div id="leadFormSuccess" style="display: none; text-align: center; color: #34d399; font-weight: 600; padding: 2rem 0;">
+              <i class="fas fa-check-circle" style="font-size: 2.5rem; display: block; margin-bottom: 1rem; color: #10b981;"></i>
+              Inquiry sent successfully! The agency will review your request and get in touch.
+            </div>
+            <div id="leadFormError" style="display: none; text-align: center; color: #f87171; font-weight: 600; padding-top: 1rem; font-size: 0.95rem;"></div>
           </div>
         </div>
 
@@ -482,6 +514,68 @@ export default async function handler(req, res) {
       <p style="margin: 0;">&copy; 2026 LocalLeads. All rights reserved. All agency trademarks belong to their respective owners.</p>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const leadForm = document.getElementById('agencyLeadForm');
+      const submitBtn = document.getElementById('submitLeadBtn');
+      const successDiv = document.getElementById('leadFormSuccess');
+      const errorDiv = document.getElementById('leadFormError');
+
+      if (leadForm) {
+        leadForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          submitBtn.disabled = true;
+          const originalBtnHtml = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+          
+          errorDiv.style.display = 'none';
+          errorDiv.textContent = '';
+
+          const payload = {
+            name: document.getElementById('leadName').value.trim(),
+            email: document.getElementById('leadEmail').value.trim(),
+            phone: document.getElementById('leadPhone').value.trim() || null,
+            url: document.getElementById('leadWebsite').value.trim() || null,
+            message: document.getElementById('leadMessage').value.trim(),
+            agencyDirectoryId: parseInt(leadForm.querySelector('input[name="agencyDirectoryId"]').value, 10)
+          };
+
+          const agencyIdInput = leadForm.querySelector('input[name="agencyId"]');
+          if (agencyIdInput) {
+            payload.agencyId = parseInt(agencyIdInput.value, 10);
+          }
+
+          try {
+            const response = await fetch('/api/submit-lead', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              leadForm.style.display = 'none';
+              successDiv.style.display = 'block';
+            } else {
+              errorDiv.textContent = data.message || 'Failed to submit inquiry.';
+              errorDiv.style.display = 'block';
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnHtml;
+            }
+          } catch (err) {
+            console.error('Lead form error:', err);
+            errorDiv.textContent = 'A network error occurred. Please try again.';
+            errorDiv.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>`;

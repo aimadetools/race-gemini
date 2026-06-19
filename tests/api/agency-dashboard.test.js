@@ -206,6 +206,7 @@ describe('agency-dashboard API', () => {
       totalPagesGenerated: 3,
       customDomain: null,
       customDomainRedirect: null,
+      agencyLeads: [],
     });
   });
 

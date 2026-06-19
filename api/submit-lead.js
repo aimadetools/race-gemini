@@ -12,10 +12,14 @@ export default async (req, res, currentKvClient) => {
     }
 
     const currentKv = currentKvClient || kv;
-    const { pageId, name, email, phone, message, url } = req.body;
+    const { pageId, name, email, phone, message, url, agencyId, agencyDirectoryId } = req.body;
 
-    if (!pageId || !name || !email) {
-        return res.status(400).json({ message: 'Missing required fields: pageId, name, email.' });
+    if (!name || !email) {
+        return res.status(400).json({ message: 'Missing required fields: name, email.' });
+    }
+
+    if (!pageId && !agencyId && !agencyDirectoryId) {
+        return res.status(400).json({ message: 'Missing required fields: pageId, agencyId, or agencyDirectoryId.' });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,39 +32,41 @@ export default async (req, res, currentKvClient) => {
         let businessName = '';
         let service = '';
         let town = '';
+        let dbAgencyDirectoryId = null;
+        let leadSource = 'landing_page';
 
-        // 1. Try to find the page metadata in PostgreSQL (seo_pages)
-        if (pageId) {
-            try {
-                const pageResult = await query(
-                    'SELECT user_id, business_name, service, town FROM seo_pages WHERE id = $1',
-                    [pageId]
-                );
-                if (pageResult.rows.length > 0) {
-                    const row = pageResult.rows[0];
-                    userId = row.user_id;
-                    businessName = row.business_name;
-                    service = row.service;
-                    town = row.town;
+        if (agencyId || agencyDirectoryId) {
+            leadSource = 'agency_profile';
+            if (agencyId) {
+                userId = parseInt(agencyId, 10);
+            }
+            if (agencyDirectoryId) {
+                dbAgencyDirectoryId = parseInt(agencyDirectoryId, 10);
+                try {
+                    const agencyResult = await query(
+                        'SELECT claimed_user_id, name, city FROM agency_directory WHERE id = $1',
+                        [dbAgencyDirectoryId]
+                    );
+                    if (agencyResult.rows.length > 0) {
+                        const row = agencyResult.rows[0];
+                        if (row.claimed_user_id) {
+                            userId = row.claimed_user_id;
+                        }
+                        businessName = row.name;
+                        town = row.city;
+                        service = 'Digital Marketing';
+                    }
+                } catch (err) {
+                    await logError(err, 'Failed to query agency directory in submit-lead');
                 }
-            } catch (err) {
-                await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by pageId');
             }
-        }
-
-        // 2. If not found by ID (or generated statically via api/generate-seo-pages.js), try to query by slug/url
-        if (!userId) {
-            let slug = '';
-            if (url) {
-                const filename = url.split('/').pop() || '';
-                slug = filename.replace('.html', '');
-            }
-
-            if (slug) {
+        } else {
+            // 1. Try to find the page metadata in PostgreSQL (seo_pages)
+            if (pageId) {
                 try {
                     const pageResult = await query(
-                        'SELECT user_id, business_name, service, town FROM seo_pages WHERE slug = $1 OR file_name = $2',
-                        [slug, `${slug}.html`]
+                        'SELECT user_id, business_name, service, town FROM seo_pages WHERE id = $1',
+                        [pageId]
                     );
                     if (pageResult.rows.length > 0) {
                         const row = pageResult.rows[0];
@@ -70,24 +76,51 @@ export default async (req, res, currentKvClient) => {
                         town = row.town;
                     }
                 } catch (err) {
-                    await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by slug');
+                    await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by pageId');
+                }
+            }
+
+            // 2. If not found by ID (or generated statically via api/generate-seo-pages.js), try to query by slug/url
+            if (!userId) {
+                let slug = '';
+                if (url) {
+                    const filename = url.split('/').pop() || '';
+                    slug = filename.replace('.html', '');
+                }
+
+                if (slug) {
+                    try {
+                        const pageResult = await query(
+                            'SELECT user_id, business_name, service, town FROM seo_pages WHERE slug = $1 OR file_name = $2',
+                            [slug, `${slug}.html`]
+                        );
+                        if (pageResult.rows.length > 0) {
+                            const row = pageResult.rows[0];
+                            userId = row.user_id;
+                            businessName = row.business_name;
+                            service = row.service;
+                            town = row.town;
+                        }
+                    } catch (err) {
+                        await logError(err, 'Failed to query page data from PostgreSQL in submit-lead by slug');
+                    }
                 }
             }
         }
 
-        if (!userId) {
-            await logError(new Error(`User not found for pageId: ${pageId}, url: ${url}`), 'Lead Submission - User Not Found');
-            return res.status(404).json({ message: 'Page owner not found. Lead cannot be submitted.' });
+        if (!userId && !dbAgencyDirectoryId) {
+            await logError(new Error(`User not found for pageId: ${pageId}, url: ${url}, agencyId: ${agencyId}, agencyDirectoryId: ${agencyDirectoryId}`), 'Lead Submission - User Not Found');
+            return res.status(404).json({ message: 'Lead destination not found. Lead cannot be submitted.' });
         }
 
         // 3. Save lead to PostgreSQL leads table
         const insertLeadResult = await query(
-            `INSERT INTO leads (name, email, phone, message, user_id, page_id, url, source)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-            [name, email, phone || null, message || null, userId, pageId, url || null, 'landing_page']
+            `INSERT INTO leads (name, email, phone, message, user_id, page_id, url, source, agency_directory_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+            [name, email, phone || null, message || null, userId, pageId || null, url || null, leadSource, dbAgencyDirectoryId]
         );
         const leadId = insertLeadResult.rows[0].id;
-        await logInfo(`Lead ${leadId} stored successfully for user ${userId}.`, 'Lead Submission');
+        await logInfo(`Lead ${leadId} stored successfully for user ${userId || 'unclaimed agency ' + dbAgencyDirectoryId}.`, 'Lead Submission');
 
         // 4. Retrieve user's email and package details to see if they are a paying customer
         const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone FROM users WHERE id = $1', [userId]);
