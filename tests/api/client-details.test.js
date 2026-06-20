@@ -218,6 +218,7 @@ describe('client-details API', () => {
       name: client.name,
       email: client.email,
       credits: client.credits,
+      shareToken: expect.any(String),
       pages: [
         {
           pageId: pageId1,
@@ -318,6 +319,7 @@ describe('client-details API', () => {
       name: client.name,
       email: client.email,
       credits: client.credits,
+      shareToken: expect.any(String),
       pages: [
         {
           pageId: pageId1,
