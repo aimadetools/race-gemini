@@ -32,7 +32,7 @@ export const originalMockQuery = async (text, params) => {
     const textLower = text.toLowerCase();
 
     // 1. SELECT query
-    if (textLower.startsWith('select')) {
+    if (textLower.trim().startsWith('select')) {
         if (textLower.includes('from leads')) {
             if (textLower.includes('where source = $1')) {
                 const source = params[0];
@@ -70,6 +70,68 @@ export const originalMockQuery = async (text, params) => {
         }
 
         if (textLower.includes('from seo_pages')) {
+            if (textLower.includes('select distinct town')) {
+                const towns = [...new Set(mockSeoPages.map(p => p.town).filter(Boolean))].sort();
+                return { rows: towns.map(town => ({ town })) };
+            }
+            if (textLower.includes('select distinct service')) {
+                const services = [...new Set(mockSeoPages.map(p => p.service).filter(Boolean))].sort();
+                return { rows: services.map(service => ({ service })) };
+            }
+            if (textLower.includes('join users')) {
+                let rows = mockSeoPages.map(page => {
+                    const user = mockUsers.find(u => u.id?.toString() === page.user_id?.toString());
+                    return {
+                        id: page.id,
+                        business_name: page.business_name || '',
+                        service: page.service,
+                        town: page.town,
+                        created_at: page.created_at || new Date(),
+                        primary_color: page.primary_color || '#3b82f6',
+                        user_id: page.user_id,
+                        custom_domain: user?.custom_domain || null
+                    };
+                });
+
+                for (const param of params) {
+                    if (typeof param === 'string') {
+                        if (param.startsWith('%') && param.endsWith('%')) {
+                            const searchVal = param.replace(/%/g, '').toLowerCase();
+                            rows = rows.filter(r => 
+                                r.business_name?.toLowerCase().includes(searchVal) ||
+                                r.service?.toLowerCase().includes(searchVal) ||
+                                r.town?.toLowerCase().includes(searchVal)
+                            );
+                        } else {
+                            const lowerParam = param.toLowerCase();
+                            const isService = mockSeoPages.some(p => p.service?.toLowerCase() === lowerParam);
+                            const isTown = mockSeoPages.some(p => p.town?.toLowerCase() === lowerParam);
+                            if (isService) {
+                                rows = rows.filter(r => r.service?.toLowerCase() === lowerParam);
+                            } else if (isTown) {
+                                rows = rows.filter(r => r.town?.toLowerCase() === lowerParam);
+                            }
+                        }
+                    }
+                }
+
+                if (textLower.includes('count(*)')) {
+                    return { rows: [{ count: rows.length }] };
+                }
+
+                rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                if (textLower.includes('limit')) {
+                    const limitVal = params[params.length - 2];
+                    const offsetVal = params[params.length - 1];
+                    if (typeof limitVal === 'number' && typeof offsetVal === 'number') {
+                        rows = rows.slice(offsetVal, offsetVal + limitVal);
+                    }
+                }
+
+                return { rows };
+            }
+
             if (textLower.includes('count(*)')) {
                 const userId = params[0]?.toString();
                 const count = mockSeoPages.filter(p => p.user_id?.toString() === userId).length;

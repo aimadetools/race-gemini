@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Showcase & Dynamic Landing Pages | LocalLeads</title>
+  <meta name="description" content="Explore real search-optimized landing pages generated for local businesses using LocalLeads. See how plumbers, cleaners, and contractors rank.">
+  <meta name="keywords" content="seo showcase, client examples, local landing pages, programmatic seo gallery, local seo templates">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Customer Showcase & Dynamic Landing Pages | LocalLeads">
+  <meta property="og:description" content="Browse active local SEO pages generated on our platform. See real results for local service businesses.">
+  <meta property="og:image" content="https://www.localseogen.com/images/og_webp/og-image.webp">
+  <meta property="og:url" content="https://www.localseogen.com/showcase.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Styling -->
+  <link href="style.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+      --card-bg: rgba(31, 41, 55, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero section */
+    .showcase-hero {
+      padding: 8rem 0 4rem;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.15) 0%, rgba(11, 15, 25, 0) 60%);
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .showcase-hero h1 {
+      font-family: var(--font-title);
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      background: linear-gradient(to right, #fff, #9ca3af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .showcase-hero p {
+      font-size: 1.2rem;
+      color: #9ca3af;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Search and Filters */
+    .filter-bar {
+      background: rgba(31, 41, 55, 0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 15px;
+      margin-top: -2.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 2;
+      min-width: 280px;
+    }
+
+    .search-input-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+
+    .search-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 14px 14px 45px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .filter-select {
+      flex: 1;
+      min-width: 180px;
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 40px;
+      transition: all 0.2s ease;
+    }
+
+    .filter-select:focus {
+      border-color: #3b82f6;
+    }
+
+    .clear-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #f3f4f6;
+      border-radius: 8px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .clear-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Grid */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 4rem;
+    }
+
+    .showcase-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .showcase-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-color, #3b82f6);
+      opacity: 0.8;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .niche-badge {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .showcase-card h3 {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      margin: 0 0 0.5rem;
+      color: #fff;
+    }
+
+    .card-location {
+      color: #9ca3af;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-location i {
+      color: #3b82f6;
+    }
+
+    .view-link {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .view-link:hover {
+      background: var(--accent-color, #3b82f6);
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Loader */
+    .loader-container {
+      text-align: center;
+      padding: 5rem 0;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.1);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border-left-color: #3b82f6;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin: 2rem 0 6rem;
+    }
+
+    .page-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      color: #9ca3af;
+      font-size: 0.95rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 500px;
+      margin: 0 auto 4rem;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .empty-state h3 {
+      color: #fff;
+      font-family: var(--font-title);
+      margin: 0 0 0.5rem;
+    }
+
+    .empty-state p {
+      color: #9ca3af;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <nav>
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <a class="logo" href="/">
+          <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+        </a>
+        <ul class="nav-links" id="nav-menu" style="display: flex; list-style: none; gap: 20px; margin: 0; padding: 0;">
+          <li><a href="/generate.html">Generate Pages</a></li>
+          <li><a href="/pricing.html">Pricing</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/audit.html">Free Audit</a></li>
+          <li><a href="/showcase.html" style="color: #60a5fa; font-weight: 600;">Showcase</a></li>
+          <li><a href="/directory.html">Agency Directory</a></li>
+          <li><a href="/auth.html">Login/Signup</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="showcase-hero">
+      <div class="container">
+        <h1>Local SEO Pages Showcase</h1>
+        <p>Explore real, search-optimized local landing pages generated on LocalLeads. See how local contractors and service businesses establish proximity dominance.</p>
+      </div>
+    </section>
+
+    <div class="container" style="position: relative; z-index: 10;">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-input" class="search-input" placeholder="Search by niche, town, or business name...">
+        </div>
+        <select id="service-select" class="filter-select">
+          <option value="">All Services</option>
+        </select>
+        <select id="town-select" class="filter-select">
+          <option value="">All Towns</option>
+        </select>
+        <button id="clear-btn" class="clear-btn">Clear</button>
+      </div>
+
+      <!-- Loader -->
+      <div id="showcase-loader" class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading generated pages...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="showcase-empty" class="empty-state" style="display: none;">
+        <i class="fas fa-search-minus"></i>
+        <h3>No pages match your criteria</h3>
+        <p>Try clearing your filters or search keywords to view other results.</p>
+      </div>
+
+      <!-- Grid -->
+      <div id="showcase-grid" class="showcase-grid"></div>
+
+      <!-- Pagination -->
+      <div id="showcase-pagination" class="pagination" style="display: none;">
+        <button id="prev-btn" class="page-btn" disabled>Previous</button>
+        <span id="page-info" class="page-info">Page 1 of 1</span>
+        <button id="next-btn" class="page-btn">Next</button>
+      </div>
+    </div>
+  </main>
+
+  <footer style="margin-top: 4rem; padding: 4rem 0; border-top: 1px solid var(--border-color); background: rgba(17, 24, 39, 0.4); text-align: center; color: #9ca3af; font-size: 0.95rem;">
+    <div class="container">
+      <p>&copy; 2026 LocalLeads. All rights reserved. Dominate local search, get found in every town.</p>
+    </div>
+  </footer>
+
+  <script>
+    const limit = 12;
+    let offset = 0;
+    let currentTown = '';
+    let currentService = '';
+    let currentSearch = '';
+
+    // Elements
+    const searchInput = document.getElementById('search-input');
+    const serviceSelect = document.getElementById('service-select');
+    const townSelect = document.getElementById('town-select');
+    const clearBtn = document.getElementById('clear-btn');
+    const grid = document.getElementById('showcase-grid');
+    const loader = document.getElementById('showcase-loader');
+    const emptyState = document.getElementById('showcase-empty');
+    const pagination = document.getElementById('showcase-pagination');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const pageInfo = document.getElementById('page-info');
+
+    // Load initial showcase
+    loadShowcase();
+
+    // Event listeners
+    let searchTimeout;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        currentSearch = searchInput.value;
+        offset = 0;
+        loadShowcase();
+      }, 300);
+    });
+
+    serviceSelect.addEventListener('change', () => {
+      currentService = serviceSelect.value;
+      offset = 0;
+      loadShowcase();
+    });
+
+    townSelect.addEventListener('change', () => {
+      currentTown = townSelect.value;
+      offset = 0;
+      loadShowcase();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      serviceSelect.value = '';
+      townSelect.value = '';
+      currentSearch = '';
+      currentService = '';
+      currentTown = '';
+      offset = 0;
+      loadShowcase();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (offset >= limit) {
+        offset -= limit;
+        loadShowcase();
+        window.scrollTo({ top: document.querySelector('.filter-bar').offsetTop - 50, behavior: 'smooth' });
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      offset += limit;
+      loadShowcase();
+      window.scrollTo({ top: document.querySelector('.filter-bar').offsetTop - 50, behavior: 'smooth' });
+    });
+
+    async function loadShowcase() {
+      loader.style.display = 'block';
+      grid.style.display = 'none';
+      emptyState.style.display = 'none';
+      pagination.style.display = 'none';
+      
+      try {
+        const url = `/api/showcase?limit=${limit}&offset=${offset}&town=${encodeURIComponent(currentTown)}&service=${encodeURIComponent(currentService)}&search=${encodeURIComponent(currentSearch)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        
+        // Populate select filters on first load
+        if (serviceSelect.children.length === 1 && townSelect.children.length === 1) {
+          populateDropdowns(data.towns, data.services);
+        }
+        
+        renderPages(data.pages);
+        updatePagination(data.totalCount);
+      } catch (error) {
+        console.error(error);
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = `<i class="fas fa-exclamation-circle" style="color: #ef4444; font-size: 2rem;"></i><p>Failed to load showcase data. Please try again later.</p>`;
+      } finally {
+        loader.style.display = 'none';
+      }
+    }
+
+    function populateDropdowns(towns, services) {
+      towns.forEach(town => {
+        const opt = document.createElement('option');
+        opt.value = town;
+        opt.textContent = town;
+        townSelect.appendChild(opt);
+      });
+
+      services.forEach(service => {
+        const opt = document.createElement('option');
+        opt.value = service;
+        opt.textContent = service;
+        serviceSelect.appendChild(opt);
+      });
+    }
+
+    function renderPages(pages) {
+      grid.innerHTML = '';
+      if (!pages || pages.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      grid.style.display = 'grid';
+      pages.forEach(page => {
+        const card = document.createElement('div');
+        card.className = 'showcase-card';
+        card.style.setProperty('--accent-color', page.primaryColor || '#3b82f6');
+        
+        const dateStr = page.createdAt ? new Date(page.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Recently Generated';
+        
+        card.innerHTML = `
+          <div>
+            <div class="card-meta">
+              <span class="niche-badge">${escapeHtml(page.service)}</span>
+              <span style="font-size: 0.8rem; color: #6b7280;"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+            </div>
+            <h3>${escapeHtml(page.businessName)}</h3>
+            <div class="card-location">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>${escapeHtml(page.town)}</span>
+            </div>
+          </div>
+          <a class="view-link" href="${page.url}" target="_blank">
+            <span>View Live Local Page</span>
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function updatePagination(totalCount) {
+      const totalPages = Math.ceil(totalCount / limit);
+      const currentPage = Math.floor(offset / limit) + 1;
+      
+      if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      pagination.style.display = 'flex';
+      pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
