@@ -424,11 +424,145 @@ document.addEventListener('DOMContentLoaded', () => {
                         confidenceClass = 'confidence-low';
                     }
                     confidenceDisplay.innerHTML = `Confidence: <span class="${confidenceClass}">${confidenceText} (${confidence}/10)</span>`;
-                    resultContainer.appendChild(confidenceDisplay);
-                }
                 gbpCategoryContainer.appendChild(resultContainer);
             }
         }
+    }
+
+        // Render Local SEO Visibility Grid Heatmap
+        const gridSection = document.getElementById('local-seo-grid-section');
+        const gridHeatmap = document.getElementById('local-seo-grid-heatmap');
+        const gridSubtitle = document.getElementById('local-seo-grid-subtitle');
+        const cellDetailPanel = document.getElementById('grid-cell-detail-panel');
+
+        if (results.grid && Array.isArray(results.grid) && results.grid.length > 0) {
+            gridSection.style.display = 'block';
+            gridHeatmap.innerHTML = '';
+            cellDetailPanel.style.display = 'none';
+
+            if (results.detected_city) {
+                gridSubtitle.innerHTML = `Showing your search ranking visibility and opportunities in towns surrounding <strong style="color: #fff;">${results.detected_city}</strong>.`;
+            } else {
+                gridSubtitle.textContent = 'Showing your search ranking visibility and opportunities in towns surrounding your business location.';
+            }
+
+            results.grid.forEach((cell, idx) => {
+                const isCenter = cell.direction === 'CTR';
+                const isVisible = cell.status === 'visible';
+                const cellBg = isCenter 
+                    ? 'rgba(16, 185, 129, 0.12)' 
+                    : (isVisible ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.05)');
+                const cellBorder = isCenter
+                    ? 'rgba(16, 185, 129, 0.45)'
+                    : (isVisible ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)');
+                const badgeBg = isVisible ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+                const badgeColor = isVisible ? '#34d399' : '#f87171';
+                const statusText = isVisible ? `Rank: #${cell.rank}` : 'Not Ranked';
+
+                const cellEl = document.createElement('div');
+                cellEl.className = `seo-grid-cell ${cell.direction.toLowerCase()}`;
+                cellEl.dataset.index = idx;
+                cellEl.style.cssText = `background: ${cellBg}; border: 1px solid ${cellBorder}; border-radius: 12px; padding: 1rem 0.5rem; text-align: center; position: relative; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; cursor: pointer;`;
+
+                cellEl.innerHTML = `
+                    <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                        ${cell.label}
+                    </span>
+                    <span style="font-weight: 700; font-size: 0.85rem; color: #fff; line-height: 1.2; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+                        ${cell.name}
+                    </span>
+                    <span style="font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 20px; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid rgba(${isVisible ? '16,185,129' : '239,68,68'},0.2);">
+                        ${statusText}
+                    </span>
+                    <span class="node-pulse" style="position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; border-radius: 50%; background: ${isVisible ? '#10b981' : '#ef4444'}; box-shadow: 0 0 6px ${isVisible ? '#10b981' : '#ef4444'};"></span>
+                `;
+
+                cellEl.addEventListener('mouseenter', () => {
+                    cellEl.style.transform = 'translateY(-3px)';
+                    cellEl.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    cellEl.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+                });
+
+                cellEl.addEventListener('mouseleave', () => {
+                    cellEl.style.transform = 'none';
+                    const activeEl = document.querySelector('#local-seo-grid-heatmap .seo-grid-cell.active-highlight');
+                    const activeIndex = activeEl ? parseInt(activeEl.dataset.index) : -1;
+                    cellEl.style.borderColor = activeIndex === idx ? '#60a5fa' : cellBorder;
+                    cellEl.style.boxShadow = activeIndex === idx ? '0 0 10px rgba(96, 165, 250, 0.4)' : 'none';
+                });
+
+                cellEl.addEventListener('click', () => {
+                    selectHeatmapCell(idx, results.grid);
+                });
+
+                gridHeatmap.appendChild(cellEl);
+            });
+
+            // Auto-select center cell (CTR is index 4 in the 3x3 layout)
+            setTimeout(() => {
+                selectHeatmapCell(4, results.grid);
+            }, 100);
+        } else {
+            gridSection.style.display = 'none';
+        }
+    }
+
+    function selectHeatmapCell(idx, grid) {
+        if (!grid || !grid[idx]) return;
+        const cell = grid[idx];
+        
+        const panel = document.getElementById('grid-cell-detail-panel');
+        const title = document.getElementById('detail-cell-title');
+        const volume = document.getElementById('detail-cell-volume');
+        const status = document.getElementById('detail-cell-status');
+        const actionContainer = document.getElementById('detail-cell-action-container');
+        
+        // Highlight active cell visually
+        document.querySelectorAll('#local-seo-grid-heatmap .seo-grid-cell').forEach((el, index) => {
+            const isCenter = grid[index].direction === 'CTR';
+            const isVisible = grid[index].status === 'visible';
+            const cBorder = isCenter 
+                ? 'rgba(16, 185, 129, 0.45)' 
+                : (isVisible ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)');
+            
+            if (index === idx) {
+                el.classList.add('active-highlight');
+                el.style.boxShadow = '0 0 10px rgba(96, 165, 250, 0.4)';
+                el.style.borderColor = '#60a5fa';
+            } else {
+                el.classList.remove('active-highlight');
+                el.style.boxShadow = 'none';
+                el.style.borderColor = cBorder;
+            }
+        });
+
+        title.innerHTML = `<span style="color:#60a5fa;">${cell.label} Region:</span> ${cell.name}`;
+        volume.textContent = `${cell.searchVolume} / mo`;
+        
+        const isVisible = cell.status === 'visible';
+        status.textContent = isVisible ? `Visible (Rank #${cell.rank})` : 'Not Mentioned (Unranked)';
+        status.style.color = isVisible ? '#34d399' : '#f87171';
+        
+        if (isVisible) {
+            actionContainer.innerHTML = `
+                <div style="padding: 0.6rem; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); border-radius: 6px; color: #34d399; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-check-circle"></i> <span>Your site is optimized and ranking for this target region!</span>
+                </div>
+            `;
+        } else {
+            actionContainer.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                    <div style="color: #ef4444; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-exclamation-triangle"></i> <span>No localized content targeting this city was found.</span>
+                    </div>
+                    <a href="/generate.html?towns=${encodeURIComponent(cell.name)}" style="display: inline-block; padding: 0.5rem 1rem; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; font-size: 0.8rem; font-weight: 700; border-radius: 6px; text-decoration: none; text-align: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                        Claim Location - Generate Landing Page <i class="fas fa-arrow-right" style="margin-left:4px;"></i>
+                    </a>
+                </div>
+            `;
+        }
+        
+        panel.style.display = 'block';
     }
 
     function escapeHtml(str) {

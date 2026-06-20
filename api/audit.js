@@ -2,9 +2,10 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { logError } from '../lib/logger.js';
 import { parseAddress } from '../lib/html-parser.js';
+import { computeLocalSeoGrid } from '../lib/seo-grid.js';
 const fetch = global.fetch; // Keep global.fetch as is
 
-async function runGbpCategoryCheck(url) {
+async function runGbpCategoryCheck(url, precomputedLat, precomputedLng) {
     const openCageApiKey = process.env.OPENCAGE_API_KEY;
     if (!openCageApiKey || openCageApiKey === 'your_opencage_api_key') {
         const errorMsg = 'OpenCage API key is not configured.';
@@ -13,38 +14,45 @@ async function runGbpCategoryCheck(url) {
     }
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            const responseBody = await response.text().catch(() => 'N/A'); // Attempt to read body, catch if not readable
-            const errorMsg = `Failed to fetch URL: ${url}. Status: ${response.status} ${response.statusText}. Body: ${responseBody.substring(0, 200)}...`; // Limit body to 200 chars
-            logError(new Error(errorMsg), 'runGbpCategoryCheck - Fetch URL Error', 'audit_error.log');
-            return { error: errorMsg };
-        }
-        const html = await response.text();
-        const address = parseAddress(html);
+        let lat = precomputedLat;
+        let lng = precomputedLng;
 
-        if (!address) {
-            const errorMsg = 'Address not found on page for GBP category check.';
-            logError(new Error(errorMsg), 'runGbpCategoryCheck - Address Not Found', 'audit_error.log');
-            return { businessCategory: errorMsg };
+        if (!lat || !lng) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                const responseBody = await response.text().catch(() => 'N/A');
+                const errorMsg = `Failed to fetch URL: ${url}. Status: ${response.status} ${response.statusText}. Body: ${responseBody.substring(0, 200)}...`;
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Fetch URL Error', 'audit_error.log');
+                return { error: errorMsg };
+            }
+            const html = await response.text();
+            const address = parseAddress(html);
+
+            if (!address) {
+                const errorMsg = 'Address not found on page for GBP category check.';
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Address Not Found', 'audit_error.log');
+                return { businessCategory: errorMsg };
+            }
+
+            const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
+            const geocodingResponse = await fetch(geocodingUrl);
+            if (!geocodingResponse.ok) {
+                const responseBody = await geocodingResponse.text().catch(() => 'N/A');
+                const errorMsg = `Geocoding request failed for ${address}. Status: ${geocodingResponse.status} ${geocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding Error', 'audit_error.log');
+                return { error: errorMsg };
+            }
+            const geocodingData = await geocodingResponse.json();
+
+            if (!geocodingData.results || geocodingData.results.length === 0) {
+                const errorMsg = `Geocoding API returned no results for address: ${address}.`;
+                logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding No Results', 'audit_error.log');
+                return { error: errorMsg };
+            }
+            lat = geocodingData.results[0].geometry.lat;
+            lng = geocodingData.results[0].geometry.lng;
         }
 
-        const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
-        const geocodingResponse = await fetch(geocodingUrl);
-        if (!geocodingResponse.ok) {
-            const responseBody = await geocodingResponse.text().catch(() => 'N/A');
-            const errorMsg = `Geocoding request failed for ${address}. Status: ${geocodingResponse.status} ${geocodingResponse.statusText}. Body: ${responseBody.substring(0, 200)}...`;
-            logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding Error', 'audit_error.log');
-            return { error: errorMsg };
-        }
-        const geocodingData = await geocodingResponse.json();
-
-        if (!geocodingData.results || geocodingData.results.length === 0) {
-            const errorMsg = `Geocoding API returned no results for address: ${address}.`;
-            logError(new Error(errorMsg), 'runGbpCategoryCheck - Geocoding No Results', 'audit_error.log');
-            return { error: errorMsg };
-        }
-        const { lat, lng } = geocodingData.results[0].geometry;
         const reverseGeocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${openCageApiKey}`;
         const reverseGeocodingResponse = await fetch(reverseGeocodingUrl);
         if (!reverseGeocodingResponse.ok) {
@@ -58,19 +66,19 @@ async function runGbpCategoryCheck(url) {
         if (!reverseGeocodingData.results || reverseGeocodingData.results.length === 0) {
             const errorMsg = `Reverse geocoding API returned no results for coordinates: ${lat}, ${lng}.`;
             logError(new Error(errorMsg), 'runGbpCategoryCheck - Reverse Geocoding No Results', 'audit_error.log');
-            return { error: error.message };
+            return { error: errorMsg };
         }
 
-            const components = reverseGeocodingData.results[0].components;
-                const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
-                const confidence = geocodingData.results[0].confidence;
+        const components = reverseGeocodingData.results[0].components;
+        const businessCategory = components._type || components.shop || components.amenity || components.craft || 'Not specified';
+        const confidence = reverseGeocodingData.results[0].confidence;
 
-                if (businessCategory === 'Not specified') {
-                    const errorMsg = 'Could not determine category from address.';
-                    logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
-                    return { error: error.message };
-                }
-                return { businessCategory, confidence };
+        if (businessCategory === 'Not specified') {
+            const errorMsg = 'Could not determine category from address.';
+            logError(new Error(errorMsg), 'runGbpCategoryCheck - Category Not Found', 'audit_error.log');
+            return { error: errorMsg };
+        }
+        return { businessCategory, confidence };
     } catch (error) {
         logError(error, 'runGbpCategoryCheck - General Error', 'audit_error.log');
         return { error: error.message };
@@ -182,9 +190,70 @@ export default async (req, res) => {
         auditsToRun.push({ name: 'locations', command: 'locations', args: [url, '--locations-db', locations.join(',')] });
     }
 
+    // Attempt geocoding of the business URL address for local visibility grid
+    let address = null;
+    let lat = null;
+    let lng = null;
+    let city = '';
+    const openCageApiKey = process.env.OPENCAGE_API_KEY;
+
+    if (openCageApiKey && openCageApiKey !== 'your_opencage_api_key') {
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                const html = await response.text();
+                address = parseAddress(html);
+            }
+        } catch (e) {
+            console.error('Error fetching website for address parsing:', e);
+        }
+
+        if (address) {
+            try {
+                const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${openCageApiKey}`;
+                const geocodingResponse = await fetch(geocodingUrl);
+                if (geocodingResponse.ok) {
+                    const geocodingData = await geocodingResponse.json();
+                    if (geocodingData.results && geocodingData.results.length > 0) {
+                        lat = geocodingData.results[0].geometry.lat;
+                        lng = geocodingData.results[0].geometry.lng;
+                        city = geocodingData.results[0].components.city || geocodingData.results[0].components.town || geocodingData.results[0].components.village || '';
+                    }
+                }
+            } catch (e) {
+                console.error('Error geocoding parsed address:', e);
+            }
+        }
+    }
+
+    // Fallback geocoding based on locations input if no address parsed
+    if ((!lat || !lng) && locations && locations.length > 0 && openCageApiKey && openCageApiKey !== 'your_opencage_api_key') {
+        city = locations[0];
+        try {
+            const geocodingUrl = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(city)}&key=${openCageApiKey}`;
+            const geocodingResponse = await fetch(geocodingUrl);
+            if (geocodingResponse.ok) {
+                const geocodingData = await geocodingResponse.json();
+                if (geocodingData.results && geocodingData.results.length > 0) {
+                    lat = geocodingData.results[0].geometry.lat;
+                    lng = geocodingData.results[0].geometry.lng;
+                }
+            }
+        } catch (e) {
+            console.error('Error geocoding fallback city:', e);
+        }
+    }
+
+    // Default coordinates fallback if all else fails
+    if (!lat || !lng) {
+        lat = 30.2672;
+        lng = -97.7431;
+        city = city || (locations && locations[0]) || 'Home City';
+    }
+
     try {
         const auditPromises = auditsToRun.map(audit => runAudit(audit.command, audit.args));
-        const gbpPromise = runGbpCategoryCheck(url);
+        const gbpPromise = runGbpCategoryCheck(url, lat, lng);
         
         const results = await Promise.allSettled([...auditPromises, gbpPromise]);
 
@@ -208,6 +277,30 @@ export default async (req, res) => {
             logError(new Error(`Audit 'gbp_category_check' failed. Reason: ${JSON.stringify(gbpResult.reason)}`), `Audit API - Audit Failure`, 'audit_error.log');
         }
 
+        // Standardize location_audit key format for the frontend
+        if (auditResults['locations']) {
+            const locRes = auditResults['locations'];
+            if (locRes && locRes.results) {
+                auditResults['location_audit'] = {
+                    mentioned_locations: locRes.results.locations_found || [],
+                    mentioned_count: locRes.results.found_count || 0,
+                    missed_locations: locRes.results.locations_not_found || [],
+                    missed_count: locRes.results.not_found_count || 0
+                };
+            }
+        }
+
+        // Generate the 3x3 SEO grid heatmap data
+        let grid = [];
+        const visibleTowns = auditResults['location_audit'] ? auditResults['location_audit'].mentioned_locations : [];
+        try {
+            grid = computeLocalSeoGrid(city || 'Home City', lat, lng, locations || [], visibleTowns);
+        } catch (gridErr) {
+            console.error('Error computing grid for audit:', gridErr);
+        }
+        auditResults['grid'] = grid;
+        auditResults['detected_city'] = city;
+
         res.status(200).json(auditResults);
 
     } catch (error) {
@@ -218,4 +311,3 @@ export default async (req, res) => {
         });
     }
 };
-

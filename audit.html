@@ -172,6 +172,30 @@
         <ul id="missed-list">
         </ul>
        </div>
+
+        <!-- Local SEO Visibility Heatmap Grid -->
+        <div class="audit-section" id="local-seo-grid-section" style="display:none; margin: 2rem 0; padding: 2rem; background: rgba(30, 41, 59, 0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.25);">
+         <h3 style="text-align: center; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fas fa-map-marked-alt" style="color: #10b981;"></i> Local Visibility Heatmap
+         </h3>
+         <p style="text-align: center; margin: 0 0 1.5rem 0; color: #94a3b8; font-size: 0.9rem;" id="local-seo-grid-subtitle">
+          Showing your search ranking visibility and opportunities in towns surrounding your business location.
+         </p>
+         <div id="local-seo-grid-heatmap" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; max-width: 420px; margin: 0 auto;">
+           <!-- Grid cells will be dynamically generated -->
+         </div>
+         
+         <!-- Grid Cell Detail Panel -->
+         <div id="grid-cell-detail-panel" style="margin-top: 1.5rem; padding: 1.2rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; text-align: left; display: none;">
+             <h4 id="detail-cell-title" style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.05rem; font-weight: 700;">Town Details</h4>
+             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; color: #cbd5e1;">
+                 <div>Est. Searches/mo: <strong id="detail-cell-volume" style="color: #60a5fa;">-</strong></div>
+                 <div>Visibility: <strong id="detail-cell-status" style="color: #fff;">-</strong></div>
+                 <div style="grid-column: 1 / -1; margin-top: 0.5rem;" id="detail-cell-action-container"></div>
+             </div>
+         </div>
+        </div>
+
        <div class="audit-section" id="broken-links-audit">
         <h3>
          Broken Links

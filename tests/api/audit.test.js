@@ -121,7 +121,9 @@ describe('audit API', () => {
             },
             'gbp_category_check': {
                 error: 'OpenCage API key is not configured.'
-            }
+            },
+            'detected_city': expect.any(String),
+            'grid': expect.any(Array)
         });
     });
     
