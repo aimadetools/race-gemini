@@ -587,6 +587,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = event.target.classList.contains('visual-edit-page-btn') ? event.target : event.target.closest('.visual-edit-page-btn');
             const pageId = btn.getAttribute('data-id');
             openVisualEditor(pageId);
+        } else if (event.target.classList.contains('seo-audit-btn') || event.target.closest('.seo-audit-btn')) {
+            const btn = event.target.classList.contains('seo-audit-btn') ? event.target : event.target.closest('.seo-audit-btn');
+            const pageId = btn.getAttribute('data-id');
+            openSeoChecklist(pageId);
         } else if (event.target.classList.contains('delete-page-btn')) {
             const pageId = event.target.getAttribute('data-id');
             document.getElementById('delete-page-id').value = pageId;
@@ -656,6 +660,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelDeleteBtn) {
         cancelDeleteBtn.addEventListener('click', () => {
             deleteModal.style.display = 'none';
+        });
+    }
+
+    const seoChecklistModal = document.getElementById('seo-checklist-modal');
+    const closeSeoChecklistModal = document.getElementById('close-seo-checklist-modal');
+    const closeSeoChecklistBtn = document.getElementById('close-seo-checklist-btn');
+
+    if (closeSeoChecklistModal) {
+        closeSeoChecklistModal.addEventListener('click', () => {
+            seoChecklistModal.style.display = 'none';
+        });
+    }
+    if (closeSeoChecklistBtn) {
+        closeSeoChecklistBtn.addEventListener('click', () => {
+            seoChecklistModal.style.display = 'none';
         });
     }
 
@@ -1096,6 +1115,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === upgradeModal) {
             upgradeModal.style.display = 'none';
         }
+        if (event.target === seoChecklistModal) {
+            seoChecklistModal.style.display = 'none';
+        }
     });
 
     function populateTagFilters() {
@@ -1223,6 +1245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <a href="${page.url}" target="_blank" class="button button-small">View</a>
                         <button class="button button-small button-secondary edit-page-btn" data-id="${page.pageId}">Edit</button>
                         <button class="button button-small button-secondary visual-edit-page-btn" data-id="${page.pageId}" style="display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-paint-brush"></i> Visual Edit</button>
+                        <button class="button button-small button-secondary seo-audit-btn" data-id="${page.pageId}" style="display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-tasks"></i> SEO Audit</button>
                         <button class="button button-small button-danger delete-page-btn" data-id="${page.pageId}">Delete</button>
                     </td>
                 `;
@@ -4071,6 +4094,325 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsText(file);
         });
+    }
+
+    // Trigger rankings load
+    fetchRankings();
+
+    async function openSeoChecklist(pageId) {
+        const page = userPages.find(p => p.pageId === pageId);
+        if (!page) return;
+
+        const seoChecklistModal = document.getElementById('seo-checklist-modal');
+        const checklistPageName = document.getElementById('seo-checklist-page-name');
+        const scoreCircle = document.getElementById('seo-score-circle');
+        const scoreText = document.getElementById('seo-score-text');
+        const scoreGrade = document.getElementById('seo-score-grade');
+        const scoreAdvice = document.getElementById('seo-score-advice');
+        const checklistItems = document.getElementById('seo-checklist-items');
+
+        if (!seoChecklistModal) return;
+
+        // Reset display to flex
+        seoChecklistModal.style.display = 'flex';
+
+        // Set Loading State
+        checklistPageName.textContent = `Analyzing: ${page.businessName || 'Local Business'} - ${page.service} in ${page.town}`;
+        scoreText.textContent = '0%';
+        scoreCircle.style.strokeDashoffset = '213.6';
+        scoreGrade.textContent = 'Calculating...';
+        scoreAdvice.textContent = 'Fetching and parsing generated page HTML...';
+        checklistItems.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #3b82f6;"></i>
+                <span>Analyzing page HTML elements...</span>
+            </div>
+        `;
+
+        try {
+            const response = await fetch(page.url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch page: ${response.statusText}`);
+            }
+            const html = await response.text();
+            
+            // Parse HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            const audits = [];
+            let totalScore = 0;
+
+            // 1. Title Tag Audit (Max 20 points)
+            const titleEl = doc.querySelector('title');
+            const titleText = titleEl ? titleEl.textContent.trim() : '';
+            const titleLength = titleText.length;
+            let titleScore = 0;
+            let titleStatus = 'fail';
+            let titleMessage = '';
+
+            if (titleLength === 0) {
+                titleMessage = 'Title tag is missing or empty. This is a critical SEO factor.';
+            } else if (titleLength < 30) {
+                titleScore = 10;
+                titleStatus = 'warning';
+                titleMessage = `Title is too short (${titleLength} chars). Optimal length is 30–65 characters. Current: "${titleText}"`;
+            } else if (titleLength > 65) {
+                titleScore = 12;
+                titleStatus = 'warning';
+                titleMessage = `Title is too long (${titleLength} chars). It may get truncated in search results. Optimal length is 30–65 characters. Current: "${titleText}"`;
+            } else {
+                titleScore = 20;
+                titleStatus = 'pass';
+                titleMessage = `Title tag is perfectly optimized (${titleLength} chars): "${titleText}"`;
+            }
+            totalScore += titleScore;
+            audits.push({
+                name: 'Title Tag Optimization',
+                score: titleScore,
+                max: 20,
+                status: titleStatus,
+                message: titleMessage,
+                details: 'Title tags are displayed on search engine results pages (SERPs) as the clickable headline for a given result. They are important for usability, SEO, and social sharing.'
+            });
+
+            // 2. Header Tags H1/H2 Audit (Max 20 points)
+            const h1s = doc.querySelectorAll('h1');
+            const h2s = doc.querySelectorAll('h2');
+            let headersScore = 0;
+            let headersStatus = 'pass';
+            let headersMessage = '';
+
+            if (h1s.length === 0) {
+                headersStatus = 'fail';
+                headersMessage = 'Missing H1 tag. A page should have exactly one H1 tag as its primary heading.';
+            } else if (h1s.length > 1) {
+                headersScore = 8;
+                headersStatus = 'warning';
+                headersMessage = `Multiple H1 tags found (${h1s.length}). A page should ideally have exactly one H1 tag.`;
+            } else {
+                headersScore = 10;
+                headersMessage = 'Exactly one H1 tag found.';
+            }
+
+            if (h2s.length === 0) {
+                headersStatus = headersStatus === 'fail' ? 'fail' : 'warning';
+                headersMessage += ' No H2 tags found. Use H2 tags for subheadings to improve structural readability.';
+            } else {
+                headersScore += 10;
+                headersMessage += ` Found ${h2s.length} structural H2 tags.`;
+            }
+            totalScore += headersScore;
+            audits.push({
+                name: 'Header Tags Structure (H1/H2)',
+                score: headersScore,
+                max: 20,
+                status: headersStatus,
+                message: headersMessage,
+                details: 'H1 tags define the main topic of the page, while H2 tags define sub-sections. Search engines use them to understand structural context.'
+            });
+
+            // 3. Image Alt Attributes Audit (Max 20 points)
+            const imgs = doc.querySelectorAll('img');
+            let altScore = 0;
+            let altStatus = 'pass';
+            let altMessage = '';
+
+            if (imgs.length === 0) {
+                altScore = 20;
+                altStatus = 'pass';
+                altMessage = 'No images found on this page to analyze (neutral impact).';
+            } else {
+                let missingAlt = 0;
+                imgs.forEach(img => {
+                    if (!img.hasAttribute('alt') || img.getAttribute('alt').trim() === '') {
+                        missingAlt++;
+                    }
+                });
+
+                if (missingAlt === 0) {
+                    altScore = 20;
+                    altMessage = `All images (${imgs.length}) have valid alt attributes.`;
+                } else {
+                    const hasAltPercent = (imgs.length - missingAlt) / imgs.length;
+                    altScore = Math.round(hasAltPercent * 20);
+                    altStatus = hasAltPercent > 0.7 ? 'warning' : 'fail';
+                    altMessage = `${missingAlt} out of ${imgs.length} images are missing alt descriptive attributes.`;
+                }
+            }
+            totalScore += altScore;
+            audits.push({
+                name: 'Image Alt Attributes',
+                score: altScore,
+                max: 20,
+                status: altStatus,
+                message: altMessage,
+                details: 'Alt attributes (alternative text) describe what is in an image, helping screen readers and search engines catalog page visuals correctly.'
+            });
+
+            // 4. Keyword Density (Max 20 points)
+            const bodyText = doc.body ? doc.body.textContent || '' : '';
+            const words = bodyText.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'\n\r\t]/g, ' ').split(/\s+/).filter(w => w.length > 1);
+            const wordCount = words.length;
+
+            const serviceKeyword = (page.service || '').toLowerCase().trim();
+            
+            let keywordOccurrences = 0;
+            if (serviceKeyword) {
+                const textLower = bodyText.toLowerCase();
+                let pos = textLower.indexOf(serviceKeyword);
+                while (pos !== -1) {
+                    keywordOccurrences++;
+                    pos = textLower.indexOf(serviceKeyword, pos + serviceKeyword.length);
+                }
+            }
+
+            const keywordWordCount = serviceKeyword.split(/\s+/).length;
+            const density = wordCount > 0 ? (keywordOccurrences * keywordWordCount / wordCount) * 100 : 0;
+
+            let densityScore = 0;
+            let densityStatus = 'pass';
+            let densityMessage = '';
+
+            if (density === 0) {
+                densityStatus = 'fail';
+                densityMessage = `Target keyword phrase "${page.service}" does not appear in body text.`;
+            } else if (density < 0.5) {
+                densityScore = 10;
+                densityStatus = 'warning';
+                densityMessage = `Low keyword density (${density.toFixed(2)}%). Consider mentioning "${page.service}" more naturally in content.`;
+            } else if (density > 4.5) {
+                densityScore = 12;
+                densityStatus = 'warning';
+                densityMessage = `High keyword density (${density.toFixed(2)}%). Avoid keyword stuffing, keep it natural to avoid search penalties.`;
+            } else {
+                densityScore = 20;
+                densityMessage = `Optimal keyword density (${density.toFixed(2)}%). target keyword "${page.service}" is mentioned ${keywordOccurrences} times.`;
+            }
+            totalScore += densityScore;
+            audits.push({
+                name: 'Keyword Density & Optimization',
+                score: densityScore,
+                max: 20,
+                status: densityStatus,
+                message: densityMessage,
+                details: `Checks how frequently the primary service name "${page.service}" is used. Optimal density is between 0.5% and 4.0% of total word count (${wordCount} words).`
+            });
+
+            // 5. Schema Markup Audit (Max 20 points)
+            const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+            let schemaScore = 0;
+            let schemaStatus = 'fail';
+            let schemaMessage = 'LocalBusiness Schema markup is missing.';
+
+            scripts.forEach(script => {
+                const content = script.textContent;
+                if (content.includes('LocalBusiness') || content.includes('PostalAddress')) {
+                    schemaScore = 20;
+                    schemaStatus = 'pass';
+                    schemaMessage = 'Valid LocalBusiness structured data (Schema.org) JSON-LD markup is present on this page.';
+                }
+            });
+            totalScore += schemaScore;
+            audits.push({
+                name: 'Structured Schema Markup',
+                score: schemaScore,
+                max: 20,
+                status: schemaStatus,
+                message: schemaMessage,
+                details: 'Structured Schema markup enables rich snippets in search engine results and helps crawler bots identify local business physical details instantly.'
+            });
+
+            // Render Results
+            scoreText.textContent = `${totalScore}%`;
+            
+            // Set circle progress
+            const circumference = 213.6;
+            const offset = circumference - (circumference * totalScore / 100);
+            scoreCircle.style.strokeDashoffset = offset;
+
+            // Set Grade and Advice
+            if (totalScore >= 90) {
+                scoreGrade.textContent = 'Excellent SEO Health';
+                scoreGrade.style.color = '#10b981';
+                scoreAdvice.textContent = 'Your generated landing page follows best practices and is optimized for local search engines.';
+                scoreCircle.setAttribute('stroke', '#10b981');
+            } else if (totalScore >= 70) {
+                scoreGrade.textContent = 'Good SEO Health';
+                scoreGrade.style.color = '#3b82f6';
+                scoreAdvice.textContent = 'The page looks solid but has room for slight enhancements to boost local authority.';
+                scoreCircle.setAttribute('stroke', '#3b82f6');
+            } else if (totalScore >= 50) {
+                scoreGrade.textContent = 'Fair SEO Health';
+                scoreGrade.style.color = '#f59e0b';
+                scoreAdvice.textContent = 'Several key SEO factors are missing or sub-optimal. Review the suggestions below.';
+                scoreCircle.setAttribute('stroke', '#f59e0b');
+            } else {
+                scoreGrade.textContent = 'Needs Optimization';
+                scoreGrade.style.color = '#ef4444';
+                scoreAdvice.textContent = 'Critical issues identified. Update the page copy or configurations to improve rankings.';
+                scoreCircle.setAttribute('stroke', '#ef4444');
+            }
+
+            // Render Checklist Items
+            checklistItems.innerHTML = '';
+            audits.forEach(audit => {
+                const item = document.createElement('div');
+                item.style.background = 'rgba(255, 255, 255, 0.02)';
+                item.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+                item.style.borderRadius = '10px';
+                item.style.padding = '1.25rem';
+                item.style.display = 'flex';
+                item.style.flexDirection = 'column';
+                item.style.gap = '0.5rem';
+
+                let iconClass = 'fa-check-circle';
+                let iconColor = '#10b981';
+                let bgBadge = 'rgba(16, 185, 129, 0.1)';
+                let borderBadge = 'rgba(16, 185, 129, 0.2)';
+
+                if (audit.status === 'warning') {
+                    iconClass = 'fa-exclamation-circle';
+                    iconColor = '#f59e0b';
+                    bgBadge = 'rgba(245, 158, 11, 0.1)';
+                    borderBadge = 'rgba(245, 158, 11, 0.2)';
+                } else if (audit.status === 'fail') {
+                    iconClass = 'fa-times-circle';
+                    iconColor = '#ef4444';
+                    bgBadge = 'rgba(239, 68, 68, 0.1)';
+                    borderBadge = 'rgba(239, 68, 68, 0.2)';
+                }
+
+                item.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: #fff;">
+                            <i class="fas ${iconClass}" style="color: ${iconColor}; font-size: 1.1rem;"></i>
+                            <span>${audit.name}</span>
+                        </div>
+                        <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; background: ${bgBadge}; color: ${iconColor}; border: 1px solid ${borderBadge};">
+                            ${audit.score} / ${audit.max} Pts
+                        </span>
+                    </div>
+                    <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4;">${audit.message}</p>
+                    <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px; padding-top: 6px; border-top: 1px dashed rgba(255, 255, 255, 0.05);">
+                        <strong>SEO Guideline:</strong> ${audit.details}
+                    </div>
+                `;
+                checklistItems.appendChild(item);
+            });
+
+        } catch (err) {
+            console.error('Error running SEO checklist audit:', err);
+            checklistItems.innerHTML = `
+                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 1rem; color: #ef4444; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Failed to perform SEO Checklist audit. Ensure the landing page url is accessible.</span>
+                </div>
+            `;
+            scoreGrade.textContent = 'Error';
+            scoreGrade.style.color = '#ef4444';
+            scoreAdvice.textContent = 'The page content could not be fetched or parsed.';
+        }
     }
 
     // Trigger rankings load
