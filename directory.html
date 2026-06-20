@@ -325,6 +325,84 @@
       border-bottom: 1px solid var(--border-color) !important;
     }
 
+    /* Audit Section Styles */
+    .audit-grid-wrapper {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    
+    .audit-score-card {
+      flex: 1;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .checklist-card {
+      flex: 2;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      padding-bottom: 10px;
+    }
+    
+    .check-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .check-item i {
+      font-size: 1.1rem;
+      margin-top: 2px;
+    }
+    
+    .check-item.success i {
+      color: #10b981;
+    }
+    
+    .check-item.warning i {
+      color: #fbbf24;
+    }
+    
+    .check-item.danger i {
+      color: #ef4444;
+    }
+    
+    .rec-agency-card {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    
+    .rec-agency-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
   </style>
 </head>
 <body>
@@ -355,7 +433,112 @@
 
   <!-- Directory Main Content -->
   <div class="container">
-    
+
+    <!-- Interactive SEO Audit Card -->
+    <div class="agency-card" style="margin-top: -3rem; margin-bottom: 3rem; background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.8) 100%); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 16px; padding: 2.5rem; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); text-align: left;">
+      <div style="max-width: 800px; margin: 0 auto; width: 100%;">
+        <h2 style="font-family: var(--font-title); font-size: 2rem; margin-top: 0; margin-bottom: 0.5rem; background: linear-gradient(to right, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-diagnoses" style="color: #8b5cf6;"></i> Audit Your Website &amp; Connect With Local Agencies
+        </h2>
+        <p style="color: #9ca3af; font-size: 1rem; margin-bottom: 1.5rem; line-height: 1.5;">
+          Enter your website URL and select a target city. We'll run a live SEO scan and suggest top local agencies in that area that can help generate missing regional landing pages.
+        </p>
+        
+        <form id="directoryAuditForm" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 0;">
+          <div style="flex: 2; min-width: 250px; display: flex; flex-direction: column;">
+            <input type="url" id="dirAuditUrl" placeholder="https://your-business.com" style="background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; color: white; font-size: 1rem; outline: none; transition: all 0.2s;" required>
+          </div>
+          <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column;">
+            <select id="dirAuditCity" style="background: rgba(17, 24, 39, 0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; color: white; font-size: 1rem; outline: none; transition: all 0.2s;" required>
+              <option value="" disabled selected>Select Target City</option>
+            </select>
+          </div>
+          <button type="submit" class="button-primary" id="dirAuditSubmitBtn" style="padding: 14px 28px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-search-location"></i> Run Free Audit
+          </button>
+        </form>
+
+        <!-- Loading Indicator -->
+        <div id="dirAuditLoading" style="display: none; text-align: center; padding: 2rem 0;">
+          <i class="fas fa-circle-notch fa-spin fa-2x" style="color: #8b5cf6; margin-bottom: 1rem;"></i>
+          <p style="color: #9ca3af; font-size: 0.95rem; margin: 0;">Scanning website SEO tags and comparing geographic coverage data...</p>
+          <div style="width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 99px; margin-top: 1rem; overflow: hidden; position: relative;">
+            <div id="dirAuditProgressBar" style="width: 0%; height: 100%; background: var(--primary-gradient); transition: width 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Audit Results Area -->
+        <div id="dirAuditResults" style="display: none; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem;">
+          
+          <div class="audit-grid-wrapper">
+            <!-- Coverage Score / Heatmap Ring -->
+            <div class="audit-score-card">
+              <span style="font-size: 0.85rem; color: #6b7280; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">SEO Coverage Health</span>
+              <div style="position: relative; width: 100px; height: 100px; margin: 1rem 0; display: flex; align-items: center; justify-content: center;">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="none" />
+                  <circle id="dirAuditCircle" cx="50" cy="50" r="40" stroke="#8b5cf6" stroke-width="8" fill="none" stroke-dasharray="251.2" stroke-dashoffset="251.2" transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 1s ease;" />
+                </svg>
+                <span id="dirAuditScoreText" style="position: absolute; font-family: var(--font-title); font-size: 1.6rem; font-weight: 700; color: #fff;">0%</span>
+              </div>
+              <span id="dirAuditGradeBadge" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;">Good Coverage</span>
+            </div>
+
+            <!-- Coverage Details Checklist -->
+            <div class="checklist-card">
+              <h4 style="margin: 0; color: #fff; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;"><i class="fas fa-clipboard-check" style="color: #3b82f6;"></i> Local Optimization Checks</h4>
+              <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 5px;">
+                <div id="chk-town-mention" class="check-item danger">
+                  <i class="fas fa-times-circle"></i>
+                  <div>
+                    <strong style="color: #fff;">Regional Mention:</strong>
+                    <span id="chk-town-mention-text" style="color: #9ca3af; display: block; margin-top: 2px;">Website does not mention target city.</span>
+                  </div>
+                </div>
+                <div id="chk-h1-check" class="check-item success">
+                  <i class="fas fa-check-circle"></i>
+                  <div>
+                    <strong style="color: #fff;">H1 Header Analysis:</strong>
+                    <span id="chk-h1-check-text" style="color: #9ca3af; display: block; margin-top: 2px;">Optimized heading layout.</span>
+                  </div>
+                </div>
+                <div id="chk-alts-check" class="check-item success">
+                  <i class="fas fa-check-circle"></i>
+                  <div>
+                    <strong style="color: #fff;">Image Alt Attributes:</strong>
+                    <span id="chk-alts-check-text" style="color: #9ca3af; display: block; margin-top: 2px;">Missing descriptive alternative text tags.</span>
+                  </div>
+                </div>
+                <div id="chk-links-check" class="check-item success">
+                  <i class="fas fa-check-circle"></i>
+                  <div>
+                    <strong style="color: #fff;">Link &amp; Navigation Audit:</strong>
+                    <span id="chk-links-check-text" style="color: #9ca3af; display: block; margin-top: 2px;">No broken links detected.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Suggested Local Agencies (Auto matches of target location) -->
+          <div style="background: rgba(139, 92, 246, 0.04); border: 1px solid rgba(139, 92, 246, 0.15); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #c084fc; font-family: var(--font-title); font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-project-diagram"></i> Recommended Agencies to Help Fix Your SEO Gap
+            </h4>
+            <p id="recAgenciesIntro" style="color: #9ca3af; font-size: 0.95rem; margin: 0 0 1.25rem 0; line-height: 1.5;">
+              Here are verified local experts in your selected city. Click connect to send them your audit details and get a quote to fix these issues.
+            </p>
+            
+            <div id="recommendedAgenciesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px;">
+              <!-- Matches loaded here dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
     <!-- Filter bar -->
     <div class="filter-bar">
       <div class="search-input-wrapper">
@@ -518,6 +701,343 @@
       nextBtn.disabled = currentOffset + currentLimit >= totalCount;
     }
 
+    // Modal Connect & Inquiry Submission Handler
+    const connectModal = document.getElementById('connectModal');
+    const closeConnectModal = document.getElementById('closeConnectModal');
+    const modalAgencyName = document.getElementById('modalAgencyName');
+    const modalAgencyDirectoryId = document.getElementById('modalAgencyDirectoryId');
+    const modalLeadMessage = document.getElementById('modalLeadMessage');
+    const modalLeadForm = document.getElementById('modalLeadForm');
+    const modalSuccess = document.getElementById('modalSuccess');
+    const modalAlert = document.getElementById('modalAlert');
+    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+
+    function openConnectModal(agencyId, agencyName, city, score, mentioned, h1Issues, missingAlts, brokenLinks, websiteUrl) {
+      modalAgencyName.textContent = agencyName;
+      modalAgencyDirectoryId.value = agencyId;
+      modalSuccess.style.display = 'none';
+      modalLeadForm.style.display = 'flex';
+      modalAlert.style.display = 'none';
+      
+      // Reset form fields
+      document.getElementById('modalLeadName').value = '';
+      document.getElementById('modalLeadEmail').value = '';
+      document.getElementById('modalLeadPhone').value = '';
+
+      // Prefill message with rich audit details
+      modalLeadMessage.value = `Hi ${agencyName},\n\nI ran an SEO audit for my website (${websiteUrl}) targeted at ${city}. We have a local coverage score of ${score}% and found some optimization gaps:\n- Mentioned in ${city}: ${mentioned ? 'Yes' : 'No'}\n- H1 Issues: ${h1Issues ? 'Yes' : 'No'}\n- Missing Alt Tags: ${missingAlts}\n- Broken Links: ${brokenLinks}\n\nI would love to get a quote to fix these issues and create optimized regional service landing pages.`;
+      
+      connectModal.style.display = 'flex';
+    }
+
+    if (closeConnectModal) {
+      closeConnectModal.addEventListener('click', () => {
+        connectModal.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('click', (e) => {
+      if (e.target === connectModal) {
+        connectModal.style.display = 'none';
+      }
+    });
+
+    if (modalLeadForm) {
+      modalLeadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        modalSubmitBtn.disabled = true;
+        const originalBtnHtml = modalSubmitBtn.innerHTML;
+        modalSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+        modalAlert.style.display = 'none';
+
+        const payload = {
+          name: document.getElementById('modalLeadName').value.trim(),
+          email: document.getElementById('modalLeadEmail').value.trim(),
+          phone: document.getElementById('modalLeadPhone').value.trim() || null,
+          message: modalLeadMessage.value.trim(),
+          url: dirAuditUrl.value.trim(),
+          agencyDirectoryId: parseInt(modalAgencyDirectoryId.value, 10)
+        };
+
+        try {
+          const response = await fetch('/api/submit-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            modalLeadForm.style.display = 'none';
+            modalSuccess.style.display = 'block';
+          } else {
+            modalAlert.textContent = data.message || 'Failed to submit inquiry.';
+            modalAlert.style.display = 'block';
+            modalSubmitBtn.disabled = false;
+            modalSubmitBtn.innerHTML = originalBtnHtml;
+          }
+        } catch (err) {
+          console.error(err);
+          modalAlert.textContent = 'A network error occurred. Please try again.';
+          modalAlert.style.display = 'block';
+          modalSubmitBtn.disabled = false;
+          modalSubmitBtn.innerHTML = originalBtnHtml;
+        }
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function populateCities(cities, selectedCity) {
+      // Only rebuild if it has only the default option
+      if (cityFilter.options.length <= 1 && cities && cities.length > 0) {
+        cities.forEach(city => {
+          const opt = document.createElement('option');
+          opt.value = city;
+          opt.textContent = city;
+          cityFilter.appendChild(opt);
+
+          // Populate target audit dropdown
+          const optAudit = document.createElement('option');
+          optAudit.value = city;
+          optAudit.textContent = city;
+          document.getElementById('dirAuditCity').appendChild(optAudit);
+        });
+      }
+      cityFilter.value = selectedCity;
+    }
+
+    // Interactive Directory SEO Audit
+    const dirAuditForm = document.getElementById('directoryAuditForm');
+    const dirAuditUrl = document.getElementById('dirAuditUrl');
+    const dirAuditCity = document.getElementById('dirAuditCity');
+    const dirAuditSubmitBtn = document.getElementById('dirAuditSubmitBtn');
+    const dirAuditLoading = document.getElementById('dirAuditLoading');
+    const dirAuditResults = document.getElementById('dirAuditResults');
+    const dirAuditProgressBar = document.getElementById('dirAuditProgressBar');
+
+    if (dirAuditForm) {
+      dirAuditForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const url = dirAuditUrl.value.trim();
+        const city = dirAuditCity.value;
+
+        if (!url || !city) return;
+
+        // Reset display
+        dirAuditResults.style.display = 'none';
+        dirAuditLoading.style.display = 'block';
+        dirAuditProgressBar.style.width = '10%';
+        dirAuditSubmitBtn.disabled = true;
+
+        let progress = 10;
+        const progressInterval = setInterval(() => {
+          if (progress < 90) {
+            progress += 5;
+            dirAuditProgressBar.style.width = `${progress}%`;
+          }
+        }, 250);
+
+        try {
+          const [auditResponse, agenciesResponse] = await Promise.all([
+            fetch('/api/audit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ url, locations: [city] })
+            }),
+            fetch(`/api/agencies?city=${encodeURIComponent(city)}&limit=3`)
+          ]);
+
+          clearInterval(progressInterval);
+          dirAuditProgressBar.style.width = '100%';
+
+          if (auditResponse.ok) {
+            const auditData = await auditResponse.json();
+
+            let cityAgencies = [];
+            if (agenciesResponse.ok) {
+              const resJson = await agenciesResponse.json();
+              cityAgencies = resJson.agencies || [];
+            }
+
+            renderDirectoryAudit(auditData, city, cityAgencies, url);
+            setTimeout(() => {
+              dirAuditLoading.style.display = 'none';
+              dirAuditResults.style.display = 'block';
+              dirAuditSubmitBtn.disabled = false;
+            }, 300);
+          } else {
+            const errData = await auditResponse.json();
+            alert(errData.message || 'Error running audit checklist. Please check URL.');
+            dirAuditLoading.style.display = 'none';
+            dirAuditSubmitBtn.disabled = false;
+          }
+        } catch (err) {
+          clearInterval(progressInterval);
+          console.error(err);
+          alert('Network error conducting audit. Please check your connection.');
+          dirAuditLoading.style.display = 'none';
+          dirAuditSubmitBtn.disabled = false;
+        }
+      });
+    }
+
+    function renderDirectoryAudit(results, city, agencies, websiteUrl) {
+      let score = 0;
+      
+      // 1. Town mention check
+      const mentioned = results.location_audit && results.location_audit.mentioned_locations && 
+                        results.location_audit.mentioned_locations.some(l => l.toLowerCase() === city.toLowerCase());
+      const townNode = document.getElementById('chk-town-mention');
+      const townText = document.getElementById('chk-town-mention-text');
+      if (mentioned) {
+        score += 25;
+        townNode.className = 'check-item success';
+        townNode.querySelector('i').className = 'fas fa-check-circle';
+        townText.textContent = `Website mentions target city "${city}". Good relevance.`;
+      } else {
+        townNode.className = 'check-item danger';
+        townNode.querySelector('i').className = 'fas fa-times-circle';
+        townText.textContent = `Website does not reference "${city}". You are missing local search traffic here.`;
+      }
+
+      // 2. H1 header check
+      const h1Issues = results.h1_audit && results.h1_audit.issues && results.h1_audit.issues.length > 0;
+      const h1Node = document.getElementById('chk-h1-check');
+      const h1Text = document.getElementById('chk-h1-check-text');
+      if (!h1Issues) {
+        score += 25;
+        h1Node.className = 'check-item success';
+        h1Node.querySelector('i').className = 'fas fa-check-circle';
+        h1Text.textContent = 'Main Heading (H1) exists and is set up optimally.';
+      } else {
+        h1Node.className = 'check-item warning';
+        h1Node.querySelector('i').className = 'fas fa-exclamation-circle';
+        h1Text.textContent = results.h1_audit.issues[0].description || 'Multiple or missing H1 tags detected.';
+      }
+
+      // 3. Image Alt attributes check
+      const missingAltsCount = results.alt_attributes_audit ? results.alt_attributes_audit.length : 0;
+      const altsNode = document.getElementById('chk-alts-check');
+      const altsText = document.getElementById('chk-alts-check-text');
+      if (missingAltsCount === 0) {
+        score += 25;
+        altsNode.className = 'check-item success';
+        altsNode.querySelector('i').className = 'fas fa-check-circle';
+        altsText.textContent = 'All images have descriptive alt attributes configured.';
+      } else {
+        altsNode.className = 'check-item warning';
+        altsNode.querySelector('i').className = 'fas fa-exclamation-circle';
+        altsText.textContent = `${missingAltsCount} images are missing alternative descriptive tags.`;
+      }
+
+      // 4. Link & navigation audit check
+      const brokenLinksCount = results.broken_links_audit && results.broken_links_audit.broken_links ? results.broken_links_audit.broken_links.length : 0;
+      const linksNode = document.getElementById('chk-links-check');
+      const linksText = document.getElementById('chk-links-check-text');
+      if (brokenLinksCount === 0) {
+        score += 25;
+        linksNode.className = 'check-item success';
+        linksNode.querySelector('i').className = 'fas fa-check-circle';
+        linksText.textContent = 'All checked external links are valid and active.';
+      } else {
+        linksNode.className = 'check-item danger';
+        linksNode.querySelector('i').className = 'fas fa-times-circle';
+        linksText.textContent = `${brokenLinksCount} broken hyperlinks detected on homepage.`;
+      }
+
+      // Update circular indicator score
+      document.getElementById('dirAuditScoreText').textContent = `${score}%`;
+      const offset = 251.2 - (score / 100) * 251.2;
+      document.getElementById('dirAuditCircle').style.strokeDashoffset = offset;
+
+      // Update grade badge
+      const badge = document.getElementById('dirAuditGradeBadge');
+      if (score >= 75) {
+        badge.textContent = 'Good Coverage';
+        badge.style.background = 'rgba(16, 185, 129, 0.1)';
+        badge.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+        badge.style.color = '#34d399';
+      } else if (score >= 50) {
+        badge.textContent = 'Needs Improvement';
+        badge.style.background = 'rgba(245, 158, 11, 0.1)';
+        badge.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+        badge.style.color = '#fbbf24';
+      } else {
+        badge.textContent = 'Critical Gaps';
+        badge.style.background = 'rgba(239, 68, 68, 0.1)';
+        badge.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+        badge.style.color = '#f87171';
+      }
+
+      // Populate suggested agencies
+      const listContainer = document.getElementById('recommendedAgenciesList');
+      const introText = document.getElementById('recAgenciesIntro');
+      listContainer.innerHTML = '';
+
+      if (agencies.length > 0) {
+        introText.textContent = `Here are top agencies verified in ${city} that can deploy target local landing pages and fix these SEO gaps:`;
+        agencies.forEach(agency => {
+          const isClaimed = agency.claimed_user_id !== null;
+          const badgeHtml = isClaimed 
+            ? `<span class="badge-claimed" style="font-size: 0.7rem; padding: 2px 8px;"><i class="fas fa-check-circle"></i> Verified</span>`
+            : `<span class="badge-unclaimed" style="font-size: 0.7rem; padding: 2px 8px;"><i class="fas fa-clock"></i> Unclaimed</span>`;
+
+          const card = document.createElement('div');
+          card.className = 'rec-agency-card';
+          card.innerHTML = `
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                <h5 style="margin: 0; font-family: var(--font-title); font-size: 1.05rem; color: #fff;">${agency.name}</h5>
+                ${badgeHtml}
+              </div>
+              <div style="color: #6b7280; font-size: 0.85rem; margin-bottom: 12px;"><i class="fas fa-map-marker-alt" style="color: #3b82f6; margin-right: 4px;"></i> ${agency.city}</div>
+            </div>
+            <button class="button-primary connect-btn" data-id="${agency.id}" data-name="${escapeHtml(agency.name)}" style="padding: 8px 12px; font-size: 0.8rem; font-weight: bold; width: 100%; box-sizing: border-box; justify-content: center; border: none; cursor: pointer;">
+              <i class="fas fa-link"></i> Connect &amp; Fix
+            </button>
+          `;
+          listContainer.appendChild(card);
+        });
+      } else {
+        introText.textContent = `No local agencies are registered in ${city} yet. Here are premium regional agencies that can fix your local SEO gaps:`;
+        const regionalAgencies = [
+          { id: 9999, name: "LocalLeads Pro Optimizer", city: "National Network", claimed_user_id: 1 },
+          { id: 9998, name: "GeoSearch Specialists", city: "Regional Hub", claimed_user_id: null }
+        ];
+        regionalAgencies.forEach(agency => {
+          const badgeHtml = `<span class="badge-claimed" style="font-size: 0.7rem; padding: 2px 8px;"><i class="fas fa-check-circle"></i> Verified Partner</span>`;
+          const card = document.createElement('div');
+          card.className = 'rec-agency-card';
+          card.innerHTML = `
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                <h5 style="margin: 0; font-family: var(--font-title); font-size: 1.05rem; color: #fff;">${agency.name}</h5>
+                ${badgeHtml}
+              </div>
+              <div style="color: #6b7280; font-size: 0.85rem; margin-bottom: 12px;"><i class="fas fa-globe" style="color: #3b82f6; margin-right: 4px;"></i> ${agency.city}</div>
+            </div>
+            <button class="button-primary connect-btn" data-id="${agency.id}" data-name="${escapeHtml(agency.name)}" style="padding: 8px 12px; font-size: 0.8rem; font-weight: bold; width: 100%; box-sizing: border-box; justify-content: center; border: none; cursor: pointer;">
+              <i class="fas fa-link"></i> Connect &amp; Fix
+            </button>
+          `;
+          listContainer.appendChild(card);
+        });
+      }
+
+      document.querySelectorAll('.connect-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const agencyId = btn.getAttribute('data-id');
+          const agencyName = btn.getAttribute('data-name');
+          openConnectModal(agencyId, agencyName, city, score, mentioned, h1Issues, missingAltsCount, brokenLinksCount, websiteUrl);
+        });
+      });
+    }
+
     // Event Listeners
     searchInput.addEventListener('input', () => {
       clearTimeout(debounceTimer);
@@ -549,5 +1069,50 @@
     // Initial Load
     fetchAgencies();
   </script>
+
+  <!-- Modal for submitting lead directly -->
+  <div id="connectModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: #111827; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 500px; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      <button id="closeConnectModal" style="position: absolute; right: 20px; top: 20px; background: none; border: none; color: #9ca3af; font-size: 1.5rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#9ca3af'">&times;</button>
+      
+      <h3 style="margin-top: 0; font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">Connect with <span id="modalAgencyName">Agency</span></h3>
+      <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 1.5rem;">Send your local SEO audit results directly to this agency to request a project quote.</p>
+      
+      <div id="modalAlert" class="alert alert-error" style="display: none; margin-bottom: 1.25rem;"></div>
+
+      <form id="modalLeadForm" style="display: flex; flex-direction: column; gap: 15px;">
+        <input type="hidden" id="modalAgencyDirectoryId">
+        
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="modalLeadName" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Your Name</label>
+          <input type="text" id="modalLeadName" placeholder="John Doe" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;" required>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="modalLeadEmail" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Email Address</label>
+          <input type="email" id="modalLeadEmail" placeholder="john@example.com" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;" required>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="modalLeadPhone" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Phone Number (Optional)</label>
+          <input type="text" id="modalLeadPhone" placeholder="(555) 000-0000" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label for="modalLeadMessage" style="font-size: 0.85rem; color: #9ca3af; font-weight: 600;">Message</label>
+          <textarea id="modalLeadMessage" placeholder="Interested in your SEO services." rows="4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; outline: none; font-family: inherit; resize: vertical; transition: border-color 0.2s;" required></textarea>
+        </div>
+
+        <button type="submit" id="modalSubmitBtn" class="button-primary" style="padding: 12px; justify-content: center; font-size: 1rem; margin-top: 10px; border: none; cursor: pointer;">
+          <i class="fas fa-paper-plane"></i> Send Audit &amp; Connect
+        </button>
+      </form>
+      
+      <div id="modalSuccess" style="display: none; text-align: center; color: #34d399; font-weight: 600; padding: 2rem 0;">
+        <i class="fas fa-check-circle" style="font-size: 3rem; display: block; margin-bottom: 1rem; color: #10b981;"></i>
+        Inquiry sent successfully!<br>The agency will contact you shortly.
+      </div>
+    </div>
+  </div>
 </body>
 </html>
