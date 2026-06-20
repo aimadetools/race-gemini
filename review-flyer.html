@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Printable Review Flyer Generator - LocalLeads</title>
+  <link href="style.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <style>
+    /* Styling for the interactive page builder */
+    body {
+      background-color: #0f172a;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar controls */
+    .sidebar {
+      width: 360px;
+      background: #1e293b;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem 1.5rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      overflow-y: auto;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar h2 i {
+      color: #3b82f6;
+    }
+
+    .sidebar p.desc {
+      color: #9ca3af;
+      font-size: 0.85rem;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .form-input {
+      background: rgba(15, 23, 42, 0.6);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+
+    .color-picker-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .color-picker {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 44px;
+      height: 44px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .color-picker::-webkit-color-swatch {
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .layout-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .layout-card.active {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+    .layout-card i {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      color: #9ca3af;
+    }
+
+    .layout-card.active i {
+      color: #3b82f6;
+    }
+
+    .layout-card div {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .platforms-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .platform-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .platform-checkbox input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s;
+      margin-top: auto;
+    }
+
+    .btn-print:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Main preview area */
+    .preview-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+      overflow-y: auto;
+      height: 100vh;
+      box-sizing: border-box;
+      background: radial-gradient(circle at top, #1e293b 0%, #0b0f19 100%);
+    }
+
+    /* Printed paper mockup styles */
+    .paper-canvas {
+      background: #ffffff;
+      color: #0f172a;
+      width: 8.5in;
+      height: 11in;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    /* Countertop Tent Layout (2-sided landscape) */
+    .paper-canvas.layout-table-tent {
+      width: 11in;
+      height: 8.5in;
+      flex-direction: row;
+    }
+
+    /* Window Decal Layout */
+    .paper-canvas.layout-decal {
+      width: 8.5in;
+      height: 8.5in;
+      border-radius: 50%;
+    }
+
+    /* Portrait Flyer Elements */
+    .flyer-content {
+      padding: 3rem;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .flyer-header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .flyer-logo-wrapper {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flyer-logo {
+      max-height: 100%;
+      max-width: 250px;
+      object-fit: contain;
+    }
+
+    .flyer-headline {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: #1e3a8a;
+      line-height: 1.15;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .flyer-accent-bar {
+      width: 80px;
+      height: 5px;
+      background-color: #3b82f6;
+      border-radius: 4px;
+    }
+
+    .flyer-subheadline {
+      font-size: 1.25rem;
+      color: #475569;
+      line-height: 1.5;
+      max-width: 500px;
+      margin: 0;
+    }
+
+    .flyer-qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .flyer-qr-border {
+      padding: 1.5rem;
+      border: 3px solid #3b82f6;
+      border-radius: 20px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    .flyer-qr-image {
+      width: 240px;
+      height: 240px;
+    }
+
+    .flyer-qr-caption {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flyer-steps {
+      display: flex;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 580px;
+      justify-content: space-between;
+    }
+
+    .step-card {
+      flex: 1;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #3b82f6;
+      color: white;
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      line-height: 1.3;
+    }
+
+    .flyer-footer {
+      width: 100%;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .platforms-list {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .platform-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .platform-badge.google i { color: #ea4335; }
+    .platform-badge.facebook i { color: #1877f2; }
+    .platform-badge.yelp i { color: #d32323; }
+
+    .powered-by {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* Table Tent Specific Layout Styles */
+    .tent-side {
+      width: 50%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .tent-side.side-back {
+      border-right: 1px dashed #cbd5e1;
+      transform: rotate(180deg); /* Back side stands upside down so when folded it stands right side up! */
+    }
+
+    .tent-fold-line {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      border-right: 1px dashed #cbd5e1;
+    }
+
+    /* Decal Specific Styles */
+    .decal-content {
+      padding: 3.5rem;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      border: 15px solid #3b82f6;
+      border-radius: 50%;
+      margin: 1.5rem;
+    }
+
+    /* Print overrides */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        display: block !important;
+        height: auto !important;
+        min-height: auto !important;
+      }
+
+      .sidebar {
+        display: none !important;
+      }
+
+      .preview-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+      }
+
+      .paper-canvas {
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        page-break-after: always !important;
+        transform: scale(1) !important; /* Reset visual scaling for printing */
+        left: 0 !important;
+        top: 0 !important;
+      }
+
+      .paper-canvas.layout-flyer {
+        width: 8.5in !important;
+        height: 11in !important;
+      }
+
+      .paper-canvas.layout-table-tent {
+        width: 11in !important;
+        height: 8.5in !important;
+      }
+
+      .paper-canvas.layout-decal {
+        width: 8.5in !important;
+        height: 8.5in !important;
+      }
+
+      /* Force background colors and borders in print */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Panel -->
+  <div class="sidebar">
+    <h2><i class="fas fa-magic"></i> Flyer Customizer</h2>
+    <p class="desc">Design and print high-converting feedback flyers and table cards. Put them on counters or in service vans to collect reviews.</p>
+
+    <!-- Layout Picker -->
+    <div class="form-group">
+      <label>Select Template Layout</label>
+      <div class="layout-grid">
+        <div class="layout-card active" data-layout="flyer">
+          <i class="far fa-file-alt"></i>
+          <div>A4/Letter Flyer</div>
+        </div>
+        <div class="layout-card" data-layout="table-tent">
+          <i class="fas fa-laptop-code" style="transform: rotate(90deg);"></i>
+          <div>Table Tent</div>
+        </div>
+        <div class="layout-card" data-layout="decal">
+          <i class="far fa-dot-circle"></i>
+          <div>Decal Badge</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accent Color Selector -->
+    <div class="form-group">
+      <label for="color-picker-input">Theme Accent Color</label>
+      <div class="color-picker-wrapper">
+        <input type="color" id="color-picker-input" class="color-picker" value="#3b82f6" />
+        <input type="text" id="color-picker-text" class="form-input" value="#3B82F6" style="flex: 1; font-family: monospace; text-transform: uppercase;" />
+      </div>
+    </div>
+
+    <!-- Headline and text edits -->
+    <div class="form-group">
+      <label for="headline-input">Headline Title</label>
+      <input type="text" id="headline-input" class="form-input" value="How Did We Do?" />
+    </div>
+
+    <div class="form-group">
+      <label for="subheadline-input">Description Message</label>
+      <textarea id="subheadline-input" class="form-input" rows="3" style="resize: none;">Scan the QR code below to share your experience with us. Your feedback helps us serve you better!</textarea>
+    </div>
+
+    <!-- Platform icons toggles -->
+    <div class="form-group">
+      <label>Include Social Platform Badges</label>
+      <div class="platforms-toggle">
+        <label class="platform-checkbox">
+          <input type="checkbox" id="toggle-google" checked />
+          <span>Google Business</span>
+        </label>
+        <label class="platform-checkbox">
+          <input type="checkbox" id="toggle-facebook" checked />
+          <span>Facebook Reviews</span>
+        </label>
+        <label class="platform-checkbox">
+          <input type="checkbox" id="toggle-yelp" checked />
+          <span>Yelp Listing</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Action button -->
+    <button class="btn-print" id="print-action-btn">
+      <i class="fas fa-print"></i> Open Print Dialog
+    </button>
+  </div>
+
+  <!-- Interactive Live Canvas -->
+  <div class="preview-container">
+    <div class="paper-canvas layout-flyer" id="canvas-paper">
+      
+      <!-- Content wrapper will change dynamically based on selected layout -->
+      <div class="flyer-content" id="canvas-content">
+        <!-- Render Portrait Flyer as default -->
+        <div class="flyer-header">
+          <div class="flyer-logo-wrapper" id="canvas-logo-wrapper" style="display: none;">
+            <img src="" alt="Business Logo" class="flyer-logo" id="canvas-logo-img" />
+          </div>
+          <h1 class="flyer-headline" id="canvas-headline">How Did We Do?</h1>
+          <div class="flyer-accent-bar" id="canvas-accent-bar"></div>
+          <p class="flyer-subheadline" id="canvas-subheadline">
+            Scan the QR code below to share your experience with us. Your feedback helps us serve you better!
+          </p>
+        </div>
+
+        <div class="flyer-qr-section">
+          <div class="flyer-qr-border" id="canvas-qr-border">
+            <img src="https://api.qrcode-server.com/v1/create-qr-code/?size=300x300&data=https://localseogen.com" alt="Review QR Code" class="flyer-qr-image" id="canvas-qr-img" />
+          </div>
+          <p class="flyer-qr-caption">
+            <i class="fas fa-camera"></i> Scan to Leave Review
+          </p>
+        </div>
+
+        <div class="flyer-steps">
+          <div class="step-card">
+            <div class="step-num" id="step-num-1">1</div>
+            <div class="step-text">Scan QR Code with Phone Camera</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num" id="step-num-2">2</div>
+            <div class="step-text">Select Rating and Write Review</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num" id="step-num-3">3</div>
+            <div class="step-text">Submit! We Value Your Feedback</div>
+          </div>
+        </div>
+
+        <div class="flyer-footer">
+          <div class="platforms-list" id="canvas-platforms">
+            <div class="platform-badge google" id="badge-google"><i class="fab fa-google"></i> Google</div>
+            <div class="platform-badge facebook" id="badge-facebook"><i class="fab fa-facebook-f"></i> Facebook</div>
+            <div class="platform-badge yelp" id="badge-yelp"><i class="fab fa-yelp"></i> Yelp</div>
+          </div>
+          <div class="powered-by">
+            Powered by LocalLeads
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Configuration state
+      let activeLayout = 'flyer'; // flyer, table-tent, decal
+      let activeColor = '#3b82f6';
+      let businessLogo = '';
+      let businessName = 'Local Business';
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientId = urlParams.get('client');
+
+      // Elements
+      const canvasPaper = document.getElementById('canvas-paper');
+      const canvasContent = document.getElementById('canvas-content');
+      
+      // Control Inputs
+      const colorPickerInput = document.getElementById('color-picker-input');
+      const colorPickerText = document.getElementById('color-picker-text');
+      const headlineInput = document.getElementById('headline-input');
+      const subheadlineInput = document.getElementById('subheadline-input');
+      const toggleGoogle = document.getElementById('toggle-google');
+      const toggleFacebook = document.getElementById('toggle-facebook');
+      const toggleYelp = document.getElementById('toggle-yelp');
+      const printActionBtn = document.getElementById('print-action-btn');
+      
+      // QR link construction
+      const reviewUrl = clientId 
+        ? `${window.location.origin}/review.html?client=${clientId}` 
+        : `${window.location.origin}/review.html`;
+      const qrApiUrl = `https://api.qrcode-server.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(reviewUrl)}`;
+
+      // Setup initial visual scaling of mockup canvas to fit screen beautifully
+      function scaleMockup() {
+        const previewContainer = document.querySelector('.preview-container');
+        if (!previewContainer) return;
+
+        const containerWidth = previewContainer.clientWidth - 96; // subtracting padding
+        const containerHeight = previewContainer.clientHeight - 96;
+
+        let targetWidth = 8.5 * 96; // inches to px approximation (DPI 96)
+        let targetHeight = 11 * 96;
+
+        if (activeLayout === 'table-tent') {
+          targetWidth = 11 * 96;
+          targetHeight = 8.5 * 96;
+        } else if (activeLayout === 'decal') {
+          targetWidth = 8.5 * 96;
+          targetHeight = 8.5 * 96;
+        }
+
+        const scaleX = containerWidth / targetWidth;
+        const scaleY = containerHeight / targetHeight;
+        const scale = Math.min(scaleX, scaleY, 1); // clamp scale to maximum of 1 to preserve sharpness
+
+        canvasPaper.style.transform = `scale(${scale})`;
+      }
+
+      window.addEventListener('resize', scaleMockup);
+
+      // Fetch client profile data (Logo, Name, Theme color)
+      async function loadBusinessData() {
+        if (!clientId) return;
+        try {
+          const response = await fetch(`/api/public-business-info?clientId=${clientId}`);
+          if (response.ok) {
+            const data = await response.json();
+            businessName = data.businessName || 'Local Business';
+            businessLogo = data.logoUrl || '';
+            
+            // Set custom default subheadline with business name
+            subheadlineInput.value = `Scan the QR code below to share your experience with ${businessName}. Your feedback helps us serve you better!`;
+            
+            // If primary color exists, use it
+            if (data.primaryColor && /^#[0-9A-F]{6}$/i.test(data.primaryColor)) {
+              activeColor = data.primaryColor;
+              colorPickerInput.value = activeColor;
+              colorPickerText.value = activeColor.toUpperCase();
+            }
+            
+            updateFlyerDOM();
+          }
+        } catch (err) {
+          console.error('Failed to load business data:', err);
+        }
+      }
+
+      // Render the correct layout contents inside the canvas
+      function updateFlyerDOM() {
+        // Clear paper classes
+        canvasPaper.className = `paper-canvas layout-${activeLayout}`;
+
+        if (activeLayout === 'flyer') {
+          canvasPaper.innerHTML = `
+            <div class="flyer-content">
+              <div class="flyer-header">
+                <div class="flyer-logo-wrapper" style="${businessLogo ? 'display: flex;' : 'display: none;'}">
+                  <img src="${businessLogo}" alt="Business Logo" class="flyer-logo" />
+                </div>
+                <h1 class="flyer-headline" style="color: ${activeColor};">${headlineInput.value}</h1>
+                <div class="flyer-accent-bar" style="background-color: ${activeColor};"></div>
+                <p class="flyer-subheadline">${subheadlineInput.value}</p>
+              </div>
+
+              <div class="flyer-qr-section">
+                <div class="flyer-qr-border" style="border-color: ${activeColor};">
+                  <img src="${qrApiUrl}" alt="Review QR" class="flyer-qr-image" />
+                </div>
+                <p class="flyer-qr-caption" style="color: ${activeColor};">
+                  <i class="fas fa-camera"></i> Scan to Leave Review
+                </p>
+              </div>
+
+              <div class="flyer-steps">
+                <div class="step-card">
+                  <div class="step-num" style="background: ${activeColor};">1</div>
+                  <div class="step-text">Scan QR Code with Phone Camera</div>
+                </div>
+                <div class="step-card">
+                  <div class="step-num" style="background: ${activeColor};">2</div>
+                  <div class="step-text">Select Rating and Write Review</div>
+                </div>
+                <div class="step-card">
+                  <div class="step-num" style="background: ${activeColor};">3</div>
+                  <div class="step-text">Submit! We Value Your Feedback</div>
+                </div>
+              </div>
+
+              <div class="flyer-footer">
+                <div class="platforms-list">
+                  <div class="platform-badge google" style="display: ${toggleGoogle.checked ? 'flex' : 'none'};"><i class="fab fa-google"></i> Google</div>
+                  <div class="platform-badge facebook" style="display: ${toggleFacebook.checked ? 'flex' : 'none'};"><i class="fab fa-facebook-f"></i> Facebook</div>
+                  <div class="platform-badge yelp" style="display: ${toggleYelp.checked ? 'flex' : 'none'};"><i class="fab fa-yelp"></i> Yelp</div>
+                </div>
+                <div class="powered-by">
+                  Powered by LocalLeads
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (activeLayout === 'table-tent') {
+          // Table tent layout features 2 mirroring sides, divided by a dotted line.
+          // Side-Back is rotated 180 degrees so when printed and folded, both sides face right side up.
+          const sideHtml = `
+            <div class="tent-side-wrapper" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100%; width: 100%;">
+              <div class="flyer-logo-wrapper" style="height: 40px; ${businessLogo ? 'display: flex;' : 'display: none;'}">
+                <img src="${businessLogo}" alt="Logo" class="flyer-logo" style="max-height: 100%;" />
+              </div>
+              <h2 style="font-size: 1.75rem; font-weight: 800; text-align: center; color: ${activeColor}; margin: 10px 0 5px 0; text-transform: uppercase;">${headlineInput.value}</h2>
+              <p style="font-size: 0.85rem; color: #475569; text-align: center; margin: 0 0 10px 0; max-width: 320px; line-height: 1.4;">${subheadlineInput.value}</p>
+              
+              <div style="padding: 10px; border: 3px solid ${activeColor}; border-radius: 12px; display: inline-flex; background: #fff;">
+                <img src="${qrApiUrl}" alt="Review QR" style="width: 140px; height: 140px;" />
+              </div>
+              <p style="font-size: 0.9rem; font-weight: 700; color: ${activeColor}; margin: 5px 0 15px 0; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-camera"></i> Scan to Review
+              </p>
+
+              <div style="display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 0.75rem; color: #64748b; font-weight: 700; border-top: 1px solid #f1f5f9; padding-top: 8px; width: 100%;">
+                <span style="display: ${toggleGoogle.checked ? 'inline' : 'none'}"><i class="fab fa-google" style="color: #ea4335;"></i> Google</span>
+                <span style="display: ${toggleFacebook.checked ? 'inline' : 'none'}"><i class="fab fa-facebook" style="color: #1877f2;"></i> Facebook</span>
+                <span style="display: ${toggleYelp.checked ? 'inline' : 'none'}"><i class="fab fa-yelp" style="color: #d32323;"></i> Yelp</span>
+              </div>
+            </div>
+          `;
+
+          canvasPaper.innerHTML = `
+            <div class="tent-side side-back">
+              ${sideHtml}
+            </div>
+            <div class="tent-side side-front">
+              <div class="tent-fold-line"></div>
+              ${sideHtml}
+            </div>
+          `;
+        } else if (activeLayout === 'decal') {
+          canvasPaper.innerHTML = `
+            <div class="decal-content" style="border-color: ${activeColor};">
+              <div class="flyer-logo-wrapper" style="height: 45px; margin-bottom: 5px; ${businessLogo ? 'display: flex;' : 'display: none;'}">
+                <img src="${businessLogo}" alt="Logo" class="flyer-logo" style="max-height: 100%;" />
+              </div>
+              <h1 style="font-size: 2.25rem; font-weight: 900; color: ${activeColor}; text-align: center; margin: 0; text-transform: uppercase; line-height: 1.1;">${headlineInput.value}</h1>
+              
+              <div style="padding: 12px; border: 4px solid ${activeColor}; border-radius: 16px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.04);">
+                <img src="${qrApiUrl}" alt="Review QR" style="width: 180px; height: 180px;" />
+              </div>
+              
+              <div style="text-align: center;">
+                <p style="font-size: 0.95rem; font-weight: 800; color: #1e293b; margin: 0 0 4px 0; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                  <i class="fas fa-mobile-alt"></i> Scan to Leave Review
+                </p>
+                <p style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin: 0;">We appreciate your feedback!</p>
+              </div>
+
+              <div style="display: flex; gap: 12px; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-top: 5px;">
+                <span style="display: ${toggleGoogle.checked ? 'inline' : 'none'}"><i class="fab fa-google" style="color: #ea4335;"></i> Google</span>
+                <span style="display: ${toggleFacebook.checked ? 'inline' : 'none'}"><i class="fab fa-facebook" style="color: #1877f2;"></i> Facebook</span>
+                <span style="display: ${toggleYelp.checked ? 'inline' : 'none'}"><i class="fab fa-yelp" style="color: #d32323;"></i> Yelp</span>
+              </div>
+            </div>
+          `;
+        }
+
+        scaleMockup();
+      }
+
+      // Sidebar controllers listeners
+      document.querySelectorAll('.sidebar .layout-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.sidebar .layout-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          activeLayout = card.dataset.layout;
+          updateFlyerDOM();
+        });
+      });
+
+      colorPickerInput.addEventListener('input', (e) => {
+        activeColor = e.target.value;
+        colorPickerText.value = activeColor.toUpperCase();
+        updateFlyerDOM();
+      });
+
+      colorPickerText.addEventListener('input', (e) => {
+        let val = e.target.value.trim();
+        if (val && !val.startsWith('#')) val = '#' + val;
+        if (/^#[0-9A-F]{6}$/i.test(val)) {
+          activeColor = val;
+          colorPickerInput.value = val;
+          updateFlyerDOM();
+        }
+      });
+
+      headlineInput.addEventListener('input', updateFlyerDOM);
+      subheadlineInput.addEventListener('input', updateFlyerDOM);
+      toggleGoogle.addEventListener('change', updateFlyerDOM);
+      toggleFacebook.addEventListener('change', updateFlyerDOM);
+      toggleYelp.addEventListener('change', updateFlyerDOM);
+
+      printActionBtn.addEventListener('click', () => {
+        window.print();
+      });
+
+      // Load initial data and run
+      loadBusinessData().then(() => {
+        updateFlyerDOM();
+      });
+    });
+  </script>
+</body>
+</html>

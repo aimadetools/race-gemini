@@ -482,6 +482,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
                 }
 
+                // Populate print flyer and QR code buttons
+                const printFlyerBtn = document.getElementById('print-flyer-btn');
+                if (printFlyerBtn && data.clientId) {
+                    printFlyerBtn.href = `/review-flyer.html?client=${data.clientId}`;
+                }
+
+                const downloadQrBtn = document.getElementById('download-qr-btn');
+                if (downloadQrBtn && data.clientId) {
+                    downloadQrBtn.onclick = () => {
+                        const reviewUrl = encodeURIComponent(`${window.location.origin}/review.html?client=${data.clientId}`);
+                        const qrUrl = `https://api.qrcode-server.com/v1/create-qr-code/?size=500x500&data=${reviewUrl}`;
+                        
+                        downloadQrBtn.disabled = true;
+                        const originalText = downloadQrBtn.innerHTML;
+                        downloadQrBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+                        
+                        fetch(qrUrl)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `review-qr-${data.clientId}.png`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                window.URL.revokeObjectURL(url);
+                            })
+                            .catch(err => {
+                                console.error('Failed to download QR code blob, opening in new tab instead:', err);
+                                window.open(qrUrl, '_blank');
+                            })
+                            .finally(() => {
+                                downloadQrBtn.disabled = false;
+                                downloadQrBtn.innerHTML = originalText;
+                            });
+                    };
+                }
+
                 currentDashboardData = data;
                 updateActivationChecklist(data);
                 initializeLocalUpdates(data);
