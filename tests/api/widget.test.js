@@ -144,4 +144,94 @@ describe('Embeddable Service Area Widget API', () => {
         expect(sentContent).toContain('widgetCss = ".custom-class { color: magenta; }"');
         expect(sentContent).toContain('styles + \'\\n\' + widgetCss');
     });
+
+    test('should return reviews widget with fallback reviews if client has no testimonials', async () => {
+        req.query.clientId = '123';
+        req.query.type = 'reviews';
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: null, primary_color: null, google_review_link: 'https://g.page/mybiz' }] };
+            }
+            if (text.includes('SELECT author_name, rating')) {
+                return { rows: [] }; // No testimonials found
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('__localseoReviewsLoaded_123');
+        expect(sentContent).toContain('James Anderson'); // from fallback reviews
+        expect(sentContent).toContain('Sarah Miller');
+        expect(sentContent).toContain('averageRating = 5'); // 5.0 rating for mock fallback reviews
+        expect(sentContent).toContain('reviewLink = "https://g.page/mybiz"');
+    });
+
+    test('should return reviews widget with client reviews and calculate average rating correctly', async () => {
+        req.query.clientId = '123';
+        req.query.type = 'reviews';
+        req.query.layout = 'grid';
+        req.query.theme = 'dark';
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: 'reviews.mybiz.com', primary_color: '#ffaa00', google_review_link: 'https://g.page/mybiz' }] };
+            }
+            if (text.includes('SELECT author_name, rating')) {
+                return { rows: [
+                    { author_name: 'John Doe', rating: 4, review_text: 'Good job', review_date: '2026-06-15T00:00:00.000Z', author_avatar: 'avatar1.png' },
+                    { author_name: 'Jane Smith', rating: 5, review_text: 'Amazing', review_date: '2026-06-16T00:00:00.000Z', author_avatar: null }
+                ] };
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('theme = "dark"');
+        expect(sentContent).toContain('layout = "grid"');
+        expect(sentContent).toContain('baseColor = "#ffaa00"');
+        expect(sentContent).toContain('averageRating = 4.5'); // (4 + 5) / 2 = 4.5
+        expect(sentContent).toContain('John Doe');
+        expect(sentContent).toContain('Jane Smith');
+        expect(sentContent).toContain('Good job');
+        expect(sentContent).toContain('avatar1.png');
+    });
+
+    test('should return reviews widget with carousel layout when layout is not badge or grid', async () => {
+        req.query.clientId = '123';
+        req.query.type = 'reviews';
+        req.query.layout = 'carousel';
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: null, primary_color: null }] };
+            }
+            if (text.includes('SELECT author_name, rating')) {
+                return { rows: [
+                    { author_name: 'John Doe', rating: 5, review_text: 'Perfect', review_date: '2026-06-15T00:00:00.000Z', author_avatar: null }
+                ] };
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('layout = "carousel"');
+        expect(sentContent).toContain('ll-carousel-wrapper');
+        expect(sentContent).toContain('ll-carousel-track');
+    });
 });
