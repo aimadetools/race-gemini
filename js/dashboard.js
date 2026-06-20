@@ -1943,7 +1943,7 @@ document.addEventListener('DOMContentLoaded', () => {
             style.textContent = cssInput.value;
         }
 
-        function updateBaseCssPreview(theme, layout, baseColor) {
+        function updateBaseCssPreview(theme, layout, baseColor, widgetType = 'service-area') {
             let style = document.getElementById('widget-preview-base-styles');
             if (!style) {
                 style = document.createElement('style');
@@ -1951,7 +1951,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.head.appendChild(style);
             }
 
-            style.textContent = `
+            let stylesContent = `
                 .ll-widget-container-${clientId} {
                     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     box-sizing: border-box;
@@ -1961,139 +1961,348 @@ document.addEventListener('DOMContentLoaded', () => {
                 .ll-widget-container-${clientId} * {
                     box-sizing: border-box;
                 }
-                .ll-widget-title-${clientId} {
-                    font-size: 1.1rem;
-                    font-weight: 700;
-                    margin-bottom: 1rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-                .ll-widget-grid-${clientId} {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                    gap: 10px;
-                    width: 100%;
-                }
-                .ll-widget-card-${clientId} {
-                    border-radius: 8px;
-                    padding: 0.75rem;
-                    text-decoration: none;
-                    transition: transform 0.2s ease, box-shadow 0.2s ease;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    border: 1px solid rgba(128,128,128,0.2);
-                    cursor: pointer;
-                }
-                .ll-widget-card-${clientId}:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                }
-                .ll-widget-card-town-${clientId} {
-                    font-weight: 700;
-                    font-size: 0.85rem;
-                    margin-bottom: 4px;
-                }
-                .ll-widget-card-service-${clientId} {
-                    font-size: 0.75rem;
-                    opacity: 0.8;
-                }
-                .ll-widget-list-${clientId} {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                    width: 100%;
-                }
-                .ll-widget-list-item-${clientId} a {
-                    display: inline-block;
-                    padding: 5px 10px;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    text-decoration: none;
-                    font-weight: 500;
-                    transition: background 0.2s ease, transform 0.1s ease;
-                    border: 1px solid rgba(128,128,128,0.2);
-                }
-                .ll-widget-list-item-${clientId} a:hover {
-                    transform: scale(1.02);
-                }
+            `;
 
-                /* Light Theme */
-                .ll-theme-light-${clientId} .ll-widget-card-${clientId} {
-                    background: #ffffff;
-                    color: #1f2937;
-                }
-                .ll-theme-light-${clientId} .ll-widget-card-${clientId}:hover {
-                    border-color: ${baseColor};
-                }
-                .ll-theme-light-${clientId} .ll-widget-card-town-${clientId} {
-                    color: #111827;
-                }
-                .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a {
-                    background: #f3f4f6;
-                    color: #374151;
-                }
-                .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a:hover {
-                    background: ${baseColor};
-                    color: #ffffff;
-                    border-color: ${baseColor};
-                }
-                .ll-theme-light-${clientId} .ll-widget-title-${clientId} {
-                    color: #111827;
-                }
+            if (widgetType === 'reviews') {
+                stylesContent += `
+                    .ll-reviews-container-${clientId} {
+                        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                        box-sizing: border-box;
+                        margin: 1rem 0;
+                        width: 100%;
+                    }
+                    .ll-reviews-container-${clientId} * {
+                        box-sizing: border-box;
+                    }
+                    .ll-reviews-header-${clientId} {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 1.25rem;
+                        padding-bottom: 0.75rem;
+                        border-bottom: 1px solid rgba(128,128,128,0.15);
+                        flex-wrap: wrap;
+                        gap: 12px;
+                    }
+                    .ll-reviews-title-${clientId} {
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        margin: 0;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                    .ll-reviews-summary-${clientId} {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        font-size: 0.9rem;
+                    }
+                    .ll-reviews-stars-${clientId} {
+                        color: #f59e0b;
+                        letter-spacing: 1px;
+                    }
+                    .ll-reviews-grid-${clientId} {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                        gap: 16px;
+                        width: 100%;
+                    }
+                    .ll-review-card-${clientId} {
+                        border-radius: 12px;
+                        padding: 1.25rem;
+                        border: 1px solid rgba(128,128,128,0.15);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        min-height: 180px;
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    }
+                    .ll-review-card-${clientId}:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+                    }
+                    .ll-review-meta-${clientId} {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin-bottom: 10px;
+                    }
+                    .ll-review-avatar-${clientId} {
+                        width: 38px;
+                        height: 38px;
+                        border-radius: 50%;
+                        background: ${baseColor};
+                        color: #ffffff;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 0.95rem;
+                        overflow: hidden;
+                    }
+                    .ll-review-avatar-${clientId} img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                    .ll-review-author-info-${clientId} {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    .ll-review-author-${clientId} {
+                        font-weight: 700;
+                        font-size: 0.9rem;
+                    }
+                    .ll-review-date-${clientId} {
+                        font-size: 0.75rem;
+                        opacity: 0.6;
+                    }
+                    .ll-review-text-${clientId} {
+                        font-size: 0.85rem;
+                        line-height: 1.5;
+                        margin-bottom: 10px;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 4;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                    }
+                    .ll-reviews-footer-${clientId} {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 1.25rem;
+                        font-size: 0.8rem;
+                        opacity: 0.8;
+                        border-top: 1px solid rgba(128,128,128,0.15);
+                        padding-top: 8px;
+                    }
+                    .ll-reviews-footer-${clientId} a {
+                        color: inherit;
+                        text-decoration: none;
+                    }
+                    .ll-reviews-footer-${clientId} a:hover {
+                        text-decoration: underline;
+                    }
+                    .ll-carousel-wrapper-${clientId} {
+                        position: relative;
+                        width: 100%;
+                        overflow: hidden;
+                        border-radius: 12px;
+                    }
+                    .ll-carousel-track-${clientId} {
+                        display: flex;
+                        transition: transform 0.3s ease-in-out;
+                        width: 100%;
+                    }
+                    .ll-carousel-slide-${clientId} {
+                        min-width: 100%;
+                        width: 100%;
+                        padding: 4px;
+                    }
+                    .ll-carousel-nav-${clientId} {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 15px;
+                        margin-top: 12px;
+                    }
+                    .ll-carousel-btn-${clientId} {
+                        background: rgba(128,128,128,0.1);
+                        border: 1px solid rgba(128,128,128,0.15);
+                        border-radius: 50%;
+                        width: 32px;
+                        height: 32px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        color: inherit;
+                        font-weight: bold;
+                        transition: background 0.2s, transform 0.1s;
+                        user-select: none;
+                    }
+                    .ll-carousel-btn-${clientId}:hover {
+                        background: ${baseColor};
+                        color: white;
+                        border-color: ${baseColor};
+                    }
+                `;
+            } else {
+                stylesContent += `
+                    .ll-widget-title-${clientId} {
+                        font-size: 1.1rem;
+                        font-weight: 700;
+                        margin-bottom: 1rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                    .ll-widget-grid-${clientId} {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                        gap: 10px;
+                        width: 100%;
+                    }
+                    .ll-widget-card-${clientId} {
+                        border-radius: 8px;
+                        padding: 0.75rem;
+                        text-decoration: none;
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        border: 1px solid rgba(128,128,128,0.2);
+                        cursor: pointer;
+                    }
+                    .ll-widget-card-${clientId}:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    }
+                    .ll-widget-card-town-${clientId} {
+                        font-weight: 700;
+                        font-size: 0.85rem;
+                        margin-bottom: 4px;
+                    }
+                    .ll-widget-card-service-${clientId} {
+                        font-size: 0.75rem;
+                        opacity: 0.8;
+                    }
+                    .ll-widget-list-${clientId} {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        width: 100%;
+                    }
+                    .ll-widget-list-item-${clientId} a {
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-radius: 20px;
+                        font-size: 0.75rem;
+                        text-decoration: none;
+                        font-weight: 500;
+                        transition: background 0.2s ease, transform 0.1s ease;
+                        border: 1px solid rgba(128,128,128,0.2);
+                    }
+                    .ll-widget-list-item-${clientId} a:hover {
+                        transform: scale(1.02);
+                    }
+                `;
+            }
 
-                /* Dark Theme */
-                .ll-theme-dark-${clientId} .ll-widget-card-${clientId} {
-                    background: #1f2937;
-                    color: #f3f4f6;
-                    border-color: #374151;
-                }
-                .ll-theme-dark-${clientId} .ll-widget-card-${clientId}:hover {
-                    border-color: ${baseColor};
-                }
-                .ll-theme-dark-${clientId} .ll-widget-card-town-${clientId} {
-                    color: #ffffff;
-                }
-                .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a {
-                    background: #374151;
-                    color: #f3f4f6;
-                    border-color: #4b5563;
-                }
-                .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a:hover {
-                    background: ${baseColor};
-                    color: #ffffff;
-                    border-color: ${baseColor};
-                }
-                .ll-theme-dark-${clientId} .ll-widget-title-${clientId} {
-                    color: #ffffff;
-                }
+            // Light, Dark, Glassmorphic themes styling
+            if (widgetType === 'reviews') {
+                stylesContent += `
+                    .ll-theme-light-${clientId} .ll-review-card-${clientId} {
+                        background: #ffffff;
+                        color: #1f2937;
+                    }
+                    .ll-theme-light-${clientId} .ll-review-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-light-${clientId} .ll-reviews-title-${clientId} {
+                        color: #111827;
+                    }
 
-                /* Glassmorphic Theme */
-                .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId} {
-                    background: rgba(255, 255, 255, 0.05);
-                    color: #f3f4f6;
-                    border-color: rgba(255, 255, 255, 0.1);
-                }
-                .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId}:hover {
-                    border-color: ${baseColor};
-                    background: rgba(255, 255, 255, 0.08);
-                }
-                .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a {
-                    background: rgba(255, 255, 255, 0.05);
-                    color: #f3f4f6;
-                    border-color: rgba(255, 255, 255, 0.1);
-                }
-                .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a:hover {
-                    background: ${baseColor};
-                    color: #ffffff;
-                    border-color: ${baseColor};
-                }
+                    .ll-theme-dark-${clientId} .ll-review-card-${clientId} {
+                        background: #1f2937;
+                        color: #f3f4f6;
+                        border-color: #374151;
+                    }
+                    .ll-theme-dark-${clientId} .ll-review-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-dark-${clientId} .ll-reviews-title-${clientId} {
+                        color: #ffffff;
+                    }
 
-                /* Badge Specifics */
+                    .ll-theme-glassmorphic-${clientId} .ll-review-card-${clientId} {
+                        background: rgba(255, 255, 255, 0.05);
+                        color: #f3f4f6;
+                        border-color: rgba(255, 255, 255, 0.1);
+                    }
+                    .ll-theme-glassmorphic-${clientId} .ll-review-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                        background: rgba(255, 255, 255, 0.08);
+                    }
+                `;
+            } else {
+                stylesContent += `
+                    .ll-theme-light-${clientId} .ll-widget-card-${clientId} {
+                        background: #ffffff;
+                        color: #1f2937;
+                    }
+                    .ll-theme-light-${clientId} .ll-widget-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-light-${clientId} .ll-widget-card-town-${clientId} {
+                        color: #111827;
+                    }
+                    .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a {
+                        background: #f3f4f6;
+                        color: #374151;
+                    }
+                    .ll-theme-light-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                        background: ${baseColor};
+                        color: #ffffff;
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-light-${clientId} .ll-widget-title-${clientId} {
+                        color: #111827;
+                    }
+
+                    .ll-theme-dark-${clientId} .ll-widget-card-${clientId} {
+                        background: #1f2937;
+                        color: #f3f4f6;
+                        border-color: #374151;
+                    }
+                    .ll-theme-dark-${clientId} .ll-widget-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-dark-${clientId} .ll-widget-card-town-${clientId} {
+                        color: #ffffff;
+                    }
+                    .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a {
+                        background: #374151;
+                        color: #f3f4f6;
+                        border-color: #4b5563;
+                    }
+                    .ll-theme-dark-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                        background: ${baseColor};
+                        color: #ffffff;
+                        border-color: ${baseColor};
+                    }
+                    .ll-theme-dark-${clientId} .ll-widget-title-${clientId} {
+                        color: #ffffff;
+                    }
+
+                    .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId} {
+                        background: rgba(255, 255, 255, 0.05);
+                        color: #f3f4f6;
+                        border-color: rgba(255, 255, 255, 0.1);
+                    }
+                    .ll-theme-glassmorphic-${clientId} .ll-widget-card-${clientId}:hover {
+                        border-color: ${baseColor};
+                        background: rgba(255, 255, 255, 0.08);
+                    }
+                    .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a {
+                        background: rgba(255, 255, 255, 0.05);
+                        color: #f3f4f6;
+                        border-color: rgba(255, 255, 255, 0.1);
+                    }
+                    .ll-theme-glassmorphic-${clientId} .ll-widget-list-item-${clientId} a:hover {
+                        background: ${baseColor};
+                        color: #ffffff;
+                        border-color: ${baseColor};
+                    }
+                `;
+            }
+
+            // Common Badge Styles
+            stylesContent += `
                 .ll-badge-trigger-${clientId} {
                     background: ${baseColor};
                     color: #ffffff;
@@ -2122,10 +2331,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     opacity: 1;
                 }
             `;
+
+            style.textContent = stylesContent;
         }
 
         function updateEmbedCodeAndPreview() {
             const widgetType = typeSelect ? typeSelect.value : 'service-area';
+            
+            // Toggle layout options based on widget type
+            if (layoutSelect) {
+                const listOption = layoutSelect.querySelector('option[value="list"]');
+                const carouselOption = layoutSelect.querySelector('option[value="carousel"]');
+                if (widgetType === 'service-area') {
+                    if (listOption) listOption.style.display = 'block';
+                    if (carouselOption) carouselOption.style.display = 'none';
+                    if (layoutSelect.value === 'carousel') {
+                        layoutSelect.value = 'badge';
+                    }
+                } else if (widgetType === 'reviews') {
+                    if (listOption) listOption.style.display = 'none';
+                    if (carouselOption) carouselOption.style.display = 'block';
+                    if (layoutSelect.value === 'list') {
+                        layoutSelect.value = 'badge';
+                    }
+                }
+            }
+
             const theme = themeSelect.value;
             const color = colorInput.value.replace('#', '');
             const origin = window.location.origin;
@@ -2143,26 +2374,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cssGroup) cssGroup.style.display = 'flex';
 
                 const layout = layoutSelect.value;
-                const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}`;
+                const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}&type=${widgetType}`;
                 
                 let embedCode = '';
                 if (layout === 'badge') {
-                    embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<script src="${scriptUrl}"></script>`;
+                    embedCode = `<!-- LocalLeads ${widgetType === 'reviews' ? 'Google Review' : 'Service Area'} Widget Embed -->\n<script src="${scriptUrl}"></script>`;
                 } else {
-                    embedCode = `<!-- LocalLeads Service Area Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+                    embedCode = `<!-- LocalLeads ${widgetType === 'reviews' ? 'Google Review' : 'Service Area'} Widget Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
                 }
                 embedCodeTextarea.value = embedCode;
 
                 // Update style blocks
-                updateBaseCssPreview(theme, layout, colorInput.value);
+                updateBaseCssPreview(theme, layout, colorInput.value, widgetType);
                 updateCssPreview();
 
                 // Render live preview
-                renderPreview(pages, theme, layout, colorInput.value);
+                renderPreview(pages, theme, layout, colorInput.value, widgetType);
             }
         }
 
-        function renderPreview(pagesList, theme, layout, baseColor) {
+        function renderPreview(pagesList, theme, layout, baseColor, widgetType = 'service-area') {
             previewBox.innerHTML = '';
             
             if (theme === 'light') {
@@ -2177,6 +2408,162 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewBox.style.color = '#f3f4f6';
             }
 
+            if (widgetType === 'reviews') {
+                const reviewsToUse = userTestimonials && userTestimonials.length > 0 ? userTestimonials : [
+                    { author_name: "James Anderson", rating: 5, review_text: "Absolutely fantastic service. They responded quickly to my emergency, fixed the issue efficiently, and were very professional throughout.", review_date: new Date(Date.now() - 3600000 * 24 * 2).toISOString(), author_avatar: null },
+                    { author_name: "Sarah Miller", rating: 5, review_text: "Highly recommended! Honest pricing, prompt arrival, and excellent workmanship. They explained everything clearly.", review_date: new Date(Date.now() - 3600000 * 24 * 5).toISOString(), author_avatar: null },
+                    { author_name: "Robert Taylor", rating: 5, review_text: "Very reliable local business. The team was courteous, clean, and completed the job on schedule. I will definitely hire them again.", review_date: new Date(Date.now() - 3600000 * 24 * 12).toISOString(), author_avatar: null }
+                ];
+
+                const averageRating = (reviewsToUse.reduce((acc, r) => acc + r.rating, 0) / reviewsToUse.length).toFixed(1);
+
+                function makeStars(rating) {
+                    let s = '';
+                    for (let i = 1; i <= 5; i++) {
+                        s += i <= rating ? '★' : '☆';
+                    }
+                    return s;
+                }
+
+                function formatDate(dateStr) {
+                    try {
+                        return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    } catch(e) {
+                        return '';
+                    }
+                }
+
+                function createReviewCard(review) {
+                    const initial = review.author_name ? review.author_name.charAt(0) : '?';
+                    const avatarHtml = review.author_avatar 
+                        ? `<img src="${review.author_avatar}" alt="${review.author_name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` 
+                        : `<div style="width: 32px; height: 32px; border-radius: 50%; background: ${baseColor}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink:0;">${initial}</div>`;
+                    return `
+                        <div class="ll-review-card-${clientId}" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; text-align: left;">
+                            <div>
+                                <div class="ll-review-meta-${clientId}">
+                                    <div class="ll-review-avatar-${clientId}">${avatarHtml}</div>
+                                    <div class="ll-review-author-info-${clientId}">
+                                        <span class="ll-review-author-${clientId}">${review.author_name}</span>
+                                        <span class="ll-review-date-${clientId}">${formatDate(review.review_date)}</span>
+                                    </div>
+                                </div>
+                                <div class="ll-reviews-stars-${clientId}">${makeStars(review.rating)}</div>
+                                <p class="ll-review-text-${clientId}" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 5px;" title="${review.review_text.replace(/"/g, '&quot;')}">${review.review_text}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (layout === 'badge') {
+                    previewBox.innerHTML = `
+                        <div class="ll-widget-container-${clientId}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 10px; width: 100%; font-family: sans-serif;">
+                            <div class="ll-badge-trigger-${clientId}" id="preview-badge-trigger">
+                                ⭐ ${averageRating} (${reviewsToUse.length} Reviews)
+                            </div>
+                            <p style="font-size: 0.75rem; color: #9ca3af; margin: 0; text-align: center;">Click the badge to preview the reviews list.</p>
+                            
+                            <div id="preview-badge-modal" class="ll-badge-modal-${clientId}" style="display: none; flex-direction: column; width: 90%; max-height: 250px; background: ${theme === 'light' ? '#fff' : '#111827'}; color: ${theme === 'light' ? '#374151' : '#f3f4f6'}; text-align: left; overflow: hidden;">
+                                <div class="ll-badge-modal-header-${clientId}" style="padding: 8px; border-bottom: 1px solid rgba(128,128,128,0.2); display: flex; justify-content: space-between; font-weight: bold; align-items: center;">
+                                    <span>Google Business Reviews</span>
+                                    <span id="preview-close-modal" class="ll-badge-modal-close-${clientId}">&times;</span>
+                                </div>
+                                <div class="ll-badge-modal-body-${clientId}" style="padding: 8px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                                    ${reviewsToUse.slice(0, 3).map(r => createReviewCard(r)).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const trigger = previewBox.querySelector('#preview-badge-trigger');
+                    const modal = previewBox.querySelector('#preview-badge-modal');
+                    const closeBtn = previewBox.querySelector('#preview-close-modal');
+
+                    trigger.addEventListener('click', () => {
+                        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+                    });
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        modal.style.display = 'none';
+                    });
+                } else if (layout === 'grid') {
+                    const cards = reviewsToUse.slice(0, 2).map(r => createReviewCard(r)).join('');
+                    previewBox.innerHTML = `
+                        <div class="ll-reviews-container-${clientId} ll-theme-${theme}-${clientId}" style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif; gap: 10px;">
+                            <div class="ll-reviews-header-${clientId}">
+                                <h3 class="ll-reviews-title-${clientId}">⭐ Google Reviews</h3>
+                                <div class="ll-reviews-summary-${clientId}">
+                                    <strong>${averageRating} / 5.0</strong>
+                                    <span class="ll-reviews-stars-${clientId}">${makeStars(Math.round(averageRating))}</span>
+                                    <span>(${reviewsToUse.length} reviews)</span>
+                                </div>
+                            </div>
+                            <div class="ll-reviews-grid-${clientId}">
+                                ${cards}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // carousel / other
+                    const slides = reviewsToUse.map((r, i) => `
+                        <div class="ll-carousel-slide-${clientId}" style="${i === 0 ? 'display: block;' : 'display: none;'} min-width: 100%; width: 100%;">
+                            ${createReviewCard(r)}
+                        </div>
+                    `).join('');
+
+                    previewBox.innerHTML = `
+                        <div class="ll-reviews-container-${clientId} ll-theme-${theme}-${clientId}" style="width: 100%; text-align: left; display: flex; flex-direction: column; height: 100%; font-family: sans-serif; gap: 10px;">
+                            <div class="ll-reviews-header-${clientId}">
+                                <h3 class="ll-reviews-title-${clientId}">⭐ Google Reviews</h3>
+                                <div class="ll-reviews-summary-${clientId}">
+                                    <strong>${averageRating} / 5.0</strong>
+                                    <span class="ll-reviews-stars-${clientId}">${makeStars(Math.round(averageRating))}</span>
+                                    <span>(${reviewsToUse.length} reviews)</span>
+                                </div>
+                            </div>
+                            <div class="ll-carousel-wrapper-${clientId}" style="position: relative; overflow: hidden; width: 100%;">
+                                <div class="ll-carousel-track-${clientId}" id="preview-carousel-track" style="display: flex; width: 100%;">
+                                    ${slides}
+                                </div>
+                            </div>
+                            <div class="ll-carousel-nav-${clientId}" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px;">
+                                <div class="ll-carousel-btn-${clientId}" id="preview-carousel-prev" style="cursor: pointer; padding: 4px 8px; border: 1px solid rgba(128,128,128,0.2); border-radius: 4px;">&lt;</div>
+                                <div id="preview-carousel-index">1 / ${reviewsToUse.length}</div>
+                                <div class="ll-carousel-btn-${clientId}" id="preview-carousel-next" style="cursor: pointer; padding: 4px 8px; border: 1px solid rgba(128,128,128,0.2); border-radius: 4px;">&gt;</div>
+                            </div>
+                        </div>
+                    `;
+
+                    let currentIndex = 0;
+                    const prevBtn = previewBox.querySelector('#preview-carousel-prev');
+                    const nextBtn = previewBox.querySelector('#preview-carousel-next');
+                    const indexDiv = previewBox.querySelector('#preview-carousel-index');
+                    const slidesEls = previewBox.querySelectorAll(`.ll-carousel-slide-${clientId}`);
+
+                    function showSlide(idx) {
+                        slidesEls.forEach((slide, i) => {
+                            slide.style.display = i === idx ? 'block' : 'none';
+                        });
+                        indexDiv.textContent = `${idx + 1} / ${reviewsToUse.length}`;
+                    }
+
+                    if (prevBtn && nextBtn) {
+                        prevBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentIndex = (currentIndex - 1 + reviewsToUse.length) % reviewsToUse.length;
+                            showSlide(currentIndex);
+                        });
+                        nextBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentIndex = (currentIndex + 1) % reviewsToUse.length;
+                            showSlide(currentIndex);
+                        });
+                    }
+                }
+                return;
+            }
+
+            // service area widgets logic
             if (pagesList.length === 0) {
                 previewBox.innerHTML = '<p style="font-size: 0.85rem; color: #9ca3af; margin: 0; text-align: center;">Generate pages first to preview the widget.</p>';
                 return;

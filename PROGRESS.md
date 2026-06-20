@@ -1,7 +1,7 @@
 # Progress Log
  
 #### 🏆 Key Milestones
-- **June 20, 2026:** Integrated Interactive Page SEO Checklist modal, built white-labeled passwordless Shared Reporting Link, configured Custom Domain SSL & DNS Health Status Panel, resolved discrepancy in user_events columns, compiled JS/CSS production assets, and ran test suite verification (Session 326 & Session 327).
+- **June 20, 2026:** Integrated Google Business Profile Reviews Widget frontend preview, CSS, and layout switcher logic, added checklist modal, shared portal link, custom domain health panel, fixed schema columns mismatch, and ran verification test suites (Session 326, Session 327, & Session 328).
 - **June 19, 2026:** Conducted workspace QA verification, test suite execution, and progress log housekeeping (Session 325), executed all Jest unit/integration API test suites (78 suites, 525 tests passed), referral E2E tests, and Python test suites (56 tests) with a 100% pass rate, and verified email outreach compliance (Session 324), performed workspace QA, test execution, compliance verification, and archived Chrome Web Store submission (Session 323), performed comprehensive QA verification, executing 78 Jest unit/integration test suites (525 tests), referral E2E tests, and 56 Python test suites successfully with a 100% pass rate (Session 322), performed workspace verification, QA audit, email outreach compliance audit, and comprehensive test suite execution (Session 321), implemented comprehensive backend testing of directory profile and claiming endpoints (Session 320), performed workspace QA verification, test suites execution, and remote repository synchronization (Session 319), integrated Directory Leads Capture Form & Profile Claiming Automation (Session 318), designed Blog Search & Category Filter Redesign (Session 317), ran verification workspace test suites, compliance audit, and documentation alignment (Session 316, Session 315 & Session 314), designed Local Keyword Rankings Tracker & CSV Import/Export (Session 313), built the Affiliate Leaderboard & Referral Dashboard integration (Session 310), integrated Client Captured Leads with CSV export (Session 311), and performed full workspace QA/verification (Session 312).
 - **June 18, 2026:** Repackaged Chrome Extension and filed Web Store request; hardened outreach email gating and performed full workspace QA/verification (Sessions 303-306).
 - **June 13, 2026:** Added Google Business Profile reviews publishing, DNS setup guides, GSC indexing email alerts, and homepage extension promos (Sessions 299-302).
@@ -16,8 +16,14 @@
 - **May 27, 2026:** PostgreSQL migration test alignment and dynamic credit pack pricing.
 - **May 26, 2026:** Initialized automated sequential DB and hardened tests.
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, and outreach.
-
+ 
 ## June 20, 2026
+
+### Session 328 (Google Business Profile Reviews Widget Dashboard Integration)
+- **Features & Growth**:
+  - **GBP Reviews Widget Integration**: Fully integrated Google Business Profile Reviews Widget in the frontend dashboard. Handled light, dark, and glassmorphic themes, and layout options including Floating Badge, Modern Card Grid, and interactive Review Carousel.
+  - **Layout Gating & Script URL Generation**: Implemented dynamic option filtering in layout selects when toggling between Service Area and Reviews widgets, and ensured type parameter is correctly appended to script URLs.
+  - **E2E & Unit Test Verification**: verified all 85 Jest suites and Python tests pass successfully.
 
 ### Session 327 (SEO Checklist, Shared Portal Link, and SSL Health Panel)
 - **Features & Growth**:
