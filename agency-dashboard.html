@@ -332,6 +332,30 @@
 </form>
 <p id="custom-domain-success-msg" style="color: green; font-weight: bold; margin-top: 10px; display: none;"></p>
 <p id="custom-domain-error-msg" style="color: red; font-weight: bold; margin-top: 10px; display: none;"></p>
+
+<!-- Custom Domain Health Status Panel -->
+<div id="dns-health-status-panel" style="display: none; margin-top: 15px; padding: 15px; border-radius: 6px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);">
+    <h4 style="margin: 0 0 12px 0; color: #fff; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-heartbeat" style="color: #3b82f6;" id="health-panel-heart-icon"></i> Custom Domain Health Status
+    </h4>
+    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+            <span>DNS Mapping:</span>
+            <span id="health-dns-mapping-status" style="font-weight: bold; color: #94a3b8;">Checking...</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+            <span>Domain Resolution:</span>
+            <span id="health-dns-resolution-status" style="font-weight: bold; color: #94a3b8;">Checking...</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+            <span>SSL Certificate:</span>
+            <span id="health-ssl-status" style="font-weight: bold; color: #94a3b8;">Checking...</span>
+        </div>
+        <div id="health-warnings-container" style="margin-top: 5px; color: #f59e0b; display: none; font-size: 0.8rem; line-height: 1.4; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 8px; border-radius: 4px;">
+            <i class="fas fa-exclamation-triangle"></i> <span id="health-warnings-text"></span>
+        </div>
+    </div>
+</div>
 </section>
 <section class="dashboard">
 <h2>
@@ -458,6 +482,13 @@ const customDomainInput = document.getElementById('custom-domain-input');
 const customDomainRedirectInput = document.getElementById('custom-domain-redirect-input');
 if (customDomainInput) {
     customDomainInput.value = data.customDomain || '';
+    if (data.customDomain && data.customDomain.trim()) {
+        setTimeout(() => {
+            if (typeof updateDnsHealthStatusPanel === 'function') {
+                updateDnsHealthStatusPanel(data.customDomain.trim());
+            }
+        }, 500);
+    }
 }
 if (customDomainRedirectInput) {
     customDomainRedirectInput.value = data.customDomainRedirect || '';
@@ -763,6 +794,99 @@ if (customDomainForm) {
     });
 }
 
+async function updateDnsHealthStatusPanel(domain) {
+    const panel = document.getElementById('dns-health-status-panel');
+    const dnsMappingStatus = document.getElementById('health-dns-mapping-status');
+    const dnsResolutionStatus = document.getElementById('health-dns-resolution-status');
+    const sslStatus = document.getElementById('health-ssl-status');
+    const warningsContainer = document.getElementById('health-warnings-container');
+    const warningsText = document.getElementById('health-warnings-text');
+    const heartIcon = document.getElementById('health-panel-heart-icon');
+
+    if (!panel) return;
+    panel.style.display = 'block';
+
+    dnsMappingStatus.textContent = 'Checking...';
+    dnsMappingStatus.style.color = '#94a3b8';
+    dnsResolutionStatus.textContent = 'Checking...';
+    dnsResolutionStatus.style.color = '#94a3b8';
+    sslStatus.textContent = 'Checking...';
+    sslStatus.style.color = '#94a3b8';
+    warningsContainer.style.display = 'none';
+    if (heartIcon) {
+        heartIcon.className = 'fas fa-heartbeat fa-spin';
+        heartIcon.style.color = '#3b82f6';
+    }
+
+    try {
+        const response = await fetch('/api/verify-dns', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ domain })
+        });
+
+        const resData = await response.json();
+
+        // DNS Mapping
+        if (resData.verified) {
+            dnsMappingStatus.textContent = 'Verified';
+            dnsMappingStatus.style.color = '#10b981';
+        } else {
+            dnsMappingStatus.textContent = 'Failed';
+            dnsMappingStatus.style.color = '#ef4444';
+        }
+
+        // DNS Resolution
+        if (resData.dnsResolved) {
+            dnsResolutionStatus.textContent = 'Resolving';
+            dnsResolutionStatus.style.color = '#10b981';
+        } else {
+            dnsResolutionStatus.textContent = 'Not Resolving';
+            dnsResolutionStatus.style.color = '#ef4444';
+        }
+
+        // SSL Status
+        if (resData.sslVerified) {
+            sslStatus.textContent = 'Active & Valid';
+            sslStatus.style.color = '#10b981';
+        } else {
+            sslStatus.textContent = resData.dnsResolved ? 'Invalid' : 'Pending';
+            sslStatus.style.color = resData.dnsResolved ? '#ef4444' : '#f59e0b';
+        }
+
+        // Warnings
+        let warningMsg = resData.resolutionWarning;
+        if (!resData.verified && !warningMsg) {
+            warningMsg = `DNS verification failed. Point a CNAME record to 'localseogen.com'.`;
+        }
+        if (resData.dnsResolved && !resData.sslVerified) {
+            const sslErrDetail = resData.sslError ? ` (${resData.sslError})` : '';
+            warningMsg = (warningMsg ? warningMsg + ' ' : '') + `SSL certificate verification failed${sslErrDetail}. Vercel may still be provisioning it, or DNS propagation is pending.`;
+        }
+
+        if (warningMsg) {
+            warningsText.textContent = warningMsg;
+            warningsContainer.style.display = 'block';
+            if (heartIcon) heartIcon.style.color = '#f59e0b';
+        } else {
+            if (heartIcon) heartIcon.style.color = '#10b981';
+        }
+    } catch (error) {
+        console.error('Error updating DNS health status panel:', error);
+        dnsMappingStatus.textContent = 'Error';
+        dnsMappingStatus.style.color = '#ef4444';
+        dnsResolutionStatus.textContent = 'Error';
+        dnsResolutionStatus.style.color = '#ef4444';
+        sslStatus.textContent = 'Error';
+        sslStatus.style.color = '#ef4444';
+        warningsText.textContent = 'Failed to fetch DNS health status details. Connection error.';
+        warningsContainer.style.display = 'block';
+        if (heartIcon) heartIcon.style.color = '#ef4444';
+    } finally {
+        if (heartIcon) heartIcon.classList.remove('fa-spin');
+    }
+}
+
 const verifyDnsBtn = document.getElementById('verify-dns-btn');
 if (verifyDnsBtn) {
     verifyDnsBtn.addEventListener('click', async () => {
@@ -783,21 +907,17 @@ if (verifyDnsBtn) {
         verifyDnsBtn.disabled = true;
 
         try {
-            const response = await fetch('/api/verify-dns', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ domain: customDomain }),
-            });
-
-            const resData = await response.json();
-            if (response.ok && resData.verified) {
+            await updateDnsHealthStatusPanel(customDomain.trim());
+            
+            const dnsMappingStatus = document.getElementById('health-dns-mapping-status');
+            if (dnsMappingStatus && dnsMappingStatus.textContent === 'Verified') {
                 if (customDomainSuccessMsg) {
-                    customDomainSuccessMsg.textContent = resData.message;
+                    customDomainSuccessMsg.textContent = 'DNS configuration verified successfully!';
                     customDomainSuccessMsg.style.display = 'block';
                 }
             } else {
                 if (customDomainErrorMsg) {
-                    customDomainErrorMsg.textContent = resData.message || 'DNS verification failed.';
+                    customDomainErrorMsg.textContent = 'DNS verification failed. See the health status panel below for diagnostics.';
                     customDomainErrorMsg.style.display = 'block';
                 }
             }

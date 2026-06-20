@@ -97,6 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const customDomainRedirectInput = document.getElementById('custom-domain-redirect-input');
                 if (customDomainInput) {
                     customDomainInput.value = data.customDomain || '';
+                    if (data.customDomain && data.customDomain.trim()) {
+                        setTimeout(() => {
+                            if (typeof updateDnsHealthStatusPanel === 'function') {
+                                updateDnsHealthStatusPanel(data.customDomain.trim(), jwtToken);
+                            }
+                        }, 500);
+                    }
                 }
                 if (customDomainRedirectInput) {
                     customDomainRedirectInput.value = data.customDomainRedirect || '';
@@ -804,6 +811,104 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    async function updateDnsHealthStatusPanel(domain, token) {
+        const panel = document.getElementById('dns-health-status-panel');
+        const dnsMappingStatus = document.getElementById('health-dns-mapping-status');
+        const dnsResolutionStatus = document.getElementById('health-dns-resolution-status');
+        const sslStatus = document.getElementById('health-ssl-status');
+        const warningsContainer = document.getElementById('health-warnings-container');
+        const warningsText = document.getElementById('health-warnings-text');
+        const heartIcon = document.getElementById('health-panel-heart-icon');
+
+        if (!panel) return;
+        panel.style.display = 'block';
+
+        dnsMappingStatus.textContent = 'Checking...';
+        dnsMappingStatus.style.color = '#94a3b8';
+        dnsResolutionStatus.textContent = 'Checking...';
+        dnsResolutionStatus.style.color = '#94a3b8';
+        sslStatus.textContent = 'Checking...';
+        sslStatus.style.color = '#94a3b8';
+        warningsContainer.style.display = 'none';
+        if (heartIcon) {
+            heartIcon.className = 'fas fa-heartbeat fa-spin';
+            heartIcon.style.color = '#3b82f6';
+        }
+
+        try {
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch('/api/verify-dns', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ domain })
+            });
+
+            const resData = await response.json();
+
+            // DNS Mapping
+            if (resData.verified) {
+                dnsMappingStatus.textContent = 'Verified';
+                dnsMappingStatus.style.color = '#10b981';
+            } else {
+                dnsMappingStatus.textContent = 'Failed';
+                dnsMappingStatus.style.color = '#ef4444';
+            }
+
+            // DNS Resolution
+            if (resData.dnsResolved) {
+                dnsResolutionStatus.textContent = 'Resolving';
+                dnsResolutionStatus.style.color = '#10b981';
+            } else {
+                dnsResolutionStatus.textContent = 'Not Resolving';
+                dnsResolutionStatus.style.color = '#ef4444';
+            }
+
+            // SSL Status
+            if (resData.sslVerified) {
+                sslStatus.textContent = 'Active & Valid';
+                sslStatus.style.color = '#10b981';
+            } else {
+                sslStatus.textContent = resData.dnsResolved ? 'Invalid' : 'Pending';
+                sslStatus.style.color = resData.dnsResolved ? '#ef4444' : '#f59e0b';
+            }
+
+            // Warnings
+            let warningMsg = resData.resolutionWarning;
+            if (!resData.verified && !warningMsg) {
+                warningMsg = `DNS verification failed. Point a CNAME record to 'localseogen.com'.`;
+            }
+            if (resData.dnsResolved && !resData.sslVerified) {
+                const sslErrDetail = resData.sslError ? ` (${resData.sslError})` : '';
+                warningMsg = (warningMsg ? warningMsg + ' ' : '') + `SSL certificate verification failed${sslErrDetail}. Vercel may still be provisioning it, or DNS propagation is pending.`;
+            }
+
+            if (warningMsg) {
+                warningsText.textContent = warningMsg;
+                warningsContainer.style.display = 'block';
+                if (heartIcon) heartIcon.style.color = '#f59e0b';
+            } else {
+                if (heartIcon) heartIcon.style.color = '#10b981';
+            }
+        } catch (error) {
+            console.error('Error updating DNS health status panel:', error);
+            dnsMappingStatus.textContent = 'Error';
+            dnsMappingStatus.style.color = '#ef4444';
+            dnsResolutionStatus.textContent = 'Error';
+            dnsResolutionStatus.style.color = '#ef4444';
+            sslStatus.textContent = 'Error';
+            sslStatus.style.color = '#ef4444';
+            warningsText.textContent = 'Failed to fetch DNS health status details. Connection error.';
+            warningsContainer.style.display = 'block';
+            if (heartIcon) heartIcon.style.color = '#ef4444';
+        } finally {
+            if (heartIcon) heartIcon.classList.remove('fa-spin');
+        }
+    }
+
     const verifyDnsBtn = document.getElementById('verify-dns-btn');
     if (verifyDnsBtn) {
         verifyDnsBtn.addEventListener('click', async () => {
@@ -824,24 +929,17 @@ document.addEventListener('DOMContentLoaded', () => {
             verifyDnsBtn.disabled = true;
 
             try {
-                const response = await fetch('/api/verify-dns', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify({ domain: customDomain })
-                });
-
-                const resData = await response.json();
-                if (response.ok && resData.verified) {
+                await updateDnsHealthStatusPanel(customDomain.trim(), jwtToken);
+                
+                const dnsMappingStatus = document.getElementById('health-dns-mapping-status');
+                if (dnsMappingStatus && dnsMappingStatus.textContent === 'Verified') {
                     if (customDomainSuccessMsg) {
-                        customDomainSuccessMsg.textContent = resData.message;
+                        customDomainSuccessMsg.textContent = 'DNS configuration verified successfully!';
                         customDomainSuccessMsg.style.display = 'block';
                     }
                 } else {
                     if (customDomainErrorMsg) {
-                        customDomainErrorMsg.textContent = resData.message || 'DNS verification failed.';
+                        customDomainErrorMsg.textContent = 'DNS verification failed. See the health status panel below for diagnostics.';
                         customDomainErrorMsg.style.display = 'block';
                     }
                 }

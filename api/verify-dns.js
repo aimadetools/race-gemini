@@ -1,9 +1,45 @@
 import dns from 'dns';
+import tls from 'tls';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { logError } from '../lib/logger.js';
 
 const dnsPromises = dns.promises;
+
+async function verifySsl(domain) {
+    return new Promise((resolve) => {
+        const socket = tls.connect({
+            host: domain,
+            port: 443,
+            servername: domain,
+            timeout: 5000 // 5 seconds timeout
+        }, () => {
+            const authorized = socket.authorized;
+            const authError = socket.authorizationError;
+            socket.end();
+            resolve({
+                verified: !!authorized,
+                error: authError ? String(authError) : null
+            });
+        });
+
+        socket.on('error', (err) => {
+            socket.destroy();
+            resolve({
+                verified: false,
+                error: err.message
+            });
+        });
+
+        socket.on('timeout', () => {
+            socket.destroy();
+            resolve({
+                verified: false,
+                error: 'Connection timeout'
+            });
+        });
+    });
+}
 
 async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -48,19 +84,12 @@ async function handler(req, res) {
             // resolveCname throws if no CNAME is present
         }
 
-        if (cnameResolved) {
-            return res.status(200).json({
-                verified: true,
-                method: 'CNAME',
-                message: `DNS configuration verified successfully! CNAME points to localseogen.com.`
-            });
-        }
-
         // 2. Check IP mapping (A record / CNAME flattening)
         let ipsMatch = false;
+        let domainIps = [];
         try {
             const platformIps = await dnsPromises.resolve4('localseogen.com').catch(() => []);
-            const domainIps = await dnsPromises.resolve4(cleanedDomain).catch(() => []);
+            domainIps = await dnsPromises.resolve4(cleanedDomain).catch(() => []);
 
             if (platformIps.length > 0 && domainIps.length > 0) {
                 ipsMatch = domainIps.some(ip => platformIps.includes(ip));
@@ -69,17 +98,52 @@ async function handler(req, res) {
             // resolve4 throws if no records found
         }
 
-        if (ipsMatch) {
-            return res.status(200).json({
-                verified: true,
-                method: 'A/IP',
-                message: `DNS configuration verified successfully via IP mapping!`
-            });
+        // 3. General resolution status (can it resolve to any IP?)
+        let dnsResolved = false;
+        try {
+            await dnsPromises.lookup(cleanedDomain);
+            dnsResolved = true;
+        } catch (lookupErr) {
+            dnsResolved = false;
+        }
+
+        const verified = cnameResolved || ipsMatch;
+
+        // 4. SSL certificate check
+        let sslVerified = false;
+        let sslError = null;
+        let sslMessage = 'Checking...';
+
+        if (dnsResolved) {
+            const sslResult = await verifySsl(cleanedDomain);
+            sslVerified = sslResult.verified;
+            sslError = sslResult.error;
+            sslMessage = sslVerified
+                ? 'SSL certificate is active and valid.'
+                : `SSL certificate is not active/valid: ${sslError || 'Verification failed.'}`;
+        } else {
+            sslMessage = 'SSL check skipped because domain DNS is not resolving.';
+        }
+
+        // 5. Resolution warning details
+        let resolutionWarning = null;
+        if (!dnsResolved) {
+            resolutionWarning = `Warning: Subdomain '${cleanedDomain}' is not resolving correctly. Please check that you entered the correct subdomain and that your DNS record has propagation time.`;
+        } else if (!verified) {
+            resolutionWarning = `Warning: Subdomain '${cleanedDomain}' resolves but does not point to 'localseogen.com'. Current records point elsewhere.`;
         }
 
         return res.status(200).json({
-            verified: false,
-            message: `Verification failed. CNAME/A record for '${cleanedDomain}' is not pointing to 'localseogen.com'. DNS propagation can take up to 24 hours.`
+            verified,
+            method: cnameResolved ? 'CNAME' : (ipsMatch ? 'A/IP' : null),
+            dnsResolved,
+            sslVerified,
+            sslError,
+            resolutionWarning,
+            message: verified
+                ? `DNS configuration verified successfully! ${cnameResolved ? 'CNAME points to localseogen.com.' : 'IP mapped to platform.'}`
+                : `Verification failed. CNAME/A record for '${cleanedDomain}' is not pointing to 'localseogen.com'. DNS propagation can take up to 24 hours.`,
+            sslMessage
         });
 
     } catch (error) {

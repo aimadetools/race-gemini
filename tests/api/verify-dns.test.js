@@ -2,12 +2,19 @@ import { jest } from '@jest/globals';
 
 const mockResolveCname = jest.fn();
 const mockResolve4 = jest.fn();
+const mockLookup = jest.fn();
+const mockTlsConnect = jest.fn();
 
 jest.mock('dns', () => ({
   promises: {
     resolveCname: (...args) => mockResolveCname(...args),
     resolve4: (...args) => mockResolve4(...args),
+    lookup: (...args) => mockLookup(...args),
   },
+}));
+
+jest.mock('tls', () => ({
+  connect: (...args) => mockTlsConnect(...args),
 }));
 
 jest.mock('cookie', () => ({
@@ -20,6 +27,7 @@ jest.mock('jsonwebtoken', () => ({
 
 import handler from '../../api/verify-dns';
 import dns from 'dns';
+import tls from 'tls';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 
@@ -46,6 +54,24 @@ describe('verify-dns API', () => {
     jest.clearAllMocks();
     mockResolveCname.mockReset();
     mockResolve4.mockReset();
+    mockLookup.mockReset();
+    mockTlsConnect.mockReset();
+
+    mockLookup.mockResolvedValue({ address: '1.2.3.4' });
+    mockTlsConnect.mockImplementation((options, callback) => {
+      const mockSocket = {
+        authorized: true,
+        authorizationError: null,
+        end: jest.fn(),
+        destroy: jest.fn(),
+        on: jest.fn().mockReturnThis(),
+      };
+      if (callback) {
+        setTimeout(() => callback(mockSocket), 0);
+      }
+      return mockSocket;
+    });
+
     cookie.parse.mockReturnValue({ auth: 'valid_token' });
     jwt.verify.mockReturnValue({ userId: '123' });
 
@@ -154,6 +180,50 @@ describe('verify-dns API', () => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
       verified: false,
       message: expect.stringContaining('Verification failed')
+    }));
+  });
+
+  test('should report SSL verification failure when tls connection fails', async () => {
+    mockResolveCname.mockResolvedValue(['localseogen.com']);
+    mockTlsConnect.mockImplementation((options, callback) => {
+      const mockSocket = {
+        authorized: false,
+        authorizationError: 'DEPTH_ZERO_SELF_SIGNED_CERT',
+        end: jest.fn(),
+        destroy: jest.fn(),
+        on: jest.fn().mockReturnThis(),
+      };
+      if (callback) {
+        setTimeout(() => callback(mockSocket), 0);
+      }
+      return mockSocket;
+    });
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      verified: true,
+      sslVerified: false,
+      sslError: 'DEPTH_ZERO_SELF_SIGNED_CERT',
+      sslMessage: expect.stringContaining('SSL certificate is not active/valid')
+    }));
+  });
+
+  test('should report dnsResolved false and skip SSL check when dns lookup fails', async () => {
+    mockResolveCname.mockRejectedValue(new Error('ENODATA'));
+    mockResolve4.mockRejectedValue(new Error('ENODATA'));
+    mockLookup.mockRejectedValue(new Error('ENOTFOUND'));
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      verified: false,
+      dnsResolved: false,
+      sslVerified: false,
+      resolutionWarning: expect.stringContaining('is not resolving correctly'),
+      sslMessage: expect.stringContaining('SSL check skipped')
     }));
   });
 });
