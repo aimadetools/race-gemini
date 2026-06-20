@@ -42,10 +42,16 @@ export default async function handler(req, res) {
             return res.status(401).json({ message: 'Not authenticated. Please log in.' });
         }
 
+        let userId;
         try {
             const decoded = jwt.verify(authToken, process.env.JWT_SECRET);
-            const userId = decoded.userId;
-            
+            userId = decoded.userId;
+        } catch (error) {
+            await logError(error, 'Local SEO Grid API - JWT Verification Error', 'grid_error.log');
+            return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
+        }
+
+        try {
             // Check if checking for a client (agency dashboard context)
             const { clientId } = req.query;
             if (clientId && parseInt(clientId) !== userId) {
@@ -67,9 +73,9 @@ export default async function handler(req, res) {
                     baseCity = userRes.rows[0].town || 'Home City';
                 }
             }
-        } catch (error) {
-            await logError(error, 'Local SEO Grid API - JWT Verification Error', 'grid_error.log');
-            return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
+        } catch (dbError) {
+            await logError(dbError, 'Local SEO Grid API - DB Auth Verification Error', 'grid_error.log');
+            return res.status(500).json({ message: 'Internal server error.' });
         }
     }
 

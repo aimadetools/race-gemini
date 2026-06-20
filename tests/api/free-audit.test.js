@@ -134,7 +134,10 @@ describe('free-audit API', () => {
             lat: 30.2672,
             lng: -97.7431,
             foundPages: ['plumbers-in-austin'],
-            missedOpportunities: ['plumbers-in-round-rock', 'plumbers-in-pflugerville']
+            missedOpportunities: ['plumbers-in-round-rock', 'plumbers-in-pflugerville'],
+            locationsFound: ['Austin'],
+            locationsNotFound: ['Round Rock', 'Pflugerville'],
+            grid: expect.any(Array)
         });
     });
 
