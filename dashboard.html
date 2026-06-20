@@ -713,6 +713,52 @@
                 </div>
             </div>
 
+            <!-- Local SEO Geographic Heatmap Grid Card -->
+            <div class="card" id="local-seo-grid-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(31, 41, 55, 0.85) 0%, rgba(17, 24, 39, 0.85) 100%); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; color: #fff; font-size: 1.5rem; font-weight: 700;">
+                            <i class="fa-solid fa-map-location-dot" style="color: #60a5fa;"></i> Geographic Local SEO Grid Heatmap
+                        </h2>
+                        <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Visualize your local ranking visibility and find missed town keyword opportunities within a 15-mile radius.</p>
+                    </div>
+                    <button class="button" id="refresh-grid-btn" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                        <i class="fas fa-sync-alt"></i> Refresh Heatmap
+                    </button>
+                </div>
+
+                <div id="grid-heatmap-loading" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 0; color: #9ca3af; gap: 10px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #3b82f6;"></i>
+                    <span>Computing local visibility coordinates...</span>
+                </div>
+
+                <div id="grid-heatmap-error" style="display: none; color: #ef4444; text-align: center; padding: 2rem;">
+                    Failed to calculate local SEO grid heatmap.
+                </div>
+
+                <div id="grid-heatmap-content" style="display: none; max-width: 800px; margin: 0 auto; gap: 2rem; flex-wrap: wrap; align-items: center; justify-content: center; text-align: left;">
+                    <!-- 3x3 Heatmap Grid Wrapper -->
+                    <div style="flex: 1; min-width: 320px;">
+                        <div id="dashboard-seo-grid-heatmap" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; max-width: 380px; margin: 0 auto;">
+                            <!-- Dynamically populated grid cells -->
+                        </div>
+                    </div>
+
+                    <!-- Selected Cell Details Panel -->
+                    <div style="flex: 1.2; min-width: 320px; background: rgba(17, 24, 39, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;" id="dashboard-grid-detail-panel">
+                        <h3 id="dash-detail-cell-title" style="margin: 0; color: #fff; font-size: 1.2rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">Select a cell to view details</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem; color: #cbd5e1;">
+                            <div>Directional Slot: <strong id="dash-detail-cell-dir" style="color: #fff;">-</strong></div>
+                            <div>Est. Searches/mo: <strong id="dash-detail-cell-volume" style="color: #60a5fa;">-</strong></div>
+                            <div style="grid-column: 1 / -1; margin-top: 0.25rem;">Visibility Status: <strong id="dash-detail-cell-status" style="color: #fff;">-</strong></div>
+                        </div>
+                        <div id="dash-detail-cell-action" style="margin-top: 0.5rem;">
+                            <!-- Action button pre-populating target town -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card" id="captured-leads-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
                     <div>

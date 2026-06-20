@@ -453,6 +453,46 @@
       </div>
     </div>
 
+    <!-- Local SEO Geographic Heatmap Grid Section -->
+    <div class="dashboard-section" id="local-seo-grid-section" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px); margin-bottom: 2rem;">
+      <div class="section-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+        <h2 class="section-title" style="display: flex; align-items: center; gap: 8px; color: #fff; font-size: 1.35rem; font-weight: 700; margin: 0;">
+            <i class="fa-solid fa-map-location-dot" style="color: #60a5fa;"></i> Geographic Local SEO Grid Heatmap
+        </h2>
+      </div>
+
+      <div id="grid-heatmap-loading" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 3rem 0; color: #9ca3af; gap: 10px;">
+          <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #3b82f6;"></i>
+          <span>Computing local visibility coordinates...</span>
+      </div>
+
+      <div id="grid-heatmap-error" style="display: none; color: #ef4444; text-align: center; padding: 2rem;">
+          Failed to calculate local SEO grid heatmap.
+      </div>
+
+      <div id="grid-heatmap-content" style="display: none; max-width: 800px; margin: 0 auto; gap: 2rem; flex-wrap: wrap; align-items: center; justify-content: center; text-align: left;">
+          <!-- 3x3 Heatmap Grid Wrapper -->
+          <div style="flex: 1; min-width: 300px;">
+              <div id="share-seo-grid-heatmap" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; max-width: 360px; margin: 0 auto;">
+                  <!-- Dynamically populated grid cells -->
+              </div>
+          </div>
+
+          <!-- Selected Cell Details Panel -->
+          <div style="flex: 1.2; min-width: 300px; background: rgba(17, 24, 39, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;" id="share-grid-detail-panel">
+              <h3 id="share-detail-cell-title" style="margin: 0; color: #fff; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem;">Select a cell to view details</h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem; color: #cbd5e1;">
+                  <div>Directional Slot: <strong id="share-detail-cell-dir" style="color: #fff;">-</strong></div>
+                  <div>Est. Searches/mo: <strong id="share-detail-cell-volume" style="color: #60a5fa;">-</strong></div>
+                  <div style="grid-column: 1 / -1; margin-top: 0.25rem;">Visibility Status: <strong id="share-detail-cell-status" style="color: #fff;">-</strong></div>
+              </div>
+              <div id="share-detail-cell-action" style="margin-top: 0.25rem;">
+                  <!-- Action badge -->
+              </div>
+          </div>
+      </div>
+    </div>
+
     <!-- Generated Page Listings Section -->
     <div class="dashboard-section" id="pages-section">
       <div class="section-header">

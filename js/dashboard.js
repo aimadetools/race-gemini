@@ -4801,7 +4801,173 @@ document.addEventListener('DOMContentLoaded', () => {
             scoreAdvice.textContent = 'The page content could not be fetched or parsed.';
         }
     }
+    // --- Local SEO Grid Heatmap Logic ---
+    const refreshGridBtn = document.getElementById('refresh-grid-btn');
+    const gridLoading = document.getElementById('grid-heatmap-loading');
+    const gridError = document.getElementById('grid-heatmap-error');
+    const gridContent = document.getElementById('grid-heatmap-content');
+    const gridContainer = document.getElementById('dashboard-seo-grid-heatmap');
 
-    // Trigger rankings load
+    async function fetchLocalSeoGrid() {
+        if (!gridContainer) return;
+        gridLoading.style.display = 'flex';
+        gridContent.style.display = 'none';
+        gridError.style.display = 'none';
+
+        try {
+            const response = await fetch('/api/local-seo-grid', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                renderGridHeatmap(data);
+            } else {
+                console.error('Failed to fetch local SEO grid.');
+                gridLoading.style.display = 'none';
+                gridError.style.display = 'block';
+            }
+        } catch (err) {
+            console.error('Error fetching local SEO grid:', err);
+            gridLoading.style.display = 'none';
+            gridError.style.display = 'block';
+        }
+    }
+
+    function renderGridHeatmap(data) {
+        gridLoading.style.display = 'none';
+        if (!data.grid || data.grid.length === 0) {
+            gridError.style.display = 'block';
+            return;
+        }
+
+        gridContent.style.display = 'flex';
+        gridContainer.innerHTML = '';
+
+        data.grid.forEach((cell, idx) => {
+            const isCenter = cell.direction === 'CTR';
+            const isVisible = cell.status === 'visible';
+            const cellBg = isCenter 
+                ? 'rgba(16, 185, 129, 0.12)' 
+                : (isVisible ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.05)');
+            const cellBorder = isCenter
+                ? 'rgba(16, 185, 129, 0.45)'
+                : (isVisible ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)');
+            const badgeBg = isVisible ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+            const badgeColor = isVisible ? '#34d399' : '#f87171';
+            const statusText = isVisible ? `Rank: #${cell.rank}` : 'Not Ranked';
+            
+            const cellEl = document.createElement('div');
+            cellEl.className = `seo-grid-cell ${cell.direction.toLowerCase()}`;
+            cellEl.dataset.index = idx;
+            cellEl.style.cssText = `background: ${cellBg}; border: 1px solid ${cellBorder}; border-radius: 12px; padding: 1rem 0.5rem; text-align: center; position: relative; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; cursor: pointer;`;
+            
+            cellEl.addEventListener('mouseenter', () => {
+                cellEl.style.transform = 'translateY(-3px)';
+                cellEl.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                cellEl.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+            });
+            cellEl.addEventListener('mouseleave', () => {
+                cellEl.style.transform = 'none';
+                const activeEl = document.querySelector('#dashboard-seo-grid-heatmap .seo-grid-cell.active-highlight');
+                const activeIndex = activeEl ? parseInt(activeEl.dataset.index) : -1;
+                cellEl.style.borderColor = activeIndex === idx ? '#60a5fa' : cellBorder;
+                cellEl.style.boxShadow = activeIndex === idx ? '0 0 10px rgba(96, 165, 250, 0.4)' : 'none';
+            });
+
+            cellEl.innerHTML = `
+                <!-- Direction / Label -->
+                <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                    ${cell.label}
+                </span>
+                
+                <!-- City name -->
+                <span style="font-weight: 700; font-size: 0.85rem; color: #fff; line-height: 1.2; margin-bottom: 0.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+                    ${cell.name}
+                </span>
+                
+                <!-- Status badge -->
+                <span style="font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 20px; background: ${badgeBg}; color: ${badgeColor}; border: 1px solid rgba(${isVisible ? '16,185,129' : '239,68,68'},0.2);">
+                    ${statusText}
+                </span>
+                
+                <!-- Pulsing indicator -->
+                <span class="node-pulse" style="position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; border-radius: 50%; background: ${isVisible ? '#10b981' : '#ef4444'}; box-shadow: 0 0 6px ${isVisible ? '#10b981' : '#ef4444'};"></span>
+            `;
+
+            cellEl.addEventListener('click', () => {
+                selectDashboardGridCell(cell, idx, data.grid);
+            });
+
+            gridContainer.appendChild(cellEl);
+        });
+
+        // Auto-select center cell
+        if (data.grid && data.grid[4]) {
+            selectDashboardGridCell(data.grid[4], 4, data.grid);
+        }
+    }
+
+    function selectDashboardGridCell(cell, idx, grid) {
+        const title = document.getElementById('dash-detail-cell-title');
+        const dir = document.getElementById('dash-detail-cell-dir');
+        const volume = document.getElementById('dash-detail-cell-volume');
+        const status = document.getElementById('dash-detail-cell-status');
+        const action = document.getElementById('dash-detail-cell-action');
+
+        // Highlight active cell visually
+        document.querySelectorAll('#dashboard-seo-grid-heatmap .seo-grid-cell').forEach((el, index) => {
+            el.classList.remove('active-highlight');
+            const cBorder = grid[index].direction === 'CTR' 
+                ? 'rgba(16, 185, 129, 0.45)' 
+                : (grid[index].status === 'visible' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)');
+            el.style.boxShadow = index === idx ? '0 0 10px rgba(96, 165, 250, 0.4)' : 'none';
+            el.style.borderColor = index === idx ? '#60a5fa' : cBorder;
+            if (index === idx) {
+                el.classList.add('active-highlight');
+            }
+        });
+
+        title.textContent = cell.name;
+        dir.textContent = cell.label;
+        volume.textContent = `${cell.searchVolume} searches/month`;
+
+        const isVisible = cell.status === 'visible';
+        status.textContent = isVisible ? `Visible (Rank #${cell.rank})` : 'Invisible / Missed Opportunity';
+        status.style.color = isVisible ? '#34d399' : '#f87171';
+
+        if (isVisible) {
+            action.innerHTML = `
+                <div style="padding: 0.6rem; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); border-radius: 6px; color: #34d399; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-circle-check"></i> <span>Active localized page is deployed and ranking.</span>
+                </div>
+            `;
+        } else {
+            action.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                    <div style="color: #ef4444; font-size: 0.8rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <span>Missing town target landing page.</span>
+                    </div>
+                    <button class="button button-primary" onclick="window.prefillPageGeneration('${cell.name.replace(/'/g, "\\'")}')" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; font-size: 0.85rem; padding: 0.5rem; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(59,130,246,0.35);">
+                        <i class="fa-solid fa-magic"></i> Generate Page for ${cell.name}
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    window.prefillPageGeneration = (town) => {
+        window.location.href = `/generate.html?prefill_town=${encodeURIComponent(town)}`;
+    };
+
+    if (refreshGridBtn) {
+        refreshGridBtn.addEventListener('click', fetchLocalSeoGrid);
+    }
+
+    // Trigger rankings load & local SEO grid load
     fetchRankings();
+    fetchLocalSeoGrid();
 });

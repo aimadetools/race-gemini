@@ -2,6 +2,7 @@ const fetch = global.fetch;
 import { logError } from '../lib/logger.js';
 import { parseAddress } from '../lib/html-parser.js';
 import { exec } from 'child_process';
+import { computeLocalSeoGrid } from '../lib/seo-grid.js';
 
 export default async (req, res) => {
     // Enable CORS
@@ -59,16 +60,26 @@ export default async (req, res) => {
 
             // Query Overpass API for nearby places
             let nearbyTowns = [];
+            let nearbyTownsWithCoords = [];
             try {
                 const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:25000,${lat},${lng})[place~"city|town|suburb|village|hamlet"];out;`;
                 const overpassResponse = await fetch(overpassUrl);
                 if (overpassResponse && overpassResponse.ok) {
                     const overpassData = await overpassResponse.json();
                     if (overpassData && overpassData.elements && overpassData.elements.length > 0) {
-                        const towns = overpassData.elements
-                            .map(el => el.tags && el.tags.name)
-                            .filter(name => name && name.toLowerCase() !== city.toLowerCase());
-                        nearbyTowns = [...new Set(towns)].sort().slice(0, 15);
+                        const seen = new Set();
+                        overpassData.elements.forEach(el => {
+                            const name = el.tags && el.tags.name;
+                            if (name && name.toLowerCase() !== city.toLowerCase() && !seen.has(name.toLowerCase())) {
+                                seen.add(name.toLowerCase());
+                                nearbyTownsWithCoords.push({
+                                    name: name,
+                                    lat: el.lat,
+                                    lng: el.lon
+                                });
+                            }
+                        });
+                        nearbyTowns = nearbyTownsWithCoords.map(t => t.name).sort().slice(0, 15);
                     }
                 }
             } catch (overpassErr) {
@@ -100,11 +111,13 @@ export default async (req, res) => {
 
             let foundPages = [];
             let missedOpportunities = [];
+            let locationsFound = [];
+            let locationsNotFound = [];
 
             try {
                 const pythonCommand = `python scripts/auditor_cli.py locations "${url}" --locations-db "${locationsDb}"`;
                 const { stdout, stderr } = await new Promise((resolve, reject) => {
-                    exec(pythonCommand, { cwd: process.cwd() }, (error, stdout, stderr) => { // Added cwd
+                    exec(pythonCommand, { cwd: process.cwd() }, (error, stdout, stderr) => {
                         if (error) {
                             return reject(error);
                         }
@@ -121,16 +134,28 @@ export default async (req, res) => {
                 if (auditOutput && auditOutput.results) {
                     foundPages = auditOutput.results.locations_found.map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
                     missedOpportunities = auditOutput.results.locations_not_found.map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
+                    locationsFound = auditOutput.results.locations_found || [];
+                    locationsNotFound = auditOutput.results.locations_not_found || [];
                 } else {
                     await logError(new Error(`Python audit did not return expected results for URL: ${url}`), 'Free Audit - Python Output Error', 'free_audit_error.log');
                 }
 
             } catch (pythonError) {
                 await logError(pythonError, 'Free Audit - Python Audit Execution Error', 'free_audit_error.log');
-                // Fallback to simpler logic or return an error to the client
                 foundPages = city ? [`${service}-in-${baseCity}`] : [];
                 missedOpportunities = nearbyTowns.filter(town => town.toLowerCase().replace(/ /g, '-') !== baseCity).map(loc => `${service}-in-${loc.toLowerCase().replace(/ /g, '-')}`);
+                locationsFound = city ? [city] : [];
+                locationsNotFound = nearbyTowns.filter(t => (typeof t === 'string' ? t : t.name).toLowerCase() !== (city || '').toLowerCase());
             }
+
+            // Compute local SEO visibility grid
+            const grid = computeLocalSeoGrid(
+                city || 'Home City', 
+                lat, 
+                lng, 
+                nearbyTownsWithCoords.length > 0 ? nearbyTownsWithCoords : nearbyTowns, 
+                locationsFound
+            );
 
             res.status(200).json({
                 address,
@@ -138,6 +163,9 @@ export default async (req, res) => {
                 lng,
                 foundPages,
                 missedOpportunities,
+                locationsFound,
+                locationsNotFound,
+                grid
             });
         } else {
             await logError(new Error(`Could not geocode the address for: ${address}`), 'Free Audit - Geocoding Failed', 'free_audit_error.log');

@@ -2087,6 +2087,27 @@ a.logo span {
   }
 }
 
+/* SEO Heatmap Grid Animations */
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.seo-grid-cell .node-pulse {
+  animation: pulse-green 2s infinite;
+}
+
+.seo-grid-cell.opportunity .node-pulse {
+  animation: pulse-red 2s infinite !important;
+}
+
 
 
 

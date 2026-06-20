@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const townsInput = document.getElementById('towns');
     const townsCharCount = document.getElementById('towns-char-count');
 
+    // Prefill town from URL query parameter if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const prefillTown = urlParams.get('prefill_town');
+    if (prefillTown && townsInput) {
+        townsInput.value = prefillTown;
+    }
+
     // Credit display elements
     const currentCreditsSpan = document.getElementById('current-credits');
     const estimatedCreditsSpan = document.getElementById('estimated-credits');
