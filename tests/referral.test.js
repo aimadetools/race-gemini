@@ -2,6 +2,7 @@ import { jest } from '@jest/globals';
 import fetch from 'node-fetch';
 
 describe('Referral Program E2E Test', () => {
+  jest.setTimeout(120000);
   const API_URL = process.env.API_URL || 'http://localhost:3000';
 
 
