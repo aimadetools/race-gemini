@@ -24,6 +24,10 @@
   ],
   "rewrites": [
     {
+      "source": "/share/:hash",
+      "destination": "/share.html?token=:hash"
+    },
+    {
       "source": "/generated-seo-pages/:fileName",
       "destination": "/api/serve-static-page?fileName=:fileName"
     },

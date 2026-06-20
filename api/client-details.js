@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import slugify from 'slugify';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
+import crypto from 'crypto';
 
 async function handler(req, res, currentKvClient) {
     const currentKv = currentKvClient || kv;
@@ -57,13 +58,19 @@ async function handler(req, res, currentKvClient) {
         }
 
         // Fetch client details from PostgreSQL
-        const clientResult = await query('SELECT id, name, email, credits, agency_id FROM users WHERE id = $1', [id]);
+        const clientResult = await query('SELECT id, name, email, credits, agency_id, share_token FROM users WHERE id = $1', [id]);
         if (clientResult.rows.length === 0) {
             await logError(new Error(`Client with ID ${id} not found.`), 'Client Details - Client Not Found', 'client_details_error.log');
             return res.status(404).json({ message: 'Client not found' });
         }
 
         const client = clientResult.rows[0];
+        let shareToken = client.share_token;
+        if (!shareToken) {
+            shareToken = crypto.randomBytes(16).toString('hex');
+            await query('UPDATE users SET share_token = $1 WHERE id = $2', [shareToken, id]);
+        }
+
         if (client.agency_id !== agencyId) {
             await logError(new Error(`Client ${id} does not belong to agency ${agencyId}.`), 'Client Details - Unauthorized Access', 'client_details_error.log');
             return res.status(403).json({ message: 'Client does not belong to this agency.' });
@@ -123,6 +130,7 @@ async function handler(req, res, currentKvClient) {
             name: client.name,
             email: client.email,
             credits: client.credits || 0,
+            shareToken: shareToken,
             pages,
             leads
         });

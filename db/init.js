@@ -30,6 +30,7 @@ import { addBusinessProfileToUsers } from './migrations/add_business_profile_to_
 import { addGbpOauthToUsers } from './migrations/add_gbp_oauth_to_users.js';
 import { createKeywordRankingsTable } from './migrations/create_keyword_rankings_table.js';
 import { addAgencyDirectoryIdToLeads } from './migrations/add_agency_directory_id_to_leads.js';
+import { addShareTokenToUsers } from './migrations/add_share_token_to_users.js';
 
 
 export async function initializeDatabase() {
@@ -130,12 +131,12 @@ export async function initializeDatabase() {
     console.log('Ensuring agency_directory_id column exists in leads table...');
     await addAgencyDirectoryIdToLeads();
 
+    console.log('Ensuring share_token column exists in users table...');
+    await addShareTokenToUsers();
+
     console.log('Database initialization completed.');
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
   }
 }
-
-
-

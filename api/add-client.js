@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js'; // Import centralized logger
 import { sendEmail } from '../lib/email.js';
+import crypto from 'crypto';
 
 
 async function handler(req, res, currentKvClient) {
@@ -67,11 +68,12 @@ async function handler(req, res, currentKvClient) {
 
         const password = Math.random().toString(36).slice(-8);
         const passwordHash = await bcrypt.hash(password, 10);
+        const shareToken = crypto.randomBytes(16).toString('hex');
 
         // Insert client into PostgreSQL users table
         const pgResult = await query(
-            'INSERT INTO users (email, password_hash, credits, agency_id, name) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [clientEmail, passwordHash, 0, agencyId, clientName]
+            'INSERT INTO users (email, password_hash, credits, agency_id, name, share_token) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+            [clientEmail, passwordHash, 0, agencyId, clientName, shareToken]
         );
         const userId = pgResult.rows[0].id;
 
@@ -82,7 +84,8 @@ async function handler(req, res, currentKvClient) {
             passwordHash,
             agencyId,
             createdAt: new Date().toISOString(),
-            credits: 0
+            credits: 0,
+            shareToken
         };
         
         await currentKv.set(`user:${userId}`, newUser);

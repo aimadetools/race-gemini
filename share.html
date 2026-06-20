@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Client Reporting Portal</title>
+  <meta content="View your local SEO performance report, page traffic metrics, and captured client leads in real time." name="description"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="/images/favicon.png" rel="icon" type="image/png"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="/style.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --bg-dark: #070a13;
+      --card-bg: rgba(17, 24, 39, 0.4);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top right, var(--primary-color), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.03), transparent 40%),
+                  var(--bg-dark);
+      background-attachment: fixed;
+      font-family: var(--font-body);
+      color: #e2e8f0;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .agency-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .agency-logo-img {
+      max-height: 38px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .agency-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .portal-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+    }
+
+    main {
+      flex: 1;
+      padding: 2.5rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.3) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+    }
+
+    .welcome-title {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      color: #fff;
+    }
+
+    .welcome-desc {
+      color: #94a3b8;
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      color: var(--primary-color);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* Dashboard Layout */
+    .dashboard-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.85rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i {
+      color: var(--primary-color);
+    }
+
+    /* Tables */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-family: var(--font-display);
+      color: #94a3b8;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.85rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    td {
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Badge styles */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-indexed {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-crawled {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .badge-excluded {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .badge-unknown {
+      background: rgba(148, 163, 184, 0.1);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    /* Action Buttons */
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #fff;
+    }
+
+    /* Loading Overlay */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #070a13;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      gap: 1rem;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 3px solid rgba(255, 255, 255, 0.05);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+    }
+
+    /* Error Area */
+    #error-container {
+      display: none;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      max-width: 450px;
+      margin: 4rem auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+    }
+
+    #error-container i {
+      font-size: 3.5rem;
+      color: #ef4444;
+      margin-bottom: 1.25rem;
+    }
+
+    #error-container h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #error-container p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      background: rgba(15, 23, 42, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; font-family: var(--font-display); font-size: 0.95rem;">Loading Report Portal...</div>
+  </div>
+
+  <!-- Error Screen -->
+  <div id="error-container">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h2 id="error-title">Access Denied</h2>
+    <p id="error-desc">This shared portal link is invalid or has expired. Please contact your administrator.</p>
+  </div>
+
+  <!-- Portal Header -->
+  <header id="portal-header" style="display: none;">
+    <div class="header-container">
+      <div class="agency-logo-container">
+        <img id="agency-logo" src="/images/logo.svg" alt="Agency Logo" class="agency-logo-img">
+        <span id="agency-name" class="agency-name">LocalLeads</span>
+      </div>
+      <div class="portal-tag">Client Report</div>
+    </div>
+  </header>
+
+  <!-- Dashboard Main Content -->
+  <main id="portal-content" style="display: none;">
+    
+    <!-- Welcome Header Card -->
+    <div class="welcome-banner">
+      <h1 class="welcome-title" id="portal-welcome-title">Reporting Portal</h1>
+      <p class="welcome-desc" id="portal-welcome-desc">Real-time local search visibility, traffic analytics, and inquiry tracking.</p>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-pages">0</div>
+          <div class="stat-label">Generated Pages</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-views">0</div>
+          <div class="stat-label">Total SEO Views</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-visitors">0</div>
+          <div class="stat-label">Unique Visitors</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-leads">0</div>
+          <div class="stat-label">Inquiries Captured</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyword Rankings Tracker Section -->
+    <div class="dashboard-section" id="rankings-section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-search"></i> Keyword Rankings Tracker</h2>
+        <span style="font-size: 0.8rem; color: #94a3b8;"><i class="fas fa-check-circle" style="color: #10b981;"></i> Auto-Synched</span>
+      </div>
+      <div id="rankings-empty" style="display: none; padding: 2rem 0; text-align: center; color: #94a3b8;">
+        <i class="fas fa-search" style="font-size: 2rem; opacity: 0.5; margin-bottom: 0.75rem; display: block;"></i>
+        No keywords tracked yet.
+      </div>
+      <div class="table-responsive" id="rankings-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Keyword</th>
+              <th>Service Area</th>
+              <th style="text-align: center;">Current Rank</th>
+              <th style="text-align: center;">Weekly Trend</th>
+              <th style="text-align: center;">History (7 Days)</th>
+            </tr>
+          </thead>
+          <tbody id="rankings-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Generated Page Listings Section -->
+    <div class="dashboard-section" id="pages-section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-globe"></i> Active Service Pages</h2>
+      </div>
+      <div id="pages-empty" style="display: none; padding: 2rem 0; text-align: center; color: #94a3b8;">
+        <i class="fas fa-globe" style="font-size: 2rem; opacity: 0.5; margin-bottom: 0.75rem; display: block;"></i>
+        No landing pages generated yet.
+      </div>
+      <div class="table-responsive" id="pages-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Town</th>
+              <th>Views</th>
+              <th>Visitors</th>
+              <th>Google Indexing</th>
+              <th>Live Page</th>
+            </tr>
+          </thead>
+          <tbody id="pages-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Leads/Inquiries List Section -->
+    <div class="dashboard-section" id="leads-section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-inbox"></i> Leads & Direct Inquiries</h2>
+      </div>
+      <div id="leads-empty" style="display: none; padding: 2rem 0; text-align: center; color: #94a3b8;">
+        <i class="fas fa-envelope-open" style="font-size: 2rem; opacity: 0.5; margin-bottom: 0.75rem; display: block;"></i>
+        No inquiries captured yet.
+      </div>
+      <div class="table-responsive" id="leads-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact Details</th>
+              <th>Message</th>
+              <th>Source Page</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="leads-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 <span id="footer-agency-name">LocalLeads</span>. Powered by LocalLeads. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function loadPortal() {
+      // 1. Extract share token from URL path or query
+      const urlParams = new URLSearchParams(window.location.search);
+      let token = urlParams.get('token');
+      
+      if (!token) {
+        const pathParts = window.location.pathname.split('/');
+        // e.g., /share/[token] -> pathParts: ["", "share", "[token]"]
+        if (pathParts.length >= 3 && pathParts[1] === 'share') {
+          token = pathParts[2];
+        }
+      }
+
+      if (!token) {
+        showError('Link Error', 'Invalid portal URL. Missing share credentials.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/share?token=${token}`);
+        if (!response.ok) {
+          const errData = await response.json();
+          showError('Not Found', errData.message || 'Shared portal could not be loaded.');
+          return;
+        }
+
+        const data = await response.json();
+        renderPortal(data);
+      } catch (err) {
+        console.error('Error fetching portal data:', err);
+        showError('Connection Error', 'Unable to retrieve portal details. Please check your connection.');
+      }
+    }
+
+    function showError(title, desc) {
+      document.getElementById('loading-overlay').style.display = 'none';
+      document.getElementById('portal-header').style.display = 'none';
+      document.getElementById('portal-content').style.display = 'none';
+      
+      const errorContainer = document.getElementById('error-container');
+      errorContainer.style.display = 'block';
+      document.getElementById('error-title').textContent = title;
+      document.getElementById('error-desc').textContent = desc;
+    }
+
+    function renderPortal(data) {
+      // Dynamic primary color injection
+      if (data.primaryColor) {
+        document.documentElement.style.setProperty('--primary-color', data.primaryColor);
+        document.documentElement.style.setProperty('--bg-dark', '#070a13');
+      }
+
+      // White-label header values
+      const logo = document.getElementById('agency-logo');
+      if (data.logoUrl) {
+        logo.src = data.logoUrl;
+      } else {
+        logo.src = '/images/logo.svg';
+      }
+      
+      document.getElementById('agency-name').textContent = data.agencyName || 'LocalLeads';
+      document.getElementById('footer-agency-name').textContent = data.agencyName || 'LocalLeads';
+
+      // Welcome Banner details
+      document.getElementById('portal-welcome-title').textContent = `Report Dashboard for ${data.clientName}`;
+      
+      // Page statistics totals
+      const totalPages = data.pages ? data.pages.length : 0;
+      let totalViews = 0;
+      let totalVisitors = 0;
+
+      if (data.pages) {
+        data.pages.forEach(p => {
+          totalViews += p.views || 0;
+          totalVisitors += p.uniqueVisitors || 0;
+        });
+      }
+
+      const totalLeads = data.leads ? data.leads.length : 0;
+
+      document.getElementById('stat-pages').textContent = totalPages;
+      document.getElementById('stat-views').textContent = totalViews;
+      document.getElementById('stat-visitors').textContent = totalVisitors;
+      document.getElementById('stat-leads').textContent = totalLeads;
+
+      // --- 1. RENDER KEYWORD RANKINGS ---
+      const rankingsTableBody = document.getElementById('rankings-table-body');
+      const rankingsEmpty = document.getElementById('rankings-empty');
+      const rankingsContainer = document.getElementById('rankings-table-container');
+
+      if (!data.rankings || data.rankings.length === 0) {
+        rankingsEmpty.style.display = 'block';
+        rankingsContainer.style.display = 'none';
+      } else {
+        rankingsEmpty.style.display = 'none';
+        rankingsContainer.style.display = 'block';
+        rankingsTableBody.innerHTML = '';
+
+        data.rankings.forEach(item => {
+          const row = document.createElement('tr');
+          
+          let trendHtml = `<span style="color: #94a3b8; font-size: 0.85rem;"><i class="fas fa-minus"></i> —</span>`;
+          if (item.trend > 0) {
+            trendHtml = `<span style="color: #10b981; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-up"></i> +${item.trend}</span>`;
+          } else if (item.trend < 0) {
+            trendHtml = `<span style="color: #ef4444; font-weight: bold; font-size: 0.85rem;"><i class="fas fa-arrow-down"></i> ${item.trend}</span>`;
+          }
+
+          let rankColor = '#94a3b8';
+          if (item.rank <= 3) rankColor = '#fbbf24';
+          else if (item.rank <= 10) rankColor = '#3b82f6';
+          else if (item.rank <= 20) rankColor = '#10b981';
+
+          const rankBadge = `<span style="display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid ${rankColor}; color: ${rankColor}; font-weight: 700; font-size: 0.85rem;">#${item.rank}</span>`;
+
+          let sparklineHtml = '<span style="color: #64748b; font-size: 0.75rem;">No history</span>';
+          if (item.history && item.history.length > 0) {
+            const pts = item.history;
+            const minRank = 1;
+            const maxRank = 50;
+            const width = 80;
+            const height = 22;
+            const step = width / (pts.length - 1);
+            
+            const pointsStr = pts.map((p, idx) => {
+              const x = idx * step;
+              const val = p.rank;
+              const normalizedY = 2 + ((val - minRank) / (maxRank - minRank)) * (height - 4);
+              return `${x.toFixed(1)},${normalizedY.toFixed(1)}`;
+            }).join(' ');
+
+            sparklineHtml = `
+              <svg width="${width}" height="${height}" style="overflow: visible;">
+                <polyline fill="none" stroke="#10b981" stroke-width="1.5" points="${pointsStr}" />
+                <circle cx="${width}" cy="${(2 + ((item.rank - minRank) / (maxRank - minRank)) * (height - 4)).toFixed(1)}" r="2" fill="#10b981" />
+              </svg>
+            `;
+          }
+
+          row.innerHTML = `
+            <td style="padding: 1rem 0.5rem;">
+              <div style="font-weight: 600; color: #fff;">${item.keyword}</div>
+              <div style="font-size: 0.75rem; color: #64748b; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                <i class="fas fa-map-marker-alt" style="font-size: 0.65rem;"></i> ${item.town}
+              </div>
+            </td>
+            <td>${item.service}</td>
+            <td style="text-align: center; vertical-align: middle;">${rankBadge}</td>
+            <td style="text-align: center; vertical-align: middle;">${trendHtml}</td>
+            <td style="text-align: center; vertical-align: middle;">${sparklineHtml}</td>
+          `;
+          rankingsTableBody.appendChild(row);
+        });
+      }
+
+      // --- 2. RENDER ACTIVE PAGES ---
+      const pagesTableBody = document.getElementById('pages-table-body');
+      const pagesEmpty = document.getElementById('pages-empty');
+      const pagesContainer = document.getElementById('pages-table-container');
+
+      if (!data.pages || data.pages.length === 0) {
+        pagesEmpty.style.display = 'block';
+        pagesContainer.style.display = 'none';
+      } else {
+        pagesEmpty.style.display = 'none';
+        pagesContainer.style.display = 'block';
+        pagesTableBody.innerHTML = '';
+
+        data.pages.forEach(page => {
+          const getIndexingBadge = (status) => {
+            const statusLower = (status || '').toLowerCase();
+            if (statusLower.includes('indexed') || statusLower === 'pass' || statusLower === 'indexed, primary') {
+              return `<span class="badge badge-indexed"><i class="fas fa-check-circle"></i> Indexed</span>`;
+            }
+            if (statusLower.includes('crawled') || statusLower === 'neutral') {
+              return `<span class="badge badge-crawled"><i class="fas fa-history"></i> Crawled</span>`;
+            }
+            if (statusLower.includes('excluded') || statusLower.includes('noindex') || statusLower === 'fail') {
+              return `<span class="badge badge-excluded"><i class="fas fa-times-circle"></i> Excluded</span>`;
+            }
+            return `<span class="badge badge-unknown"><i class="fas fa-question-circle"></i> Unknown</span>`;
+          };
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${page.service}</td>
+            <td>${page.town}</td>
+            <td>${page.views || 0}</td>
+            <td>${page.uniqueVisitors || 0}</td>
+            <td>${getIndexingBadge(page.indexingStatus)}</td>
+            <td><a href="/${data.pages.length > 0 ? (page.resolvedClientId || data.pages[0].pageId ? (page.resolvedClientId || 'custom') : 'custom') : 'custom'}/${page.fileName}" target="_blank" class="action-btn">View Page <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i></a></td>
+          `;
+          
+          // Wait, let's fix the link path if is custom domain or standard localseogen path.
+          // Since it's a shared link, we don't know the exact client ID unless we pass it.
+          // Let's pass resolvedClientId in share API or use standard link structure:
+          // /:clientId/:fileName
+          // In the share API, we can output pages with user_id!
+          // Let's make sure the link is:
+          // `/${data.id || 'custom'}/${page.fileName}` or similar.
+          // But wait, the API share.js returns `clientId` or we can map page.resolvedClientId. Let's make sure `/api/share.js` returns page with user_id or we use user_id dynamically.
+          // Wait, `/api/share.js` returns `pages` with `fileName` and `pageId`. If the client has custom domain, we can construct the direct URL or just standard localseogen.com/:userId/:fileName.
+          // In renderPortal, let's look at `pages`. We didn't add user_id to page object, but we have data.id or we can map `/share` data.
+          // Wait, let's check: does `/api/share.js` return `id` of client?
+          // Let's check `api/share.js`:
+          // `return res.status(200).json({ clientName: client.name, ... });`
+          // Wait! Let's check if we return the client ID in `api/share.js`.
+          // In `api/share.js`:
+          // `const clientId = client.id;`
+          // Ah, we did NOT return `clientId` or `id` in the JSON response!
+          // We should return `clientId: client.id` or `id: client.id` in `api/share.js` response so the client-side JavaScript can build `/clientId/fileName` links correctly!
+          // Let's verify: yes, returning `clientId` or `id` is crucial. Let's modify the share.html row generator to use `data.id` or `data.clientId`:
+          // `const pageUrl = /${data.clientId}/${page.fileName};`
+          // Wait, this is extremely simple!
+          
+          row.cells[5].innerHTML = `<a href="/${data.clientId || 'custom'}/${page.fileName}" target="_blank" class="action-btn">View Page <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i></a>`;
+          
+          pagesTableBody.appendChild(row);
+        });
+      }
+
+      // --- 3. RENDER LEADS / INQUIRIES ---
+      const leadsTableBody = document.getElementById('leads-table-body');
+      const leadsEmpty = document.getElementById('leads-empty');
+      const leadsContainer = document.getElementById('leads-table-container');
+
+      if (!data.leads || data.leads.length === 0) {
+        leadsEmpty.style.display = 'block';
+        leadsContainer.style.display = 'none';
+      } else {
+        leadsEmpty.style.display = 'none';
+        leadsContainer.style.display = 'block';
+        leadsTableBody.innerHTML = '';
+
+        data.leads.forEach(lead => {
+          const row = document.createElement('tr');
+          
+          // Mask/obfuscate contact details if not unlocked (if that's a requirement), or display read-only details
+          let contactDetailsHtml = '';
+          if (lead.isUnlocked) {
+            contactDetailsHtml = `
+              <div style="font-weight: 600; color: #fff;">${lead.email || '—'}</div>
+              <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px;">${lead.phone || '—'}</div>
+            `;
+          } else {
+            contactDetailsHtml = `
+              <div style="font-weight: 600; color: #94a3b8; font-style: italic;"><i class="fas fa-lock"></i> Locked Lead</div>
+              <div style="font-size: 0.75rem; color: #64748b;">Contact agency to unlock</div>
+            `;
+          }
+
+          let sourcePageName = '—';
+          if (lead.url) {
+            try {
+              sourcePageName = new URL(lead.url).pathname;
+            } catch (e) {
+              sourcePageName = lead.url;
+            }
+          }
+
+          row.innerHTML = `
+            <td style="font-weight: 600; color: #fff;">${lead.name || '—'}</td>
+            <td>${contactDetailsHtml}</td>
+            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${lead.message || ''}">${lead.message || '—'}</td>
+            <td><a href="${lead.url || '#'}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${sourcePageName}</a></td>
+            <td>${lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : '—'}</td>
+          `;
+          leadsTableBody.appendChild(row);
+        });
+      }
+
+      // Hide loading overlay and show dashboard
+      document.getElementById('loading-overlay').style.display = 'none';
+      document.getElementById('portal-header').style.display = 'block';
+      document.getElementById('portal-content').style.display = 'block';
+    }
+
+    // Initialize portal load
+    loadPortal();
+  </script>
+</body>
+</html>

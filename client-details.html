@@ -83,6 +83,17 @@
        0
       </span>
 </p>
+<p>
+<strong>
+       Shared Client Portal Link:
+      </strong>
+<span id="client-share-link-container">
+       <a href="#" id="client-share-link" target="_blank" style="color: #60a5fa; text-decoration: none;">Loading...</a>
+       <button id="copy-share-link-btn" class="button button-small button-secondary" style="margin-left: 10px; padding: 2px 8px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
+           <i class="far fa-copy"></i> Copy Link
+       </button>
+</span>
+</p>
 </div>
 <div class="assign-credits-section">
 <h2>
@@ -391,6 +402,8 @@
 const clientEmailDisplay = document.getElementById('client-email');
 const clientCreditsDisplay = document.getElementById('client-credits');
 const generatedPages = document.getElementById('generated-pages');
+const clientShareLink = document.getElementById('client-share-link');
+const copyShareLinkBtn = document.getElementById('copy-share-link-btn');
 
 const assignCreditsForm = document.getElementById('assign-credits-form');
 const assignCreditsAmount = document.getElementById('assign-credits-amount');
@@ -555,6 +568,25 @@ async function fetchClientDetails() {
         clientNameDisplay.textContent = data.name;
         clientEmailDisplay.textContent = data.email;
         clientCreditsDisplay.textContent = data.credits || 0;
+
+        if (clientShareLink && data.shareToken) {
+            const shareUrl = `${window.location.origin}/share/${data.shareToken}`;
+            clientShareLink.href = shareUrl;
+            clientShareLink.textContent = shareUrl;
+
+            copyShareLinkBtn.onclick = () => {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    const originalText = copyShareLinkBtn.innerHTML;
+                    copyShareLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyShareLinkBtn.innerHTML = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy share link:', err);
+                    alert('Failed to copy to clipboard.');
+                });
+            };
+        }
 
         // Populate edit form fields
         editClientNameInput.value = data.name;

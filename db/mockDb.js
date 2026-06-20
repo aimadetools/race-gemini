@@ -297,6 +297,27 @@ export const originalMockQuery = async (text, params) => {
             return { rows: [] };
         }
 
+        if (textLower.includes('where share_token = $1') || textLower.includes('share_token = $1')) {
+            const token = params[0];
+            const user = mockUsers.find(u => u.share_token === token);
+            if (user) {
+                const u = {
+                    id: user.id,
+                    name: user.name || null,
+                    email: user.email,
+                    password_hash: user.password_hash || user.passwordHash || user.hashed_password,
+                    credits: user.credits || 0,
+                    referral_code: user.referral_code,
+                    referrer_id: user.referrer_id,
+                    agency_id: user.agency_id || null,
+                    is_agency: user.is_agency || false,
+                    share_token: user.share_token || null
+                };
+                return { rows: [u] };
+            }
+            return { rows: [] };
+        }
+
         if (textLower.includes('where agency_id = $1')) {
             const agencyId = params[0]?.toString();
             const clients = mockUsers.filter(u => u.agency_id?.toString() === agencyId);
@@ -456,6 +477,15 @@ export const originalMockQuery = async (text, params) => {
 
     // 3. UPDATE query
     if (textLower.includes('update users')) {
+        if (textLower.includes('share_token = $1')) {
+            const [token, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.share_token = token;
+                return { rows: [{ id: user.id }] };
+            }
+            return { rows: [] };
+        }
         if (textLower.includes('gbp_oauth_refresh_token = null') || textLower.includes('gbp_oauth_refresh_token =  null') || textLower.includes('gbp_oauth_refresh_token = $1 and gbp_oauth_refresh_token = null') || (textLower.includes('gbp_oauth_refresh_token') && textLower.includes('null') && params.length === 1)) {
             const [userId] = params;
             const user = mockUsers.find(u => u.id.toString() === userId.toString());
