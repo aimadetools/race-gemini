@@ -62,7 +62,10 @@ describe('Public Business Info API', () => {
                 name: 'ACME Plumbers',
                 logo_url: 'http://example.com/logo.png',
                 is_agency: false,
-                agency_id: null
+                agency_id: null,
+                google_review_link: 'https://g.page/acme/review',
+                facebook_review_link: 'https://facebook.com/acme/reviews',
+                yelp_review_link: 'https://yelp.com/biz/acme'
             }]
         });
         mockQuery.mockResolvedValueOnce({
@@ -75,7 +78,10 @@ describe('Public Business Info API', () => {
         expect(mockRes.json).toHaveBeenCalledWith({
             businessName: 'ACME Plumbers',
             logoUrl: 'http://example.com/logo.png',
-            pagesCount: 15
+            pagesCount: 15,
+            googleReviewLink: 'https://g.page/acme/review',
+            facebookReviewLink: 'https://facebook.com/acme/reviews',
+            yelpReviewLink: 'https://yelp.com/biz/acme'
         });
     });
 });
