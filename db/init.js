@@ -31,6 +31,8 @@ import { addGbpOauthToUsers } from './migrations/add_gbp_oauth_to_users.js';
 import { createKeywordRankingsTable } from './migrations/create_keyword_rankings_table.js';
 import { addAgencyDirectoryIdToLeads } from './migrations/add_agency_directory_id_to_leads.js';
 import { addShareTokenToUsers } from './migrations/add_share_token_to_users.js';
+import { addSiloSettingsToUsers } from './migrations/add_silo_settings_to_users.js';
+
 
 
 export async function initializeDatabase() {
@@ -133,6 +135,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring share_token column exists in users table...');
     await addShareTokenToUsers();
+
+    console.log('Ensuring silo settings columns exist in users table...');
+    await addSiloSettingsToUsers();
 
     console.log('Database initialization completed.');
   } catch (error) {

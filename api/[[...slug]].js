@@ -9,6 +9,8 @@ import * as cheerio from 'cheerio';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { renderMapSection } from '../lib/map-helper.js';
 import { generateFaqs } from '../lib/faq-helper.js';
+import { generateSiloLinks } from '../lib/silo-helper.js';
+
 
 export default async (req, res, currentKvClient) => {
     const currentKv = currentKvClient || kv;
@@ -100,7 +102,7 @@ export default async (req, res, currentKvClient) => {
         const [serviceSlug, townSlug] = fileName.replace('.html', '').split('-in-');
 
         // Fetch client and their parent agency from PostgreSQL
-        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id, announcement_text, announcement_type, announcement_coupon_code, announcement_expires_at, announcement_updated_at, business_profile FROM users WHERE id = $1', [resolvedClientId]);
+        const clientResult = await query('SELECT id, name, email, agency_id, ga_tracking_id, fb_pixel_id, announcement_text, announcement_type, announcement_coupon_code, announcement_expires_at, announcement_updated_at, business_profile, silo_type, silo_limit FROM users WHERE id = $1', [resolvedClientId]);
 
         if (clientResult.rows.length === 0) {
             return res.status(404).send('Not Found');
@@ -159,81 +161,19 @@ export default async (req, res, currentKvClient) => {
             longitude: pageRow.longitude
         };
 
-        // Query up to 12 other pages for this user to build Nearby Service Areas link pool
-        const otherPagesResult = await query(
-            `SELECT service, town FROM seo_pages 
-             WHERE user_id = $1 AND id != $2 
-             ORDER BY CASE WHEN service = $3 THEN 0 ELSE 1 END, created_at DESC 
-             LIMIT 12`,
-            [resolvedClientId, pageIdToFind, page.service]
+        // Generate Silo Links based on user settings
+        const nearbyAreasHtml = await generateSiloLinks(
+            resolvedClientId,
+            pageIdToFind,
+            page.service,
+            page.town,
+            page.latitude,
+            page.longitude,
+            client.silo_type || 'proximity',
+            client.silo_limit || 5,
+            isCustomDomain,
+            resolvedClientId
         );
-
-        let nearbyAreasHtml = '';
-        if (otherPagesResult && otherPagesResult.rows && otherPagesResult.rows.length > 0) {
-            let linksHtml = '';
-            for (const row of otherPagesResult.rows) {
-                const rowServiceSlug = slugify(row.service, { lower: true, strict: true });
-                const rowTownSlug = slugify(row.town, { lower: true, strict: true });
-                const linkUrl = isCustomDomain 
-                    ? `/${rowServiceSlug}-in-${rowTownSlug}.html`
-                    : `/${resolvedClientId}/${rowServiceSlug}-in-${rowTownSlug}.html`;
-                
-                linksHtml += `
-      <a class="nearby-areas-link" href="${linkUrl}">
-        <i class="fas fa-map-marker-alt"></i>
-        <span>${row.service} in ${row.town}</span>
-      </a>`;
-            }
-
-            nearbyAreasHtml = `
-<!-- Nearby Service Areas Internal Linking Pool -->
-<section class="nearby-areas">
-  <style>
-    .nearby-areas {
-      background-color: var(--bg-alt, #f9fafb);
-      padding: 3.5rem 0;
-      border-top: 1px solid var(--border-color, #e5e7eb);
-      border-bottom: 1px solid var(--border-color, #e5e7eb);
-    }
-    .nearby-areas h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      color: var(--text-color, #1f2937);
-    }
-    .nearby-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-    }
-    .nearby-areas-link {
-      color: var(--primary-color, #007bff);
-      text-decoration: none;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: color 0.2s, transform 0.2s;
-    }
-    .nearby-areas-link:hover {
-      color: #2563eb;
-      transform: translateX(4px);
-    }
-    .nearby-areas-link i {
-      font-size: 0.875rem;
-      opacity: 0.8;
-    }
-  </style>
-  <div class="container">
-    <h3>Nearby Service Areas</h3>
-    <div class="nearby-grid">
-      ${linksHtml.trim()}
-    </div>
-  </div>
-</section>
-`;
-        }
 
         let template;
         try {

@@ -260,9 +260,9 @@ describe('[[...slug]] API Wildcard Route', () => {
 
     expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/html');
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Nearby Service Areas'));
-    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('/client123/plumbing-in-manchester.html'));
-    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('/client123/heating-in-bristol.html'));
-    expect(res.send).not.toHaveBeenCalledWith(expect.stringContaining('href="/client123/plumbing-in-london.html"'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('href="plumbing-in-manchester.html"'));
+    expect(res.send).toHaveBeenCalledWith(expect.stringContaining('href="heating-in-bristol.html"'));
+    expect(res.send).not.toHaveBeenCalledWith(expect.stringContaining('href="plumbing-in-london.html"'));
   });
 
   test('should serve Google Search Console HTML verification file for custom domains when matches', async () => {

@@ -4967,7 +4967,214 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshGridBtn.addEventListener('click', fetchLocalSeoGrid);
     }
 
-    // Trigger rankings load & local SEO grid load
+    // --- SEO Link Silo Architect Logic ---
+    const siloSettingsForm = document.getElementById('silo-settings-form');
+    const siloTypeSelect = document.getElementById('silo-type-select');
+    const siloLimitInput = document.getElementById('silo-limit-input');
+    const siloDescBox = document.getElementById('silo-type-description');
+    const saveSiloBtn = document.getElementById('save-silo-settings-btn');
+    const previewServiceSelect = document.getElementById('silo-preview-service-select');
+    const previewNetworkDiv = document.getElementById('silo-preview-network');
+
+    let siloPages = [];
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        if (lat1 === null || lon1 === null || lat2 === null || lon2 === null) return Infinity;
+        if (lat1 === lat2 && lon1 === lon2) return 0;
+        const radlat1 = Math.PI * lat1 / 180;
+        const radlat2 = Math.PI * lat2 / 180;
+        const theta = lon1 - lon2;
+        const radtheta = Math.PI * theta / 180;
+        let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        if (dist > 1) dist = 1;
+        dist = Math.acos(dist);
+        dist = dist * 180 / Math.PI;
+        dist = dist * 60 * 1.1515; // miles
+        return dist;
+    }
+
+    function updateSiloDescription(type) {
+        if (!siloDescBox) return;
+        let desc = '';
+        if (type === 'proximity') {
+            desc = '<strong>Smart Proximity Silo (Recommended):</strong> Each location landing page dynamically links to the closest neighboring cities offering the same service using geographic coordinates. Best for establishing dominant local ranking clusters.';
+        } else if (type === 'loop') {
+            desc = '<strong>Circular Loop Silo:</strong> Links your city landing pages in a circular loop chain (e.g. Town A ➔ Town B ➔ Town C ➔ Town A). Distributes link equity evenly across all pages.';
+        } else if (type === 'hub_and_spoke') {
+            desc = '<strong>Hub &amp; Spoke:</strong> Links all city landing pages back to a central hub (home directory or main site), and the hub links to all location pages. Best for hierarchical sites.';
+        } else {
+            desc = '<strong>No Linking (Disabled):</strong> Location landing pages are isolated and will not link to each other.';
+        }
+        siloDescBox.innerHTML = desc;
+    }
+
+    function renderSiloPreview() {
+        if (!previewNetworkDiv) return;
+        const selectedService = previewServiceSelect ? previewServiceSelect.value : '';
+        const type = siloTypeSelect ? siloTypeSelect.value : 'proximity';
+        const limit = parseInt(siloLimitInput ? siloLimitInput.value : '5', 10) || 5;
+
+        const filteredPages = siloPages.filter(p => p.service === selectedService);
+        
+        if (filteredPages.length === 0) {
+            previewNetworkDiv.innerHTML = '<span style="font-style: italic; color: #6b7280;">No pages generated for this service yet.</span>';
+            return;
+        }
+
+        if (type === 'none') {
+            previewNetworkDiv.innerHTML = '<span style="font-style: italic; color: #f87171;"><i class="fas fa-times-circle"></i> Linking is disabled. No internal links will be injected.</span>';
+            return;
+        }
+
+        let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+
+        filteredPages.forEach(page => {
+            let links = [];
+            const otherPages = filteredPages.filter(p => p.id !== page.id);
+
+            if (type === 'proximity') {
+                const lat = page.latitude ? parseFloat(page.latitude) : null;
+                const lng = page.longitude ? parseFloat(page.longitude) : null;
+                
+                if (lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)) {
+                    // Clone objects to calculate temporary distance
+                    const pagesWithDist = otherPages.map(p => {
+                        const plat = p.latitude ? parseFloat(p.latitude) : null;
+                        const plng = p.longitude ? parseFloat(p.longitude) : null;
+                        return {
+                            town: p.town,
+                            dist: calculateDistance(lat, lng, plat, plng)
+                        };
+                    });
+                    pagesWithDist.sort((a, b) => a.dist - b.dist);
+                    links = pagesWithDist.slice(0, limit).map(p => `${p.town} (${p.dist.toFixed(1)} mi)`);
+                } else {
+                    links = otherPages.slice(0, limit).map(p => p.town);
+                }
+            } else if (type === 'loop') {
+                // sort a copy
+                const sorted = [...filteredPages].sort((a, b) => a.town.localeCompare(b.town));
+                const currentIndex = sorted.findIndex(p => p.id === page.id);
+                for (let i = 1; i <= limit; i++) {
+                    if (links.length >= sorted.length - 1) break;
+                    const nextIndex = (currentIndex + i) % sorted.length;
+                    if (nextIndex !== currentIndex) {
+                        links.push(sorted[nextIndex].town);
+                    }
+                }
+            } else if (type === 'hub_and_spoke') {
+                links.push('Hub Directory (Home)');
+                otherPages.slice(0, Math.max(1, limit - 1)).forEach(p => {
+                    links.push(p.town);
+                });
+            }
+
+            html += `
+                <div style="padding: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;">
+                    <strong style="color: #60a5fa; min-width: 140px;">${page.town} Page:</strong>
+                    <span style="color: #9ca3af; flex: 1;">➔ Links to: ${links.length > 0 ? links.map(l => `<span style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; display: inline-block;">${l}</span>`).join('') : '<span style="color: #ef4444; font-style: italic;">None</span>'}</span>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+        previewNetworkDiv.innerHTML = html;
+    }
+
+    async function fetchSiloSettings() {
+        if (!siloTypeSelect) return;
+        try {
+            const response = await fetch('/api/silo-settings', {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                siloTypeSelect.value = data.siloType || 'proximity';
+                siloLimitInput.value = data.siloLimit || 5;
+                siloPages = data.pages || [];
+                
+                updateSiloDescription(siloTypeSelect.value);
+
+                // Populate service select for preview
+                if (previewServiceSelect) {
+                    previewServiceSelect.innerHTML = '';
+                    const services = [...new Set(siloPages.map(p => p.service).filter(Boolean))].sort();
+                    services.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s;
+                        opt.textContent = s;
+                        previewServiceSelect.appendChild(opt);
+                    });
+                    previewServiceSelect.style.display = services.length > 0 ? 'inline-block' : 'none';
+                }
+
+                renderSiloPreview();
+            }
+        } catch (error) {
+            console.error('Error fetching silo settings:', error);
+        }
+    }
+
+    if (siloTypeSelect) {
+        siloTypeSelect.addEventListener('change', (e) => {
+            updateSiloDescription(e.target.value);
+            renderSiloPreview();
+        });
+    }
+
+    if (siloLimitInput) {
+        siloLimitInput.addEventListener('input', renderSiloPreview);
+    }
+
+    if (previewServiceSelect) {
+        previewServiceSelect.addEventListener('change', renderSiloPreview);
+    }
+
+    if (siloSettingsForm) {
+        siloSettingsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const type = siloTypeSelect.value;
+            const limit = parseInt(siloLimitInput.value, 10);
+
+            if (saveSiloBtn) {
+                saveSiloBtn.disabled = true;
+                saveSiloBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 6px;"></i> Saving...';
+            }
+
+            try {
+                const response = await fetch('/api/silo-settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ siloType: type, siloLimit: limit })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message || 'Silo configurations updated successfully!');
+                    await fetchSiloSettings();
+                } else {
+                    alert(`Error: ${data.message || 'Failed to save settings.'}`);
+                }
+            } catch (err) {
+                console.error('Error updating silo settings:', err);
+                alert('A network error occurred while updating settings.');
+            } finally {
+                if (saveSiloBtn) {
+                    saveSiloBtn.disabled = false;
+                    saveSiloBtn.innerHTML = '<i class="fas fa-save" style="margin-right: 6px;"></i> Save Silo Architecture';
+                }
+            }
+        });
+    }
+
+    // Trigger rankings load, local SEO grid load, and silo settings load
     fetchRankings();
     fetchLocalSeoGrid();
+    fetchSiloSettings();
 });

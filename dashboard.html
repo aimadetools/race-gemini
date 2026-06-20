@@ -883,6 +883,56 @@
                     Your custom plugin zip includes your account settings so configuration is automatic! Just upload the zip file in your WordPress dashboard, activate it, and your pages will show up under your domain.
                 </p>
             </div>
+            <div class="card" id="seo-silo-card">
+                <h2>SEO Link Silo Architect</h2>
+                <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">Connect your generated pages using advanced local SEO linking structures. Internal linking distributes page authority and helps search engine crawlers discover and index all your city pages.</p>
+                
+                <form id="silo-settings-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="silo-type-select" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Linking Architecture</label>
+                            <select id="silo-type-select" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                                <option value="proximity">Smart Proximity Silo (Recommended)</option>
+                                <option value="loop">Circular Loop Silo</option>
+                                <option value="hub_and_spoke">Hub &amp; Spoke (Central Directory)</option>
+                                <option value="none">No Linking (Disabled)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="silo-limit-input" style="display: block; color: #fff; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500;">Max Internal Links per Page</label>
+                            <input type="number" id="silo-limit-input" min="1" max="20" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px; color: #fff; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div id="silo-type-description" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-size: 0.85rem; color: #9ca3af; margin-bottom: 1rem; line-height: 1.45;">
+                        <!-- Updated by JS -->
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                        <button type="submit" class="button" id="save-silo-settings-btn">
+                            <i class="fas fa-save" style="margin-right: 6px;"></i> Save Silo Architecture
+                        </button>
+                    </div>
+                </form>
+
+                <div id="silo-preview-section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem; margin-top: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="margin: 0; font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-project-diagram" style="color: #3b82f6;"></i> Silo Network Live Preview
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label for="silo-preview-service-select" style="font-size: 0.8rem; color: #9ca3af;">Filter by Service:</label>
+                            <select id="silo-preview-service-select" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 4px 10px; color: #fff; font-size: 0.8rem;">
+                                <!-- Populated dynamically by JS -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="silo-preview-network" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; max-height: 250px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; color: #a1a1aa; line-height: 1.5;">
+                        <span style="font-style: italic; color: #6b7280;">Generate pages first to see the linking network visualization.</span>
+                    </div>
+                </div>
+            </div>
             <div class="card" id="chrome-extension-card">
                 <h2>1-Click Local SEO Audit Extension</h2>
                 <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">Audit any website's local SEO reach in 1 click right from your browser. Find missed town opportunities and route them directly to the page generator.</p>

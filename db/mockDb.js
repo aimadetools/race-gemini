@@ -204,6 +204,8 @@ export const originalMockQuery = async (text, params) => {
                     gbp_oauth_token_expires_at: user.gbp_oauth_token_expires_at || user.gbpOauthTokenExpiresAt || null,
                     gbp_account_id: user.gbp_account_id || user.gbpAccountId || null,
                     gbp_location_id: user.gbp_location_id || user.gbpLocationId || null,
+                    silo_type: user.silo_type || user.siloType || 'proximity',
+                    silo_limit: user.silo_limit || user.siloLimit || 5,
                 };
                 return { rows: [u] };
 
@@ -259,6 +261,8 @@ export const originalMockQuery = async (text, params) => {
                     gbp_oauth_token_expires_at: user.gbp_oauth_token_expires_at || user.gbpOauthTokenExpiresAt || null,
                     gbp_account_id: user.gbp_account_id || user.gbpAccountId || null,
                     gbp_location_id: user.gbp_location_id || user.gbpLocationId || null,
+                    silo_type: user.silo_type || user.siloType || 'proximity',
+                    silo_limit: user.silo_limit || user.siloLimit || 5,
                 };
                 return { rows: [u] };
 
@@ -632,6 +636,15 @@ export const originalMockQuery = async (text, params) => {
             if (user) {
                 user.custom_domain = customDomain;
                 user.custom_domain_redirect = customDomainRedirect;
+                return { rows: [user] };
+            }
+        }
+        if (textLower.includes('silo_type = $1') && textLower.includes('silo_limit = $2')) {
+            const [siloType, siloLimit, userId] = params;
+            const user = mockUsers.find(u => u.id.toString() === userId.toString());
+            if (user) {
+                user.silo_type = siloType;
+                user.silo_limit = siloLimit;
                 return { rows: [user] };
             }
         }
