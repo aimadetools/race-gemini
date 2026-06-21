@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
 import { logError } from '../lib/logger.js';
 import { query } from '../db/index.js';
-import { checkGscIndexingStatus } from '../lib/gsc.js';
+import { checkGscIndexingStatus, requestGoogleIndexing } from '../lib/gsc.js';
 import slugify from 'slugify';
 
 export default async function handler(req, res) {
@@ -82,8 +82,25 @@ export default async function handler(req, res) {
     const gscResult = await checkGscIndexingStatus(pageUrl, siteUrl);
 
     if (gscResult.success) {
-      const status = gscResult.coverageState || 'unknown';
+      let status = gscResult.coverageState || 'unknown';
+      const statusLower = status.toLowerCase();
+      const isIndexed = (statusLower.includes('indexed') || statusLower === 'pass') && !statusLower.includes('not indexed') && !statusLower.includes('noindex');
       
+      let indexingRequested = false;
+      let indexingError = null;
+
+      if (!isIndexed) {
+        // Trigger Google Indexing API submission for newly generated landing pages
+        const indexingApiResult = await requestGoogleIndexing(pageUrl);
+        if (indexingApiResult.success) {
+          indexingRequested = true;
+          // Append to status to show in UI that crawler request was submitted
+          status = `${status} (Indexing Requested)`;
+        } else {
+          indexingError = indexingApiResult.error;
+        }
+      }
+
       // Update page in PostgreSQL
       await query(
         'UPDATE seo_pages SET indexing_status = $1, last_indexing_check = NOW(), updated_at = NOW() WHERE id = $2',
@@ -91,9 +108,13 @@ export default async function handler(req, res) {
       );
 
       return res.status(200).json({
-        message: 'Indexing status checked successfully.',
+        message: indexingRequested 
+          ? 'Indexing status checked and crawl request submitted successfully.' 
+          : 'Indexing status checked successfully.',
         indexingStatus: status,
-        lastIndexingCheck: new Date().toISOString()
+        lastIndexingCheck: new Date().toISOString(),
+        indexingRequested,
+        indexingError
       });
     } else {
       return res.status(500).json({

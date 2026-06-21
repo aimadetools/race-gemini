@@ -8,9 +8,15 @@ jest.mock('cookie', () => ({
   parse: jest.fn(),
 }));
 
+jest.mock('../../lib/gsc.js', () => ({
+  checkGscIndexingStatus: jest.fn(),
+  requestGoogleIndexing: jest.fn(),
+}));
+
 import handler from '../../api/check-indexing-status';
 import jwt from 'jsonwebtoken';
 import { parse as parseCookie } from 'cookie';
+import { checkGscIndexingStatus, requestGoogleIndexing } from '../../lib/gsc.js';
 import { clearMockUsers, addMockUser, addMockSeoPage, clearMockSeoPages } from '../../db/mockDb.js';
 
 describe('Check Indexing Status API', () => {
@@ -87,9 +93,10 @@ describe('Check Indexing Status API', () => {
         expect(res.status).toHaveBeenCalledWith(403);
     });
 
-    test('should successfully check indexing status and return 200', async () => {
+    test('should successfully check indexing status and return 200 for already indexed pages', async () => {
         parseCookie.mockReturnValue({ authToken: 'valid_token' });
         jwt.verify.mockReturnValue({ userId: 1 });
+        checkGscIndexingStatus.mockResolvedValue({ success: true, coverageState: 'Indexed, primary' });
         
         addMockUser({ id: 1, name: 'Client 1', email: 'client1@example.com', agency_id: null, custom_domain: null });
         addMockSeoPage({
@@ -106,14 +113,44 @@ describe('Check Indexing Status API', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Indexing status checked successfully.',
-            indexingStatus: expect.any(String),
-            lastIndexingCheck: expect.any(String)
+            indexingStatus: 'Indexed, primary',
+            lastIndexingCheck: expect.any(String),
+            indexingRequested: false
         }));
+    });
+
+    test('should successfully check indexing status, submit crawl request and return 200 for non-indexed pages', async () => {
+        parseCookie.mockReturnValue({ authToken: 'valid_token' });
+        jwt.verify.mockReturnValue({ userId: 1 });
+        checkGscIndexingStatus.mockResolvedValue({ success: true, coverageState: 'Crawled - currently not indexed' });
+        requestGoogleIndexing.mockResolvedValue({ success: true });
+        
+        addMockUser({ id: 1, name: 'Client 1', email: 'client1@example.com', agency_id: null, custom_domain: null });
+        addMockSeoPage({
+            id: 'page_123',
+            user_id: 1,
+            business_name: 'Super Plumber',
+            service: 'Plumbing',
+            town: 'Austin',
+            zip_code: '78701',
+        });
+
+        await handler(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Indexing status checked and crawl request submitted successfully.',
+            indexingStatus: 'Crawled - currently not indexed (Indexing Requested)',
+            lastIndexingCheck: expect.any(String),
+            indexingRequested: true
+        }));
+        expect(requestGoogleIndexing).toHaveBeenCalledWith(expect.stringContaining('plumbing-in-austin.html'));
     });
 
     test('should successfully check indexing status and return 200 for agency-managed client pages', async () => {
         parseCookie.mockReturnValue({ authToken: 'valid_token' });
         jwt.verify.mockReturnValue({ userId: 2 });
+        checkGscIndexingStatus.mockResolvedValue({ success: true, coverageState: 'Indexed, primary' });
         
         addMockUser({ id: 1, name: 'Client 1', email: 'client1@example.com', agency_id: 2, custom_domain: null });
         addMockUser({ id: 2, name: 'Agency 1', email: 'agency1@example.com', is_agency: true });
@@ -131,7 +168,7 @@ describe('Check Indexing Status API', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Indexing status checked successfully.',
-            indexingStatus: expect.any(String),
+            indexingStatus: 'Indexed, primary',
             lastIndexingCheck: expect.any(String)
         }));
     });
