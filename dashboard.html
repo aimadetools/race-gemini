@@ -780,6 +780,7 @@
                             <th>Source Page</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -2117,6 +2118,59 @@
 
         <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem;">
           <button type="button" id="close-seo-checklist-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Close Audit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead CRM Modal -->
+    <div id="lead-crm-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 650px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; position: relative;">
+        <span class="close-modal" id="close-lead-crm-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af;">&times;</span>
+        
+        <h2 style="margin-top: 0; margin-bottom: 0.5rem; color: #fff; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-address-card" style="color: #10b981;"></i> Lead Profile & CRM
+        </h2>
+        <p style="margin: 0 0 1.5rem 0; color: #9ca3af; font-size: 0.9rem;">Manage lead status, track interactions, and record follow-up logs.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <!-- Left Column: Lead Info -->
+          <div style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 12px; box-sizing: border-box;">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; font-size: 1.1rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">Contact Information</h3>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>Name:</strong> <span id="crm-lead-name" style="color: #fff;"></span></p>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>Email:</strong> <span id="crm-lead-email"></span></p>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>Phone:</strong> <span id="crm-lead-phone"></span></p>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>Date:</strong> <span id="crm-lead-date"></span></p>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>Source:</strong> <span id="crm-lead-source"></span></p>
+            <div style="margin-top: 1rem;">
+              <strong>Submitted Message:</strong>
+              <div id="crm-lead-message" style="margin-top: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; font-size: 0.85rem; max-height: 120px; overflow-y: auto; white-space: pre-wrap; color: #d1d5db;"></div>
+            </div>
+          </div>
+          
+          <!-- Right Column: CRM Settings -->
+          <div style="display: flex; flex-direction: column; gap: 1.25rem; box-sizing: border-box;">
+            <div>
+              <label for="crm-lead-status" style="display: block; font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 8px;">Lead Status</label>
+              <select id="crm-lead-status" style="width: 100%; padding: 0.75rem; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; cursor: pointer;">
+                <option value="New">New</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Proposal Sent">Proposal Sent</option>
+                <option value="Won">Won (Closed)</option>
+                <option value="Lost">Lost (Closed)</option>
+              </select>
+            </div>
+            
+            <div style="flex: 1; display: flex; flex-direction: column;">
+              <label for="crm-lead-notes" style="display: block; font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 8px;">Internal CRM Notes</label>
+              <textarea id="crm-lead-notes" placeholder="Add follow-up details, quotes, meeting times..." style="width: 100%; flex: 1; min-height: 150px; padding: 0.75rem; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; resize: vertical; box-sizing: border-box; font-family: inherit;"></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.25rem; align-items: center;">
+          <span id="crm-save-status" style="font-size: 0.9rem; color: #10b981; font-weight: 500; display: none;"></span>
+          <button type="button" id="close-crm-modal-btn" style="background: rgba(255,255,255,0.1); color: #e5e7eb; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Cancel</button>
+          <button type="button" id="save-crm-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">Save CRM Entry</button>
         </div>
       </div>
     </div>

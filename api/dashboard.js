@@ -89,7 +89,7 @@ export default async function handler(req, res, currentKvClient) {
 
       // Retrieve captured leads for the user
       const leadsResult = await query(
-          'SELECT id, name, email, phone, message, url, created_at, is_unlocked FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
+          'SELECT id, name, email, phone, message, url, created_at, is_unlocked, status, notes FROM leads WHERE user_id = $1 ORDER BY created_at DESC',
           [userId]
       );
       const leads = leadsResult.rows;

@@ -48,6 +48,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const reviewLinkInput = document.getElementById('review-link-input');
     const copyReviewLinkBtn = document.getElementById('copy-review-link-btn');
 
+    // Lead CRM Modal Elements
+    const leadCrmModal = document.getElementById('lead-crm-modal');
+    const closeLeadCrmModal = document.getElementById('close-lead-crm-modal');
+    const closeCrmModalBtn = document.getElementById('close-crm-modal-btn');
+    const saveCrmBtn = document.getElementById('save-crm-btn');
+
+    if (closeLeadCrmModal) {
+        closeLeadCrmModal.addEventListener('click', () => {
+            if (leadCrmModal) leadCrmModal.style.display = 'none';
+        });
+    }
+    if (closeCrmModalBtn) {
+        closeCrmModalBtn.addEventListener('click', () => {
+            if (leadCrmModal) leadCrmModal.style.display = 'none';
+        });
+    }
+    if (saveCrmBtn) {
+        saveCrmBtn.addEventListener('click', async () => {
+            const leadId = saveCrmBtn.dataset.leadId;
+            const status = document.getElementById('crm-lead-status').value;
+            const notes = document.getElementById('crm-lead-notes').value;
+            const crmSaveStatus = document.getElementById('crm-save-status');
+
+            if (!leadId) return;
+
+            saveCrmBtn.disabled = true;
+            const originalText = saveCrmBtn.textContent;
+            saveCrmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const response = await fetch('/api/update-lead', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({ leadId, status, notes })
+                });
+
+                const resData = await response.json();
+                if (response.ok) {
+                    if (crmSaveStatus) {
+                        crmSaveStatus.textContent = 'Saved successfully!';
+                        crmSaveStatus.style.display = 'inline';
+                    }
+                    await fetchDashboardData();
+                    setTimeout(() => {
+                        if (crmSaveStatus) crmSaveStatus.style.display = 'none';
+                        if (leadCrmModal) leadCrmModal.style.display = 'none';
+                    }, 1000);
+                } else {
+                    alert(resData.message || 'Failed to save CRM updates.');
+                }
+            } catch (err) {
+                console.error('Error updating lead CRM:', err);
+                alert('A network error occurred. Please try again.');
+            } finally {
+                saveCrmBtn.disabled = false;
+                saveCrmBtn.textContent = originalText;
+            }
+        });
+    }
+
     const analyticsTownSelect = document.getElementById('analytics-town-select');
     const analyticsServiceSelect = document.getElementById('analytics-service-select');
     if (analyticsTownSelect && analyticsServiceSelect) {
@@ -191,9 +254,30 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ? `<span style="background: rgba(239, 68, 68, 0.1); color: #f87171; padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid rgba(239, 68, 68, 0.2); white-space: nowrap;"><i class="fas fa-lock" style="font-size: 0.75rem; margin-right: 4px;"></i> ${lead.phone || 'N/A'}</span>` 
                                 : (lead.phone ? `<a href="tel:${lead.phone}">${lead.phone}</a>` : 'N/A');
                             
-                            const statusHtml = lead.isLocked 
-                                ? `<button class="button unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #fbbf24; color: #000; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-unlock" style="font-size: 0.7rem;"></i> Unlock (1 Credit)</button>` 
-                                : `<span class="credit-positive" style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle" style="font-size: 0.75rem;"></i> Active</span>`;
+                            let statusHtml = '';
+                            let actionsHtml = '';
+                            
+                            if (lead.isLocked) {
+                                statusHtml = `<button class="button unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #fbbf24; color: #000; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-unlock" style="font-size: 0.7rem;"></i> Unlock (1 Credit)</button>`;
+                                actionsHtml = `<span style="color: #6b7280; font-size: 0.85rem;"><i class="fas fa-lock"></i> Locked</span>`;
+                            } else {
+                                const status = lead.status || 'New';
+                                let badgeStyle = 'background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2);'; // default/New
+                                if (status === 'Contacted') {
+                                    badgeStyle = 'background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2);';
+                                } else if (status === 'Proposal Sent') {
+                                    badgeStyle = 'background: rgba(139, 92, 246, 0.1); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.2);';
+                                } else if (status === 'Won') {
+                                    badgeStyle = 'background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2);';
+                                } else if (status === 'Lost') {
+                                    badgeStyle = 'background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2);';
+                                }
+                                statusHtml = `<span style="padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; white-space: nowrap; ${badgeStyle}">${status}</span>`;
+                                
+                                const safeMsg = (lead.message || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                                const safeNotes = (lead.notes || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                                actionsHtml = `<button class="button button-small manage-crm-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" data-lead-email="${lead.email}" data-lead-phone="${lead.phone || 'N/A'}" data-lead-date="${formattedDate}" data-lead-source="${pageText}" data-lead-message="${safeMsg}" data-lead-status="${status}" data-lead-notes="${safeNotes}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;"><i class="fas fa-address-card"></i> CRM</button>`;
+                            }
 
                             row.innerHTML = `
                                 <td style="font-weight: 600; color: #fff;">${lead.name}</td>
@@ -203,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td><a href="${pageUrl}" target="_blank" style="color: #60a5fa; text-decoration: underline;">${pageText}</a></td>
                                 <td>${formattedDate}</td>
                                 <td>${statusHtml}</td>
+                                <td>${actionsHtml}</td>
                             `;
                         });
 
@@ -245,6 +330,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         });
 
+                        // Bind CRM buttons
+                        document.querySelectorAll('.manage-crm-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                if (!leadCrmModal) return;
+
+                                document.getElementById('crm-lead-name').textContent = btn.dataset.leadName;
+                                document.getElementById('crm-lead-email').innerHTML = `<a href="mailto:${btn.dataset.leadEmail}" style="color: #60a5fa; text-decoration: underline;">${btn.dataset.leadEmail}</a>`;
+                                document.getElementById('crm-lead-phone').innerHTML = btn.dataset.leadPhone !== 'N/A' ? `<a href="tel:${btn.dataset.leadPhone}" style="color: #60a5fa; text-decoration: underline;">${btn.dataset.leadPhone}</a>` : 'N/A';
+                                document.getElementById('crm-lead-date').textContent = btn.dataset.leadDate;
+                                document.getElementById('crm-lead-source').textContent = btn.dataset.leadSource;
+                                document.getElementById('crm-lead-message').textContent = btn.dataset.leadMessage || 'N/A';
+                                document.getElementById('crm-lead-status').value = btn.dataset.leadStatus || 'New';
+                                document.getElementById('crm-lead-notes').value = btn.dataset.leadNotes || '';
+                                saveCrmBtn.dataset.leadId = btn.dataset.leadId;
+                                
+                                document.getElementById('crm-save-status').style.display = 'none';
+                                leadCrmModal.style.display = 'flex';
+                            });
+                        });
+
                         if (!data.isPaidUser) {
                             const unlockBanner = document.createElement('div');
                             unlockBanner.id = 'leads-unlock-banner';
@@ -280,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     } else {
-                        leadsTableBody.innerHTML = '<tr><td colspan="7">No leads captured yet. Leads will appear here when visitors contact you from your generated pages.</td></tr>';
+                        leadsTableBody.innerHTML = '<tr><td colspan="8">No leads captured yet. Leads will appear here when visitors contact you from your generated pages.</td></tr>';
                     }
                 }
 

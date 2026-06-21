@@ -33,6 +33,7 @@ import { addAgencyDirectoryIdToLeads } from './migrations/add_agency_directory_i
 import { addShareTokenToUsers } from './migrations/add_share_token_to_users.js';
 import { addSiloSettingsToUsers } from './migrations/add_silo_settings_to_users.js';
 import { addAutoResponderToUsers } from './migrations/add_auto_responder_to_users.js';
+import { addCrmColumnsToLeads } from './migrations/add_crm_columns_to_leads.js';
 
 
 
@@ -142,6 +143,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring auto-responder columns exist in users table...');
     await addAutoResponderToUsers();
+
+    console.log('Ensuring CRM columns (status, notes) exist in leads table...');
+    await addCrmColumnsToLeads();
 
     console.log('Database initialization completed.');
   } catch (error) {
