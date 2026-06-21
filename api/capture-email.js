@@ -16,7 +16,7 @@ export default async (req, res) => {
         return res.status(405).json({ message: 'Only POST requests are allowed.' });
     }
 
-    const { email, url, userId, agencyId, name, source } = req.body;
+    const { email, url, userId, agencyId, name, phone, message, source } = req.body;
 
     if (!email || !url) {
         await logError(new Error('Email and URL are required.'), 'Capture Email - Validation Error', 'capture_email_error.log');
@@ -28,19 +28,33 @@ export default async (req, res) => {
         const resolvedUserId = userId || agencyId || null;
         const resolvedName = name || null;
         const resolvedSource = source || 'free-audit';
+        const resolvedPhone = phone || null;
+        const resolvedMessage = message || null;
 
-        let result;
-        if (resolvedUserId || resolvedName) {
-            result = await client.query(
-                'INSERT INTO leads (email, url, source, user_id, name) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                [email, url, resolvedSource, resolvedUserId, resolvedName]
-            );
-        } else {
-            result = await client.query(
-                'INSERT INTO leads (email, url, source) VALUES ($1, $2, $3) RETURNING *',
-                [email, url, resolvedSource]
-            );
+        const columns = ['email', 'url', 'source'];
+        const values = [email, url, resolvedSource];
+
+        if (resolvedUserId) {
+            columns.push('user_id');
+            values.push(resolvedUserId);
         }
+        if (resolvedName) {
+            columns.push('name');
+            values.push(resolvedName);
+        }
+        if (resolvedPhone) {
+            columns.push('phone');
+            values.push(resolvedPhone);
+        }
+        if (resolvedMessage) {
+            columns.push('message');
+            values.push(resolvedMessage);
+        }
+
+        const placeholders = columns.map((_, index) => `$${index + 1}`).join(', ');
+        const queryText = `INSERT INTO leads (${columns.join(', ')}) VALUES (${placeholders}) RETURNING *`;
+
+        const result = await client.query(queryText, values);
         client.release();
         res.status(201).json({ message: 'Email captured successfully.', data: result.rows[0] });
     } catch (error) {

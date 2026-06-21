@@ -109,6 +109,41 @@ describe('Capture Email API', () => {
         });
     });
 
+    it('should successfully store captured email as lead with phone and message', async () => {
+        mockReq.body = {
+            email: 'full_lead@example.com',
+            url: 'http://localseocalculator.com',
+            name: 'Springfield Plumbing',
+            phone: '555-019-9234',
+            message: 'ROI Projection: 120x ROI, 50 towns',
+            source: 'roi_pdf_download'
+        };
+
+        const mockLead = {
+            id: 1001,
+            email: 'full_lead@example.com',
+            url: 'http://localseocalculator.com',
+            name: 'Springfield Plumbing',
+            phone: '555-019-9234',
+            message: 'ROI Projection: 120x ROI, 50 towns',
+            source: 'roi_pdf_download'
+        };
+        mockQuery.mockResolvedValueOnce({ rows: [mockLead] });
+
+        await handler(mockReq, mockRes);
+
+        expect(mockQuery).toHaveBeenCalledWith(
+            expect.stringContaining('INSERT INTO leads (email, url, source, name, phone, message)'),
+            ['full_lead@example.com', 'http://localseocalculator.com', 'roi_pdf_download', 'Springfield Plumbing', '555-019-9234', 'ROI Projection: 120x ROI, 50 towns']
+        );
+
+        expect(mockRes.status).toHaveBeenCalledWith(201);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            message: 'Email captured successfully.',
+            data: mockLead
+        });
+    });
+
     it('should return 500 when database insertion fails', async () => {
         mockQuery.mockRejectedValueOnce(new Error('DB connection failed'));
 

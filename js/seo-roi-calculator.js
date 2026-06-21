@@ -148,6 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const industry = industrySelect.value;
         const preset = industryPresets[industry] || industryPresets.custom;
 
+        // Show or hide custom industry details section
+        const customFieldsContainer = document.getElementById('custom-industry-fields');
+        if (customFieldsContainer) {
+            customFieldsContainer.style.display = industry === 'custom' ? 'block' : 'none';
+        }
+
         const jobValue = parseFloat(jobValueInput.value) || 0;
         const towns = parseInt(townsInput.value) || 0;
         const successRate = parseFloat(successRateInput.value) / 100;
@@ -156,7 +162,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeRate = parseFloat(closeRateInput.value) / 100;
 
         // Dynamic local search volume estimate based on industry and town count
-        const volumePerTown = preset.volumePerTown;
+        let volumePerTown = preset.volumePerTown;
+        let serviceName = preset.serviceName;
+
+        if (industry === 'custom') {
+            const customVolumeInput = document.getElementById('calc-custom-volume');
+            const customNameInput = document.getElementById('calc-custom-industry-name');
+            if (customVolumeInput && customVolumeInput.value) {
+                volumePerTown = parseInt(customVolumeInput.value) || 100;
+            }
+            if (customNameInput && customNameInput.value.trim()) {
+                serviceName = customNameInput.value.trim();
+            }
+        }
+
+        // Keep lead service input in sync
+        const leadServiceInput = document.getElementById('leadService');
+        if (leadServiceInput) {
+            leadServiceInput.value = serviceName;
+        }
+
         const totalSearchVolume = towns * volumePerTown;
 
         // Monthly calculations
@@ -304,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
             leadMessage.textContent = '';
 
             try {
-                // Submit email to the capture endpoint
+                // Submit email and calculation details to the capture endpoint
                 const response = await fetch('/api/capture-email', {
                     method: 'POST',
                     headers: {
@@ -312,7 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({
                         email: email,
-                        url: window.location.href
+                        url: window.location.href,
+                        name: businessName,
+                        source: 'roi_calculator_lead',
+                        message: `Submitted inline lead form.\nService/Niche: ${service}\n\n${getRoiMessageSummary()}`
                     })
                 });
 
@@ -394,7 +422,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pdfTargetUrl) pdfTargetUrl.textContent = 'Website: ' + website;
         
         if (pdfTargetIndustry && industrySelect) {
-            const selectedNiche = industrySelect.options[industrySelect.selectedIndex].text;
+            let selectedNiche = industrySelect.options[industrySelect.selectedIndex].text;
+            if (industrySelect.value === 'custom') {
+                const customNameInput = document.getElementById('calc-custom-industry-name');
+                if (customNameInput && customNameInput.value.trim()) {
+                    selectedNiche = customNameInput.value.trim();
+                }
+            }
             pdfTargetIndustry.textContent = 'Industry: ' + selectedNiche;
         }
 
@@ -566,8 +600,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Helper to generate a detailed ROI message summary
+    function getRoiMessageSummary() {
+        const industry = industrySelect.value;
+        let selectedNiche = industrySelect.options[industrySelect.selectedIndex].text;
+        if (industry === 'custom') {
+            const customNameInput = document.getElementById('calc-custom-industry-name');
+            if (customNameInput && customNameInput.value.trim()) {
+                selectedNiche = customNameInput.value.trim();
+            }
+        }
+
+        const towns = townsInput ? townsInput.value : '';
+        const jobValue = jobValueInput ? jobValueInput.value : '';
+        const annualRev = outAnnualRev ? outAnnualRev.textContent : '';
+        const monthlyRev = outMonthlyRev ? outMonthlyRev.textContent : '';
+        const traffic = outTraffic ? outTraffic.textContent : '';
+        const leads = outLeads ? outLeads.textContent : '';
+        const jobs = outJobs ? outJobs.textContent : '';
+        const netReturn = outNetReturn ? outNetReturn.textContent : '';
+        const roi = outRoi ? outRoi.textContent : '';
+        const investment = outInvestment ? outInvestment.textContent : '';
+        
+        const keywordsInput = document.getElementById('pdf-keywords');
+        const notesInput = document.getElementById('pdf-custom-notes');
+        const keywords = keywordsInput ? keywordsInput.value.trim() : '';
+        const notes = notesInput ? notesInput.value.trim() : '';
+
+        let summary = `ROI Projections for ${selectedNiche}:\n` +
+            `- Target Towns/Cities: ${towns}\n` +
+            `- Average Job Value: $${jobValue}\n` +
+            `- Est. Annual Revenue Increase: ${annualRev}\n` +
+            `- Est. Monthly Traffic: ${traffic}\n` +
+            `- Est. Monthly Leads: ${leads}\n` +
+            `- Est. Booked Jobs / Month: ${jobs}\n` +
+            `- One-Time Setup Investment: ${investment}\n` +
+            `- Net 1st Year Profit: ${netReturn}\n` +
+            `- Est. ROI: ${roi}`;
+            
+        if (keywords) {
+            summary += `\n- Target Keywords: ${keywords}`;
+        }
+        if (notes) {
+            summary += `\n- Custom Recommendations: ${notes}`;
+        }
+        return summary;
+    }
+
     // Lead capturing helper
-    async function handleLeadCapture(email, name, source) {
+    async function handleLeadCapture(email, name, source, phone = null, message = null) {
         try {
             const response = await fetch('/api/capture-email', {
                 method: 'POST',
@@ -578,6 +659,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     email: email,
                     name: name,
                     source: source,
+                    phone: phone,
+                    message: message,
                     url: window.location.href
                 })
             });
@@ -596,6 +679,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function generatePDF() {
         const bizName = pdfBizInput ? pdfBizInput.value.trim() : '';
         const email = pdfEmailInput ? pdfEmailInput.value.trim() : '';
+        const phone = pdfPhoneInput ? pdfPhoneInput.value.trim() : null;
+        const message = getRoiMessageSummary();
 
         if (!bizName || !email) {
             if (pdfMessage) {
@@ -611,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Capture lead
-        await handleLeadCapture(email, bizName, 'roi_pdf_download');
+        await handleLeadCapture(email, bizName, 'roi_pdf_download', phone, message);
 
         try {
             if (pdfMessage) pdfMessage.textContent = 'Loading PDF engine...';
@@ -672,6 +757,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const bizName = pdfBizInput ? pdfBizInput.value.trim() : '';
             const email = pdfEmailInput ? pdfEmailInput.value.trim() : '';
+            const phone = pdfPhoneInput ? pdfPhoneInput.value.trim() : null;
+            const message = getRoiMessageSummary();
             const preparedBy = pdfPreparedInput ? pdfPreparedInput.value.trim() || 'LocalLeads' : 'LocalLeads';
 
             if (!bizName || !email) {
@@ -689,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Capture lead
-            await handleLeadCapture(email, bizName, 'roi_pdf_email');
+            await handleLeadCapture(email, bizName, 'roi_pdf_email', phone, message);
 
             // Generate/download PDF so they have the file locally
             const success = await generatePDF();
@@ -729,6 +816,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             btnEmailPdf.disabled = false;
+        });
+    }
+
+    // Custom industry inputs listeners
+    const customNameInput = document.getElementById('calc-custom-industry-name');
+    const customVolumeInput = document.getElementById('calc-custom-volume');
+
+    if (customNameInput) {
+        customNameInput.addEventListener('input', () => {
+            calculate();
+            updateReportMeta();
+        });
+    }
+    if (customVolumeInput) {
+        customVolumeInput.addEventListener('input', () => {
+            calculate();
+            updateReportMeta();
         });
     }
 
