@@ -277,7 +277,7 @@ describe('Submit Lead API', () => {
             ['Directory prospect 2', 'prospect2@example.com', null, 'Need B2B local SEO', 888, null, null, 'agency_profile', 56]
         );
         expect(mockQuery).toHaveBeenNthCalledWith(3,
-            expect.stringContaining('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone FROM users WHERE id = $1'),
+            expect.stringContaining('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone, auto_responder_enabled, auto_responder_subject, auto_responder_message FROM users WHERE id = $1'),
             [888]
         );
 
