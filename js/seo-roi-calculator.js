@@ -432,6 +432,69 @@ document.addEventListener('DOMContentLoaded', () => {
         if (headerEl) {
             headerEl.style.borderColor = themeColor;
         }
+
+        // Custom inputs preview updates
+        const keywordsInput = document.getElementById('pdf-keywords');
+        const notesInput = document.getElementById('pdf-custom-notes');
+        const ctaTextInput = document.getElementById('pdf-cta-text');
+        const ctaLinkInput = document.getElementById('pdf-cta-link');
+
+        const keywords = keywordsInput ? keywordsInput.value.trim() : '';
+        const notes = notesInput ? notesInput.value.trim() : '';
+        const ctaText = ctaTextInput ? ctaTextInput.value.trim() : '';
+        const ctaLink = ctaLinkInput ? ctaLinkInput.value.trim() : '';
+
+        const pdfCustomSection = document.getElementById('pdf-preview-custom-section');
+        const pdfKeywordsContainer = document.getElementById('pdf-preview-keywords-container');
+        const pdfKeywords = document.getElementById('pdf-preview-keywords');
+        const pdfNotesContainer = document.getElementById('pdf-preview-notes-container');
+        const pdfNotes = document.getElementById('pdf-preview-notes');
+
+        let hasCustomContent = false;
+        if (pdfKeywordsContainer && pdfKeywords) {
+            if (keywords) {
+                pdfKeywords.textContent = keywords;
+                pdfKeywordsContainer.style.display = 'block';
+                hasCustomContent = true;
+            } else {
+                pdfKeywordsContainer.style.display = 'none';
+            }
+        }
+        if (pdfNotesContainer && pdfNotes) {
+            if (notes) {
+                pdfNotes.textContent = notes;
+                pdfNotesContainer.style.display = 'block';
+                hasCustomContent = true;
+            } else {
+                pdfNotesContainer.style.display = 'none';
+            }
+        }
+        if (pdfCustomSection) {
+            pdfCustomSection.style.display = hasCustomContent ? 'block' : 'none';
+        }
+
+        const pdfCtaBanner = document.getElementById('pdf-preview-cta-banner');
+        const pdfCtaAnchor = document.getElementById('pdf-preview-cta-anchor');
+        if (pdfCtaBanner && pdfCtaAnchor) {
+            if (ctaText) {
+                pdfCtaAnchor.textContent = ctaText;
+                pdfCtaBanner.style.backgroundColor = themeColor;
+                if (ctaLink) {
+                    if (ctaLink.startsWith('http://') || ctaLink.startsWith('https://')) {
+                        pdfCtaAnchor.href = ctaLink;
+                    } else if (ctaLink.match(/^\+?[0-9\s().-]+$/)) {
+                        pdfCtaAnchor.href = `tel:${ctaLink.replace(/[^0-9+]/g, '')}`;
+                    } else {
+                        pdfCtaAnchor.href = ctaLink;
+                    }
+                } else {
+                    pdfCtaAnchor.href = '#';
+                }
+                pdfCtaBanner.style.display = 'block';
+            } else {
+                pdfCtaBanner.style.display = 'none';
+            }
+        }
     }
 
     // Attach Customizer Event Listeners
@@ -442,11 +505,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const pdfPreparedInput = document.getElementById('pdf-prepared-by');
     const pdfPhoneInput = document.getElementById('pdf-phone');
     const pdfLogoInput = document.getElementById('pdf-logo-url');
+    const pdfKeywordsInput = document.getElementById('pdf-keywords');
+    const pdfNotesInput = document.getElementById('pdf-custom-notes');
+    const pdfCtaTextInput = document.getElementById('pdf-cta-text');
+    const pdfCtaLinkInput = document.getElementById('pdf-cta-link');
     const pdfColorInput = document.getElementById('pdf-theme-color');
 
     const customizationInputs = [
         pdfBizInput, pdfEmailInput, pdfContactInput, pdfWebsiteInput,
-        pdfPreparedInput, pdfPhoneInput, pdfLogoInput
+        pdfPreparedInput, pdfPhoneInput, pdfLogoInput,
+        pdfKeywordsInput, pdfNotesInput, pdfCtaTextInput, pdfCtaLinkInput
     ];
 
     customizationInputs.forEach(input => {
