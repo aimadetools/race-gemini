@@ -253,4 +253,45 @@ describe('update-integrations API', () => {
     const updatedUser = getMockUsers().find(u => u.id === '123');
     expect(updatedUser.google_verification_code).toBe('googlee1a2b3c4d5e6f7.html');
   });
+
+  test('should return 400 if auto-responder subject exceeds 255 characters', async () => {
+    req.body.autoResponderSubject = 'a'.repeat(256);
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Auto-responder subject must be under 255 characters.' });
+  });
+
+  test('should return 400 if auto-responder message exceeds 2000 characters', async () => {
+    req.body.autoResponderMessage = 'a'.repeat(2001);
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Auto-responder message must be under 2000 characters.' });
+  });
+
+  test('should update auto-responder settings successfully and return 200', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      auto_responder_enabled: false,
+      auto_responder_subject: null,
+      auto_responder_message: null,
+    };
+    addMockUser(user);
+
+    req.body.autoResponderEnabled = true;
+    req.body.autoResponderSubject = 'Thanks {{lead_name}}!';
+    req.body.autoResponderMessage = 'Hi {{lead_name}}, we received your message regarding {{service}} in {{town}}.';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const updatedUser = getMockUsers().find(u => u.id === '123');
+    expect(updatedUser.auto_responder_enabled).toBe(true);
+    expect(updatedUser.auto_responder_subject).toBe('Thanks {{lead_name}}!');
+    expect(updatedUser.auto_responder_message).toBe('Hi {{lead_name}}, we received your message regarding {{service}} in {{town}}.');
+  });
 });

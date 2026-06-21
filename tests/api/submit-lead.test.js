@@ -289,4 +289,51 @@ describe('Submit Lead API', () => {
 
         expect(mockRes.status).toHaveBeenCalledWith(200);
     });
+
+    it('should send auto-responder email to lead when auto-responder is enabled for paid user', async () => {
+        // Mock SQL responses
+        // 1. Fetch page owner metadata
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                user_id: 123,
+                business_name: 'Super Plumbing',
+                service: 'plumbing',
+                town: 'springfield'
+            }]
+        });
+        // 2. Insert lead (returns lead ID)
+        mockQuery.mockResolvedValueOnce({ rows: [{ id: 456 }] });
+        // 3. Fetch user owner profile with auto-responder fields enabled
+        mockQuery.mockResolvedValueOnce({
+            rows: [{
+                email: 'owner@example.com',
+                is_agency: true,
+                subscription_status: 'active',
+                auto_responder_enabled: true,
+                auto_responder_subject: 'Thanks for writing, {{lead_name}}!',
+                auto_responder_message: 'Hi {{lead_name}},\nWe will help you with {{service}} in {{town}}.'
+            }]
+        });
+
+        await handler(mockReq, mockRes, mockKv);
+
+        // Verify two sendEmail calls: one to owner, one to lead
+        expect(sendEmail).toHaveBeenCalledTimes(2);
+
+        // First call should be lead details to owner
+        expect(sendEmail).toHaveBeenNthCalledWith(1,
+            'owner@example.com',
+            expect.stringContaining('New Lead'),
+            expect.any(String)
+        );
+
+        // Second call should be auto-responder to lead (jane@example.com)
+        expect(sendEmail).toHaveBeenNthCalledWith(2,
+            'jane@example.com',
+            'Thanks for writing, Jane Doe!',
+            expect.stringContaining('We will help you with plumbing in springfield.')
+        );
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+    });
 });

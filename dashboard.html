@@ -1318,6 +1318,37 @@
                     </div>
 
                     <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Automated Lead Auto-Responder (Paid Plans Only)</h3>
+                        <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">
+                            Send an immediate automated email reply to visitors who submit a lead form on your generated landing pages.
+                        </p>
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+                            <input id="autoresponder-enabled-checkbox" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;" />
+                            <label for="autoresponder-enabled-checkbox" style="font-weight: bold; font-size: 0.85rem; color: #ccc; cursor: pointer;">Enable Email Auto-Responder</label>
+                        </div>
+                        <div id="autoresponder-settings-fields" style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="autoresponder-subject-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Email Subject</label>
+                                <input id="autoresponder-subject-input" type="text" placeholder="e.g. Thanks for reaching out to {{business_name}}!" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box;" />
+                            </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                                <label for="autoresponder-message-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Email Message Body</label>
+                                <textarea id="autoresponder-message-input" placeholder="Hi {{lead_name}},\n\nThank you for your interest! We received your inquiry about {{service}} in {{town}}. Our team will get back to you shortly." rows="5" style="background: transparent; color: #fff; border: 1px solid #444; padding: 0.75rem; border-radius: 4px; width: 100%; box-sizing: border-box; font-family: sans-serif; resize: vertical;"></textarea>
+                            </div>
+                            <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.15); padding: 10px; border-radius: 6px;">
+                                <span style="font-size: 0.75rem; font-weight: bold; color: #60a5fa; display: block; margin-bottom: 5px;">Available Dynamic Placeholders:</span>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px 12px; font-family: monospace; font-size: 0.7rem; color: #9ca3af;">
+                                    <span><strong>{{lead_name}}</strong> - Lead's Name</span>
+                                    <span><strong>{{business_name}}</strong> - Your Business Name</span>
+                                    <span><strong>{{service}}</strong> - Requested Service</span>
+                                    <span><strong>{{town}}</strong> - Selected Location</span>
+                                    <span><strong>{{phone}}</strong> - Lead's Phone</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">
                         <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Tracking Pixels &amp; Analytics</h3>
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px;">
                             <label for="ga-tracking-id-input" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Google Analytics Measurement ID</label>

@@ -31,7 +31,7 @@ export default async function handler(req, res, currentKvClient) {
       const userId = decoded.userId;
 
       // Fetch user from PostgreSQL
-      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at, weekly_report_enabled, gbp_sync_enabled, gbp_place_id, gbp_last_synced_at, gbp_oauth_refresh_token, gbp_oauth_access_token FROM users WHERE id = $1', [userId]);
+      const userResult = await query('SELECT email, credits, custom_domain, custom_domain_redirect, google_verification_code, webhook_url, webhook_enabled, ga_tracking_id, fb_pixel_id, sms_enabled, sms_phone, widget_css, google_review_link, facebook_review_link, yelp_review_link, announcement_text, announcement_type, announcement_coupon_code, announcement_updated_at, announcement_expires_at, weekly_report_enabled, gbp_sync_enabled, gbp_place_id, gbp_last_synced_at, gbp_oauth_refresh_token, gbp_oauth_access_token, auto_responder_enabled, auto_responder_subject, auto_responder_message FROM users WHERE id = $1', [userId]);
       if (userResult.rows.length === 0) {
           return res.status(404).json({ message: 'User profile not found. Please log in again.' });
       }
@@ -232,7 +232,10 @@ export default async function handler(req, res, currentKvClient) {
         announcementCouponCode: user.announcement_coupon_code,
         announcementUpdatedAt: user.announcement_updated_at ? user.announcement_updated_at.toISOString() : null,
         announcementExpiresAt: user.announcement_expires_at ? user.announcement_expires_at.toISOString() : null,
-        weeklyReportEnabled: user.weekly_report_enabled !== false
+        weeklyReportEnabled: user.weekly_report_enabled !== false,
+        autoResponderEnabled: user.auto_responder_enabled || false,
+        autoResponderSubject: user.auto_responder_subject || null,
+        autoResponderMessage: user.auto_responder_message || null
       });
 
     } catch (error) {

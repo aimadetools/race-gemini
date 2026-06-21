@@ -273,7 +273,10 @@ describe('dashboard API', () => {
       announcementCouponCode: null,
       announcementUpdatedAt: null,
       announcementExpiresAt: null,
-      weeklyReportEnabled: true
+      weeklyReportEnabled: true,
+      autoResponderEnabled: false,
+      autoResponderSubject: null,
+      autoResponderMessage: null
     });
   });
 
@@ -341,7 +344,10 @@ describe('dashboard API', () => {
       announcementCouponCode: null,
       announcementUpdatedAt: null,
       announcementExpiresAt: null,
-      weeklyReportEnabled: true
+      weeklyReportEnabled: true,
+      autoResponderEnabled: false,
+      autoResponderSubject: null,
+      autoResponderMessage: null
     });
   });
 

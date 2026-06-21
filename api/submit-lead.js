@@ -123,7 +123,7 @@ export default async (req, res, currentKvClient) => {
         await logInfo(`Lead ${leadId} stored successfully for user ${userId || 'unclaimed agency ' + dbAgencyDirectoryId}.`, 'Lead Submission');
 
         // 4. Retrieve user's email and package details to see if they are a paying customer
-        const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone FROM users WHERE id = $1', [userId]);
+        const userResult = await query('SELECT email, is_agency, subscription_status, webhook_url, webhook_enabled, sms_enabled, sms_phone, auto_responder_enabled, auto_responder_subject, auto_responder_message FROM users WHERE id = $1', [userId]);
         if (userResult.rows.length === 0) {
             return res.status(200).json({ message: 'Lead submitted successfully.' }); 
         }
@@ -222,6 +222,41 @@ export default async (req, res, currentKvClient) => {
                 });
             } catch (smsErr) {
                 console.error('Error triggering SMS notification:', smsErr);
+            }
+        }
+
+        // 5c. Send automated email auto-responder to the lead if enabled and user is paid
+        if (isPaidUser && user.auto_responder_enabled && email) {
+            try {
+                let responderSubject = user.auto_responder_subject || `Thank you for contacting ${businessName || 'us'}`;
+                let responderMessage = user.auto_responder_message || `Hi {{lead_name}},\n\nThank you for reaching out to ${businessName || 'us'}! We have received your request for ${service || 'our services'} in ${town || 'your town'} and our team will get back to you shortly.\n\nBest regards,\nThe team`;
+
+                // Substitution of variables
+                const placeholders = {
+                    '{{lead_name}}': name,
+                    '{{business_name}}': businessName || 'our business',
+                    '{{service}}': service || 'services',
+                    '{{town}}': town || 'your area',
+                    '{{phone}}': phone || 'Not provided'
+                };
+
+                for (const [key, value] of Object.entries(placeholders)) {
+                    responderSubject = responderSubject.replaceAll(key, value);
+                    responderMessage = responderMessage.replaceAll(key, value);
+                }
+
+                // Convert plain text newlines to HTML br/p tags for clean rendering
+                const formattedHtml = `
+                    <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                        ${responderMessage.split('\n').map(paragraph => `<p style="margin: 0 0 10px 0;">${paragraph}</p>`).join('')}
+                    </div>
+                `;
+
+                sendEmail(email, responderSubject, formattedHtml).catch(emailErr => {
+                    console.error('Error in auto-responder email delivery:', emailErr);
+                });
+            } catch (autoResponderErr) {
+                console.error('Error triggering auto-responder:', autoResponderErr);
             }
         }
 

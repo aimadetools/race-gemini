@@ -464,6 +464,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const weeklyReportEnabledCheckbox = document.getElementById('weekly-report-enabled-checkbox');
                 if (weeklyReportEnabledCheckbox) weeklyReportEnabledCheckbox.checked = data.weeklyReportEnabled !== false;
 
+                const autoresponderEnabledCheckbox = document.getElementById('autoresponder-enabled-checkbox');
+                const autoresponderSubjectInput = document.getElementById('autoresponder-subject-input');
+                const autoresponderMessageInput = document.getElementById('autoresponder-message-input');
+                const autoresponderSettingsFields = document.getElementById('autoresponder-settings-fields');
+
+                if (autoresponderEnabledCheckbox) {
+                    autoresponderEnabledCheckbox.checked = !!data.autoResponderEnabled;
+                    if (autoresponderSettingsFields) {
+                        autoresponderSettingsFields.style.display = data.autoResponderEnabled ? 'flex' : 'none';
+                    }
+                    autoresponderEnabledCheckbox.onchange = () => {
+                        if (autoresponderSettingsFields) {
+                            autoresponderSettingsFields.style.display = autoresponderEnabledCheckbox.checked ? 'flex' : 'none';
+                        }
+                    };
+                }
+                if (autoresponderSubjectInput) autoresponderSubjectInput.value = data.autoResponderSubject || '';
+                if (autoresponderMessageInput) autoresponderMessageInput.value = data.autoResponderMessage || '';
+
                 // Initialize GBP Sync settings
                 const gbpSyncEnabledCheckbox = document.getElementById('gbp-sync-enabled-checkbox');
                 const gbpPlaceIdInput = document.getElementById('gbp-place-id-input');
@@ -2736,6 +2755,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const facebookReviewLink = document.getElementById('facebook-review-link-input') ? document.getElementById('facebook-review-link-input').value : '';
             const yelpReviewLink = document.getElementById('yelp-review-link-input') ? document.getElementById('yelp-review-link-input').value : '';
             const weeklyReportEnabled = document.getElementById('weekly-report-enabled-checkbox') ? document.getElementById('weekly-report-enabled-checkbox').checked : true;
+            
+            const autoResponderEnabled = document.getElementById('autoresponder-enabled-checkbox') ? document.getElementById('autoresponder-enabled-checkbox').checked : false;
+            const autoResponderSubject = document.getElementById('autoresponder-subject-input') ? document.getElementById('autoresponder-subject-input').value : '';
+            const autoResponderMessage = document.getElementById('autoresponder-message-input') ? document.getElementById('autoresponder-message-input').value : '';
 
             try {
                 const response = await fetch('/api/update-integrations', {
@@ -2744,7 +2767,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, autoResponderEnabled, autoResponderSubject, autoResponderMessage })
                 });
 
 
