@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local Citation Health & NAP Consistency Scanner | LocalLeads</title>
+    <meta content="Scan your business name, address, and phone number (NAP) consistency across top local directories. Find and resolve errors to boost your local SEO." name="description"/>
+    <meta content="citation scanner, NAP consistency check, local seo tool, local citations, business listing accuracy" name="keywords"/>
+    <meta content="Free Local Citation Health & NAP Consistency Scanner | LocalLeads" property="og:title"/>
+    <meta content="Scan your business name, address, and phone number (NAP) consistency across top local directories. Find and resolve errors to boost your local SEO." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/citation-scanner.html" property="og:url"/>
+    <link href="https://www.localseogen.com/citation-scanner.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        /* Premium style additions for Citation Scanner */
+        .scanner-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .scanner-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-grid-full {
+                grid-column: span 2;
+            }
+        }
+        .scanner-input {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+        }
+        .scanner-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(31, 41, 55, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .scanner-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+        .pulse-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+        .pulse-btn:hover {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        .pulse-btn:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results dashboard */
+        .results-container {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .score-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .radial-progress {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin-bottom: 1.5rem;
+        }
+        .radial-progress svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .radial-progress circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+        .radial-progress .bg-circle {
+            stroke: rgba(255, 255, 255, 0.06);
+        }
+        .radial-progress .progress-circle {
+            stroke: #10b981;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .score-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .score-desc {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            max-width: 450px;
+        }
+        .directory-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+        @media (min-width: 768px) {
+            .directory-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (min-width: 1024px) {
+            .directory-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        .directory-card {
+            background: rgba(31, 41, 55, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .directory-card:hover {
+            transform: translateY(-3px);
+            background: rgba(31, 41, 55, 0.5);
+        }
+        .directory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .directory-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 50px;
+            letter-spacing: 0.05em;
+        }
+        .badge-consistent {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .badge-mismatched {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .badge-missing {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .directory-details {
+            color: #9ca3af;
+            font-size: 0.88rem;
+            line-height: 1.4;
+        }
+
+        /* Failure & CTA Section */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(16, 185, 129, 0.05));
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 2.25rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .cta-box h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+        .cta-box p {
+            color: #d1d5db;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        .towns-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .town-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e5e7eb;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-weight: 700;
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+        }
+
+        /* Loading Overlay styling */
+        .loading-overlay {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+        .loading-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .loading-subtitle {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+        .loading-steps {
+            max-width: 320px;
+            text-align: left;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #4b5563;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .loading-step.active {
+            color: #6366f1;
+            font-weight: 600;
+        }
+        .loading-step.completed {
+            color: #10b981;
+        }
+        .loading-step i {
+            width: 16px;
+            text-align: center;
+        }
+        .loading-step.completed i {
+            color: #10b981;
+        }
+        .loading-step.active i {
+            animation: spin 1s infinite linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .error-container {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #f87171;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+    </style>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li>
+                        <a href="/generate.html">Generate Pages</a>
+                    </li>
+                    <li>
+                        <a href="/pricing.html">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="/blog.html">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/audit.html">Free Audit</a>
+                    </li>
+                    <li>
+                        <a href="/seo-roi-calculator.html">ROI Calculator</a>
+                    </li>
+                    <li>
+                        <a href="/citation-scanner.html" style="color: #6366f1; font-weight: 700;">Citation Scanner</a>
+                    </li>
+                    <li>
+                        <a href="/showcase.html">Showcase</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                    <li>
+                        <a href="/auth.html">Login/Signup</a>
+                    </li>
+                    <li>
+                        <a href="/buy-credits.html">Buy Credits</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+        <div class="section-header">
+            <h1>Local Citation Health Scanner</h1>
+            <p>Scan and identify Name, Address, and Phone (NAP) discrepancies across key business directories. Instantly uncover local listing opportunities.</p>
+        </div>
+
+        <div class="scanner-card">
+            <!-- Form Input Panel -->
+            <form id="citation-form">
+                <div class="error-container" id="error-message"></div>
+                
+                <div class="form-grid">
+                    <div>
+                        <label class="scanner-label" for="biz-name">Business Name <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="biz-name" placeholder="e.g. Springfield Plumbing" required type="text"/>
+                    </div>
+                    <div>
+                        <label class="scanner-label" for="biz-phone">Phone Number <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="biz-phone" placeholder="e.g. (555) 019-9234" required type="text"/>
+                    </div>
+                    <div class="form-grid-full">
+                        <label class="scanner-label" for="biz-address">Business Address <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="biz-address" placeholder="e.g. 742 Evergreen Terrace, Springfield, IL 62704" required type="text"/>
+                    </div>
+                </div>
+
+                <button class="pulse-btn" id="btn-scan" type="submit">
+                    <i class="fas fa-search-location"></i> Run Free Listing Scan
+                </button>
+            </form>
+
+            <!-- Loading Progression Panel -->
+            <div class="loading-overlay" id="loading-panel">
+                <div class="spinner" style="width: 48px; height: 48px; border-width: 4px; border-top-color: #6366f1; margin: 0 auto;"></div>
+                <div class="loading-title">Scanning Directories...</div>
+                <div class="loading-subtitle">Verifying online listings data. Please wait.</div>
+                
+                <div class="loading-steps">
+                    <div class="loading-step" id="step-geocode">
+                        <i class="fas fa-circle-notch"></i> Verifying Address Geolocation
+                    </div>
+                    <div class="loading-step" id="step-osm">
+                        <i class="fas fa-circle-notch"></i> Retrieving Nearby Mapping Coordinates
+                    </div>
+                    <div class="loading-step" id="step-google">
+                        <i class="fas fa-circle-notch"></i> Scanning Google Business Profile
+                    </div>
+                    <div class="loading-step" id="step-yelp">
+                        <i class="fas fa-circle-notch"></i> Analyzing Yelp Directory NAP State
+                    </div>
+                    <div class="loading-step" id="step-facebook">
+                        <i class="fas fa-circle-notch"></i> Checking Facebook Pages
+                    </div>
+                    <div class="loading-step" id="step-other">
+                        <i class="fas fa-circle-notch"></i> Scanning Bing, YellowPages, &amp; Foursquare
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Results Display Panel -->
+            <div class="results-container" id="results-panel">
+                <div class="score-section">
+                    <div class="radial-progress">
+                        <svg>
+                            <circle class="bg-circle" cx="80" cy="80" r="70"></circle>
+                            <circle class="progress-circle" id="score-circle" cx="80" cy="80" r="70"></circle>
+                        </svg>
+                        <div class="score-value" id="score-text">0%</div>
+                    </div>
+                    <div class="score-label" id="score-grade">Needs Improvement</div>
+                    <div class="score-desc" id="score-summary">We found several critical discrepancies in your Name, Address, and Phone Number (NAP) details. Consistent directories are essential to lock in local rankings.</div>
+                </div>
+
+                <div class="directory-grid" id="directory-grid">
+                    <!-- Cards will be dynamically injected by JavaScript -->
+                </div>
+
+                <!-- Call to Action Recommendation Panel -->
+                <div class="cta-box" id="cta-recommendation">
+                    <h3>Fix Inconsistent Listings &amp; Capture Traffic</h3>
+                    <p>Having incorrect address formats or missing listings tells search engines that your business details are untrustworthy, lowering your rankings. Fix these gaps and target high-intent customers in your surrounding service areas:</p>
+                    
+                    <div class="towns-tags-container" id="suggested-towns">
+                        <!-- Town tags will be dynamically injected -->
+                    </div>
+
+                    <a class="cta-button" id="cta-redirect" href="#">
+                        <i class="fas fa-rocket"></i> Fix Gaps &amp; Generate Landing Pages
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-cols" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; padding: 4rem 0 2rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="footer-col" style="flex: 1; min-width: 250px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">LocalLeads</h2>
+                    <p style="font-size: 0.95rem; color: #9ca3af; line-height: 1.6;">Dominate your local market, effortlessly.</p>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Quick Links</h2>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="referral-program.html">Referral Program</a></li>
+                        <li><a href="seo-roi-calculator.html">ROI Calculator</a></li>
+                        <li><a href="citation-scanner.html" style="color: #6366f1; font-weight: 600;">Citation Scanner</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Legal</h2>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-size: 0.9rem;">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/citation-scanner.js"></script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>

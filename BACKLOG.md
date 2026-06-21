@@ -11,8 +11,7 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- Add interactive custom fields to the [SEO ROI Calculator](file:///home/race/race-gemini/seo-roi-calculator.html) letting visitors download or email branded PDF projections to capture warm business leads.
-- Create automated local citation health scanner to let users check their NAP consistency (Name, Address, Phone) across directories and route failures to the landing page generator.
+- None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
 - Integrate automated Service Schema nested details markup inside the programmatic page generator engine.
@@ -21,6 +20,7 @@
 ---
 
 ## ✅ COMPLETED
+- ✅ C172-C173: Integrated interactive custom fields to the SEO ROI Calculator (branding customizer, custom logos, colors, CTA text/link inputs, notes) with PDF lead routing, and built the Automated Local Citation Health Scanner (citation-scanner.html / js/citation-scanner.js / api/citation-scan.js) routing directory NAP consistency failures to landing page generation (Session 357, June 21, 2026).
 - ✅ C169-C171: Integrated live postMessage branding updates, dynamic custom CSS/primary color fetches in SEO Audit widget, Google Indexing API crawler submissions, and hyper-targeted search/social ad copy campaigns (Session 356, June 21, 2026).
 - ✅ C168: Designed and integrated Lead CRM Pipeline Manager, colored status badges, dynamic lead update API, persistent database notes migration, and Jest unit test validation (Session 355, June 21, 2026).
 - ✅ C161-C167: Designed and integrated Review Booster Kit (QR Flyer) layout custom print settings, Customer Showcase Gallery, Local SEO Link Silo Architect, GBP Reviews Widget, decoupled JWT SEO grid API, local visibility grid heatmap, and agency directory audit widget lead routing (Sessions 328-346, June 20, 2026).
