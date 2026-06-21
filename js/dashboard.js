@@ -2097,13 +2097,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updateCssPreview() {
             if (!cssInput) return;
-            let style = document.getElementById('widget-preview-custom-css');
-            if (!style) {
-                style = document.createElement('style');
-                style.id = 'widget-preview-custom-css';
-                document.head.appendChild(style);
+            const widgetType = typeSelect ? typeSelect.value : 'service-area';
+            if (widgetType === 'seo-audit') {
+                const iframe = previewBox.querySelector('iframe');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ type: 'updateCss', css: cssInput.value }, '*');
+                }
+            } else {
+                let style = document.getElementById('widget-preview-custom-css');
+                if (!style) {
+                    style = document.createElement('style');
+                    style.id = 'widget-preview-custom-css';
+                    document.head.appendChild(style);
+                }
+                style.textContent = cssInput.value;
             }
-            style.textContent = cssInput.value;
         }
 
         function updateBaseCssPreview(theme, layout, baseColor, widgetType = 'service-area') {
@@ -2526,12 +2534,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (widgetType === 'seo-audit') {
                 if (layoutGroup) layoutGroup.style.display = 'none';
-                if (cssGroup) cssGroup.style.display = 'none';
+                if (cssGroup) cssGroup.style.display = 'flex';
 
                 const iframeUrl = `${origin}/audit-widget.html?agencyId=${clientId}&theme=${theme}&color=${color}`;
                 embedCodeTextarea.value = `<!-- LocalLeads White-Label SEO Audit Widget Embed -->\n<iframe src="${iframeUrl}" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" title="Local SEO Audit"></iframe>`;
 
-                previewBox.innerHTML = `<iframe src="${iframeUrl}" style="width: 100%; height: 100%; min-height: 350px; border: none; border-radius: 8px;"></iframe>`;
+                const iframe = document.createElement('iframe');
+                iframe.src = iframeUrl;
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.minHeight = '350px';
+                iframe.style.border = 'none';
+                iframe.style.borderRadius = '8px';
+                iframe.onload = () => {
+                    if (cssInput) {
+                        iframe.contentWindow.postMessage({ type: 'updateCss', css: cssInput.value }, '*');
+                    }
+                };
+
+                previewBox.innerHTML = '';
+                previewBox.appendChild(iframe);
             } else {
                 if (layoutGroup) layoutGroup.style.display = 'flex';
                 if (cssGroup) cssGroup.style.display = 'flex';

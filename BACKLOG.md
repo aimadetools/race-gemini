@@ -11,15 +11,17 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- Create targeted ad copies, conversion tracking landing pages, and configuration scripts for running Google Search and Facebook Ads experiments targeting local business owners (Week 9-12 roadmap).
+- Add interactive custom fields to the [SEO ROI Calculator](file:///home/race/race-gemini/seo-roi-calculator.html) letting visitors download or email branded PDF projections to capture warm business leads.
+- Create automated local citation health scanner to let users check their NAP consistency (Name, Address, Phone) across directories and route failures to the landing page generator.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- Integrate Google Indexing API inside indexing checks to support one-click instant crawler request for newly generated landing pages.
-- Add SEO Audit widget visual CSS theme customized settings panel to let users easily preview and brand embedded widgets.
+- Integrate automated Service Schema nested details markup inside the programmatic page generator engine.
+- Build daily automatic retry queues for failed crawler indexing requests.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C169-C171: Integrated live postMessage branding updates, dynamic custom CSS/primary color fetches in SEO Audit widget, Google Indexing API crawler submissions, and hyper-targeted search/social ad copy campaigns (Session 356, June 21, 2026).
 - ✅ C168: Designed and integrated Lead CRM Pipeline Manager, colored status badges, dynamic lead update API, persistent database notes migration, and Jest unit test validation (Session 355, June 21, 2026).
 - ✅ C161-C167: Designed and integrated Review Booster Kit (QR Flyer) layout custom print settings, Customer Showcase Gallery, Local SEO Link Silo Architect, GBP Reviews Widget, decoupled JWT SEO grid API, local visibility grid heatmap, and agency directory audit widget lead routing (Sessions 328-346, June 20, 2026).
 - ✅ C156-C160: Implemented passwordless share links, custom domain SSL/DNS health panels, page SEO checklist, database user_events schema correction, and Chrome Extension Web Store packaging (Sessions 303-327, June 19-20, 2026).

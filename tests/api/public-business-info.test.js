@@ -65,7 +65,9 @@ describe('Public Business Info API', () => {
                 agency_id: null,
                 google_review_link: 'https://g.page/acme/review',
                 facebook_review_link: 'https://facebook.com/acme/reviews',
-                yelp_review_link: 'https://yelp.com/biz/acme'
+                yelp_review_link: 'https://yelp.com/biz/acme',
+                primary_color: '#ff0000',
+                widget_css: '.custom { color: green; }'
             }]
         });
         mockQuery.mockResolvedValueOnce({
@@ -81,7 +83,9 @@ describe('Public Business Info API', () => {
             pagesCount: 15,
             googleReviewLink: 'https://g.page/acme/review',
             facebookReviewLink: 'https://facebook.com/acme/reviews',
-            yelpReviewLink: 'https://yelp.com/biz/acme'
+            yelpReviewLink: 'https://yelp.com/biz/acme',
+            primaryColor: '#ff0000',
+            widgetCss: '.custom { color: green; }'
         });
     });
 });

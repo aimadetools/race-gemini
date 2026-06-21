@@ -420,6 +420,46 @@
         document.documentElement.style.setProperty('--primary-color', cleanColor);
       }
 
+      // Fetch custom branding information if agencyId is present
+      if (agencyId) {
+        fetch(`/api/public-business-info?clientId=${encodeURIComponent(agencyId)}`)
+          .then(res => {
+            if (res.ok) return res.json();
+            throw new Error('Failed to load branding info');
+          })
+          .then(data => {
+            if (data.primaryColor && !primaryColor) {
+              let cleanColor = data.primaryColor;
+              if (!cleanColor.startsWith('#')) {
+                cleanColor = '#' + cleanColor;
+              }
+              document.documentElement.style.setProperty('--primary-color', cleanColor);
+            }
+            if (data.widgetCss) {
+              const styleTag = document.createElement('style');
+              styleTag.id = 'localseo-custom-widget-css';
+              styleTag.textContent = data.widgetCss;
+              document.head.appendChild(styleTag);
+            }
+          })
+          .catch(err => {
+            console.error('[Branding] Error loading agency brand info:', err);
+          });
+      }
+
+      // Handle message events from parent window for live customization previews
+      window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'updateCss') {
+          let styleTag = document.getElementById('localseo-custom-widget-css');
+          if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'localseo-custom-widget-css';
+            document.head.appendChild(styleTag);
+          }
+          styleTag.textContent = event.data.css;
+        }
+      });
+
       const auditForm = document.getElementById('audit-url-form');
       const setupView = document.getElementById('setup-view');
       const loadingView = document.getElementById('loading-view');
