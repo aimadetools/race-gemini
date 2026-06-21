@@ -11,10 +11,11 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Create targeted ad copies, conversion tracking landing pages, and configuration scripts for running Google Search and Facebook Ads experiments targeting local business owners (Week 9-12 roadmap).
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Integrate Google Indexing API inside indexing checks to support one-click instant crawler request for newly generated landing pages.
+- Add SEO Audit widget visual CSS theme customized settings panel to let users easily preview and brand embedded widgets.
 
 ---
 
