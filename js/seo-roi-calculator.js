@@ -213,6 +213,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 recommendedPackageRoi.style.display = 'none';
             }
         }
+
+        // Update PDF Preview Calculations
+        const pdfTownsCount = document.getElementById('pdf-preview-towns-count');
+        const pdfAnnualRev = document.getElementById('pdf-preview-annual-rev');
+        const pdfVolume = document.getElementById('pdf-preview-volume');
+        const pdfSuccessRate = document.getElementById('pdf-preview-success-rate');
+        const pdfCtr = document.getElementById('pdf-preview-ctr');
+        const pdfConvRate = document.getElementById('pdf-preview-conv-rate');
+        const pdfTraffic = document.getElementById('pdf-preview-traffic');
+        const pdfLeads = document.getElementById('pdf-preview-leads');
+        const pdfCloseRate = document.getElementById('pdf-preview-close-rate');
+        const pdfJobs = document.getElementById('pdf-preview-jobs');
+        const pdfMonthlyRev = document.getElementById('pdf-preview-monthly-rev');
+        const pdfInvestment = document.getElementById('pdf-preview-investment');
+        const pdfNetReturn = document.getElementById('pdf-preview-net-return');
+        const pdfRoi = document.getElementById('pdf-preview-roi');
+
+        if (pdfTownsCount) pdfTownsCount.textContent = towns;
+        if (pdfAnnualRev) pdfAnnualRev.textContent = formatter.format(annualRevenue);
+        if (pdfVolume) pdfVolume.textContent = numFormatter.format(totalSearchVolume);
+        if (pdfSuccessRate) pdfSuccessRate.textContent = (successRate * 100) + '%';
+        if (pdfCtr) pdfCtr.textContent = (ctr * 100) + '%';
+        if (pdfConvRate) pdfConvRate.textContent = (convRate * 100) + '%';
+        if (pdfTraffic) pdfTraffic.textContent = numFormatter.format(estimatedTraffic);
+        if (pdfLeads) pdfLeads.textContent = numFormatter.format(estimatedLeads);
+        if (pdfCloseRate) pdfCloseRate.textContent = (closeRate * 100) + '%';
+        if (pdfJobs) pdfJobs.textContent = numFormatter.format(bookedJobs);
+        if (pdfMonthlyRev) pdfMonthlyRev.textContent = formatter.format(monthlyRevenue);
+        if (pdfInvestment) pdfInvestment.textContent = formatter.format(packageCost);
+        if (pdfNetReturn) pdfNetReturn.textContent = formatter.format(netReturn);
+        if (pdfRoi) pdfRoi.textContent = roiMultiplier > 1 ? (numFormatter.format(roiMultiplier) + 'x ROI') : 'N/A';
     }
 
     // Input Listeners
@@ -324,7 +355,317 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize Preset and Calculation on Load
+    // Report Customizer Meta Updates
+    function updateReportMeta() {
+        const bizNameInput = document.getElementById('pdf-business-name');
+        const emailInput = document.getElementById('pdf-email');
+        const contactInput = document.getElementById('pdf-contact-name');
+        const websiteInput = document.getElementById('pdf-website');
+        const preparedInput = document.getElementById('pdf-prepared-by');
+        const phoneInput = document.getElementById('pdf-phone');
+        const logoInput = document.getElementById('pdf-logo-url');
+        const colorInput = document.getElementById('pdf-theme-color');
+
+        const bizName = bizNameInput ? bizNameInput.value.trim() || 'Your Business Name' : 'Your Business Name';
+        const contactEmail = emailInput ? emailInput.value.trim() || 'Not Provided' : 'Not Provided';
+        const contactName = contactInput ? contactInput.value.trim() : '';
+        const website = websiteInput ? websiteInput.value.trim() || 'Not Provided' : 'Not Provided';
+        const preparedBy = preparedInput ? preparedInput.value.trim() || 'LocalLeads' : 'LocalLeads';
+        const phone = phoneInput ? phoneInput.value.trim() || 'Not Provided' : 'Not Provided';
+        const logoUrl = logoInput ? logoInput.value.trim() : '';
+        const themeColor = colorInput ? colorInput.value : '#007bff';
+
+        // Date
+        const dateEl = document.getElementById('pdf-preview-date');
+        if (dateEl) {
+            dateEl.textContent = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Target Biz Details
+        const pdfTargetBiz = document.getElementById('pdf-preview-target-biz');
+        const pdfTargetUrl = document.getElementById('pdf-preview-target-url');
+        const pdfTargetIndustry = document.getElementById('pdf-preview-target-industry');
+
+        if (pdfTargetBiz) pdfTargetBiz.textContent = bizName;
+        if (pdfTargetUrl) pdfTargetUrl.textContent = 'Website: ' + website;
+        
+        if (pdfTargetIndustry && industrySelect) {
+            const selectedNiche = industrySelect.options[industrySelect.selectedIndex].text;
+            pdfTargetIndustry.textContent = 'Industry: ' + selectedNiche;
+        }
+
+        // Prepared By Details
+        const pdfPrepBy = document.getElementById('pdf-preview-prepared-by');
+        const pdfPrepPhone = document.getElementById('pdf-preview-prepared-phone');
+        const pdfPrepEmail = document.getElementById('pdf-preview-prepared-email');
+        const pdfFooterName = document.getElementById('pdf-preview-footer-name');
+
+        if (pdfPrepBy) pdfPrepBy.textContent = preparedBy;
+        if (pdfPrepPhone) pdfPrepPhone.textContent = 'Phone: ' + phone;
+        if (pdfPrepEmail) pdfPrepEmail.textContent = 'Email: ' + contactEmail;
+        if (pdfFooterName) pdfFooterName.textContent = preparedBy;
+
+        // Logo
+        const logoImg = document.getElementById('pdf-preview-logo');
+        const logoText = document.getElementById('pdf-preview-logo-text');
+        if (logoImg && logoText) {
+            if (logoUrl) {
+                logoImg.src = logoUrl;
+                logoImg.style.display = 'block';
+                logoText.style.display = 'none';
+            } else {
+                logoImg.style.display = 'none';
+                logoText.style.display = 'block';
+                logoText.textContent = preparedBy;
+            }
+        }
+
+        // Color updates
+        const colorHex = document.getElementById('theme-color-hex');
+        if (colorHex) colorHex.textContent = themeColor.toUpperCase();
+        
+        const headerEl = document.querySelector('.pdf-header');
+        if (headerEl) {
+            headerEl.style.borderColor = themeColor;
+        }
+    }
+
+    // Attach Customizer Event Listeners
+    const pdfBizInput = document.getElementById('pdf-business-name');
+    const pdfEmailInput = document.getElementById('pdf-email');
+    const pdfContactInput = document.getElementById('pdf-contact-name');
+    const pdfWebsiteInput = document.getElementById('pdf-website');
+    const pdfPreparedInput = document.getElementById('pdf-prepared-by');
+    const pdfPhoneInput = document.getElementById('pdf-phone');
+    const pdfLogoInput = document.getElementById('pdf-logo-url');
+    const pdfColorInput = document.getElementById('pdf-theme-color');
+
+    const customizationInputs = [
+        pdfBizInput, pdfEmailInput, pdfContactInput, pdfWebsiteInput,
+        pdfPreparedInput, pdfPhoneInput, pdfLogoInput
+    ];
+
+    customizationInputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', updateReportMeta);
+        }
+    });
+
+    if (pdfColorInput) {
+        pdfColorInput.addEventListener('input', updateReportMeta);
+    }
+
+    // Sync CTA Lead Form with PDF builder
+    const leadBizInput = document.getElementById('leadBusinessName');
+    const leadEmailInput = document.getElementById('leadEmail');
+
+    if (leadBizInput && pdfBizInput) {
+        leadBizInput.addEventListener('input', (e) => {
+            pdfBizInput.value = e.target.value;
+            updateReportMeta();
+        });
+        pdfBizInput.addEventListener('input', (e) => {
+            leadBizInput.value = e.target.value;
+        });
+    }
+
+    if (leadEmailInput && pdfEmailInput) {
+        leadEmailInput.addEventListener('input', (e) => {
+            pdfEmailInput.value = e.target.value;
+            updateReportMeta();
+        });
+        pdfEmailInput.addEventListener('input', (e) => {
+            leadEmailInput.value = e.target.value;
+        });
+    }
+
+    // Dynamic Loader for html2pdf.js
+    function loadHtml2Pdf() {
+        return new Promise((resolve, reject) => {
+            if (window.html2pdf) {
+                resolve(window.html2pdf);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            script.onload = () => resolve(window.html2pdf);
+            script.onerror = () => reject(new Error('Failed to load html2pdf script'));
+            document.head.appendChild(script);
+        });
+    }
+
+    // Lead capturing helper
+    async function handleLeadCapture(email, name, source) {
+        try {
+            const response = await fetch('/api/capture-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    name: name,
+                    source: source,
+                    url: window.location.href
+                })
+            });
+            return response.ok;
+        } catch (err) {
+            console.error('Failed to capture lead:', err);
+            return false;
+        }
+    }
+
+    // PDF generation trigger
+    const btnDownloadPdf = document.getElementById('btn-download-pdf');
+    const btnEmailPdf = document.getElementById('btn-email-pdf');
+    const pdfMessage = document.getElementById('pdf-generator-message');
+
+    async function generatePDF() {
+        const bizName = pdfBizInput ? pdfBizInput.value.trim() : '';
+        const email = pdfEmailInput ? pdfEmailInput.value.trim() : '';
+
+        if (!bizName || !email) {
+            if (pdfMessage) {
+                pdfMessage.textContent = 'Please fill out Prepared For (Business Name) and Lead Contact Email.';
+                pdfMessage.style.color = '#ef4444';
+            }
+            return false;
+        }
+
+        if (pdfMessage) {
+            pdfMessage.textContent = 'Preparing your branded PDF report...';
+            pdfMessage.style.color = '#3b82f6';
+        }
+
+        // Capture lead
+        await handleLeadCapture(email, bizName, 'roi_pdf_download');
+
+        try {
+            if (pdfMessage) pdfMessage.textContent = 'Loading PDF engine...';
+            const html2pdf = await loadHtml2Pdf();
+            
+            if (pdfMessage) pdfMessage.textContent = 'Generating PDF file...';
+            const element = document.getElementById('report-pdf-template');
+            
+            const opt = {
+                margin:       0.5,
+                filename:     `local-seo-roi-projection-${bizName.toLowerCase().replace(/[^a-z0-9]/g, '-')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: '#111827'
+                },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            await html2pdf().set(opt).from(element).save();
+            
+            if (pdfMessage) {
+                pdfMessage.textContent = 'Branded PDF report downloaded successfully!';
+                pdfMessage.style.color = '#34d399';
+            }
+            return true;
+        } catch (err) {
+            console.error('PDF export error:', err);
+            if (pdfMessage) {
+                pdfMessage.textContent = 'Error generating PDF. Attempting browser print instead...';
+                pdfMessage.style.color = '#f59e0b';
+            }
+            
+            setTimeout(() => {
+                window.print();
+                if (pdfMessage) {
+                    pdfMessage.textContent = 'Print dialog opened. Select "Save as PDF" to download.';
+                    pdfMessage.style.color = '#34d399';
+                }
+            }, 1000);
+            return false;
+        }
+    }
+
+    if (btnDownloadPdf) {
+        btnDownloadPdf.addEventListener('click', async (e) => {
+            e.preventDefault();
+            btnDownloadPdf.disabled = true;
+            await generatePDF();
+            btnDownloadPdf.disabled = false;
+        });
+    }
+
+    if (btnEmailPdf) {
+        btnEmailPdf.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const bizName = pdfBizInput ? pdfBizInput.value.trim() : '';
+            const email = pdfEmailInput ? pdfEmailInput.value.trim() : '';
+            const preparedBy = pdfPreparedInput ? pdfPreparedInput.value.trim() || 'LocalLeads' : 'LocalLeads';
+
+            if (!bizName || !email) {
+                if (pdfMessage) {
+                    pdfMessage.textContent = 'Please fill out Prepared For (Business Name) and Lead Contact Email.';
+                    pdfMessage.style.color = '#ef4444';
+                }
+                return;
+            }
+
+            btnEmailPdf.disabled = true;
+            if (pdfMessage) {
+                pdfMessage.textContent = 'Opening email client and preparing PDF...';
+                pdfMessage.style.color = '#3b82f6';
+            }
+
+            // Capture lead
+            await handleLeadCapture(email, bizName, 'roi_pdf_email');
+
+            // Generate/download PDF so they have the file locally
+            const success = await generatePDF();
+
+            if (success) {
+                const subject = encodeURIComponent(`Local SEO ROI & Traffic Projection for ${bizName}`);
+                
+                const towns = townsInput ? townsInput.value : '';
+                const annualRev = outAnnualRev ? outAnnualRev.textContent : '';
+                const jobs = outJobs ? outJobs.textContent : '';
+                const netReturn = outNetReturn ? outNetReturn.textContent : '';
+                
+                const body = encodeURIComponent(
+                    `Hi there,\n\n` +
+                    `Here is the Local SEO ROI & Traffic Projection Report for ${bizName}.\n\n` +
+                    `Summary of projections:\n` +
+                    `- Target Towns/Cities: ${towns}\n` +
+                    `- Est. Annual Revenue Increase: ${annualRev}\n` +
+                    `- Est. Booked Jobs / Month: ${jobs}\n` +
+                    `- Net Annual Profit: ${netReturn}\n\n` +
+                    `Please check your browser downloads for the attached branded PDF report containing detailed metrics.\n\n` +
+                    `Best regards,\n` +
+                    `${preparedBy}`
+                );
+
+                if (pdfMessage) {
+                    pdfMessage.textContent = 'PDF generated! Opening email client to send branded PDF report...';
+                    pdfMessage.style.color = '#34d399';
+                }
+
+                window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank');
+            } else {
+                if (pdfMessage) {
+                    pdfMessage.textContent = 'Failed to generate PDF report template.';
+                    pdfMessage.style.color = '#ef4444';
+                }
+            }
+            
+            btnEmailPdf.disabled = false;
+        });
+    }
+
+    // Initialize Preset, Meta and Calculation on Load
     loadPreset('plumbing');
+    updateReportMeta();
     calculate();
 });

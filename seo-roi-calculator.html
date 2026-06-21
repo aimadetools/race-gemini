@@ -216,9 +216,175 @@
                         <div class="package-name" id="recommended-package-name">Starter Pack (50 Pages)</div>
                         <div class="package-cost" id="recommended-package-cost">$49 One-Time</div>
                         <div class="package-roi-banner" id="recommended-package-roi">120x ROI</div>
-                    </div>
                 </div>
             </div>
+
+            <!-- Branded PDF Report Builder & Live Preview Section -->
+            <section class="report-generator-section" id="report-generator" style="margin-top: 4rem;">
+                <div class="calculator-grid">
+                    <!-- Report Inputs & Customizer -->
+                    <div class="calc-card">
+                        <h3>Branded Report Customizer</h3>
+                        <p style="color: #9ca3af; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                            Customize the calculation projection report below with your business branding details to download or email to prospects.
+                        </p>
+                        
+                        <div class="form-group">
+                            <label for="pdf-business-name">Prepared For (Business Name) <span style="color: #ef4444;">*</span></label>
+                            <input class="calc-input" id="pdf-business-name" placeholder="e.g. Springfield Plumbing" required type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-email">Lead Contact Email <span style="color: #ef4444;">*</span></label>
+                            <input class="calc-input" id="pdf-email" placeholder="e.g. contact@springfieldplumbing.com" required type="email"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-contact-name">Contact Person Name</label>
+                            <input class="calc-input" id="pdf-contact-name" placeholder="e.g. John Doe" type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-website">Website URL</label>
+                            <input class="calc-input" id="pdf-website" placeholder="e.g. www.springfieldplumbing.com" type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-prepared-by">Prepared By (Agency/Consultant Name)</label>
+                            <input class="calc-input" id="pdf-prepared-by" placeholder="e.g. LocalLeads Projections" type="text" value="LocalLeads"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-phone">Contact Phone Number</label>
+                            <input class="calc-input" id="pdf-phone" placeholder="e.g. (555) 019-9234" type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-logo-url">Logo URL (Optional)</label>
+                            <input class="calc-input" id="pdf-logo-url" placeholder="e.g. https://domain.com/logo.png" type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pdf-theme-color">Primary Branding Color</label>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <input id="pdf-theme-color" type="color" value="#007bff" style="border: none; background: none; width: 50px; height: 40px; cursor: pointer;"/>
+                                <span id="theme-color-hex" style="color: #d1d5db; font-family: monospace; font-size: 1rem;">#007bff</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
+                            <button class="button pulse-animation" id="btn-download-pdf" style="width: 100%;"><i class="fas fa-file-pdf" style="margin-right: 8px;"></i> Download Branded PDF Report</button>
+                            <button class="button" id="btn-email-pdf" style="width: 100%; background: #4f46e5; border-color: #4f46e5;"><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email PDF Report</button>
+                        </div>
+                        <div class="message-box" id="pdf-generator-message"></div>
+                    </div>
+
+                    <!-- Live PDF Preview Card -->
+                    <div class="calc-card" style="border-color: rgba(59, 130, 246, 0.15); display: flex; flex-direction: column;">
+                        <h3>Live Report Preview</h3>
+                        <p style="color: #9ca3af; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                            This is a real-time preview of the PDF report layout.
+                        </p>
+                        
+                        <!-- PDF Container Mockup -->
+                        <div class="pdf-preview-outer">
+                            <div class="pdf-preview-inner" id="report-pdf-template">
+                                <!-- Report Header -->
+                                <div class="pdf-header" style="border-bottom: 2px solid #007bff; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-color: #007bff;">
+                                    <div class="pdf-logo-container">
+                                        <img id="pdf-preview-logo" src="" alt="Logo" style="max-height: 45px; display: none;">
+                                        <h2 id="pdf-preview-logo-text" style="font-size: 1.5rem; margin: 0; color: #fff; background: none; -webkit-text-fill-color: initial;">LocalLeads</h2>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; font-weight: 600;">SEO Traffic & ROI Projection</div>
+                                        <div id="pdf-preview-date" style="font-size: 0.9rem; color: #d1d5db; font-weight: 600;">June 21, 2026</div>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata Grid -->
+                                <div class="pdf-meta-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 25px; font-size: 0.85rem; color: #d1d5db;">
+                                    <div>
+                                        <strong style="color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">Prepared For:</strong>
+                                        <div id="pdf-preview-target-biz" style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 2px;">Your Business Name</div>
+                                        <div id="pdf-preview-target-url" style="color: #9ca3af; font-size: 0.85rem;">Website: Not Provided</div>
+                                        <div id="pdf-preview-target-industry" style="color: #9ca3af; font-size: 0.85rem;">Industry: Plumbing Services</div>
+                                    </div>
+                                    <div>
+                                        <strong style="color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">Prepared By:</strong>
+                                        <div id="pdf-preview-prepared-by" style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 2px;">LocalLeads</div>
+                                        <div id="pdf-preview-prepared-phone" style="color: #9ca3af; font-size: 0.85rem;">Phone: Not Provided</div>
+                                        <div id="pdf-preview-prepared-email" style="color: #9ca3af; font-size: 0.85rem;">Email: hello@localseogen.com</div>
+                                    </div>
+                                </div>
+
+                                <!-- Main Projection Highlights -->
+                                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                                    <div style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Estimated Annual Revenue Increase</div>
+                                    <div id="pdf-preview-annual-rev" style="font-size: 2.2rem; font-weight: 800; color: #34d399; margin: 5px 0;">$0</div>
+                                    <div style="font-size: 0.85rem; color: #9ca3af;">Based on expanding rankings to <span id="pdf-preview-towns-count" style="color: #fff; font-weight: bold;">50</span> service areas.</div>
+                                </div>
+
+                                <!-- Metrics Table -->
+                                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.85rem;">
+                                    <thead>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); text-align: left; color: #9ca3af;">
+                                            <th style="padding: 8px 0; font-weight: 600;">Metric Name</th>
+                                            <th style="padding: 8px 0; font-weight: 600; text-align: right;">Value / Projection</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="color: #d1d5db;">
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Monthly Search Volume (All Towns)</td>
+                                            <td id="pdf-preview-volume" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Ranking Success Rate (Page 1)</td>
+                                            <td id="pdf-preview-success-rate" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">40%</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Organic CTR &amp; Traffic conversion</td>
+                                            <td style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;"><span id="pdf-preview-ctr">3%</span> CTR / <span id="pdf-preview-conv-rate">8%</span> Conv.</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Estimated Monthly Traffic</td>
+                                            <td id="pdf-preview-traffic" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Estimated Monthly Leads</td>
+                                            <td id="pdf-preview-leads" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Est. Booked Jobs / Month (@<span id="pdf-preview-close-rate">50%</span> close rate)</td>
+                                            <td id="pdf-preview-jobs" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">Est. Monthly Revenue Increase</td>
+                                            <td id="pdf-preview-monthly-rev" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">$0</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0;">One-Time Campaign Setup Cost</td>
+                                            <td id="pdf-preview-investment" style="padding: 10px 0; text-align: right; font-weight: 700; color: #fff;">$49</td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                            <td style="padding: 10px 0; font-weight: bold; color: #34d399;">Net First Year Return</td>
+                                            <td id="pdf-preview-net-return" style="padding: 10px 0; text-align: right; font-weight: 700; color: #34d399;">$0</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px 0; font-weight: bold; color: #38bdf8;">Estimated ROI Multiplier</td>
+                                            <td id="pdf-preview-roi" style="padding: 10px 0; text-align: right; font-weight: 700; color: #38bdf8;">0x ROI</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Call to Action Footer -->
+                                <div style="margin-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 15px; text-align: center; font-size: 0.75rem; color: #9ca3af; line-height: 1.4;">
+                                    This ROI projection is an estimate based on average industry values and search volumes. Real ranking metrics and leads depend on competition and local demand. Prepared automatically by <span id="pdf-preview-footer-name">LocalLeads</span>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- CTA Section with Lead Magnet -->
             <section class="cta-lead-section">
