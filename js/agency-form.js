@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(agencySignupForm);
             const data = Object.fromEntries(formData.entries());
+            const tracking = window.AdTracking ? window.AdTracking.getParams() : {};
 
             try {
                 const response = await fetch('/api/agency-signup', {
@@ -25,7 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({
+                        ...data,
+                        utm_source: tracking.utm_source || '',
+                        utm_medium: tracking.utm_medium || '',
+                        utm_campaign: tracking.utm_campaign || '',
+                        utm_term: tracking.utm_term || '',
+                        gclid: tracking.gclid || ''
+                    }),
                 });
 
                 submitButton.disabled = false;

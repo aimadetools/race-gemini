@@ -275,12 +275,22 @@
         signupSubmitButton.innerHTML = 'Signing up... <span class="spinner"></span>'; // Add spinner
 
         try {
+            const tracking = window.AdTracking ? window.AdTracking.getParams() : {};
             const response = await fetch('/api/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password, referrerId }), // Include referrerId here
+                body: JSON.stringify({ 
+                    email, 
+                    password, 
+                    referrerId,
+                    utm_source: tracking.utm_source || '',
+                    utm_medium: tracking.utm_medium || '',
+                    utm_campaign: tracking.utm_campaign || '',
+                    utm_term: tracking.utm_term || '',
+                    gclid: tracking.gclid || ''
+                }), // Include referrerId and UTM tracking details here
             });
             const data = await response.json();
             if (response.ok) {
@@ -365,8 +375,7 @@
 <i class="fas fa-arrow-up">
 </i>
 </button>
-<script src="/js/app.min.js">
-</script>
-<button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<script src="/js/ad-tracking.js"></script>
+<script src="/js/app.min.js"></script>
 </body>
 </html>

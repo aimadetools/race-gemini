@@ -134,10 +134,20 @@ errorMessage.textContent = '';
 const agencyName = document.getElementById('agency-name').value;
 const email = document.getElementById('email').value;
 const password = document.getElementById('password').value;
+const tracking = window.AdTracking ? window.AdTracking.getParams() : {};
 const response = await fetch('/api/agency-signup', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ agencyName, email, password }),
+body: JSON.stringify({ 
+  agencyName, 
+  email, 
+  password,
+  utm_source: tracking.utm_source || '',
+  utm_medium: tracking.utm_medium || '',
+  utm_campaign: tracking.utm_campaign || '',
+  utm_term: tracking.utm_term || '',
+  gclid: tracking.gclid || ''
+}),
 });
 if (response.ok) {
 window.location.href = 'agency-dashboard.html';
@@ -148,5 +158,6 @@ errorMessage.textContent = message;
 });
   </script>
 <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+<script src="/js/ad-tracking.js"></script>
 <script src="/js/app.min.js"></script></body>
 </html>

@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid'; // Import nanoid for generating referral codes
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { email, password, referrerId } = req.body;
+    const { email, password, referrerId, utm_source, utm_medium, utm_campaign, utm_term, gclid } = req.body;
 
     if (!email || !password) {
       await logError(new Error('Email and password are required.'), 'Validation Error', 'signup_error.log');
@@ -56,7 +56,15 @@ export default async function handler(req, res) {
         body: {
           eventName: 'user_signup',
           userId: userId,
-          eventData: { email: email, referrerId: referrerId } // Include referrerId in tracking
+          eventData: { 
+            email: email, 
+            referrerId: referrerId,
+            utm_source: utm_source || null,
+            utm_medium: utm_medium || null,
+            utm_campaign: utm_campaign || null,
+            utm_term: utm_term || null,
+            gclid: gclid || null
+          } // Include referrerId and UTM campaign attribution details
         }
       }, {
         status: () => ({ json: () => {} }) // Mock response for tracking

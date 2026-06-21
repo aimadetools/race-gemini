@@ -72,6 +72,8 @@ export default async (req, res, currentKvClient) => {
                 await logError(kvError, 'Agency Signup - KV Store Error (non-blocking)', 'agency_signup_error.log');
             }
 
+            const { utm_source, utm_medium, utm_campaign, utm_term, gclid } = req.body;
+
             // Track the agency signup event
             // Mock req and res objects for trackEventHandler
             await trackEventHandler({
@@ -83,7 +85,12 @@ export default async (req, res, currentKvClient) => {
                         website,
                         contactPerson,
                         contactEmail,
-                        inquiryId
+                        inquiryId,
+                        utm_source: utm_source || null,
+                        utm_medium: utm_medium || null,
+                        utm_campaign: utm_campaign || null,
+                        utm_term: utm_term || null,
+                        gclid: gclid || null
                     }
                 }
             }, {
