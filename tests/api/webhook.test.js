@@ -64,9 +64,6 @@ describe('Webhook API', () => {
         clearMockUsers(); // Clear mock users for each test
         clearMockLeads(); // Clear mock leads for each test
         
-        // Ensure mockQuery uses the mockDb query implementation which routes to queryDelegate
-        const mockDb = jest.requireActual('../../db/mockDb.js');
-        mockQuery.mockImplementation(mockDb.mockQuery);
         mockQuery.mockClear();
 
         // Reset buffer mock
@@ -167,6 +164,23 @@ describe('Webhook API', () => {
             }
             if (textLower.includes('select id from users where referral_code = $3')) {
                 return { rows: [{ id: 'referrer123' }] };
+            }
+            if (textLower.includes('select user_id, name from leads')) {
+                const id = params[0];
+                const lead = getMockLeads().find(l => l.id.toString() === id.toString());
+                if (lead) {
+                    return { rows: [lead] };
+                }
+                return { rows: [] };
+            }
+            if (textLower.includes('update leads') && (textLower.includes('is_unlocked = true') || textLower.includes('is_unlocked = $1'))) {
+                const id = params[0];
+                const lead = getMockLeads().find(l => l.id.toString() === id.toString());
+                if (lead) {
+                    lead.is_unlocked = true;
+                    return { rows: [lead] };
+                }
+                return { rows: [] };
             }
             return { rows: [] };
         });
