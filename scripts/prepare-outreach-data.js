@@ -157,6 +157,44 @@ function generateLocalBusinessSchema(businessName, service, town) {
     "areaServed": {
       "@type": "State",
       "name": town
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": `${service} Services`,
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": `Residential ${service}`,
+            "description": `Professional residential ${service} installation, maintenance, and repair services in ${town}.`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": `Commercial ${service}`,
+            "description": `Reliable commercial ${service} systems setup, inspections, and customized solutions for businesses in ${town}.`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": `Emergency ${service} Service`,
+            "description": `Fast-response emergency ${service} troubleshooting and repairs available in the ${town} region.`
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": `${service} Inspection & Diagnostics`,
+            "description": `Thorough inspection, diagnostics, and preventative care for all ${service} setups in ${town}.`
+          }
+        }
+      ]
     }
   };
   return `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`;

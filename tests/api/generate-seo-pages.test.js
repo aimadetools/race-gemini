@@ -128,6 +128,7 @@ describe('POST /api/generate-seo-pages', () => {
             --primary-color: {{primaryColor}};
         }
     </style>
+    {{localBusinessSchema}}
 </head>
 <body>
     <h1>{{businessName}} - {{service}} in {{town}}</h1>
@@ -504,6 +505,46 @@ describe('POST /api/generate-seo-pages', () => {
         const page = pages.find(p => p.service === 'Plumbing' && p.town === 'New York');
         expect(page).toBeDefined();
         expect(page.ai_keywords).toBe('family-owned, 24/7 service');
+    });
+
+    test('should include Service Schema OfferCatalog nested details in generated pages', async () => {
+        process.env.GEMINI_API_KEY = '';
+        delete require.cache[require.resolve('../../api/generate-seo-pages')];
+        handlerToTest = require('../../api/generate-seo-pages').default || require('../../api/generate-seo-pages');
+
+        const req = createRequest({
+            method: 'POST',
+            body: {
+                businessName: 'Test Business',
+                services: ['Plumbing'],
+                towns: ['New York'],
+                enableAICopy: false,
+                primaryColor: '#ff0000'
+            }
+        });
+        const res = createResponse();
+
+        await handlerToTest(req, res);
+
+        expect(res.statusCode).toBe(200);
+        expect(fs.promises.writeFile).toHaveBeenCalledTimes(1);
+
+        const expectedFileName = 'plumbing-in-new-york-test-business.html';
+        const expectedFilePath = path.join(mockCwd, 'generated-seo-pages', expectedFileName);
+
+        // Retrieve the written content from writeFile mock calls
+        const writeCalls = fs.promises.writeFile.mock.calls;
+        const pageContentCall = writeCalls.find(call => call[0] === expectedFilePath);
+        expect(pageContentCall).toBeDefined();
+        const content = pageContentCall[1];
+
+        // Verify the OfferCatalog schema structure is present
+        expect(content).toContain('"@type": "OfferCatalog"');
+        expect(content).toContain('"name": "Plumbing Services"');
+        expect(content).toContain('"name": "Residential Plumbing"');
+        expect(content).toContain('"name": "Commercial Plumbing"');
+        expect(content).toContain('"name": "Emergency Plumbing Service"');
+        expect(content).toContain('"name": "Plumbing Inspection & Diagnostics"');
     });
 
 });

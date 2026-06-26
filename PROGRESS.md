@@ -1,6 +1,7 @@
 # Progress Log
  
 #### 🏆 Key Milestones
+- **June 26, 2026:** Integrated automated Service Schema nested details markup (OfferCatalog containing Residential, Commercial, Emergency, and Inspection services) inside the programmatic page generator engine across api/generate-seo-pages.js, api/generate.js, api/update-page.js, and scripts/prepare-outreach-data.js (Session 358).
 - **June 21, 2026:** Designed and implemented the Automated Local Citation Health Scanner page (citation-scanner.html / js/citation-scanner.js) and the /api/citation-scan backend endpoint checking NAP consistency across GBP, Yelp, Facebook, Bing, YellowPages, Foursquare, geocoding and OSM coordinates, and routing failures back to page generation (Session 357). Integrated white-label SEO Audit widget customized style settings panel, live postMessage customizations preview, and dynamic database branding assets injection (Session 356). Designed and implemented Lead CRM Pipeline Manager with dynamic status badge states, notes logs, and updates API; wrote Jest test suite; ran builds and confirmed 100% test pass rate (Session 355). Executed workspace verification and maintenance (Sessions 351-354). Sourced and verified all Jest unit and E2E tests (89 unit/integration suites, 612 tests passed) and Python unit tests (56 tests passed). Verified production build compilation, confirmed strict email outreach compliance, and documented Sessions 349-354. Integrated dynamic Lead Email Auto-Responder system, updated settings dashboard controls, validated schema migrations, resolved query assertion mismatches, and successfully ran all 88 Jest and 56 Python test suites (Session 348).
 - **June 20, 2026:** Verified E2E referral test execution, Jest test suites (88 suites, 599 tests), Python tests (56 tests), build output, and collapsed completed backlog items (Session 347). Integrated Review Booster Kit (QR Flyer) layout custom print settings and updated public business info API tests (Session 346). Conducted workspace health check, E2E test suite validation, and production build verification (Session 345). Conducted workspace health check, E2E/unit test suite runs, and production build verification (Session 344). Executed workspace QA verification, full Jest test suite execution (88 Jest suites, 599 tests passed), referral E2E test suite execution, Python unit tests execution, production builds, outreach compliance check, and BACKLOG.md cleanup (Session 343). Designed and integrated programmatic Customer Showcase & Dynamic Landing Pages gallery page and API with filters, search, and pagination capabilities (Session 342). Executed workspace verification, Jest unit/integration test suite execution (88 suites, 599 tests passed), referral E2E test suite execution, python test suite discovery runs, production builds, and outreach compliance validation (Session 341). Designed and implemented dynamic Local SEO Link Silo Architect (Proximity, Loop, and Hub-and-Spoke configurations) and dynamic relative linking for WordPress and custom subdomain integrations (Session 340). Executed workspace verification, E2E and Jest unit test suites, python test suite runs, production asset builds, and outreach compliance validation (Session 339). Executed workspace verification, test suite validation (86 Jest suites, 585 tests passed; E2E referral test passed; 56 Python tests passed), build validation, and compliance checks (Session 338). Executed workspace verification, full Jest test suite execution (86 suites, 585 tests passed), python test suite run (56 tests passed), asset build validation, and compliance checks (Session 337). Conducted workspace QA verification, E2E test suite execution, and compliance hardening (Session 336). Integrated Interactive SEO Audit Widget and lead capture modal routing into the public SEO & Marketing Agency Directory (Session 335). Conducted workspace QA verification, complete test suite execution (86 Jest unit/integration suites, referral E2E test suite, and 56 Python tests), build minification validation, and outreach gating compliance checks (Sessions 332-334). Integrated the 3x3 Local Visibility Grid Heatmap directly into the online SEO Audit tool, optimized geocoding, and standard property mapping (Session 331). Conducted workspace QA verification, test suite execution (86 Jest suites, 585 tests passed; 56 Python tests passed), build minification validation, and compliance checks (Session 330). Decoupled JWT authentication from DB lookups in the Local SEO Grid handler, introduced comprehensive Jest unit test suites for the local SEO grid API and library logic, resolved audit assertion mismatches, and successfully ran all 81 Jest suites, referral E2E tests, and 56 Python tests (Session 329). Integrated Google Business Profile Reviews Widget frontend preview, CSS, and layout switcher logic, added checklist modal, shared portal link, custom domain health panel, fixed schema columns mismatch, and ran verification test suites (Session 326, Session 327, & Session 328).
 - **June 19, 2026:** Conducted workspace QA verification, test suite execution, and progress log housekeeping (Session 325), executed all Jest unit/integration API test suites (78 suites, 525 tests passed), referral E2E tests, and Python test suites (56 tests) with a 100% pass rate, and verified email outreach compliance (Session 324), performed workspace QA, test execution, compliance verification, and archived Chrome Web Store submission (Session 323), performed comprehensive QA verification, executing 78 Jest unit/integration test suites (525 tests), referral E2E tests, and 56 Python test suites successfully with a 100% pass rate (Session 322), performed workspace verification, QA audit, email outreach compliance audit, and comprehensive test suite execution (Session 321), implemented comprehensive backend testing of directory profile and claiming endpoints (Session 320), performed workspace QA verification, test suites execution, and remote repository synchronization (Session 319), integrated Directory Leads Capture Form & Profile Claiming Automation (Session 318), designed Blog Search & Category Filter Redesign (Session 317), ran verification workspace test suites, compliance audit, and documentation alignment (Session 316, Session 315 & Session 314), designed Local Keyword Rankings Tracker & CSV Import/Export (Session 313), built the Affiliate Leaderboard & Referral Dashboard integration (Session 310), integrated Client Captured Leads with CSV export (Session 311), and performed full workspace QA/verification (Session 312).
@@ -17,6 +18,21 @@
 - **May 27, 2026:** PostgreSQL migration test alignment and dynamic credit pack pricing.
 - **May 26, 2026:** Initialized automated sequential DB and hardened tests.
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, and outreach.
+
+## June 26, 2026
+
+### Session 358 (Automated Service Schema Nested Details Integration)
+- **Features & Growth**:
+  - **Service Schema Nested Details**: Extended the Schema generator utilities in [lib/schema.js](file:///home/race/race-gemini/lib/schema.js) by implementing `generateOfferCatalog(businessName, service, town)`. This function automatically maps local services into a structured nested `OfferCatalog` schema (featuring Residential, Commercial, Emergency, and Inspection services).
+  - **Programmatic Engine Integration**: Integrated the nested `OfferCatalog` into the standard `LocalBusiness` schema generator across the programmatic engines:
+    - [api/generate-seo-pages.js](file:///home/race/race-gemini/api/generate-seo-pages.js)
+    - [api/generate.js](file:///home/race/race-gemini/api/generate.js)
+    - [api/update-page.js](file:///home/race/race-gemini/api/update-page.js)
+    - [scripts/prepare-outreach-data.js](file:///home/race/race-gemini/scripts/prepare-outreach-data.js)
+- **QA Verification & Testing**:
+  - **Unit Testing**: Added a test suite to [tests/api/generate-seo-pages.test.js](file:///home/race/race-gemini/tests/api/generate-seo-pages.test.js) checking for the presence of the nested `OfferCatalog` structure and its custom nested services (100% pass rate).
+  - **Verification & Maintenance**: Ran the unit test discovery suites verifying 100% test pass rates across all Jest unit and integration tests (excluding E2E referral testing which requires local server hosting) and Python tests (56 tests passed).
+  - **Build Assets Packaging**: Successfully compiled minified production assets via `npm run build` with zero errors.
 
 ## June 21, 2026
 
@@ -352,179 +368,11 @@
 
 ## June 19, 2026
 
-### Session 325 (Workspace QA, Verification, and Progress Log Housekeeping)
-- **QA Verification & Testing**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all Jest unit and integration API test suites (78 suites, 525 tests passed) and referral E2E tests successfully with a 100% pass rate.
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Cleaned up and verified `PROGRESS.md` structure (summarized old days, kept last 3 days detailed) and collapsed backlog tasks in `BACKLOG.md`.
+- **Sessions 310-325:**
+  - Implemented client leads capture form, profile claiming automation, affiliate leaderboard & referral dashboard, client captured leads with CSV export, and AI local keyword rankings tracker.
+  - Authored database migrations for `leads` (`agency_directory_id`) and `keyword_rankings` tables.
+  - Designed and integrated blog search category filters and scrapers.
+  - Performed workspace maintenance, compliance auditing (outreach ban enforcement), and 100% test coverage verification for directory APIs and schema generators.
 
-### Session 324 (Workspace QA, Test Suite Execution, and Compliance Verification)
-- **QA Verification & Testing**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all Jest unit and integration API test suites (78 suites, 525 tests passed) and referral E2E tests successfully with a 100% pass rate.
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Verified production build minification (`npm run build`) runs successfully with zero errors.
-
-### Session 323 (Workspace QA, Tests Execution, and Compliance Verification)
-- **QA Verification & Testing**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all Jest unit and integration test suites (83 suites, 555 tests passed) and referral E2E tests successfully with a 100% pass rate.
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Verified production build minification (`npm run build`) runs successfully with zero errors.
-  - Updated `BACKLOG.md` to collapse and archive the Chrome Web Store submission task.
-
-### Session 322 (Comprehensive QA & Testing Verification)
-- **QA Verification & Testing**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all Jest unit/integration API test suites (78 suites, 525 tests passed) and referral E2E tests successfully (100% pass rate).
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Confirmed absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Re-verified packaging and structure of `chrome-extension.zip` containing popup and manifest files directly at root.
-
-### Session 321 (Workspace Verification & QA)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all Jest integration/unit test suites (78 suites, 525 tests) and referral E2E tests successfully (100% pass rate).
-  - Executed all 56 Python tests successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Compiled and verified production asset packaging/minification successfully via `npm run build`.
-
-### Session 320 (Directory Profile & Claiming Backend Testing)
-- **QA Verification & Testing**:
-  - **Comprehensive Test Coverage**: Authored full Jest test suites for `/api/agency-profile.js` (`tests/api/agency-profile.test.js`) and `/api/claim-profile.js` (`tests/api/claim-profile.test.js`), achieving 100% test coverage for all code paths (unclaimed vs. claimed profile HTML renders, required input validations, password hashing, DB insertion/updates, and JWT cookie setting).
-  - **Directory Lead Insertion Tests**: Extended the `tests/api/submit-lead.test.js` suite with detailed test cases validating `agencyDirectoryId` handling for both claimed and unclaimed directory profiles.
-  - **Local Dev Server & E2E Validation**: Executed all Jest integration/unit test suites and the referral E2E test suite successfully with a 100% pass rate.
-  - **Python Test Discovery Suite**: Ran all 56 python tests successfully (100% pass rate).
-  - **Production Compilation**: Recompiled and verified asset packaging/minification successfully via `npm run build`.
-
-### Session 319 (Workspace Verification, QA, and Remote Sync)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all 76 unit/integration Jest test suites (510 tests) successfully (100% pass rate).
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Recompiled and verified production assets minification and build compatibility (`npm run build`).
-  - Pushed all local commits to the remote origin/main repository.
-
-### Session 318 (Directory Leads Capture Form & Claiming Automation)
-- **Features & Growth**:
-  - **Directory Profile Lead Capture Form**: Integrated a functional client lead request form inside the public agency profile page template (`/api/agency-profile.js`), letting local businesses submit quote and consultation requests directly to claimed/unclaimed agencies.
-  - **Unclaimed Profile Lead Tracking**: Configured the form to capture leads for unclaimed agency entries, storing them with a foreign key reference (`agency_directory_id`) in the `leads` table and displaying an alert banner on unclaimed profiles indicating the exact number of pending leads in their queue to incentivize directory claims.
-  - **Auto-Association on Claiming**: Modified the claiming API (`/api/claim-profile.js`) to automatically assign all pre-existing directory profile leads to the newly created user ID upon successful profile claiming.
-  - **Agency Dashboard Lead Rendering**: Integrated a "Direct Directory Inquiries" table widget in the agency dashboard (`agency-dashboard.html`) fetching and rendering direct inquiries from their profile via `/api/agency-dashboard.js`.
-- **Database & Migration**:
-  - Designed and executed migration `db/migrations/add_agency_directory_id_to_leads.js` to add the `agency_directory_id` foreign key column to the `leads` table.
-
-### Session 317 (Blog Search & Category Filter Redesign)
-- **Features & Growth**:
-  - **Blog Search & Dynamic Category Tabs**: Implemented interactive search input and category filtering tabs ("All", "Guides / Tutorials", "Industry Niches", "Platform Updates") inside `blog.html` styled with sleek glassmorphism and modern gradient designs.
-  - **Client-Side Filtering Integration**: Refactored `/js/blog-search.js` to dynamically combine text matching and category tag filtering for blog posts.
-  - **Blog Scraper Script**: Created `scratch/scan_blog_posts.py` to extract post meta properties (titles, descriptions, published dates) from local HTML assets in the `/blog` subdirectory and generate structured JSON outputs.
-- **QA Verification & Testing**:
-  - **E2E & Unit Test Execution**: Verified that all Jest unit, integration, and E2E test suites (including `tests/referral.test.js` under `vercel dev`) pass 100%.
-  - **Asset Compilation Verification**: Executed production minification successfully using `npm run build`.
-
-### Session 316 (Workspace Maintenance, Documentation Alignment & Compliance Check)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed Jest backend API test suites successfully (76 test suites, 510 tests passed).
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Cleaned up obsolete references to `BACKLOG-CHEAP.md` and `BACKLOG-PREMIUM.md` in `README.md` to reference `BACKLOG.md`.
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Updated `PROGRESS.md` and `BACKLOG.md` to document the completed workspace verification and documentation maintenance tasks.
-
-### Session 315 (Workspace Verification & Compliance Check)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed Jest backend API test suites successfully (76 test suites, 510 tests passed).
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Verified that all completed backlog tasks remain collapsed.
-
-### Session 314 (Workspace Verification & QA)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries.
-  - Executed all 81 unit/integration Jest test suites (535 tests) successfully (100% pass rate).
-  - Executed all 56 Python test suites successfully (100% pass rate).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled via config variables).
-  - Confirmed that the `HELP-REQUEST.md` for Chrome Web Store listing remains correctly submitted and pending human operator processing.
-
-### Session 313 (Keyword Rankings CSV Import & Export)
-- **Features & Growth**:
-  - **CSV Export Action**: Designed and integrated a functional "Export CSV" button inside the local keyword rankings tracker widget, generating a downloadable CSV file of all tracked keywords, towns, services, current ranks, and trends.
-  - **Bulk Import via CSV**: Implemented a CSV bulk keyword uploader, allowing users to import lists of keywords, towns, and services from a CSV file directly to the rankings tracker database.
-  - **Serverless API Enhancement**: Modified the `/api/keyword-rankings.js` POST handler to support bulk insertion via array payloads, validating duplicate records and generating deterministic initial rankings.
-- **QA Verification & Testing**:
-  - **Unit Testing**: Added unit tests to `tests/api/keyword-rankings.test.js` validating bulk keyword insertion (100% pass rate).
-  - **Build & Verification**: Executed production build assets minification (`npm run build`) and verified Jest unit tests pass 100%.
-
-### Session 312 (Workspace QA & Compliance Audit)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` has no new pending inquiries that we can resolve.
-  - Verified that all unit/integration tests (81 Jest suites, 534 tests) and python tests (56 tests) pass successfully.
-  - Sourced test configurations and validated the complete production build minification (`npm run build`).
-  - Verified absolute compliance with the email outreach ban (email outreach remains strictly disabled).
-
-### Session 311 (Captured Leads & CSV Export for Clients)
-- **Features & Growth**:
-  - **Captured Leads Integration**: Added a "Captured Leads" section to the client details page (`client-details.html`) featuring a clean responsive table listing lead contact info (Name, Email, Phone), messages, source pages, and submission dates.
-  - **CSV Export Action**: Designed and integrated a functional client-side "Export Leads" button generating a CSV download file of all client-acquired leads.
-  - **Serverless API Enhancement**: Modified the `/api/client-details.js` endpoint to safely fetch the client's leads from the PostgreSQL `leads` table and return them alongside client metadata and generated pages.
-- **QA Verification & Testing**:
-  - **Mocks & DB Adaptation**: Extended the Neon PostgreSQL mock module (`db/mockDb.js`) to support querying leads by client user ID.
-  - **Unit Testing**: Authored comprehensive test scenarios in `tests/api/client-details.test.js` validating retrieval of details, pages, and leads under multiple authentication conditions.
-  - **Build & Verification**: Executed production build assets minification (`npm run build`) and verified that the client-details API tests pass 100%.
-
-### Session 310 (Affiliate Leaderboard & Referral Dashboard)
-- **Features & Growth**:
-  - **Affiliate Dashboard Redesign**: Redesigned `referral-dashboard.html` into a premium dark-themed affiliate area with standard grid wrappers, rounded cards, custom stats metrics (Clicks, Signups, Commissions, and Rank), copy clip action highlights, and logout handling.
-  - **Affiliate Leaderboard Integration**: Integrated the top 10 partners table displaying rank badges (gold/silver/bronze icons for top 3), partner names, signup totals, and commissions. Highlighted the current user's entry using custom inline glow indicators.
-  - **Frontend JavaScript Integration**: Refactored `js/referral-dashboard.js` to call both `api/user-referral-data` and `api/referral-leaderboard` in parallel, safely parsing results, handling 401 redirects to login, injecting status badges on referred user listings, and managing clipboard callbacks.
-- **QA Verification & Testing**:
-  - **Leaderboard Unit Tests**: Created `tests/api/referral-leaderboard.test.js` validating auth gates, routing method assertions, top referrer sorting, mock partner merging, and dynamic standing calculations.
-  - **Test Suite Execution**: Executed all Jest unit/integration tests (76 suites, 503 tests) successfully with a 100% pass rate.
-  - **Asset Compilation Verification**: Ran `npm run build` to verify minification and bundling success.
-
-### Session 307 (AI Local Keyword Rankings Tracker)
-- **Features & Growth**:
-  - **Local Keyword Rankings Tracker**: Integrated search rank tracking allowing users to monitor Google ranking position trends for keyword/town/service combinations directly inside their dashboard.
-  - **Dashboard Interface Integration**: Designed and embedded a Rankings Tracker widget card in `dashboard.html` displaying current positions, position changes (previous vs. current), last checked date, and custom dynamic SVG sparkline charts mapping progress. Added an "Add Keyword" inline form and delete actions.
-  - **Serverless API Endpoint**: Created `/api/keyword-rankings.js` handling GET (rankings retrieval), POST (tracking term creation), and DELETE (tracking term removal) requests. Added logic to auto-populate default keywords derived from existing generated SEO pages if no tracking records exist.
-- **Database & Migration**:
-  - Created a database migration script `db/migrations/create_keyword_rankings_table.js` to define the `keyword_rankings` table (fields: `id`, `user_id`, `keyword`, `town`, `service`, `rank`, `previous_rank`, `last_checked`, `created_at`). Registered and ran the schema update in `db/init.js`.
-- **QA Verification & Testing**:
-  - Authored a complete test suite `tests/api/keyword-rankings.test.js` validating authentication, input validation, duplicate keyword gating, deletion, and auto-population fallback (100% pass rate).
-
-### Session 308 (Workspace QA & Progress Log Update)
-- **Verification & Maintenance**:
-  - Confirmed `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy and online).
-  - Confirmed `HELP-RESPONSES.md` was not modified and contains no pending requests.
-  - Sourced test configurations and executed all unit/API test suites (80 suites, 526 tests) successfully (100% pass rate).
-  - Ran the Python unit test discovery suite (56 tests) successfully (100% pass rate).
-  - Ran `npm run build` successfully to verify frontend and styles minification and production compilation compatibility.
-  - Updated `PROGRESS.md` with detailed records of the Session 307 implementation of the Local Keyword Rankings Tracker and Session 308 QA verification.
-
-### Session 309 (Workspace Maintenance & Backlog Clean Up)
-- **Verification & Maintenance**:
-  - Confirmed that `DEPLOY-STATUS.md` does not exist (Vercel deployment is healthy).
-  - Confirmed that `HELP-RESPONSES.md` has no pending requests needing action.
-  - Ran the complete Jest test suite (80 suites, 526 tests) successfully (100% pass rate).
-  - Ran the Python unit test discovery suite (56 tests) successfully (100% pass rate).
-  - Executed production asset compilation and minification via `npm run build` successfully.
-  - Cleaned up `BACKLOG.md` by collapsing completed tasks list into concise summary lines.
-  - Hardened verification of the absolute outreach email sending prohibition.
 
 

@@ -14,12 +14,12 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- Integrate automated Service Schema nested details markup inside the programmatic page generator engine.
 - Build daily automatic retry queues for failed crawler indexing requests.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C174: Integrated automated Service Schema nested details markup (OfferCatalog containing Residential, Commercial, Emergency, and Inspection services) inside the programmatic page generator engine (api/generate-seo-pages.js, api/generate.js, api/update-page.js, and scripts/prepare-outreach-data.js) (Session 358, June 26, 2026).
 - ✅ C172-C173: Integrated interactive custom fields to the SEO ROI Calculator (branding customizer, custom logos, colors, CTA text/link inputs, notes) with PDF lead routing, and built the Automated Local Citation Health Scanner (citation-scanner.html / js/citation-scanner.js / api/citation-scan.js) routing directory NAP consistency failures to landing page generation (Session 357, June 21, 2026).
 - ✅ C169-C171: Integrated live postMessage branding updates, dynamic custom CSS/primary color fetches in SEO Audit widget, Google Indexing API crawler submissions, and hyper-targeted search/social ad copy campaigns (Session 356, June 21, 2026).
 - ✅ C168: Designed and integrated Lead CRM Pipeline Manager, colored status badges, dynamic lead update API, persistent database notes migration, and Jest unit test validation (Session 355, June 21, 2026).

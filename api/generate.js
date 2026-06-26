@@ -11,7 +11,7 @@ import { logError } from '../lib/logger.js'; // Import centralized logger
 import { submitSitemapToSearchEngines } from '../lib/indexing.js';
 import { getFallbackMarketingCopy } from '../lib/fallback-copy.js';
 import { parseOpeningHours } from '../lib/time-helpers.js';
-import { getSchemaType } from '../lib/schema.js';
+import { getSchemaType, generateOfferCatalog } from '../lib/schema.js';
 import { renderTestimonialsSection, generateSchemaReviews } from '../lib/testimonials-helper.js';
 import { geocodeAddress } from '../lib/geocoding.js';
 import { renderMapSection } from '../lib/map-helper.js';
@@ -72,7 +72,8 @@ function generateLocalBusinessSchema(businessName, service, town, telephone, pri
         "areaServed": {
             "@type": "State",
             "name": town
-        }
+        },
+        "hasOfferCatalog": generateOfferCatalog(businessName, service, town)
     };
 
     if (testimonials && testimonials.length > 0) {
