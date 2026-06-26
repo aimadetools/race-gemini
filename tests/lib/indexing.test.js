@@ -29,11 +29,11 @@ jest.mock('../../lib/logger.js', () => ({
   logInfo: jest.fn(),
 }));
 
-import { submitSitemapToSearchEngines, updateStaticSitemapAndPing, submitToGoogleIndexing } from '../../lib/indexing.js';
+import { submitSitemapToSearchEngines, updateStaticSitemapAndPing, submitToGoogleIndexing, recordFailedIndexingRequest, removeSuccessfulIndexingRequest } from '../../lib/indexing.js';
 import { promises as fs } from 'fs';
 import { kv } from '@vercel/kv';
 import path from 'path';
-import { addMockSeoPage, clearMockSeoPages } from '../../db/mockDb.js';
+import { addMockSeoPage, clearMockSeoPages, setQueryDelegate } from '../../db/mockDb.js';
 
 describe('Indexing Lib', () => {
   let mockFetch;
@@ -332,6 +332,38 @@ describe('Indexing Lib', () => {
       const notification = JSON.parse(kv.lpush.mock.calls[0][1]);
       expect(notification.message).toContain('Failed to submit 1 pages to Google Indexing API');
       expect(notification.status).toBe('error');
+    });
+  });
+
+  describe('indexing retry queue helpers', () => {
+    let mockQueries;
+
+    beforeEach(() => {
+      mockQueries = [];
+      setQueryDelegate(async (text, params) => {
+        mockQueries.push({ text, params });
+        return { rows: [] };
+      });
+    });
+
+    afterEach(() => {
+      setQueryDelegate(null);
+    });
+
+    it('should insert or update on conflict inside recordFailedIndexingRequest', async () => {
+      await recordFailedIndexingRequest('12345', 'https://example.com/failed-page', 'Some inspection error');
+
+      expect(mockQueries.length).toBe(1);
+      expect(mockQueries[0].text).toContain('INSERT INTO indexing_retry_queue');
+      expect(mockQueries[0].params).toEqual(['12345', 'https://example.com/failed-page', 'Some inspection error']);
+    });
+
+    it('should delete from queue inside removeSuccessfulIndexingRequest', async () => {
+      await removeSuccessfulIndexingRequest('12345', 'https://example.com/success-page');
+
+      expect(mockQueries.length).toBe(1);
+      expect(mockQueries[0].text).toContain('DELETE FROM indexing_retry_queue');
+      expect(mockQueries[0].params).toEqual(['12345', 'https://example.com/success-page']);
     });
   });
 });

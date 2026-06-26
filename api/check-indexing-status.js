@@ -4,6 +4,7 @@ import { logError } from '../lib/logger.js';
 import { query } from '../db/index.js';
 import { checkGscIndexingStatus, requestGoogleIndexing } from '../lib/gsc.js';
 import slugify from 'slugify';
+import { recordFailedIndexingRequest, removeSuccessfulIndexingRequest } from '../lib/indexing.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -96,9 +97,13 @@ export default async function handler(req, res) {
           indexingRequested = true;
           // Append to status to show in UI that crawler request was submitted
           status = `${status} (Indexing Requested)`;
+          await removeSuccessfulIndexingRequest(userId, pageUrl);
         } else {
           indexingError = indexingApiResult.error;
+          await recordFailedIndexingRequest(userId, pageUrl, indexingError);
         }
+      } else {
+        await removeSuccessfulIndexingRequest(userId, pageUrl);
       }
 
       // Update page in PostgreSQL

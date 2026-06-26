@@ -34,6 +34,7 @@ import { addShareTokenToUsers } from './migrations/add_share_token_to_users.js';
 import { addSiloSettingsToUsers } from './migrations/add_silo_settings_to_users.js';
 import { addAutoResponderToUsers } from './migrations/add_auto_responder_to_users.js';
 import { addCrmColumnsToLeads } from './migrations/add_crm_columns_to_leads.js';
+import { createIndexingRetryQueueTable } from './migrations/create_indexing_retry_queue_table.js';
 
 
 
@@ -146,6 +147,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring CRM columns (status, notes) exist in leads table...');
     await addCrmColumnsToLeads();
+
+    console.log('Ensuring indexing retry queue table exists...');
+    await createIndexingRetryQueueTable();
 
     console.log('Database initialization completed.');
   } catch (error) {
