@@ -3,6 +3,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import { parse } from 'cookie';
 import jwt from 'jsonwebtoken';
 import { logError } from '../lib/logger.js';
+import { query } from '../db/index.js';
 
 
 export default async (req, res) => {
@@ -27,7 +28,7 @@ export default async (req, res) => {
     }
 
     if (req.method === 'POST') {
-        const { creditPackId, agencyPlanId, referrerId } = req.body; // Expect either creditPackId, agencyPlanId, and optionally referrerId
+        const { creditPackId, agencyPlanId, referrerId, leadId } = req.body; // Expect either creditPackId, agencyPlanId, leadId, and optionally referrerId
         let sessionConfig = {}; // Initialize a configuration object for the Stripe session
         
         const host = req.headers.host || 'localseogen.com';
@@ -42,7 +43,50 @@ export default async (req, res) => {
             metadata.referrerId = referrerId;
         }
 
-        if (creditPackId) {
+        if (leadId) {
+            // Validate that the lead exists and belongs to this user
+            try {
+                const leadResult = await query(
+                    'SELECT id, user_id, is_unlocked FROM leads WHERE id = $1 AND user_id = $2',
+                    [parseInt(leadId, 10), userId]
+                );
+                if (leadResult.rows.length === 0) {
+                    await logError(new Error(`Lead not found or unauthorized: leadId=${leadId}, userId=${userId}`), 'Checkout - Lead validation');
+                    return res.status(404).json({ message: 'Lead not found or unauthorized.' });
+                }
+                if (leadResult.rows[0].is_unlocked) {
+                    return res.status(400).json({ message: 'Lead is already unlocked.' });
+                }
+            } catch (err) {
+                await logError(err, 'Checkout - Lead validation database error');
+                return res.status(500).json({ message: 'Database error validating lead.' });
+            }
+
+            sessionConfig = {
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: 'Unlock Captured Lead Details',
+                                description: 'One-time fee to unlock the full contact details (email, phone, message) of a captured lead.',
+                            },
+                            unit_amount: 900, // $9.00 USD
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                success_url: `${baseUrl}/dashboard.html?lead_unlocked=true&lead_id=${leadId}`,
+                cancel_url: `${baseUrl}/dashboard.html`,
+                client_reference_id: userId,
+                metadata: {
+                    ...metadata,
+                    leadId: leadId.toString()
+                },
+            };
+        } else if (creditPackId) {
             // Logic for one-time credit pack purchase
             const creditPackDetails = {
                 'pack_small_business': { name: 'Small Business Pack (50 Credits)', credits: 50, amount: 4900 },    // $49.00

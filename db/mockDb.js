@@ -34,6 +34,8 @@ export const originalMockQuery = async (text, params) => {
     // 1. SELECT query
     if (textLower.trim().startsWith('select')) {
         if (textLower.includes('from leads')) {
+            console.log('--- originalMockQuery mockLeads array length:', mockLeads.length);
+            console.log('--- originalMockQuery mockLeads array content:', JSON.stringify(mockLeads));
             if (textLower.includes('where source = $1')) {
                 const source = params[0];
                 const rows = mockLeads.filter(l => l.source === source);

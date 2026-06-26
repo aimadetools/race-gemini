@@ -192,7 +192,89 @@ export default async (req, res) => { // Removed currentKvClient parameter
                     }
 
                 } else if (session.mode === 'payment') {
+                    const leadId = session.metadata.leadId;
                     const credits = session.metadata.credits; // This is for one-time credit packs
+
+                    if (leadId) {
+                        const parsedLeadId = parseInt(leadId, 10);
+                        if (isNaN(parsedLeadId)) {
+                            await logError(new Error(`Invalid leadId received in webhook: ${leadId}`), 'Stripe Webhook - Invalid Lead ID');
+                            return res.status(400).json({ message: 'Invalid leadId received.' });
+                        }
+
+                        // Unlock the lead in the database
+                        const leadResult = await query(
+                            'SELECT user_id, name FROM leads WHERE id = $1',
+                            [parsedLeadId]
+                        );
+
+                        console.log('--- Webhook Query parsedLeadId:', parsedLeadId);
+                        console.log('--- Webhook Query result rows:', JSON.stringify(leadResult.rows));
+
+                        if (leadResult.rows.length === 0) {
+                            await logError(new Error(`Lead with ID ${parsedLeadId} not found in database.`), 'Stripe Webhook - Lead Not Found');
+                            return res.status(404).json({ message: 'Lead not found.' });
+                        }
+
+                        const lead = leadResult.rows[0];
+
+                        // Ensure lead belongs to the user
+                        if (lead.user_id !== parseInt(userId, 10)) {
+                            await logError(new Error(`Unauthorized lead unlock request. Lead owner: ${lead.user_id}, Payment user: ${userId}`), 'Stripe Webhook - Unauthorized Lead Unlock');
+                            return res.status(403).json({ message: 'Unauthorized lead unlock.' });
+                        }
+
+                        await query(
+                            'UPDATE leads SET is_unlocked = TRUE WHERE id = $1',
+                            [parsedLeadId]
+                        );
+
+                        await logInfo(`Lead ${parsedLeadId} (${lead.name}) successfully unlocked via direct payment for user ${userId}.`, 'Single Lead Purchase');
+
+                        // Send email notification to user
+                        const userEmail = await getUserEmail(userId);
+                        if (userEmail) {
+                            const subject = 'Lead Unlocked Successfully!';
+                            const html = `<p>You have successfully paid to unlock the lead <strong>${lead.name}</strong>. Go to your dashboard to view the lead's full contact details.</p>`;
+                            await sendEmail(userEmail, subject, html);
+                        }
+
+                        // Track revenue event
+                        await trackEventHandler({
+                            method: 'POST',
+                            body: {
+                                eventName: 'revenue_generated',
+                                userId: userId,
+                                eventData: {
+                                    type: 'single_lead',
+                                    leadId: parsedLeadId,
+                                    amountTotal: amountTotal
+                                }
+                            }
+                        }, {
+                            status: () => ({ json: () => {} })
+                        });
+
+                        // Track purchase_completed event
+                        await trackEventHandler({
+                            method: 'POST',
+                            body: {
+                                eventName: 'purchase_completed',
+                                userId: userId,
+                                eventData: {
+                                    type: 'single_lead',
+                                    leadId: parsedLeadId,
+                                    amountTotal: amountTotal,
+                                    revenue: amountTotal / 100
+                                }
+                            }
+                        }, {
+                            status: () => ({ json: () => {} })
+                        });
+
+                        await logInfo(`Stripe webhook event checkout.session.completed processed successfully for lead ${parsedLeadId}.`, 'Stripe Webhook');
+                        return res.status(200).send({ received: true });
+                    }
 
                     if (!credits) {
                         await logError(new Error('Missing credits in session metadata for payment mode.'), 'Stripe Webhook - Missing Credits for Payment');

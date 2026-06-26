@@ -9,6 +9,10 @@ import { logError } from '../../lib/logger'; // Import centralized logger for mo
 // Mock external dependencies
 jest.mock('jsonwebtoken');
 jest.mock('../../lib/logger'); // Mock the logger module
+jest.mock('../../db/index.js', () => ({
+    query: jest.fn()
+}));
+import { query as mockQuery } from '../../db/index.js';
 
 // Define mock functions for stripe outside beforeAll
 const mockStripeCheckoutSessionsCreate = jest.fn();
@@ -68,6 +72,9 @@ describe('Checkout API', () => {
         // Default mock for mockStripeCheckoutSessionsCreate
         // Note: The actual handler returns a session object, so mock a session.id for the test assertion
         mockStripeCheckoutSessionsCreate.mockResolvedValue({ id: 'mockSessionId', url: 'https://checkout.stripe.com/mock-session-id' }); 
+
+        mockQuery.mockClear();
+        mockQuery.mockResolvedValue({ rows: [] });
 
         // Clear logError mock calls
         logError.mockClear();
@@ -388,6 +395,72 @@ describe('Checkout API', () => {
 
         expect(mockRes.statusCode).toBe(500);
         expect(mockRes._getJSONData()).toEqual({ message: 'Stripe Price ID not configured for agency plan plan_basic_agency.' });
+        expect(logError).toHaveBeenCalled();
+    });
+
+    // Test for successful lead unlock checkout creation
+    test('should create a Stripe checkout session for lead unlock on success', async () => {
+        mockQuery.mockResolvedValueOnce({
+            rows: [{ id: 456, user_id: 'testUserId123', is_unlocked: false }]
+        });
+        mockReq.body = { leadId: 456 };
+        await handler(mockReq, mockRes);
+
+        expect(mockQuery).toHaveBeenCalledTimes(1);
+        expect(mockQuery).toHaveBeenCalledWith(
+            expect.stringContaining('SELECT id, user_id, is_unlocked FROM leads'),
+            [456, 'testUserId123']
+        );
+        expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledTimes(1);
+        expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(expect.objectContaining({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Unlock Captured Lead Details',
+                            description: 'One-time fee to unlock the full contact details (email, phone, message) of a captured lead.',
+                        },
+                        unit_amount: 900,
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            metadata: expect.objectContaining({
+                leadId: '456',
+                userId: 'testUserId123'
+            })
+        }));
+        expect(mockRes.statusCode).toBe(200);
+        expect(mockRes._getJSONData()).toEqual({ sessionId: 'mockSessionId' });
+        expect(logError).not.toHaveBeenCalled();
+    });
+
+    // Test for lead already unlocked
+    test('should return 400 if the lead is already unlocked', async () => {
+        mockQuery.mockResolvedValueOnce({
+            rows: [{ id: 456, user_id: 'testUserId123', is_unlocked: true }]
+        });
+        mockReq.body = { leadId: 456 };
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(400);
+        expect(mockRes._getJSONData()).toEqual({ message: 'Lead is already unlocked.' });
+        expect(logError).not.toHaveBeenCalled();
+    });
+
+    // Test for lead not found or unauthorized
+    test('should return 404 if the lead does not exist or does not belong to the user', async () => {
+        mockQuery.mockResolvedValueOnce({
+            rows: []
+        });
+        mockReq.body = { leadId: 456 };
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(404);
+        expect(mockRes._getJSONData()).toEqual({ message: 'Lead not found or unauthorized.' });
         expect(logError).toHaveBeenCalled();
     });
 });

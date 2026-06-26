@@ -258,7 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             let actionsHtml = '';
                             
                             if (lead.isLocked) {
-                                statusHtml = `<button class="button unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #fbbf24; color: #000; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-unlock" style="font-size: 0.7rem;"></i> Unlock (1 Credit)</button>`;
+                                statusHtml = `<div style="display: flex; flex-direction: column; gap: 4px; align-items: stretch; width: 100%; min-width: 120px;">
+                                    <button class="button unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #fbbf24; color: #000; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px;"><i class="fas fa-unlock" style="font-size: 0.7rem;"></i> Unlock (1 Credit)</button>
+                                    <button class="button pay-unlock-lead-btn" data-lead-id="${lead.id}" data-lead-name="${lead.name}" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: #10b981; color: #fff; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px;"><i class="fas fa-credit-card" style="font-size: 0.7rem;"></i> Pay $9 to Unlock</button>
+                                </div>`;
                                 actionsHtml = `<span style="color: #6b7280; font-size: 0.85rem;"><i class="fas fa-lock"></i> Locked</span>`;
                             } else {
                                 const status = lead.status || 'New';
@@ -326,6 +329,48 @@ document.addEventListener('DOMContentLoaded', () => {
                                     alert('A network error occurred. Please try again.');
                                     btn.disabled = false;
                                     btn.innerHTML = '<i class="fas fa-unlock"></i> Unlock (1 Credit)';
+                                }
+                            });
+                        });
+
+                        // Bind pay to unlock lead buttons
+                        document.querySelectorAll('.pay-unlock-lead-btn').forEach(btn => {
+                            btn.addEventListener('click', async (e) => {
+                                const leadId = btn.dataset.leadId;
+                                const leadName = btn.dataset.leadName;
+                                if (!confirm(`Are you sure you want to pay $9.00 USD to unlock lead "${leadName}"?`)) {
+                                    return;
+                                }
+                                
+                                btn.disabled = true;
+                                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing...';
+                                
+                                try {
+                                    const stripePubKeyRes = await fetch('/api/stripe-public-key');
+                                    const { publicKey } = await stripePubKeyRes.json();
+                                    const stripe = Stripe(publicKey);
+
+                                    const res = await fetch('/api/checkout', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ leadId })
+                                    });
+                                    
+                                    const result = await res.json();
+                                    if (res.ok && result.sessionId) {
+                                        await stripe.redirectToCheckout({ sessionId: result.sessionId });
+                                    } else {
+                                        alert(result.message || 'Failed to initialize checkout.');
+                                        btn.disabled = false;
+                                        btn.innerHTML = '<i class="fas fa-credit-card"></i> Pay $9 to Unlock';
+                                    }
+                                } catch (err) {
+                                    console.error('Error initiating lead checkout:', err);
+                                    alert('A network or Stripe checkout error occurred. Please try again.');
+                                    btn.disabled = false;
+                                    btn.innerHTML = '<i class="fas fa-credit-card"></i> Pay $9 to Unlock';
                                 }
                             });
                         });

@@ -1,6 +1,5 @@
 // tests/api/webhook.test.js
 import { createRequest, createResponse } from 'node-mocks-http';
-import { mockQuery as originalMockQuery, clearMockUsers, addMockUser, getMockUsers, setQueryDelegate } from '../../db/mockDb';
 import { logError, logInfo } from '../../lib/logger.js';
 import { sendEmail } from '../../lib/email.js';
 import stripePackage from 'stripe';
@@ -22,7 +21,7 @@ jest.mock('../../lib/email.js', () => ({
     sendEmail: jest.fn().mockResolvedValue(true),
 }));
 
-import { query as mockQuery } from '../../db/index.js';
+import { query as mockQuery, clearMockUsers, addMockUser, getMockUsers, setQueryDelegate, addMockLead, clearMockLeads, getMockLeads } from '../../db/index.js';
 
 // Mock micro's buffer
 jest.mock('micro', () => ({
@@ -63,6 +62,7 @@ describe('Webhook API', () => {
 
         jest.clearAllMocks();
         clearMockUsers(); // Clear mock users for each test
+        clearMockLeads(); // Clear mock leads for each test
         
         // Ensure mockQuery uses the mockDb query implementation which routes to queryDelegate
         const mockDb = jest.requireActual('../../db/mockDb.js');
@@ -361,5 +361,42 @@ describe('Webhook API', () => {
         );
         expect(getMockUsers()[0].subscription_status).toBe('canceled');
         expect(sendEmail).not.toHaveBeenCalled();
+    });
+
+    // Test for checkout.session.completed event - Single Lead Unlock
+    test('should unlock lead and send email for checkout.session.completed with leadId', async () => {
+        clearMockUsers();
+        addMockUser({ id: 111, email: 'user@example.com', credits: 0 });
+        
+        clearMockLeads();
+        addMockLead({ id: 456, user_id: 111, name: 'John Doe', is_unlocked: false });
+        console.log('--- Test Case mockLeads array length:', getMockLeads().length);
+        console.log('--- Test Case mockLeads content:', JSON.stringify(getMockLeads()));
+
+        mockStripeWebhooksConstructEvent.mockReturnValue({
+            type: 'checkout.session.completed',
+            data: {
+                object: {
+                    id: 'sess_lead_123',
+                    mode: 'payment',
+                    customer: 'cus_lead_123',
+                    amount_total: 900,
+                    metadata: {
+                        userId: '111',
+                        leadId: '456'
+                    }
+                }
+            }
+        });
+
+        await handler(mockReq, mockRes);
+
+        expect(mockRes.statusCode).toBe(200);
+        // Verify lead is updated to is_unlocked = true
+        expect(mockQuery).toHaveBeenCalledWith(
+            'UPDATE leads SET is_unlocked = TRUE WHERE id = $1',
+            [456]
+        );
+        expect(sendEmail).toHaveBeenCalledWith('user@example.com', 'Lead Unlocked Successfully!', expect.any(String));
     });
 });
