@@ -1,6 +1,8 @@
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 import { buffer } from 'micro';
+import { kv } from '@vercel/kv';
+
 
 import fs from 'fs';
 import path from 'path';
@@ -135,6 +137,12 @@ export default async (req, res) => { // Removed currentKvClient parameter
                             description: `Subscription renewal (${agencyPlanId})`,
                             amount: creditsToAdd
                         };
+                        try {
+                            await kv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+                        } catch (kvErr) {
+                            await logError(kvErr, 'Stripe Webhook - KV Subscription Transaction Log Error');
+                        }
+
 
                         await logInfo(`Agency user ${userId} subscribed to ${agencyPlanId}, added ${creditsToAdd} credits. New balance: ${result.rows[0].credits}`, 'Subscription');
 
@@ -302,6 +310,12 @@ export default async (req, res) => { // Removed currentKvClient parameter
                         description: `Purchased ${parsedCredits} credits`,
                         amount: parsedCredits
                     };
+                    try {
+                        await kv.lpush(`user:${userId}:credittransactions`, JSON.stringify(transaction));
+                    } catch (kvErr) {
+                        await logError(kvErr, 'Stripe Webhook - KV Credit Pack Transaction Log Error');
+                    }
+
 
                     await logInfo(`User ${userId} successfully purchased ${credits} credits. New balance: ${result.rows[0].credits}`, 'Credit Purchase');
 

@@ -3,8 +3,10 @@
 #### 🏆 Key Milestones
 - **June 27, 2026:** Verified and finalized niche solutions landing pages for Electricians, HVAC, and Roofers, updated main footer navigation solutions, verified Google Search Console Crawler & Indexing Control Center manual/bulk APIs, and executed workspace health checks, QA validation, and test runs (Sessions 363-375).
 - **June 26, 2026:** Resolved Stripe webhook lead unlock testing and database mock integration (Session 362), integrated automated Service Schema nested details OfferCatalog markup (Session 358), implemented daily automatic retry queues for failed crawler indexing requests (Session 359), and performed complete workspace verification and maintenance (Sessions 360-361).
+- **June 21, 2026:** Implemented dynamic SEO ROI Calculator custom fields, built the Local Citation Health Scanner API and dashboard, integrated White-Label SEO widget custom styling and live preview, and developed the Lead CRM Pipeline Manager dashboard and status/notes API (Sessions 355-357).
 
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, and outreach.
+
 
 ## June 27, 2026
 
@@ -151,40 +153,5 @@
   - **Verification & Maintenance**: Ran the unit test discovery suites verifying 100% test pass rates across all Jest unit and integration tests (excluding E2E referral testing which requires local server hosting) and Python tests (56 tests passed).
   - **Build Assets Packaging**: Successfully compiled minified production assets via `npm run build` with zero errors.
 
-## June 21, 2026
 
-### Session 357 (Interactive Custom Fields & Local Citation Scanner Integration)
-- **Features & Growth**:
-  - **SEO ROI Calculator Customization Fields**: Enhanced [seo-roi-calculator.html](file:///home/race/race-gemini/seo-roi-calculator.html) and [js/seo-roi-calculator.js](file:///home/race/race-gemini/js/seo-roi-calculator.js) to accept target keywords, expert notes, primary branding colors, custom logo URLs, and custom CTA text/links.
-  - **PDF Export & Lead Capture**: Handled email capture via `/api/capture-email` when downloading or emailing projections, storing detailed ROI reports directly as leads.
-  - **Local Citation Health Scanner**: Designed and developed [citation-scanner.html](file:///home/race/race-gemini/citation-scanner.html) and [js/citation-scanner.js](file:///home/race/race-gemini/js/citation-scanner.js) providing a fully interactive dark-themed dashboard checking NAP consistency. 
-  - **NAP Scanner Serverless API**: Created [/api/citation-scan.js](file:///home/race/race-gemini/api/citation-scan.js) executing address geocoding, querying OSM towns, and evaluating GBP, Yelp, Facebook, Bing, YellowPages, and Foursquare consistency, with routing of failures to `/generate.html`.
-- **QA Verification & Testing**:
-  - **NAP Scanner Unit Tests**: Created [tests/api/citation-scan.test.js](file:///home/race/race-gemini/tests/api/citation-scan.test.js) asserting correct route handling and JSON mapping (100% pass rate).
-  - **Verification Suites**: Verified all 89 Jest test suites (613 tests passed) and 56 Python tests pass successfully.
-  - **Build Assets Packaging**: Compiled production frontend bundles successfully via `npm run build`.
-
-### Session 356 (White-Label SEO Audit Widget Customization and Live Preview)
-- **Features & Growth**:
-  - **White-Label SEO Audit Widget Styling & Live Preview**: Enabled the custom CSS settings panel (`cssGroup`) in [dashboard.html](file:///home/race/race-gemini/dashboard.html) for `seo-audit` widgets. Integrated real-time styling updates via `postMessage` from the parent dashboard window into the iframe preview.
-  - **Dynamic Branding Assets Injection**: Programmed [audit-widget.html](file:///home/race/race-gemini/audit-widget.html) to call `api/public-business-info` to dynamically load and inject the agency's customized `primaryColor` and `widgetCss` stylesheet rules.
-  - **Branding Fields Database Query**: Expanded [api/public-business-info.js](file:///home/race/race-gemini/api/public-business-info.js) to retrieve `primary_color` and `widget_css` fields.
-- **QA Verification & Testing**:
-  - **Branding API Tests**: Updated [tests/api/public-business-info.test.js](file:///home/race/race-gemini/tests/api/public-business-info.test.js) asserting correct properties mapping.
-  - **Full Test Execution**: Sourced and ran all 89 Jest unit test suites (612 tests passed, 100% pass rate) and all 56 Python tests (100% pass rate).
-  - **Asset Building**: Successfully compiled minified production assets via `npm run build` with zero errors.
-  - **Outreach compliance check**: Confirmed absolute compliance with the email outreach ban.
-
-### Session 355 (Lead CRM Pipeline & Notes Integration and QA Verification)
-- **Features & Growth**:
-  - **Lead CRM & Pipeline Management UI**: Added a comprehensive Lead CRM modal interface to [dashboard.html](file:///home/race/race-gemini/dashboard.html) enabling users to view full lead metadata, assign and update contact statuses ('New', 'Contacted', 'Proposal Sent', 'Won', 'Lost'), and write persistent follow-up internal notes.
-  - **Lead Status Badges**: Redesigned the captured leads table in [js/dashboard.js](file:///home/race/race-gemini/js/dashboard.js) to display color-coded status badges and added a functional "CRM" management action button for unlocked leads.
-  - **Update Lead API Endpoint**: Created [api/update-lead.js](file:///home/race/race-gemini/api/update-lead.js) to handle POST updates for lead status validation and notes storage, checking user authorization, and preventing updates on locked leads.
-  - **Database & Schema Migration**: Developed [db/migrations/add_crm_columns_to_leads.js](file:///home/race/race-gemini/db/migrations/add_crm_columns_to_leads.js) to append `status` and `notes` columns to the Neon PostgreSQL `leads` table and registered it in [db/init.js](file:///home/race/race-gemini/db/init.js).
-  - **Dashboard Query Expansion**: Expanded `api/dashboard.js` to query and return `status` and `notes` fields.
-- **QA Verification & Testing**:
-  - **Jest Unit Tests**: Added unit tests in [tests/api/update-lead.test.js](file:///home/race/race-gemini/tests/api/update-lead.test.js) asserting correct routing, JWT authentication, authorization checks, status validation, and DB update execution. All 8 tests passed successfully.
-  - **Dashboard Integration Tests**: Verified the dashboard retrieval API tests (`tests/api/dashboard.test.js`) pass successfully.
-  - **Assets Compilation**: Re-compiled production minified assets successfully via `npm run build` with zero errors.
-  - **Outreach Gating Compliance**: Verified absolute compliance with the strict email outreach ban.
 
