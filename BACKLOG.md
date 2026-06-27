@@ -11,13 +11,10 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- [x] **[DISABLED]** Run direct SEO-driven outreach campaigns to local plumbing/HVAC directories. *(Disabled under strict cold outreach ban)*
-- [x] Monitor referral link click-through conversions and adjust commission splits if needed. *(Completed: increased default split to 35% dynamically across backend/frontend/configs to boost conversions)*
-- [x] Set up tracking for Google / Facebook local service ads targeting small businesses. *(Completed: integrated client-server tracking scripts on landers and dashboard pages)*
+- None. *(Outreach campaigns disabled under strict cold outreach ban)*
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- [x] Optimize Leaflet map loading performance with lazy assets loading. *(Completed: implemented Leaflet CSS/JS dynamic asset lazy loading on grid-scanner.html)*
-- [x] Enable dark/light mode toggle for the interactive ranking grid widget. *(Completed: added a toggle button to switch between Positron light and Dark Matter tiles/styles on the grid scanner map)*
+- None.
 
 ---
 
