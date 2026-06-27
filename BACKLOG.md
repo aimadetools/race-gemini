@@ -19,6 +19,7 @@
 ---
 
 ## ✅ COMPLETED
+- ✅ C177-C178: Designed and implemented GSC Crawler & Indexing Control Center dashboard, manual single/bulk indexing retry APIs, and performed complete workspace health checks, QA verification, and test execution (Sessions 363-364, June 27, 2026).
 - ✅ C176: Integrated Stripe checkout sessions and webhook handler to allow users to unlock captured leads via direct payment, and fixed the webhook unit test suite to handle in-memory database mock lookups (Session 362, June 26, 2026).
 - ✅ C174-C175: Integrated automated Service Schema nested details markup inside page generators, and implemented daily automatic retry queues for failed crawler indexing requests (Sessions 358-359, June 26, 2026).
 - ✅ C172-C173: Integrated interactive custom fields to the SEO ROI Calculator (branding customizer, custom logos, colors, CTA text/link inputs, notes) with PDF lead routing, and built the Automated Local Citation Health Scanner (citation-scanner.html / js/citation-scanner.js / api/citation-scan.js) routing directory NAP consistency failures to landing page generation (Session 357, June 21, 2026).
