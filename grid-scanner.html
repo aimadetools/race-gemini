@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local SEO Rank Grid Scanner & Heatmap | LocalLeads</title>
+    <meta content="Scan your business's search ranking across a local 3x3 grid. Visualise where you rank on Google Maps and find missed opportunities in surrounding towns." name="description"/>
+    <meta content="local seo grid scanner, google maps rank checker, search ranking heatmap, local business SEO, geo-targeted ranking, local rank tracker" name="keywords"/>
+    <meta content="Free Local SEO Rank Grid Scanner & Heatmap | LocalLeads" property="og:title"/>
+    <meta content="Visualize your business's Google Maps ranking across a 3x3 local search grid. Identify untapped markets in nearby cities." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/grid-scanner.html" property="og:url"/>
+    <link href="https://www.localseogen.com/grid-scanner.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    
+    <!-- Base Stylesheet -->
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style>
+        .scanner-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .hero-section {
+            text-align: center;
+            padding: 5rem 0 3rem 0;
+            background: radial-gradient(circle at top, rgba(59, 130, 246, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        .hero-section p {
+            color: #9ca3af;
+            font-size: 1.2rem;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .card-glass {
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 3rem;
+            transition: all 0.3s ease;
+        }
+        .card-glass:hover {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .input-group label {
+            color: #d1d5db;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .input-field {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Radar scan effect */
+        .radar-box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem auto;
+            border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .radar-box i {
+            font-size: 2rem;
+            color: #3b82f6;
+            z-index: 2;
+        }
+        .radar-wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            animation: pulse-wave 2s infinite ease-out;
+            z-index: 1;
+        }
+        @keyframes pulse-wave {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        /* Steps */
+        .scan-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+            color: #9ca3af;
+            font-weight: 500;
+            text-align: left;
+            padding-left: 20%;
+        }
+        @media (max-width: 640px) {
+            .scan-step {
+                padding-left: 5%;
+            }
+        }
+        .scan-step.active {
+            color: #3b82f6;
+        }
+        .scan-step.completed {
+            color: #10b981;
+        }
+        .scan-icon {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Lock Screen */
+        .lock-container {
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .lock-badge {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        /* Results dashboard */
+        .grid-scanner-split {
+            display: grid;
+            grid-template-columns: 7fr 5fr;
+            gap: 2rem;
+            margin-top: 1rem;
+            text-align: left;
+        }
+        @media (max-width: 992px) {
+            .grid-scanner-split {
+                grid-template-columns: 1fr;
+            }
+        }
+        #map-container {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .custom-rank-badge {
+            background: transparent;
+            border: none;
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .stat-lbl {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .gauge-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .gauge-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .gauge-val {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .details-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            min-height: 180px;
+        }
+        .details-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        .detail-row:last-child {
+            border: none;
+        }
+        .detail-lbl {
+            color: #9ca3af;
+        }
+        .detail-val {
+            color: #fff;
+            font-weight: 600;
+        }
+        .cta-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(16, 185, 129, 0.12) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+    </style>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li><a href="/generate.html">Generate Pages</a></li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="/audit.html">Free Audit</a></li>
+                    <li><a href="/seo-roi-calculator.html">ROI Calculator</a></li>
+                    <li><a href="/citation-scanner.html">Citation Scanner</a></li>
+                    <li><a href="/competitor-gap.html">Competitor Gap</a></li>
+                    <li><a href="/grid-scanner.html" class="active">Grid Scanner</a></li>
+                    <li><a href="/schema-generator.html">Schema Generator</a></li>
+                    <li><a href="/review-flyer.html">Review Flyer</a></li>
+                    <li><a href="/showcase.html">Showcase</a></li>
+                    <li><a href="/directory.html">Agency Directory</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/auth.html">Login/Signup</a></li>
+                    <li><a href="/buy-credits.html">Buy Credits</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="scanner-container">
+                <h1>Free Local SEO Rank Grid Scanner</h1>
+                <p>Visualize your search presence. Find out if your business ranks in Google's Map Pack in the surrounding cities and neighborhoods, or if you're completely invisible outside your shop door.</p>
+            </div>
+        </section>
+
+        <section style="padding-bottom: 5rem;">
+            <div class="scanner-container">
+                
+                <!-- STEP 1: SCAN PARAMETERS -->
+                <div id="step-input">
+                    <div class="card-glass" style="max-width: 800px; margin: 0 auto;">
+                        <h2 style="color: #fff; font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem; font-weight: 700; text-align: left;">Scan Your Service Area Grid</h2>
+                        <form id="scan-form">
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="business-name">Business Name</label>
+                                    <input class="input-field" id="business-name" placeholder="e.g. Dallas Plumber Experts" required type="text"/>
+                                </div>
+                                <div class="input-group">
+                                    <label for="user-url">Website URL (Optional)</label>
+                                    <input class="input-field" id="user-url" placeholder="e.g. dallasplumber.com" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="input-group">
+                                    <label for="city">Base City / Town</label>
+                                    <input class="input-field" id="city" placeholder="e.g. Dallas" required type="text"/>
+                                </div>
+                                <div class="input-group">
+                                    <label for="service">Target Service / Keyword</label>
+                                    <input class="input-field" id="service" placeholder="e.g. Plumber" required type="text"/>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-submit" style="margin-top: 1rem;">
+                                Scan Local Rank Grid <i class="fas fa-radar"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- STEP 2: SIMULATING / SCANNING RUN -->
+                <div id="step-analyzing" style="display: none;">
+                    <div class="card-glass" style="max-width: 600px; margin: 0 auto; text-align: center;">
+                        <div class="radar-box">
+                            <div class="radar-wave"></div>
+                            <i class="fas fa-satellite-dish"></i>
+                        </div>
+                        <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem;">Analyzing Local Map Pack Rankings...</h2>
+                        <div style="max-width: 380px; margin: 0 auto;">
+                            <div class="scan-step active" id="scan-step-1">
+                                <span class="scan-icon"><i class="fas fa-circle-notch fa-spin"></i></span>
+                                <span>Geocoding business location...</span>
+                            </div>
+                            <div class="scan-step" id="scan-step-2">
+                                <span class="scan-icon"><i class="far fa-circle"></i></span>
+                                <span>Discovering surrounding markets...</span>
+                            </div>
+                            <div class="scan-step" id="scan-step-3">
+                                <span class="scan-icon"><i class="far fa-circle"></i></span>
+                                <span>Checking geo-search visibility...</span>
+                            </div>
+                            <div class="scan-step" id="scan-step-4">
+                                <span class="scan-icon"><i class="far fa-circle"></i></span>
+                                <span>Compiling proximity heatmap...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: LEAD WALL LOCK -->
+                <div id="step-lock" style="display: none;">
+                    <div class="card-glass" style="max-width: 500px; margin: 0 auto; text-align: center;">
+                        <div class="lock-container">
+                            <span class="lock-badge"><i class="fas fa-shield-alt"></i> Scan Complete</span>
+                            <h2 style="color: #fff; font-size: 1.75rem; font-weight: 800; margin-top: 0; margin-bottom: 0.5rem;">Unlock Your Ranking Heatmap</h2>
+                            <p style="color: #9ca3af; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                                We mapped a local grid around <strong id="lock-city-text" style="color: #3b82f6;">Dallas</strong> for the keyword <strong id="lock-service-text" style="color: #10b981;">Plumber</strong>. Unlock your heatmap and detailed report.
+                            </p>
+                            <form id="lead-form">
+                                <div class="input-group" style="text-align: left; margin-bottom: 1rem;">
+                                    <label for="lead-name">Your Name</label>
+                                    <input class="input-field" id="lead-name" placeholder="John Doe" required type="text"/>
+                                </div>
+                                <div class="input-group" style="text-align: left; margin-bottom: 1.5rem;">
+                                    <label for="lead-email">Business Email</label>
+                                    <input class="input-field" id="lead-email" placeholder="john@company.com" required type="email"/>
+                                </div>
+                                <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                                    Unlock Interactive Heatmap <i class="fas fa-unlock-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: INTERACTIVE RESULTS PANEL -->
+                <div id="step-results" style="display: none;">
+                    <div class="grid-scanner-split">
+                        <!-- Left Panel: Interactive Map -->
+                        <div>
+                            <div id="map-container"></div>
+                        </div>
+
+                        <!-- Right Panel: Summary & Details -->
+                        <div>
+                            <div class="card-glass" style="padding: 1.5rem; margin-bottom: 0;">
+                                <h3 id="result-headline" style="color: #fff; font-size: 1.4rem; font-weight: 800; margin-top: 0; margin-bottom: 1rem;">Ranking Analysis</h3>
+                                
+                                <!-- Coverage Gauge -->
+                                <div class="gauge-card">
+                                    <div class="gauge-circle">
+                                        <svg width="80" height="80" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
+                                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"></circle>
+                                            <circle id="gauge-circle-stroke" cx="50" cy="50" r="40" fill="none" stroke="#ef4444" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="251.2" style="transition: stroke-dashoffset 1s ease;"></circle>
+                                        </svg>
+                                        <div class="gauge-val" id="gauge-percent">0%</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #fff; font-size: 1.05rem;">Search Visibility Score</div>
+                                        <div style="font-size: 0.85rem; color: #9ca3af; line-height: 1.4; margin-top: 0.25rem;">
+                                            You are invisible to customers in most surrounding markets.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Stats -->
+                                <div class="summary-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-val" id="stat-ranked">0/9</div>
+                                        <div class="stat-lbl">Areas Ranked</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-val" id="stat-missed-vol">0</div>
+                                        <div class="stat-lbl">Missed Searches/Mo</div>
+                                    </div>
+                                </div>
+
+                                <!-- Node Details Card -->
+                                <div class="details-card" id="node-details">
+                                    <div class="details-title" id="node-title">
+                                        <i class="fas fa-map-marker-alt"></i> Select a town on the map
+                                    </div>
+                                    <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin: 0.5rem 0 1rem 0;" id="node-desc">
+                                        Click on any marker pin on the map to analyze your Google Maps visibility and estimate the keyword search volume.
+                                    </p>
+                                    <div id="node-rows" style="display: none;">
+                                        <div class="detail-row">
+                                            <span class="detail-lbl">Geographic Direction:</span>
+                                            <span class="detail-val" id="node-dir">North</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-lbl">Rank Position:</span>
+                                            <span class="detail-val" id="node-rank" style="color: #ef4444;">Not Ranked</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-lbl">Est. Monthly Search Volume:</span>
+                                            <span class="detail-val" id="node-volume">150</span>
+                                        </div>
+                                        <div class="detail-row" style="border: none; padding-top: 0.75rem;">
+                                            <span id="node-action" style="color: #fca5a5; font-size: 0.85rem; line-height: 1.4; font-style: italic;">No page targeting this town.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action CTA -->
+                                <div class="cta-box">
+                                    <h4 style="color: #fff; margin-top: 0; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 700;">Expand Your Google Grid Coverage</h4>
+                                    <p style="color: #cbd5e1; font-size: 0.85rem; margin-top: 0; margin-bottom: 1.25rem; line-height: 1.4;">
+                                        Turn your red pins green by generating highly optimized search pages for the missing locations. Get 5 free credits on signup!
+                                    </p>
+                                    <a href="#" id="cta-generate-btn" class="button" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; width: 100%; box-sizing: border-box; padding: 0.85rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 8px; color: #fff; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                                        Prefill Page Generator <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer style="border-top: 1px solid rgba(255,255,255,0.08); padding: 3rem 0; background: #0b0f19;">
+        <div class="container">
+            <div class="footer-columns" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+                <div class="footer-col">
+                    <h2 style="color: #fff; font-size: 1.5rem; margin-top: 0; margin-bottom: 0.5rem;">LocalLeads</h2>
+                    <p style="color: #9ca3af; font-size: 0.9rem;">Get found in every town. One-time fee, lasting results.</p>
+                </div>
+                <div class="footer-col">
+                    <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem;">Quick Links</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                        <li><a href="about.html" style="color: #9ca3af; text-decoration: none;">About Us</a></li>
+                        <li><a href="pricing.html" style="color: #9ca3af; text-decoration: none;">Pricing</a></li>
+                        <li><a href="blog.html" style="color: #9ca3af; text-decoration: none;">Blog</a></li>
+                        <li><a href="competitor-gap.html" style="color: #9ca3af; text-decoration: none;">Competitor Gap</a></li>
+                        <li><a href="grid-scanner.html" style="color: #9ca3af; text-decoration: none;">Grid Scanner</a></li>
+                        <li><a href="schema-generator.html" style="color: #9ca3af; text-decoration: none;">Schema Generator</a></li>
+                        <li><a href="review-flyer.html" style="color: #9ca3af; text-decoration: none;">Review Flyer</a></li>
+                        <li><a href="seo-roi-calculator.html" style="color: #9ca3af; text-decoration: none;">ROI Calculator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem;">Legal</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                        <li><a href="privacy.html" style="color: #9ca3af; text-decoration: none;">Privacy Policy</a></li>
+                        <li><a href="terms.html" style="color: #9ca3af; text-decoration: none;">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; margin-top: 2rem; font-size: 0.85rem; color: #6b7280;">
+                <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global App minified scripts (supports menu and layout scripts) -->
+    <script src="/js/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scanForm = document.getElementById('scan-form');
+            const leadForm = document.getElementById('lead-form');
+            
+            const stepInput = document.getElementById('step-input');
+            const stepAnalyzing = document.getElementById('step-analyzing');
+            const stepLock = document.getElementById('step-lock');
+            const stepResults = document.getElementById('step-results');
+
+            const scanStep1 = document.getElementById('scan-step-1');
+            const scanStep2 = document.getElementById('scan-step-2');
+            const scanStep3 = document.getElementById('scan-step-3');
+            const scanStep4 = document.getElementById('scan-step-4');
+
+            const lockCityText = document.getElementById('lock-city-text');
+            const lockServiceText = document.getElementById('lock-service-text');
+
+            const gaugeCircleStroke = document.getElementById('gauge-circle-stroke');
+            const gaugePercent = document.getElementById('gauge-percent');
+            const statRanked = document.getElementById('stat-ranked');
+            const statMissedVol = document.getElementById('stat-missed-vol');
+
+            const nodeTitle = document.getElementById('node-title');
+            const nodeDesc = document.getElementById('node-desc');
+            const nodeRows = document.getElementById('node-rows');
+            const nodeDir = document.getElementById('node-dir');
+            const nodeRank = document.getElementById('node-rank');
+            const nodeVolume = document.getElementById('node-volume');
+            const nodeAction = document.getElementById('node-action');
+
+            const ctaGenerateBtn = document.getElementById('cta-generate-btn');
+
+            let scanResults = null;
+            let formSubmittedData = {};
+            let map = null;
+            let mapMarkers = [];
+            let mapCircles = [];
+            let mapPolylines = [];
+
+            // 1. Submit scan parameters form
+            scanForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const businessName = document.getElementById('business-name').value.trim();
+                const userUrl = document.getElementById('user-url').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const service = document.getElementById('service').value.trim();
+
+                formSubmittedData = { businessName, userUrl, city, service };
+
+                // Transition to analyzing phase
+                stepInput.style.display = 'none';
+                stepAnalyzing.style.display = 'block';
+
+                // Sequence scanning animation stages
+                setTimeout(() => {
+                    scanStep1.className = 'scan-step completed';
+                    scanStep1.querySelector('i').className = 'fas fa-check-circle';
+                    scanStep2.className = 'scan-step active';
+                    scanStep2.querySelector('i').className = 'fas fa-circle-notch fa-spin';
+                }, 1000);
+
+                setTimeout(() => {
+                    scanStep2.className = 'scan-step completed';
+                    scanStep2.querySelector('i').className = 'fas fa-check-circle';
+                    scanStep3.className = 'scan-step active';
+                    scanStep3.querySelector('i').className = 'fas fa-circle-notch fa-spin';
+                }, 2000);
+
+                setTimeout(() => {
+                    scanStep3.className = 'scan-step completed';
+                    scanStep3.querySelector('i').className = 'fas fa-check-circle';
+                    scanStep4.className = 'scan-step active';
+                    scanStep4.querySelector('i').className = 'fas fa-circle-notch fa-spin';
+                }, 3000);
+
+                // Call the API endpoint
+                let apiSuccess = false;
+                try {
+                    const response = await fetch('/api/public-local-seo-grid', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ businessName, userUrl, city, service })
+                    });
+                    
+                    if (response.ok) {
+                        scanResults = await response.json();
+                        apiSuccess = true;
+                    }
+                } catch (err) {
+                    console.error('API Error during grid scan:', err);
+                }
+
+                // Wait for the full animation sequence to end (approx 4 seconds total)
+                setTimeout(() => {
+                    stepAnalyzing.style.display = 'none';
+                    if (apiSuccess && scanResults) {
+                        // Display Lead Lock Wall
+                        lockCityText.textContent = scanResults.city;
+                        lockServiceText.textContent = scanResults.service;
+                        stepLock.style.display = 'block';
+                    } else {
+                        // Recover form on error
+                        stepInput.style.display = 'block';
+                        alert('Could not run scan for that location. Please verify the city name.');
+                    }
+                }, 4000);
+            });
+
+            // 2. Submit Lead capture Form
+            leadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('lead-name').value.trim();
+                const email = document.getElementById('lead-email').value.trim();
+
+                const submitBtn = leadForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Unlocking Heatmap... <i class="fas fa-spinner fa-spin"></i>';
+
+                try {
+                    // Send details to lead capture API
+                    await fetch('/api/capture-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            source: 'grid-scanner',
+                            metadata: {
+                                businessName: formSubmittedData.businessName,
+                                userUrl: formSubmittedData.userUrl,
+                                city: formSubmittedData.city,
+                                service: formSubmittedData.service
+                            }
+                        })
+                    });
+                } catch (err) {
+                    console.error('Error capturing lead:', err);
+                }
+
+                // Show Results Screen
+                stepLock.style.display = 'none';
+                stepResults.style.display = 'block';
+
+                // Initialize Leaflet Map and render grid
+                initResultsDashboard(scanResults);
+            });
+
+            // 3. Render Dashboard Results
+            function initResultsDashboard(data) {
+                const baseLat = data.baseLat;
+                const baseLng = data.baseLng;
+                const grid = data.grid;
+                const summary = data.summary;
+
+                // Configure statistics card & Gauge
+                statRanked.textContent = `${summary.visibleCount}/${grid.length}`;
+                statMissedVol.textContent = summary.totalSearchVolume.toLocaleString();
+                gaugePercent.textContent = `${summary.coveragePercentage}%`;
+
+                // Render circular progress svg stroke
+                const strokeVal = 251.2 - (251.2 * summary.coveragePercentage) / 100;
+                gaugeCircleStroke.style.strokeDashoffset = strokeVal;
+                
+                // Color configuration of the gauge stroke
+                if (summary.coveragePercentage > 40) {
+                    gaugeCircleStroke.setAttribute('stroke', '#eab308'); // Yellow
+                } else {
+                    gaugeCircleStroke.setAttribute('stroke', '#ef4444'); // Red
+                }
+
+                // Setup prefill URL for CTA button
+                const opportunityTowns = grid
+                    .filter(c => c.status !== 'visible' && c.direction !== 'CTR')
+                    .map(c => c.name);
+                ctaGenerateBtn.href = `/generate.html?businessName=${encodeURIComponent(data.businessName)}&services=${encodeURIComponent(data.service)}&towns=${encodeURIComponent(opportunityTowns.join(','))}`;
+
+                // Init leaflet map centered on the base location
+                if (map) {
+                    map.remove();
+                }
+
+                map = L.map('map-container').setView([baseLat, baseLng], 11);
+                
+                // Use a beautiful dark maps skin (CartoDB Dark Matter)
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: 'abcd',
+                    maxZoom: 20
+                }).addTo(map);
+
+                // Add grid markers
+                grid.forEach(cell => {
+                    const isCenter = cell.direction === 'CTR';
+                    const isVisible = cell.status === 'visible';
+                    const color = isCenter ? '#10b981' : (isVisible ? '#10b981' : '#ef4444');
+                    const label = isCenter ? 'CTR' : cell.direction;
+                    const rankLabel = isVisible ? `#${cell.rank}` : 'N/A';
+
+                    // 1. Add translucent circle overlay for search coverage area
+                    const circle = L.circle([cell.lat, cell.lng], {
+                        color: color,
+                        fillColor: color,
+                        fillOpacity: 0.1,
+                        radius: 1800,
+                        weight: 1
+                    }).addTo(map);
+                    mapCircles.push(circle);
+
+                    // 2. Add polyline vector connect back to the center node
+                    if (!isCenter) {
+                        const poly = L.polyline([[baseLat, baseLng], [cell.lat, cell.lng]], {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            weight: 1.5,
+                            dashArray: '4, 6'
+                        }).addTo(map);
+                        mapPolylines.push(poly);
+                    }
+
+                    // 3. Render custom DivIcon badge showing the rank position
+                    const badgeIcon = L.divIcon({
+                        className: 'custom-rank-badge',
+                        html: `<div style="background: ${color}; color: #fff; padding: 5px 10px; border-radius: 50px; font-weight: 700; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.6); border: 2px solid #111827; display: flex; align-items: center; gap: 5px; cursor: pointer; transform: translate(-50%, -50%); transition: transform 0.2s ease;">
+                                  <span style="display:inline-block; width: 6px; height: 6px; border-radius:50%; background: #fff;"></span>
+                                  <span>${cell.name}: ${rankLabel}</span>
+                               </div>`,
+                        iconSize: [0, 0],
+                        iconAnchor: [0, 0]
+                    });
+
+                    const marker = L.marker([cell.lat, cell.lng], { icon: badgeIcon }).addTo(map);
+                    marker.on('click', () => {
+                        selectGridCell(cell);
+                    });
+                    mapMarkers.push(marker);
+                });
+
+                // Auto-select center cell CTR initially
+                const centerCell = grid.find(c => c.direction === 'CTR');
+                if (centerCell) {
+                    selectGridCell(centerCell);
+                }
+            }
+
+            function selectGridCell(cell) {
+                nodeDesc.style.display = 'none';
+                nodeRows.style.display = 'block';
+
+                nodeTitle.innerHTML = `<i class="fas fa-map-marker-alt" style="color: ${cell.status === 'visible' || cell.direction === 'CTR' ? '#10b981' : '#ef4444'}"></i> ${cell.name}`;
+                nodeDir.textContent = cell.label;
+                nodeVolume.textContent = `${cell.searchVolume} searches/mo`;
+                
+                const isCenter = cell.direction === 'CTR';
+                const isVisible = cell.status === 'visible';
+
+                if (isCenter) {
+                    nodeRank.textContent = `Rank: #${cell.rank} (Local Center)`;
+                    nodeRank.style.color = '#10b981';
+                    nodeAction.textContent = `This is your business's physical address. You are highly visible here.`;
+                    nodeAction.style.color = '#a7f3d0';
+                } else if (isVisible) {
+                    nodeRank.textContent = `Rank: #${cell.rank} (Visible)`;
+                    nodeRank.style.color = '#10b981';
+                    nodeAction.textContent = `Excellent! You rank in the Google Map Pack in this location.`;
+                    nodeAction.style.color = '#a7f3d0';
+                } else {
+                    nodeRank.textContent = 'Not Ranked (Invisible)';
+                    nodeRank.style.color = '#ef4444';
+                    nodeAction.textContent = `No local optimized landing page exists for ${cell.name}. Customers here cannot find you online. Generate a ${cell.name} landing page to win these clients!`;
+                    nodeAction.style.color = '#fca5a5';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
