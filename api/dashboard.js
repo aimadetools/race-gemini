@@ -94,6 +94,25 @@ export default async function handler(req, res, currentKvClient) {
       );
       const leads = leadsResult.rows;
 
+      // Retrieve indexing retry queue for the user
+      let indexingRetryQueue = [];
+      try {
+        const retryQueueResult = await query(
+          'SELECT id, page_url, attempts, last_attempt, error_message, created_at FROM indexing_retry_queue WHERE user_id = $1 ORDER BY last_attempt DESC',
+          [userId]
+        );
+        indexingRetryQueue = retryQueueResult.rows.map(row => ({
+          id: row.id,
+          pageUrl: row.page_url,
+          attempts: row.attempts,
+          lastAttempt: row.last_attempt ? row.last_attempt.toISOString() : null,
+          errorMessage: row.error_message,
+          createdAt: row.created_at ? row.created_at.toISOString() : null
+        }));
+      } catch (err) {
+        console.error('Error fetching indexing retry queue:', err);
+      }
+
       // Check if user has paid
       let isPaidUser = false;
       const agencyResult = await query('SELECT is_agency, subscription_status FROM users WHERE id = $1', [userId]);
@@ -206,6 +225,7 @@ export default async function handler(req, res, currentKvClient) {
         generatedPages,
         creditTransactions,
         indexingNotifications,
+        indexingRetryQueue,
         leads: formattedLeads,
         isPaidUser,
         dailyStats,

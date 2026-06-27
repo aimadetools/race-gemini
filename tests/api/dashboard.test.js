@@ -276,7 +276,8 @@ describe('dashboard API', () => {
       weeklyReportEnabled: true,
       autoResponderEnabled: false,
       autoResponderSubject: null,
-      autoResponderMessage: null
+      autoResponderMessage: null,
+      indexingRetryQueue: []
     });
   });
 
@@ -347,7 +348,8 @@ describe('dashboard API', () => {
       weeklyReportEnabled: true,
       autoResponderEnabled: false,
       autoResponderSubject: null,
-      autoResponderMessage: null
+      autoResponderMessage: null,
+      indexingRetryQueue: []
     });
   });
 

@@ -693,6 +693,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentDashboardData = data;
                 updateActivationChecklist(data);
                 initializeLocalUpdates(data);
+                populateCrawlerCenter(data);
+
+                // Hook up retry all indexing button
+                const retryAllBtn = document.getElementById('retry-all-indexing-btn');
+                if (retryAllBtn) {
+                    retryAllBtn.onclick = async () => {
+                        retryAllBtn.disabled = true;
+                        const originalText = retryAllBtn.innerHTML;
+                        retryAllBtn.innerHTML = '<i class="fas fa-redo-alt fa-spin"></i> Retrying All...';
+                        
+                        try {
+                            const res = await fetch('/api/retry-indexing-queue', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${jwtToken}`
+                                }
+                            });
+                            
+                            const resData = await res.json();
+                            if (res.ok) {
+                                alert(`Successfully processed retry queue! Succeeded: ${resData.succeededCount}, Failed: ${resData.failedCount}`);
+                                fetchDashboardData();
+                            } else {
+                                alert('Failed to process retry queue: ' + (resData.message || 'Unknown Error'));
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('An error occurred during bulk retry.');
+                        } finally {
+                            retryAllBtn.disabled = false;
+                            retryAllBtn.innerHTML = originalText;
+                        }
+                    };
+                }
 
                 // Fetch testimonials
                 await fetchTestimonials();
@@ -705,6 +740,94 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Fetch error for dashboard data:', error);
             alert('An unexpected error occurred while loading dashboard data.');
+        }
+    }
+
+    function populateCrawlerCenter(data) {
+        const crawlerTotal = document.getElementById('crawler-total-pages');
+        const crawlerIndexed = document.getElementById('crawler-indexed-pages');
+        const crawlerQueued = document.getElementById('crawler-queued-pages');
+        const crawlerFailed = document.getElementById('crawler-failed-pages');
+        
+        const total = data.generatedPages ? data.generatedPages.length : 0;
+        const indexed = data.generatedPages ? data.generatedPages.filter(p => 
+            p.indexingStatus && 
+            p.indexingStatus.toLowerCase().includes('indexed')
+        ).length : 0;
+        const queuedList = data.indexingRetryQueue || [];
+        const queued = queuedList.length;
+        const failed = queuedList.filter(q => q.attempts >= 5).length;
+
+        if (crawlerTotal) crawlerTotal.textContent = total;
+        if (crawlerIndexed) crawlerIndexed.textContent = indexed;
+        if (crawlerQueued) crawlerQueued.textContent = queued;
+        if (crawlerFailed) crawlerFailed.textContent = failed;
+
+        const queueTableBody = document.querySelector('#crawler-queue-table tbody');
+        if (queueTableBody) {
+            queueTableBody.innerHTML = '';
+            if (queuedList.length > 0) {
+                queuedList.forEach(item => {
+                    const row = queueTableBody.insertRow();
+                    const formattedDate = item.lastAttempt ? new Date(item.lastAttempt).toLocaleString() : 'Never';
+                    
+                    let pathLabel = item.pageUrl;
+                    try {
+                        const urlObj = new URL(item.pageUrl);
+                        pathLabel = urlObj.pathname;
+                    } catch (e) {}
+                    
+                    row.innerHTML = `
+                        <td><a href="${item.pageUrl}" target="_blank" style="color: #60a5fa; text-decoration: none;">${pathLabel}</a></td>
+                        <td><span class="status-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.2); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">${item.attempts}/5</span></td>
+                        <td style="color: #ccc; font-size: 0.85rem;">${formattedDate}</td>
+                        <td style="color: #ef4444; font-size: 0.85rem; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.errorMessage || 'Unknown Error'}">${item.errorMessage || 'Unknown Error'}</td>
+                        <td>
+                            <button class="button button-small retry-single-btn" data-url="${item.pageUrl}" style="padding: 4px 10px; font-size: 0.75rem;">
+                                <i class="fas fa-play"></i> Retry
+                            </button>
+                        </td>
+                    `;
+                });
+
+                // Attach event listeners to single retry buttons
+                document.querySelectorAll('.retry-single-btn').forEach(btn => {
+                    btn.onclick = async (e) => {
+                        const url = btn.getAttribute('data-url');
+                        btn.disabled = true;
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        
+                        try {
+                            const res = await fetch('/api/retry-indexing-single', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${jwtToken}`
+                                },
+                                body: JSON.stringify({ url })
+                            });
+                            
+                            const resData = await res.json();
+                            if (res.ok) {
+                                alert('Crawl request successfully submitted to Google Indexing API!');
+                                fetchDashboardData();
+                            } else {
+                                alert('Failed to retry indexing: ' + (resData.message || 'Unknown Error'));
+                                btn.disabled = false;
+                                btn.innerHTML = originalText;
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('An error occurred during submission.');
+                            btn.disabled = false;
+                            btn.innerHTML = originalText;
+                        }
+                    };
+                });
+            } else {
+                queueTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #10b981; padding: 1.5rem;"><i class="fas fa-check-circle"></i> No failed crawl requests in queue. Your site is fully optimized!</td></tr>';
+            }
         }
     }
 

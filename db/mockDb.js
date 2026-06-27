@@ -5,11 +5,16 @@ const mockSeoPages = [];
 const mockTestimonials = [];
 const mockLeads = [];
 const mockKeywordRankings = [];
+const mockIndexingRetryQueue = [];
 let nextId = 1;
 
 export const getMockKeywordRankings = () => mockKeywordRankings;
 export const addMockKeywordRanking = (r) => mockKeywordRankings.push(r);
 export const clearMockKeywordRankings = () => { mockKeywordRankings.length = 0; };
+
+export const getMockIndexingRetryQueue = () => mockIndexingRetryQueue;
+export const addMockIndexingRetryQueue = (r) => mockIndexingRetryQueue.push(r);
+export const clearMockIndexingRetryQueue = () => { mockIndexingRetryQueue.length = 0; };
 
 let queryDelegate = null;
 export const setQueryDelegate = (fn) => {
@@ -69,6 +74,15 @@ export const originalMockQuery = async (text, params) => {
                 const rows = mockKeywordRankings.filter(r => r.user_id?.toString() === userId);
                 return { rows };
             }
+        }
+
+        if (textLower.includes('from indexing_retry_queue')) {
+            if (textLower.includes('where user_id = $1')) {
+                const userId = params[0]?.toString();
+                const rows = mockIndexingRetryQueue.filter(r => r.user_id?.toString() === userId);
+                return { rows };
+            }
+            return { rows: mockIndexingRetryQueue };
         }
 
         if (textLower.includes('from seo_pages')) {
@@ -543,6 +557,34 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('insert into indexing_retry_queue')) {
+        const match = text.match(/insert\s+into\s+indexing_retry_queue\s*\(([^)]+)\)/i);
+        if (match) {
+            const cols = match[1].split(',').map(c => c.trim().toLowerCase());
+            const newRetry = { id: (nextId++).toString() };
+            cols.forEach((col, i) => {
+                newRetry[col] = params[i];
+            });
+            newRetry.created_at = new Date();
+            newRetry.last_attempt = new Date();
+            newRetry.attempts = newRetry.attempts || 1;
+            
+            // Check unique constraint (user_id, page_url)
+            const existingIdx = mockIndexingRetryQueue.findIndex(r => 
+                r.user_id?.toString() === newRetry.user_id?.toString() && 
+                r.page_url === newRetry.page_url
+            );
+            if (existingIdx !== -1) {
+                mockIndexingRetryQueue[existingIdx].attempts = (mockIndexingRetryQueue[existingIdx].attempts || 1) + 1;
+                mockIndexingRetryQueue[existingIdx].last_attempt = new Date();
+                mockIndexingRetryQueue[existingIdx].error_message = newRetry.error_message;
+                return { rows: [mockIndexingRetryQueue[existingIdx]] };
+            }
+            mockIndexingRetryQueue.push(newRetry);
+            return { rows: [newRetry] };
+        }
+    }
+
     // 3. UPDATE query
     if (textLower.includes('update users')) {
         if (textLower.includes('share_token = $1')) {
@@ -976,6 +1018,20 @@ export const originalMockQuery = async (text, params) => {
         }
     }
 
+    if (textLower.includes('delete from indexing_retry_queue')) {
+        if (textLower.includes('where user_id = $1 and page_url = $2')) {
+            const [userId, pageUrl] = params;
+            const idx = mockIndexingRetryQueue.findIndex(r => 
+                r.user_id?.toString() === userId?.toString() && 
+                r.page_url === pageUrl
+            );
+            if (idx !== -1) {
+                mockIndexingRetryQueue.splice(idx, 1);
+            }
+            return { rows: [] };
+        }
+    }
+
     // Default mock behavior
     return { rows: [] };
 };
@@ -1001,6 +1057,7 @@ export const clearMockUsers = () => {
     mockTestimonials.length = 0;
     mockLeads.length = 0;
     mockKeywordRankings.length = 0;
+    mockIndexingRetryQueue.length = 0;
     nextId = 1;
 };
 

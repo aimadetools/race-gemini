@@ -856,6 +856,58 @@
                     </table>
                 </div>
             </div>
+            <div class="card" id="crawler-control-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-spider" style="color: #60a5fa;"></i> GSC Crawler & Indexing Control Center
+                    </h2>
+                    <button class="button button-small" id="retry-all-indexing-btn" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none;">
+                        <i class="fas fa-redo-alt"></i> Retry All Queued Pages
+                    </button>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px;">Monitored Pages</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #fff;" id="crawler-total-pages">0</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px;">Indexed by Google</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #10b981;" id="crawler-indexed-pages">0</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px;">Queued for Retry</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #fbbf24;" id="crawler-queued-pages">0</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px;">Failed / Issues</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #ef4444;" id="crawler-failed-pages">0</div>
+                    </div>
+                </div>
+
+                <h3>Crawler Retry Queue (Failed Attempts)</h3>
+                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.4;">
+                    When Google crawler or IndexNow API reports a temporary indexing failure (e.g., rate limits or connection timeouts), our crawler automatically queues the URL for up to 5 retries. You can manually force a crawl request below.
+                </p>
+                <div class="table-responsive" id="crawler-queue-container">
+                    <table class="data-table" id="crawler-queue-table">
+                        <thead>
+                        <tr>
+                            <th>Page URL</th>
+                            <th>Attempts</th>
+                            <th>Last Retry Attempt</th>
+                            <th>Error Details</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #9ca3af; padding: 1.5rem;">Loading queue data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="card">
                 <h2>Search Engine Indexing Notifications</h2>
                 <div id="indexing-notifications">
