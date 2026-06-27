@@ -1,4 +1,7 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { serialize } from 'cookie';
+import { kv } from '@vercel/kv';
 import { query } from '../db/index.js'; // Import PostgreSQL query utility
 import trackEventHandler from './track.js'; // Import the event tracking handler
 import { logError } from '../lib/logger.js'; // Import centralized logger
@@ -69,6 +72,28 @@ export default async function handler(req, res) {
       }, {
         status: () => ({ json: () => {} }) // Mock response for tracking
       });
+
+      // Generate JWT token
+      const token = jwt.sign({ userId }, process.env.JWT_SECRET || 'dummy_jwt_secret_fallback', { expiresIn: '1h' });
+
+      // Create a session in KV
+      try {
+        const sessionId = `sess_${Date.now()}_${userId}`;
+        await kv.set(`session:${sessionId}`, JSON.stringify({ userId, expiresAt: Date.now() + 3600 * 1000 }));
+      } catch (kvError) {
+        console.warn('Failed to create session in KV (non-blocking):', kvError.message);
+      }
+
+      // Set HttpOnly cookie
+      if (typeof res.setHeader === 'function') {
+        res.setHeader('Set-Cookie', serialize('authToken', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development', // Use secure in production
+          sameSite: 'strict',
+          maxAge: 3600, // 1 hour
+          path: '/',
+        }));
+      }
 
       return res.status(201).json({ message: 'User registered successfully!', userId });
     } catch (error) {

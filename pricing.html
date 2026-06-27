@@ -639,6 +639,332 @@
     customCreditsInput.addEventListener('input', calculateCustomPrice);
 </script>
 <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Exit-Intent Lead Capture Modal -->
+<div id="exit-intent-modal" class="ei-modal-overlay" style="display: none;">
+  <div class="ei-modal-content">
+    <button class="ei-modal-close-btn" id="ei-close-btn">&times;</button>
+    <div class="ei-modal-header">
+      <div class="ei-modal-icon">
+        <i class="fas fa-gift"></i>
+      </div>
+      <h3>Wait! Claim Your 5 Free Pages</h3>
+      <p>Not ready to purchase? Set up a free account in 10 seconds and get 5 local SEO landing page credits instantly—no credit card required.</p>
+    </div>
+    <form id="ei-signup-form">
+      <div class="ei-form-group">
+        <label for="ei-email">Business Email</label>
+        <input type="email" id="ei-email" class="ei-input" placeholder="you@yourbusiness.com" required>
+      </div>
+      <div class="ei-form-group">
+        <label for="ei-password">Create Password</label>
+        <input type="password" id="ei-password" class="ei-input" placeholder="Choose a secure password" required minlength="8">
+      </div>
+      <div class="ei-error-msg" id="ei-error-message" style="display: none;"></div>
+      <button type="submit" class="ei-submit-btn" id="ei-submit-btn">Claim My 5 Free Pages</button>
+    </form>
+    <div class="ei-modal-footer">
+      <a href="#" id="ei-no-thanks">No thanks, I'll continue browsing</a>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Exit Intent Modal Styles */
+.ei-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ei-modal-overlay.active {
+  opacity: 1;
+}
+
+.ei-modal-content {
+  background: linear-gradient(135deg, #0f172a, #1e1b4b);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  padding: 2.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: #fff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.ei-modal-overlay.active .ei-modal-content {
+  transform: scale(1);
+}
+
+.ei-modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.75rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.ei-modal-close-btn:hover {
+  color: #fff;
+}
+
+.ei-modal-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.ei-modal-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: #818cf8;
+  font-size: 1.5rem;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.ei-modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem;
+  background: linear-gradient(135deg, #a5b4fc, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.025em;
+}
+
+.ei-modal-header p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ei-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ei-form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+.ei-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.ei-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.ei-error-msg {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+}
+
+.ei-submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  padding: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.ei-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+}
+
+.ei-submit-btn:active {
+  transform: translateY(0);
+}
+
+.ei-submit-btn:disabled {
+  background: #475569;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ei-modal-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.ei-modal-footer a {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ei-modal-footer a:hover {
+  color: #94a3b8;
+  text-decoration: underline;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if the user is already logged in (if they have an authToken cookie)
+    const hasAuthCookie = document.cookie.split(';').some(item => item.trim().startsWith('authToken='));
+    
+    // If they are logged in, don't show the exit intent popup
+    if (hasAuthCookie) return;
+
+    let exitIntentTriggered = false;
+
+    // Detect mouse moving out of the top viewport
+    document.addEventListener('mouseleave', (e) => {
+        if (exitIntentTriggered) return;
+        
+        // Show modal
+        showExitIntentModal();
+    });
+
+    const modal = document.getElementById('exit-intent-modal');
+    const closeBtn = document.getElementById('ei-close-btn');
+    const noThanksLink = document.getElementById('ei-no-thanks');
+    const form = document.getElementById('ei-signup-form');
+    const errorMsg = document.getElementById('ei-error-message');
+    const submitBtn = document.getElementById('ei-submit-btn');
+
+    function showExitIntentModal() {
+        exitIntentTriggered = true;
+        modal.style.display = 'flex';
+        // Trigger reflow for transition
+        void modal.offsetWidth;
+        modal.classList.add('active');
+    }
+
+    function hideExitIntentModal() {
+        modal.classList.remove('active');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    closeBtn.addEventListener('click', hideExitIntentModal);
+    noThanksLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        hideExitIntentModal();
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            hideExitIntentModal();
+        }
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorMsg.style.display = 'none';
+        errorMsg.textContent = '';
+        
+        const email = document.getElementById('ei-email').value.trim();
+        const password = document.getElementById('ei-password').value;
+
+        if (!email || !password) {
+            errorMsg.textContent = 'Please fill in all fields.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Creating Account...';
+
+        try {
+            const tracking = window.AdTracking ? window.AdTracking.getParams() : {};
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    utm_source: tracking.utm_source || '',
+                    utm_medium: tracking.utm_medium || '',
+                    utm_campaign: tracking.utm_campaign || '',
+                    utm_term: tracking.utm_term || '',
+                    gclid: tracking.gclid || ''
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // Redirect user to dashboard to get started with their 5 free credits
+                window.location.href = '/dashboard.html?signup_welcome=true';
+            } else {
+                errorMsg.textContent = data.message || 'Signup failed. Please try again.';
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        } catch (error) {
+            console.error('Error during exit-intent signup:', error);
+            errorMsg.textContent = 'A network error occurred. Please try again.';
+            errorMsg.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+});
+</script>
 </body>
 </html>
 
