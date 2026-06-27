@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local Business Schema (JSON-LD) Generator | LocalLeads</title>
+    <meta content="Create highly optimized JSON-LD LocalBusiness schema markup for your service business. Boost local rankings, rich snippets, and Google Maps visibility." name="description"/>
+    <meta content="schema generator, json-ld schema, local business schema, local seo tools, structured data generator, schema builder" name="keywords"/>
+    <meta content="Free Local Business Schema (JSON-LD) Generator | LocalLeads" property="og:title"/>
+    <meta content="Create highly optimized JSON-LD LocalBusiness schema markup for your service business. Boost local rankings, rich snippets, and Google Maps visibility." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/schema-generator.html" property="og:url"/>
+    <link href="https://www.localseogen.com/schema-generator.html" rel="canonical"/>
+    <meta content="summary_large_image" name="twitter:card"/>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="style_calculator.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+    <style>
+        /* Custom Styles for Schema Generator */
+        .schema-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 992px) {
+            .schema-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-section-title {
+            font-size: 1.1rem;
+            color: #8b5cf6;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-section-title:first-of-type {
+            margin-top: 0;
+        }
+        .nested-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 576px) {
+            .nested-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .input-helper {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 0.25rem;
+        }
+        .geocode-btn {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+        .geocode-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: #8b5cf6;
+        }
+        .geocode-btn:disabled {
+            background: rgba(156, 163, 175, 0.1);
+            color: #6b7280;
+            border-color: rgba(156, 163, 175, 0.2);
+            cursor: not-allowed;
+        }
+        /* Code Editor Window Styling */
+        .code-window {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 500px;
+        }
+        .code-header {
+            background: #1e293b;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+        .code-title {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+        .code-editor-area {
+            flex: 1;
+            padding: 1.5rem;
+            overflow: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+            background: #0b0f19;
+            white-space: pre-wrap;
+            tab-size: 4;
+            max-height: 600px;
+        }
+        .code-actions {
+            padding: 1rem;
+            background: #1e293b;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn-copy {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-copy:hover {
+            background: #2563eb;
+        }
+        .btn-download {
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .btn-download:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .btn-validate {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.2);
+            margin-left: auto;
+        }
+        .btn-validate:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+        @media (max-width: 576px) {
+            .btn-validate {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        .upsell-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .upsell-text {
+            flex: 2;
+            min-width: 250px;
+        }
+        .upsell-text h4 {
+            margin: 0 0 0.5rem 0;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .upsell-text p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .upsell-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .upsell-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li><a href="/generate.html">Generate Pages</a></li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="/audit.html">Free Audit</a></li>
+                    <li><a href="/seo-roi-calculator.html">ROI Calculator</a></li>
+                    <li><a href="/citation-scanner.html">Citation Scanner</a></li>
+                    <li><a href="/schema-generator.html" style="color: #3b82f6; font-weight: 700;">Schema Generator</a></li>
+                    <li><a href="/showcase.html">Showcase</a></li>
+                    <li><a href="/directory.html">Agency Directory</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/auth.html">Login/Signup</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="background: radial-gradient(circle at top, rgba(139, 92, 246, 0.1) 0%, rgba(0, 0, 0, 0) 70%); padding: 5rem 0 3rem;">
+            <div class="container" style="text-align: center;">
+                <h1 style="font-size: 2.75rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Free Local Business Schema Generator</h1>
+                <p style="font-size: 1.15rem; color: #94a3b8; max-width: 800px; margin: 1rem auto 0; line-height: 1.6;">
+                    Generate perfectly formatted, search-optimized JSON-LD structured data for your local business. Boost your rich snippets visibility, organic rankings, and voice search presence.
+                </p>
+            </div>
+        </section>
+
+        <div class="calculator-container" style="margin-top: 0; padding-top: 0;">
+            <div class="schema-grid">
+                <!-- Inputs Section -->
+                <div class="calc-card" style="padding: 2rem;">
+                    <div class="form-section-title">1. Business Profile</div>
+                    
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-name">Business Legal Name</label>
+                            <input class="calc-input" id="biz-name" placeholder="e.g. Apex Plumbing Solutions" type="text" value="Apex Plumbing Solutions"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-type">Business Category Type</label>
+                            <select class="calc-input" id="biz-type">
+                                <option value="LocalBusiness">Generic LocalBusiness</option>
+                                <option value="Plumber" selected>Plumber</option>
+                                <option value="HVACBusiness">HVAC / Heating / AC</option>
+                                <option value="Electrician">Electrician</option>
+                                <option value="LandscapingService">Landscaping &amp; Lawn Care</option>
+                                <option value="HousekeepingService">Housecleaning &amp; Maid Services</option>
+                                <option value="RoofingContractor">Roofing Contractor</option>
+                                <option value="HousePainter">House Painter</option>
+                                <option value="PestControlService">Pest Control Service</option>
+                                <option value="Locksmith">Locksmith</option>
+                                <option value="MovingCompany">Moving Company</option>
+                                <option value="AutoRepair">Auto Repair &amp; Service</option>
+                                <option value="GeneralContractor">General Contractor</option>
+                                <option value="Dentist">Dentist</option>
+                                <option value="RealEstateAgent">Real Estate Agent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="biz-desc">Business SEO Description</label>
+                        <textarea class="calc-input" id="biz-desc" placeholder="Describe your service areas, expertise, and local presence..." rows="2" style="resize: vertical; font-size: 0.95rem;">Expert plumbing, drain cleaning, and water heater repair services in Austin and surrounding areas.</textarea>
+                    </div>
+
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-url">Website URL</label>
+                            <input class="calc-input" id="biz-url" placeholder="https://your-business.com" type="url" value="https://apexplumbingtx.com"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-logo">Logo Image URL</label>
+                            <input class="calc-input" id="biz-logo" placeholder="https://your-business.com/logo.png" type="url" value="https://apexplumbingtx.com/images/logo.png"/>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">2. Contact Details &amp; Options</div>
+                    
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-phone">Telephone Number</label>
+                            <input class="calc-input" id="biz-phone" placeholder="e.g. +1 555-123-4567" type="tel" value="+1-555-123-4567"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-email">Public Email Address</label>
+                            <input class="calc-input" id="biz-email" placeholder="e.g. info@company.com" type="email" value="info@apexplumbingtx.com"/>
+                        </div>
+                    </div>
+
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-price">Price Range</label>
+                            <select class="calc-input" id="biz-price">
+                                <option value="">Select (Optional)</option>
+                                <option value="$">$ (Inexpensive)</option>
+                                <option value="$$" selected>$$ (Moderate)</option>
+                                <option value="$$$">$$$ (Expensive)</option>
+                                <option value="$$$$">$$$$ (Ultra-premium)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-hours">Business Opening Hours</label>
+                            <input class="calc-input" id="biz-hours" placeholder="e.g. Mo-Fr 08:00-18:00" type="text" value="Mo-Fr 08:00-18:00"/>
+                            <div class="input-helper">Format: Mo-Fr 09:00-17:00, or Mo-Su 24/7</div>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">3. Physical Location</div>
+                    
+                    <div class="form-group">
+                        <label for="biz-street">Street Address</label>
+                        <input class="calc-input" id="biz-street" placeholder="e.g. 102 Main Street, Suite B" type="text" value="1209 Red River St"/>
+                    </div>
+
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-city">City / Locality</label>
+                            <input class="calc-input" id="biz-city" placeholder="e.g. Austin" type="text" value="Austin"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-state">State / Region</label>
+                            <input class="calc-input" id="biz-state" placeholder="e.g. TX" type="text" value="TX"/>
+                        </div>
+                    </div>
+
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="biz-zip">Postal / Zip Code</label>
+                            <input class="calc-input" id="biz-zip" placeholder="e.g. 78701" type="text" value="78701"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-country">Country</label>
+                            <select class="calc-input" id="biz-country">
+                                <option value="US" selected>United States (US)</option>
+                                <option value="CA">Canada (CA)</option>
+                                <option value="GB">United Kingdom (GB)</option>
+                                <option value="AU">Australia (AU)</option>
+                                <option value="NZ">New Zealand (NZ)</option>
+                                <option value="IE">Ireland (IE)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="nested-grid" style="align-items: flex-end;">
+                        <div class="form-group">
+                            <label for="biz-lat">Latitude (Optional)</label>
+                            <input class="calc-input" id="biz-lat" placeholder="e.g. 30.2711" step="any" type="number" value="30.2711"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="biz-lng">Longitude (Optional)</label>
+                            <input class="calc-input" id="biz-lng" placeholder="e.g. -97.7341" step="any" type="number" value="-97.7341"/>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="geocode-btn" id="btn-geocode">
+                        <i class="fas fa-location-arrow"></i> Auto-Detect Coordinates from Address
+                    </button>
+                    <span id="geocode-status" style="margin-left: 10px; font-size: 0.85rem; color: #9ca3af; font-weight: 500;"></span>
+
+                    <div class="form-section-title">4. Social Profile Links</div>
+                    
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="social-facebook"><i class="fab fa-facebook" style="color: #1877f2; margin-right: 4px;"></i> Facebook URL</label>
+                            <input class="calc-input" id="social-facebook" placeholder="https://facebook.com/page" type="url" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="social-twitter"><i class="fab fa-twitter" style="color: #1da1f2; margin-right: 4px;"></i> Twitter / X URL</label>
+                            <input class="calc-input" id="social-twitter" placeholder="https://twitter.com/profile" type="url" value=""/>
+                        </div>
+                    </div>
+
+                    <div class="nested-grid">
+                        <div class="form-group">
+                            <label for="social-linkedin"><i class="fab fa-linkedin" style="color: #0a66c2; margin-right: 4px;"></i> LinkedIn URL</label>
+                            <input class="calc-input" id="social-linkedin" placeholder="https://linkedin.com/company" type="url" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label for="social-instagram"><i class="fab fa-instagram" style="color: #c13584; margin-right: 4px;"></i> Instagram URL</label>
+                            <input class="calc-input" id="social-instagram" placeholder="https://instagram.com/profile" type="url" value=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Preview Code Block Section -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="code-window">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <div class="code-dot dot-red"></div>
+                                <div class="code-dot dot-yellow"></div>
+                                <div class="code-dot dot-green"></div>
+                            </div>
+                            <span class="code-title">localbusiness-schema.json</span>
+                            <span style="font-size: 0.75rem; background: rgba(139, 92, 246, 0.2); color: #c084fc; padding: 2px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">JSON-LD</span>
+                        </div>
+                        <div class="code-editor-area" id="schema-output"></div>
+                        <div class="code-actions">
+                            <button class="btn-action btn-copy" id="btn-copy">
+                                <i class="far fa-copy"></i> Copy Schema
+                            </button>
+                            <button class="btn-action btn-download" id="btn-download">
+                                <i class="fas fa-file-download"></i> Download .jsonld
+                            </button>
+                            <a href="https://validator.schema.org/" target="_blank" class="btn-action btn-validate" id="btn-validate">
+                                <i class="fas fa-external-link-alt"></i> Schema Validator <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem;">
+                        <h4 style="color: white; margin-top: 0; margin-bottom: 0.5rem; font-weight: 700; font-size: 1rem;"><i class="fas fa-info-circle" style="color: #3b82f6; margin-right: 6px;"></i> How to Use Structured Data:</h4>
+                        <ol style="color: #94a3b8; font-size: 0.85rem; padding-left: 1.25rem; margin: 0; display: flex; flex-direction: column; gap: 6px;">
+                            <li>Copy the generated JSON-LD code block above.</li>
+                            <li>Paste it into the HTML code of your website, ideally within the <code>&lt;head&gt;</code> section.</li>
+                            <li>Verify your code is error-free using the official Schema Validator.</li>
+                            <li>Search engines will read this data to understand your services, address, and rating context.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotion Upsell Banner -->
+            <div class="upsell-card">
+                <div class="upsell-text">
+                    <h4>Scale Your Local Reach automatically!</h4>
+                    <p>Creating schema is just the first step. Want to show up in search results for all surrounding towns? Generate up to 1,000 hyper-local SEO landing pages in 5 minutes with LocalLeads.</p>
+                </div>
+                <a href="/generate.html" class="upsell-btn">Generate My SEO Pages Now</a>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top: 5rem; padding: 3rem 0; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="container" style="text-align: center;">
+            <p style="color: #6b7280; font-size: 0.9rem;">© 2026 LocalLeads. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="/js/app.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Select all input elements
+            const inputs = {
+                bizName: document.getElementById('biz-name'),
+                bizType: document.getElementById('biz-type'),
+                bizDesc: document.getElementById('biz-desc'),
+                bizUrl: document.getElementById('biz-url'),
+                bizLogo: document.getElementById('biz-logo'),
+                bizPhone: document.getElementById('biz-phone'),
+                bizEmail: document.getElementById('biz-email'),
+                bizPrice: document.getElementById('biz-price'),
+                bizHours: document.getElementById('biz-hours'),
+                bizStreet: document.getElementById('biz-street'),
+                bizCity: document.getElementById('biz-city'),
+                bizState: document.getElementById('biz-state'),
+                bizZip: document.getElementById('biz-zip'),
+                bizCountry: document.getElementById('biz-country'),
+                bizLat: document.getElementById('biz-lat'),
+                bizLng: document.getElementById('biz-lng'),
+                socialFacebook: document.getElementById('social-facebook'),
+                socialTwitter: document.getElementById('social-twitter'),
+                socialLinkedin: document.getElementById('social-linkedin'),
+                socialInstagram: document.getElementById('social-instagram')
+            };
+
+            const outputArea = document.getElementById('schema-output');
+            const btnCopy = document.getElementById('btn-copy');
+            const btnDownload = document.getElementById('btn-download');
+            const btnGeocode = document.getElementById('btn-geocode');
+            const geocodeStatus = document.getElementById('geocode-status');
+
+            // Generate JSON-LD Schema
+            function updateSchema() {
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": inputs.bizType.value,
+                    "name": inputs.bizName.value || "",
+                    "description": inputs.bizDesc.value || "",
+                    "url": inputs.bizUrl.value || "",
+                    "telephone": inputs.bizPhone.value || "",
+                    "email": inputs.bizEmail.value || ""
+                };
+
+                // Add logo if provided
+                if (inputs.bizLogo.value) {
+                    schema.logo = inputs.bizLogo.value;
+                    schema.image = inputs.bizLogo.value;
+                }
+
+                // Add price range if provided
+                if (inputs.bizPrice.value) {
+                    schema.priceRange = inputs.bizPrice.value;
+                }
+
+                // Add Address block
+                const address = {
+                    "@type": "PostalAddress",
+                    "streetAddress": inputs.bizStreet.value || "",
+                    "addressLocality": inputs.bizCity.value || "",
+                    "addressRegion": inputs.bizState.value || "",
+                    "postalCode": inputs.bizZip.value || "",
+                    "addressCountry": inputs.bizCountry.value || ""
+                };
+                schema.address = address;
+
+                // Add Geo coordinates if provided
+                const lat = parseFloat(inputs.bizLat.value);
+                const lng = parseFloat(inputs.bizLng.value);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    schema.geo = {
+                        "@type": "GeoCoordinates",
+                        "latitude": lat,
+                        "longitude": lng
+                    };
+                }
+
+                // Add Opening Hours if provided
+                if (inputs.bizHours.value) {
+                    // Simple parse if it's formatted like Mo-Fr 08:00-18:00
+                    schema.openingHours = inputs.bizHours.value;
+                }
+
+                // Add Social profiles (sameAs)
+                const socialLinks = [
+                    inputs.socialFacebook.value,
+                    inputs.socialTwitter.value,
+                    inputs.socialLinkedin.value,
+                    inputs.socialInstagram.value
+                ].filter(link => link && link.trim() !== "");
+
+                if (socialLinks.length > 0) {
+                    schema.sameAs = socialLinks;
+                }
+
+                // Format the JSON with nice indentation
+                const scriptWrapper = `<script type="application/ld+json">\n${JSON.stringify(schema, null, 4)}\n<\/script>`;
+                outputArea.textContent = scriptWrapper;
+            }
+
+            // Bind update events to all inputs
+            Object.values(inputs).forEach(input => {
+                if (input) {
+                    input.addEventListener('input', updateSchema);
+                    input.addEventListener('change', updateSchema);
+                }
+            });
+
+            // Initial schema render
+            updateSchema();
+
+            // Geocoding handler
+            btnGeocode.addEventListener('click', async () => {
+                const street = inputs.bizStreet.value.trim();
+                const city = inputs.bizCity.value.trim();
+                const state = inputs.bizState.value.trim();
+                const zip = inputs.bizZip.value.trim();
+
+                const fullAddress = `${street}, ${city}, ${state} ${zip}`.trim().replace(/^,\s*|,\s*$/g, '');
+
+                if (!fullAddress || fullAddress.length < 5) {
+                    alert('Please enter a street address and city before geocoding.');
+                    return;
+                }
+
+                btnGeocode.disabled = true;
+                geocodeStatus.textContent = '🔍 Geocoding location...';
+                geocodeStatus.style.color = '#a78bfa';
+
+                try {
+                    const response = await fetch(`/api/geocode?address=${encodeURIComponent(fullAddress)}`);
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        inputs.bizLat.value = data.lat.toFixed(6);
+                        inputs.bizLng.value = data.lng.toFixed(6);
+                        geocodeStatus.textContent = '✅ Coordinates updated!';
+                        geocodeStatus.style.color = '#10b981';
+                        updateSchema();
+                    } else {
+                        geocodeStatus.textContent = `❌ ${data.message || 'Geocoding failed.'}`;
+                        geocodeStatus.style.color = '#ef4444';
+                    }
+                } catch (error) {
+                    console.error('Geocoding error:', error);
+                    geocodeStatus.textContent = '❌ Connection error.';
+                    geocodeStatus.style.color = '#ef4444';
+                } finally {
+                    btnGeocode.disabled = false;
+                }
+            });
+
+            // Copy to Clipboard handler
+            btnCopy.addEventListener('click', () => {
+                const codeText = outputArea.textContent;
+                navigator.clipboard.writeText(codeText).then(() => {
+                    const originalHTML = btnCopy.innerHTML;
+                    btnCopy.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    btnCopy.style.background = '#10b981';
+                    setTimeout(() => {
+                        btnCopy.innerHTML = originalHTML;
+                        btnCopy.style.background = '#3b82f6';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Clipboard copy failed:', err);
+                    alert('Could not copy schema. Please select the code and copy manually.');
+                });
+            });
+
+            // Download handler
+            btnDownload.addEventListener('click', () => {
+                const codeText = outputArea.textContent;
+                const blob = new Blob([codeText], { type: 'application/ld+json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${slugify(inputs.bizName.value || 'localbusiness', { lower: true })}-schema.jsonld`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>
