@@ -1,12 +1,23 @@
 # Progress Log
 
 #### 🏆 Key Milestones
-- **June 27, 2026:** Launched public interactive Local SEO Competitor Gap Finder tool (`competitor-gap.html`), built `/api/public-competitor-gap.js` serverless function, and added email-capture lead wall with automated imports. Launched Schema Generator tool (`schema-generator.html`), `/api/geocode` endpoint, and verified niche landing pages. Executed full unit/integration/E2E test suites (Sessions 363-400).
+- **June 27, 2026:** Launched public Google Review Flyer Generator with lead capture wall, interactive preview, and dynamic QR generation. Launched Competitor Gap Finder tool, Schema Generator, `/api/geocode` geocoding endpoint, and verified niche landing pages. Executed full unit/integration/E2E test suites (Sessions 363-401).
 - **June 26, 2026:** Resolved Stripe webhook lead unlock testing and database mock integration (Session 362), integrated automated Service Schema nested details OfferCatalog markup (Session 358), implemented daily automatic retry queues for failed crawler indexing requests (Session 359), and performed complete workspace verification and maintenance (Sessions 360-361).
 - **June 21, 2026:** Implemented dynamic SEO ROI Calculator custom fields, built the Local Citation Health Scanner API and dashboard, integrated White-Label SEO widget custom styling and live preview, and developed the Lead CRM Pipeline Manager dashboard and status/notes API (Sessions 355-357).
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, and outreach.
 
 ## June 27, 2026
+
+### Session 401 (Public Google Review Flyer Generator & Lead Wall Interceptor)
+- **Features & Growth**:
+  - **Public Review Flyer Generator**: Integrated custom Google Review URL and website inputs directly into `review-flyer.html` for anonymous visitors. If no `client` parameter is present in the URL, the generator displays these public customization fields.
+  - **Interactive Real-Time Preview**: The flyer preview, including dynamic QR code creation and subheadline text updates, refreshes instantly in real-time as users fill in their Google Review Link and Business Name.
+  - **Lead Capture Wall Modal**: Implemented a modern dark-mode modal popup that intercepts printing or downloading. Public users must enter their name and business email to unlock the print dialog, automatically registering them as leads via `/api/capture-email` (source: `review-flyer-generator`).
+  - **Navigation Cross-linking**: Injected "Review Flyer" links into header and footer menus across all main pages (`index.html`, `competitor-gap.html`, `audit.html`, `seo-page-generator.html`, `pricing.html`, `schema-generator.html`, `citation-scanner.html`).
+- **QA Verification & Testing**:
+  - Executed production asset compilation successfully (`npm run build`).
+  - Verified Javascript/Node unit test suite (95 suites, 646 tests passed, 100% pass rate) and Python test suite (56 tests passed) with zero regressions.
+  - Committed changes to git.
 
 ### Session 400 (Workspace QA Verification & Compliance Audit)
 - **QA Verification & Testing**:
