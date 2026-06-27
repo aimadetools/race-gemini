@@ -25,7 +25,7 @@ function getCreditsToAdd(priceId) {
 // New helper function to update referral status and commission in PostgreSQL
 async function updateReferralStatusAndCommission(referrerId, referredUserId, amountTotal, sessionMode) {
     try {
-        const commissionRate = parseFloat(process.env.REFERRAL_COMMISSION_RATE) || 0.25; // Default to 25% commission
+        const commissionRate = parseFloat(process.env.REFERRAL_COMMISSION_RATE) || 0.35; // Default to 35% commission
         const earnedAmount = (amountTotal / 100) * commissionRate; // Convert cents to dollars and apply commission
 
         // Update the referral entry in the 'referrals' table

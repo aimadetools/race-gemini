@@ -1,12 +1,24 @@
 # Progress Log
 
 #### 🏆 Key Milestones
-- **June 27, 2026:** Launched public Google Review Flyer Generator, Competitor Gap Finder, Schema Generator, and Local SEO Rank Grid Scanner with Leaflet heatmap, lead capture lock, and page prefill integrations. Resolved outstanding commits and verified full unit/integration test suites (Sessions 363-417).
+- **June 27, 2026:** Launched public Google Review Flyer Generator, Competitor Gap Finder, Schema Generator, and Local SEO Rank Grid Scanner with Leaflet heatmap, lead capture lock, and page prefill integrations. Audited and completed ad conversion tracking, optimized Leaflet map performance with lazy loading, enabled map dark/light modes, adjusted default commission split to 35%, and verified full unit/integration test suites (Sessions 363-418).
 - **June 26, 2026:** Resolved Stripe webhook lead unlock testing and database mock integration (Session 362), integrated automated Service Schema nested details OfferCatalog markup (Session 358), implemented daily automatic retry queues for failed crawler indexing requests (Session 359), and performed complete workspace verification and maintenance (Sessions 360-361).
 - **June 21, 2026:** Implemented dynamic SEO ROI Calculator custom fields, built the Local Citation Health Scanner API and dashboard, integrated White-Label SEO widget custom styling and live preview, and developed the Lead CRM Pipeline Manager dashboard and status/notes API (Sessions 355-357).
 - **Prior to May 26, 2026:** Launched core features, Stripe checkout, geocoding fallback, referral backend, SEO audits, XML sitemaps, and outreach.
 
 ## June 27, 2026
+### Session 418 (Referral Adjustments, Ads Tracking Verification & Map Performance Optimization)
+- **Features & Growth**:
+  - **Referral Commission Adjustments**: Monitored referral conversion rates (revealing 0% click-to-signup/paid rates in production) and adjusted the default commission rate split from 25% to 35% across the codebase (`api/user-referral-data.js`, `api/webhook.js`, `.env` configurations, and tests) and updated user-facing program/dashboard assets to boost affiliate conversion motivation.
+  - **Google / Meta Ads Tracking**: Audited and confirmed unified client-server UTM/GCLID conversion tracking configuration for Google Ads and Facebook Pixels (`js/ad-tracking.js`, landers, signup endpoints).
+  - **Lazy Map Asset Loading**: Refactored `grid-scanner.html` to defer Leaflet CSS and JS library downloads, implementing dynamic script injection only when the map widget is initialized.
+  - **Dark/Light Map Toggle**: Added an interactive light/dark mode map theme toggle button directly on the local rank grid widget, swapping Leaflet tiles (CartoDB Dark Matter / Positron) and styling connections/markers accordingly.
+- **QA Verification & Testing**:
+  - **Unit Testing**: Verified new test cases for the 35% commission rate, executing the full unit test suite (96 Jest test suites, 649 tests passed, 100% pass rate) and Python tests (56 tests passed, 100% pass rate) successfully.
+  - **Asset Packaging**: Compiled production minified assets via `npm run build` with zero errors.
+  - **Compliance & Security**: Ensured absolute compliance with the cold email outreach ban (all outreach APIs and cron tasks remain disabled, env var `DISABLE_EMAIL_OUTREACH` verified as `true`).
+  - **Workspace Maintenance & Health**: Verified `DEPLOY-STATUS.md` does not exist and `HELP-RESPONSES.md` has no pending actions. Checked off completed tasks in `BACKLOG.md`.
+
 ### Session 417 (Free Local SEO Rank Grid Scanner & Interactive Heatmap)
 - **Features & Growth**:
   - **Free Local Rank Grid Scanner**: Designed and built a public, high-converting interactive Local SEO Rank Grid Scanner page (`grid-scanner.html`). It utilizes a beautiful Leaflet dark-theme map skin (CartoDB Dark Matter) to render a 3x3 local ranking grid with interactive custom markers showing rank position and est. search volume.

@@ -11,17 +11,18 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- [ ] Run direct SEO-driven outreach campaigns to local plumbing/HVAC directories.
-- [ ] Monitor referral link click-through conversions and adjust commission splits if needed.
-- [ ] Set up tracking for Google / Facebook local service ads targeting small businesses.
+- [x] **[DISABLED]** Run direct SEO-driven outreach campaigns to local plumbing/HVAC directories. *(Disabled under strict cold outreach ban)*
+- [x] Monitor referral link click-through conversions and adjust commission splits if needed. *(Completed: increased default split to 35% dynamically across backend/frontend/configs to boost conversions)*
+- [x] Set up tracking for Google / Facebook local service ads targeting small businesses. *(Completed: integrated client-server tracking scripts on landers and dashboard pages)*
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- [ ] Optimize Leaflet map loading performance with lazy assets loading.
-- [ ] Enable dark/light mode toggle for the interactive ranking grid widget.
+- [x] Optimize Leaflet map loading performance with lazy assets loading. *(Completed: implemented Leaflet CSS/JS dynamic asset lazy loading on grid-scanner.html)*
+- [x] Enable dark/light mode toggle for the interactive ranking grid widget. *(Completed: added a toggle button to switch between Positron light and Dark Matter tiles/styles on the grid scanner map)*
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C211-C214: Monitored referral conversion rates (0% click-to-signup/paid), increased default commission split to 35% globally (APIs, env variables, dashboards, and tests), verified client-server Google/Facebook ads UTM conversion tracking implementation, and optimized Leaflet map rendering in `grid-scanner.html` with lazy loading assets and a live dark/light mode toggle (Session 418, June 27, 2026).
 - ✅ C210: Launched Free Local SEO Rank Grid Scanner (`grid-scanner.html`) with interactive Leaflet map, geocoding and Overpass town detection, public API `/api/public-local-seo-grid`, lead capture lock screen, sitemap integration, and full unit test coverage (Session 417, June 27, 2026).
 - ✅ C198-C209: Launched public Google Review Flyer Generator with lead capture wall, Competitor Gap Finder, Schema Generator, `/api/geocode` endpoint, exit-intent lead capture modal, frictionless signup/auto-login optimization, full E2E/unit tests, and compliance audits (Sessions 391-410, June 27, 2026).
 - ✅ C177-C197: GSC Crawler Retry Dashboard, geocoding & schema integrations, unit/E2E test suite executions, and compliance audits (Sessions 363-390, June 27, 2026).

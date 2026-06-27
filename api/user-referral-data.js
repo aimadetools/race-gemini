@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
     const parsedClicks = clicks || 0;
     const parsedSignups = parseInt(signups, 10) || 0;
-    const commissionRate = parseFloat(process.env.REFERRAL_COMMISSION_RATE) || 0.25;
+    const commissionRate = parseFloat(process.env.REFERRAL_COMMISSION_RATE) || 0.35;
 
     const paidConversions = referredUsers.filter(u => u.status === 'purchased' || parseFloat(u.commission || 0) > 0).length;
     const clickToSignupRate = parsedClicks > 0 ? (parsedSignups / parsedClicks) * 100 : 0;
