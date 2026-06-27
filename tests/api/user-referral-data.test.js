@@ -130,7 +130,10 @@ describe('user-referral-data API', () => {
       totalEarned: 50.00,
       referredUsers: [
         { email: 'referred@example.com', date: '2026-04-01', status: 'Completed', commission: '50.00' }
-      ]
+      ],
+      commissionRate: 0.25,
+      clickToSignupRate: 40.00,
+      signupToPaidRate: 50.00
     });
   });
 

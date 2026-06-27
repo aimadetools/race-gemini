@@ -59,12 +59,23 @@ export default async function handler(req, res) {
     const referredUsers = referredUsersResult.rows;
     console.log('Referred users:', referredUsers);
 
+    const parsedClicks = clicks || 0;
+    const parsedSignups = parseInt(signups, 10) || 0;
+    const commissionRate = parseFloat(process.env.REFERRAL_COMMISSION_RATE) || 0.25;
+
+    const paidConversions = referredUsers.filter(u => u.status === 'purchased' || parseFloat(u.commission || 0) > 0).length;
+    const clickToSignupRate = parsedClicks > 0 ? (parsedSignups / parsedClicks) * 100 : 0;
+    const signupToPaidRate = parsedSignups > 0 ? (paidConversions / parsedSignups) * 100 : 0;
+
     const referralData = {
       referralCode,
-      clicks: clicks || 0,
-      signups: parseInt(signups, 10),
+      clicks: parsedClicks,
+      signups: parsedSignups,
       totalEarned: parseFloat(totalearned),
       referredUsers,
+      commissionRate,
+      clickToSignupRate: parseFloat(clickToSignupRate.toFixed(2)),
+      signupToPaidRate: parseFloat(signupToPaidRate.toFixed(2))
     };
     console.log('Returning referral data:', referralData);
 

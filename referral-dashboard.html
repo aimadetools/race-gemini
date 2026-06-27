@@ -184,6 +184,22 @@
         gap: 0.4rem;
       }
 
+      .stat-sublabel {
+        font-size: 0.775rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stat-sublabel span {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
       .stat-label i {
         color: var(--color-primary);
       }
@@ -479,7 +495,7 @@
     <main class="referral-container">
       <div class="header-section">
         <h1 class="page-title">Affiliate & Referral Dashboard</h1>
-        <p class="page-subtitle">Compete on the leaderboard, invite partners, and earn 20% recurring commissions.</p>
+        <p class="page-subtitle">Compete on the leaderboard, invite partners, and earn <span id="commissionRateDisplay">25%</span> recurring commissions.</p>
       </div>
 
       <!-- Stats Grid -->
@@ -495,11 +511,17 @@
           <div class="stat-label">
             <i class="fas fa-mouse-pointer"></i> Link Clicks
           </div>
+          <div class="stat-sublabel">
+            Click-to-Signup: <span id="clickToSignupRate">0.0%</span>
+          </div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="signupsCount">0</div>
           <div class="stat-label">
             <i class="fas fa-user-plus"></i> Referred Signups
+          </div>
+          <div class="stat-sublabel">
+            Signup-to-Paid: <span id="signupToPaidRate">0.0%</span>
           </div>
         </div>
         <div class="stat-card earnings">

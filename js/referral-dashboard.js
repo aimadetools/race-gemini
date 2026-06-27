@@ -40,6 +40,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             signupsCountSpan.textContent = referralData.signups || 0;
             totalEarnedSpan.textContent = (referralData.totalEarned || 0).toFixed(2);
 
+            // 2b. Populate Conversion Rates & Commission Splits
+            const clickToSignupRateSpan = document.getElementById('clickToSignupRate');
+            const signupToPaidRateSpan = document.getElementById('signupToPaidRate');
+            if (clickToSignupRateSpan) {
+                clickToSignupRateSpan.textContent = `${(referralData.clickToSignupRate || 0).toFixed(1)}%`;
+            }
+            if (signupToPaidRateSpan) {
+                signupToPaidRateSpan.textContent = `${(referralData.signupToPaidRate || 0).toFixed(1)}%`;
+            }
+
+            const commissionRateDisplay = document.getElementById('commissionRateDisplay');
+            if (commissionRateDisplay) {
+                const ratePercent = ((referralData.commissionRate || 0.25) * 100).toFixed(0);
+                commissionRateDisplay.textContent = `${ratePercent}%`;
+            }
+
             // Set Rank Value Display
             const userRank = leaderboardData.userStanding?.rank;
             if (typeof userRank === 'number') {
