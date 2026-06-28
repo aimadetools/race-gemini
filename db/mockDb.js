@@ -6,7 +6,13 @@ const mockTestimonials = [];
 const mockLeads = [];
 const mockKeywordRankings = [];
 const mockIndexingRetryQueue = [];
+const mockAgencyDirectory = [];
 let nextId = 1;
+
+export const getMockAgencyDirectory = () => mockAgencyDirectory;
+export const addMockAgencyDirectory = (agency) => mockAgencyDirectory.push(agency);
+export const clearMockAgencyDirectory = () => { mockAgencyDirectory.length = 0; };
+
 
 export const getMockKeywordRankings = () => mockKeywordRankings;
 export const addMockKeywordRanking = (r) => mockKeywordRankings.push(r);
@@ -225,6 +231,15 @@ export const originalMockQuery = async (text, params) => {
                 const rows = mockTestimonials.filter(t => t.user_id?.toString() === userId);
                 return { rows };
             }
+        }
+
+        if (textLower.includes('from agency_directory')) {
+            if (textLower.includes('where claimed_user_id = $1')) {
+                const userId = params[0]?.toString();
+                const rows = mockAgencyDirectory.filter(ad => ad.claimed_user_id?.toString() === userId);
+                return { rows };
+            }
+            return { rows: mockAgencyDirectory };
         }
 
         if (textLower.includes('select count(*) from seo_pages where user_id = $1')) {
@@ -1058,6 +1073,7 @@ export const clearMockUsers = () => {
     mockLeads.length = 0;
     mockKeywordRankings.length = 0;
     mockIndexingRetryQueue.length = 0;
+    mockAgencyDirectory.length = 0;
     nextId = 1;
 };
 

@@ -444,6 +444,67 @@ const subscriptionPlan = document.getElementById('subscription-plan');
 const subscriptionMonthlyCredits = document.getElementById('subscription-monthly-credits');
 const subscriptionRenewalDate = document.getElementById('subscription-renewal-date');
 
+function initializePartnerBadges(slug) {
+    const previewContainer = document.getElementById('badge-preview-container');
+    const codeOutput = document.getElementById('badge-code-output');
+    const copyBtn = document.getElementById('copy-badge-code-btn');
+    const successMsg = document.getElementById('copy-badge-success-msg');
+    const styleRadios = document.getElementsByName('badge-style');
+    
+    const domain = window.location.origin;
+    const profileUrl = `${domain}/agency/${slug}`;
+    
+    const badgeTemplates = {
+        'glass-dark': `<a href="${profileUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: #f8fafc; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); transition: all 0.2s ease-in-out;" onmouseover="this.style.borderColor='rgba(16, 185, 129, 0.4)'; this.style.boxShadow='0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -4px rgba(16, 185, 129, 0.1)';" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)';">
+  <span style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 50%;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="display: block;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  </span>
+  <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.3px; color: #e2e8f0; line-height: 1;">Verified Search Partner</span>
+</a>`,
+        'neon-glow': `<a href="${profileUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: #0f172a; border: 1px solid #10b981; border-radius: 8px; color: #10b981; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); transition: all 0.2s ease-in-out;" onmouseover="this.style.boxShadow='0 0 18px rgba(16, 185, 129, 0.5)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.boxShadow='0 0 10px rgba(16, 185, 129, 0.2)'; this.style.transform='none';">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="display: block;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+  <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1;">Verified Partner</span>
+</a>`,
+        'clean-light': `<a href="${profileUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; color: #0f172a; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); transition: all 0.2s ease-in-out;" onmouseover="this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)';">
+  <span style="display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #f1f5f9; border-radius: 50%;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="display: block;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  </span>
+  <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.3px; color: #1e293b; line-height: 1;">Verified Local Search Partner</span>
+</a>`
+    };
+
+    function updateBadge() {
+        let selectedStyle = 'glass-dark';
+        for (const radio of styleRadios) {
+            if (radio.checked) {
+                selectedStyle = radio.value;
+                break;
+            }
+        }
+        const html = badgeTemplates[selectedStyle];
+        previewContainer.innerHTML = html;
+        codeOutput.value = html;
+    }
+
+    for (const radio of styleRadios) {
+        radio.addEventListener('change', updateBadge);
+    }
+    
+    copyBtn.onclick = async () => {
+        try {
+            await navigator.clipboard.writeText(codeOutput.value);
+            successMsg.style.display = 'inline';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy code: ', err);
+        }
+    };
+
+    updateBadge();
+}
+
 async function fetchBillingHistory() {
     const response = await fetch('/api/get-agency-billing-history');
     if (response.ok) {
@@ -531,6 +592,19 @@ if (directoryLeadsListBody) {
         directoryLeadsEmptyMsg.style.display = 'block';
     }
 }
+
+// Render partner badge option
+const partnerBadgeSection = document.getElementById('partner-badge-section');
+const unclaimedBadgeSection = document.getElementById('unclaimed-badge-section');
+if (data.hasClaimedProfile && data.agencySlug) {
+    if (partnerBadgeSection) partnerBadgeSection.style.display = 'block';
+    if (unclaimedBadgeSection) unclaimedBadgeSection.style.display = 'none';
+    initializePartnerBadges(data.agencySlug);
+} else {
+    if (partnerBadgeSection) partnerBadgeSection.style.display = 'none';
+    if (unclaimedBadgeSection) unclaimedBadgeSection.style.display = 'block';
+}
+
 } else {
 window.location.href = 'agency-login.html';
 }

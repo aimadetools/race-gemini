@@ -60,6 +60,14 @@ async function handler(req, res, currentKvClient) {
             return res.status(403).json({ message: 'Not an agency account' });
         }
 
+        // Query if this agency has claimed a directory profile
+        const directoryResult = await query(
+            'SELECT slug, id FROM agency_directory WHERE claimed_user_id = $1',
+            [userId]
+        );
+        const hasClaimedProfile = directoryResult.rows.length > 0;
+        const agencySlug = hasClaimedProfile ? directoryResult.rows[0].slug : null;
+
         let planName = 'N/A';
         let monthlyCredits = 'N/A';
         let renewalDate = null;
@@ -135,7 +143,9 @@ async function handler(req, res, currentKvClient) {
             totalPagesGenerated,
             customDomain: agencyUser.custom_domain,
             customDomainRedirect: agencyUser.custom_domain_redirect,
-            agencyLeads
+            agencyLeads,
+            hasClaimedProfile,
+            agencySlug
         });
 
     } catch (error) {

@@ -207,6 +207,8 @@ describe('agency-dashboard API', () => {
       customDomain: null,
       customDomainRedirect: null,
       agencyLeads: [],
+      hasClaimedProfile: false,
+      agencySlug: null,
     });
   });
 
