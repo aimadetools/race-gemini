@@ -68,7 +68,128 @@ document.addEventListener('DOMContentLoaded', () => {
       }).catch(err => console.error('Failed to track referral click:', err));
     }
   }
+
+  // Show welcome banner for referred users
+  showReferralBanner();
 });
+
+function showReferralBanner() {
+  const refCode = localStorage.getItem('referralCode');
+  if (!refCode) return;
+
+  // Don't show if dismissed in this session
+  if (sessionStorage.getItem('referral_banner_closed') === 'true') return;
+
+  // Don't show on login/signup or internal/dashboard pages
+  const path = window.location.pathname.toLowerCase();
+  const excluded = ['/auth', '/dashboard', '/referral-dashboard', '/agency-dashboard', '/client-details', '/admin-'];
+  if (excluded.some(p => path.includes(p))) return;
+
+  // Check if banner is already on the page
+  if (document.querySelector('.ref-banner-float')) return;
+
+  // Create style element for glassmorphic design & smooth animations
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .ref-banner-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 320px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      animation: refSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      font-family: 'Inter', sans-serif;
+      text-align: left;
+    }
+    @keyframes refSlideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .ref-banner-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+    .ref-banner-close:hover {
+      color: #fff;
+    }
+    .ref-banner-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ref-banner-text {
+      font-size: 0.825rem;
+      color: #d1d5db;
+      margin: 0 0 12px 0;
+      line-height: 1.4;
+    }
+    .ref-banner-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .ref-banner-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+    @media (max-width: 480px) {
+      .ref-banner-float {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        width: auto;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Create banner container
+  const banner = document.createElement('div');
+  banner.className = 'ref-banner-float';
+  banner.innerHTML = `
+    <button class="ref-banner-close" aria-label="Close banner">&times;</button>
+    <div class="ref-banner-title">🎁 Referral Offer Activated</div>
+    <p class="ref-banner-text">Your friend invited you to LocalLeads! Sign up today to claim <strong>5 free SEO page credits</strong> (no card required).</p>
+    <a href="/auth.html" class="ref-banner-btn">Claim My 5 Credits</a>
+  `;
+
+  // Bind close button event
+  banner.querySelector('.ref-banner-close').addEventListener('click', () => {
+    sessionStorage.setItem('referral_banner_closed', 'true');
+    banner.remove();
+  });
+
+  document.body.appendChild(banner);
+}
 
 // Track checkout initiation globally on any form submission targeting checkout
 document.addEventListener('submit', (e) => {
