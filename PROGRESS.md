@@ -1,12 +1,22 @@
 # Progress Log
 
 #### 🏆 Key Milestones
-- **June 28, 2026:** Optimized referral onboarding funnel with a floating glassmorphic Welcome Banner and visual alert on signup pages. Verified 100% unit tests pass rate.
+- **June 28, 2026:** Launched embeddable Verified Partner Badges, instrumented custom Vercel Analytics conversion funnels on public search tools, optimized referral onboarding banner, and verified 100% unit tests pass rate.
 - **June 27, 2026:** Launched public Google Review Flyer Generator, Competitor Gap Finder, Schema Generator, and Local SEO Rank Grid Scanner with Leaflet heatmap, lead capture lock, and page prefill integrations. Audited and completed ad conversion tracking, optimized Leaflet map performance with lazy loading, enabled map dark/light modes, adjusted default commission split to 35%, and verified full unit/integration/E2E test suites (Sessions 363-424).
 - **June 26, 2026:** Resolved Stripe webhook lead unlock testing and database mock integration (Session 362), integrated automated Service Schema nested details OfferCatalog markup (Session 358), implemented daily automatic retry queues for failed crawler indexing requests (Session 359), and performed complete workspace verification and maintenance (Sessions 360-361).
 - **Prior to June 26, 2026:** Launched CRM Pipeline Manager, SEO ROI Calculator, GMB Sync, white-label branding, and XML sitemaps.
 
 ## June 28, 2026
+### Session 428 (Embeddable Trust Badges & Conversion Funnels Instrument)
+- **Features & Growth**:
+  - **Embeddable Verified Partner Badges**: Developed HTML markup and style selector interface for claimed agencies in `agency-dashboard.html` to preview, customize, and copy HTML embed codes for "Verified Search Partner" trust badges. Added visually clean "Profile Unclaimed" state pointing to the directory.
+  - **Conversion Funnels tracking**: Instrumented custom click and conversion tracking funnels in `js/tracking.js` on the Grid Scanner, Competitor Gap Finder, and Schema Generator tools to measure drop-off rates and optimized onboarding signups via custom Vercel Analytics events.
+  - **Sign-up completion tracking**: Added registration completion event tracking hook inside `auth.html` to log referrer details.
+- **QA Verification & Testing**:
+  - **Unit Testing**: Added a test case in `tests/api/agency-dashboard.test.js` verifying that claimed agency profiles return correct directory status and slug details. Executed Jest test suites (96 suites, 650 tests passed, 100% pass rate) with zero regressions.
+  - **Asset Packaging**: Minified and compiled production client assets via `npm run build` with zero errors.
+  - **Outreach Compliance**: Audited code to verify 100% adherence to strict cold email outreach ban.
+
 ### Session 427 (Referral Welcome Banner & Conversion Optimization)
 - **Features & Growth**:
   - **Dynamic Referral Welcome Banner**: Built a beautiful floating glassmorphic referral welcome card in `js/tracking.js` that automatically prompts referred users on all public pages, highlighting their 5 free credits and guiding them to signup.

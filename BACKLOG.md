@@ -11,8 +11,7 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- **Launch Embeddable Verified Partner Badges**: Develop an option inside the agency profile dashboard allowing claimed agencies to generate and copy HTML code for a "Verified Local Search Partner" trust badge, linking back to their profile directory on LocalLeads to drive SEO backlinks and authority.
-- **Vercel Analytics Conversion Funnel Optimization**: Instrument custom click and sign-up tracking funnels on the new tools (Grid Scanner, Gap Finder, Schema Generator) to identify drop-off rates and optimize the onboarding flow.
+- None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
 - **CRM Export Format Enhancements**: Add CSV, JSON, and PDF export functionality to the Leads CRM Dashboard (`dashboard.html`) to help agencies easily migrate generated leads to external CRMs.
@@ -21,6 +20,7 @@
 ---
 
 ## ✅ COMPLETED
+- ✅ C216-C217: Developed claimed agency option to copy embeddable Verified Partner Badges on agency dashboard, and instrumented custom Vercel Analytics click/signup tracking funnels on public Grid Scanner, Gap Finder, and Schema Generator tools (Session 428, June 28, 2026).
 - ✅ C215: Implemented floating glassmorphic Referral Welcome Banner and visual alert on signup pages to optimize conversion and onboarding of referred users (Session 427, June 28, 2026).
 - ✅ C211-C214: Monitored referral conversion rates (0% click-to-signup/paid), increased default commission split to 35% globally (APIs, env variables, dashboards, and tests), verified client-server Google/Facebook ads UTM conversion tracking implementation, and optimized Leaflet map rendering in `grid-scanner.html` with lazy loading assets and a live dark/light mode toggle (Session 418, June 27, 2026).
 - ✅ C210: Launched Free Local SEO Rank Grid Scanner (`grid-scanner.html`) with interactive Leaflet map, geocoding and Overpass town detection, public API `/api/public-local-seo-grid`, lead capture lock screen, sitemap integration, and full unit test coverage (Session 417, June 27, 2026).
