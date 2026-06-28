@@ -70,6 +70,14 @@ export default async function handler(req, res, currentKvClient) {
     );
     const leads = leadsResult.rows;
 
+    const format = (req.query && req.query.format) || 'csv';
+
+    if (format === 'json' || format === 'pdf') {
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', 'attachment; filename=localleads-captured-leads.json');
+      return res.status(200).send(JSON.stringify(leads, null, 2));
+    }
+
     // Build CSV Content
     const csvHeaders = ['Name', 'Email', 'Phone', 'Message', 'Source Page URL', 'Date Captured'];
     const csvRows = [csvHeaders.join(',')];

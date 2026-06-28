@@ -612,7 +612,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (yelpReviewLinkInput) yelpReviewLinkInput.value = data.yelpReviewLink || '';
 
                 const weeklyReportEnabledCheckbox = document.getElementById('weekly-report-enabled-checkbox');
-                if (weeklyReportEnabledCheckbox) weeklyReportEnabledCheckbox.checked = data.weeklyReportEnabled !== false;
+                const reportFrequencyGroup = document.getElementById('report-frequency-group');
+                const reportFrequencySelect = document.getElementById('report-frequency-select');
+                if (weeklyReportEnabledCheckbox) {
+                    weeklyReportEnabledCheckbox.checked = data.weeklyReportEnabled !== false;
+                    if (reportFrequencyGroup) {
+                        reportFrequencyGroup.style.display = weeklyReportEnabledCheckbox.checked ? 'flex' : 'none';
+                    }
+                    weeklyReportEnabledCheckbox.onchange = () => {
+                        if (reportFrequencyGroup) {
+                            reportFrequencyGroup.style.display = weeklyReportEnabledCheckbox.checked ? 'flex' : 'none';
+                        }
+                    };
+                }
+                if (reportFrequencySelect && data.reportFrequency) {
+                    reportFrequencySelect.value = data.reportFrequency;
+                }
 
                 const autoresponderEnabledCheckbox = document.getElementById('autoresponder-enabled-checkbox');
                 const autoresponderSubjectInput = document.getElementById('autoresponder-subject-input');
@@ -1357,22 +1372,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Export Leads Click Handler
-    const exportLeadsBtn = document.getElementById('export-leads-btn');
-    if (exportLeadsBtn) {
-        exportLeadsBtn.addEventListener('click', async () => {
-            exportLeadsBtn.disabled = true;
-            const originalText = exportLeadsBtn.innerHTML;
-            exportLeadsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+    // Dynamic Loader for html2pdf.js
+    function loadHtml2Pdf() {
+        return new Promise((resolve, reject) => {
+            if (window.html2pdf) {
+                resolve(window.html2pdf);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            script.onload = () => resolve(window.html2pdf);
+            script.onerror = () => reject(new Error('Failed to load html2pdf script'));
+            document.head.appendChild(script);
+        });
+    }
+
+    // Export Leads Handlers
+    const exportCsvBtn = document.getElementById('export-leads-csv-btn');
+    const exportJsonBtn = document.getElementById('export-leads-json-btn');
+    const exportPdfBtn = document.getElementById('export-leads-pdf-btn');
+
+    async function fetchLeadsData(format) {
+        const response = await fetch(`/api/export-leads?format=${format}`, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 403) {
+                if (upgradeModal) {
+                    upgradeModal.style.display = 'flex';
+                } else {
+                    alert('Lead export is a premium feature. Please upgrade to a paid pack.');
+                }
+            } else {
+                const data = await response.json();
+                alert(`Error: ${data.message || 'Failed to export leads.'}`);
+            }
+            return null;
+        }
+        return response;
+    }
+
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', async () => {
+            exportCsvBtn.disabled = true;
+            const originalText = exportCsvBtn.innerHTML;
+            exportCsvBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
 
             try {
-                const response = await fetch('/api/export-leads', {
-                    headers: {
-                        'Authorization': `Bearer ${jwtToken}`
-                    }
-                });
-
-                if (response.ok) {
+                const response = await fetchLeadsData('csv');
+                if (response) {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -1382,22 +1433,178 @@ document.addEventListener('DOMContentLoaded', () => {
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
-                } else if (response.status === 403) {
-                    if (upgradeModal) {
-                        upgradeModal.style.display = 'flex';
-                    } else {
-                        alert('Lead export is a premium feature. Please upgrade to a paid pack.');
-                    }
-                } else {
-                    const data = await response.json();
-                    alert(`Error: ${data.message || 'Failed to export leads.'}`);
                 }
             } catch (error) {
-                console.error('Error exporting leads:', error);
-                alert('An unexpected error occurred while exporting leads.');
+                console.error('Error exporting CSV:', error);
+                alert('An unexpected error occurred while exporting CSV.');
             } finally {
-                exportLeadsBtn.disabled = false;
-                exportLeadsBtn.innerHTML = originalText;
+                exportCsvBtn.disabled = false;
+                exportCsvBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    if (exportJsonBtn) {
+        exportJsonBtn.addEventListener('click', async () => {
+            exportJsonBtn.disabled = true;
+            const originalText = exportJsonBtn.innerHTML;
+            exportJsonBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+
+            try {
+                const response = await fetchLeadsData('json');
+                if (response) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'localleads-captured-leads.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }
+            } catch (error) {
+                console.error('Error exporting JSON:', error);
+                alert('An unexpected error occurred while exporting JSON.');
+            } finally {
+                exportJsonBtn.disabled = false;
+                exportJsonBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', async () => {
+            exportPdfBtn.disabled = true;
+            const originalText = exportPdfBtn.innerHTML;
+            exportPdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+
+            try {
+                const response = await fetchLeadsData('pdf');
+                if (response) {
+                    const leads = await response.json();
+                    if (!leads || leads.length === 0) {
+                        alert('No leads found to export.');
+                        return;
+                    }
+
+                    // Load html2pdf dynamically
+                    const html2pdf = await loadHtml2Pdf();
+
+                    // Generate styled PDF template offscreen
+                    const reportContainer = document.createElement('div');
+                    reportContainer.style.fontFamily = "'Outfit', 'Inter', sans-serif";
+                    reportContainer.style.padding = '30px';
+                    reportContainer.style.color = '#fff';
+                    reportContainer.style.background = '#111827';
+                    reportContainer.style.borderRadius = '8px';
+                    reportContainer.style.width = '750px';
+                    reportContainer.style.position = 'absolute';
+                    reportContainer.style.left = '-9999px';
+
+                    // Header
+                    const header = document.createElement('div');
+                    header.style.display = 'flex';
+                    header.style.justifyContent = 'space-between';
+                    header.style.alignItems = 'center';
+                    header.style.borderBottom = '2px solid #3b82f6';
+                    header.style.paddingBottom = '15px';
+                    header.style.marginBottom = '25px';
+
+                    const title = document.createElement('h1');
+                    title.textContent = 'LocalLeads Captured Leads';
+                    title.style.margin = '0';
+                    title.style.fontSize = '1.8rem';
+                    title.style.color = '#fff';
+
+                    const meta = document.createElement('div');
+                    meta.style.textAlign = 'right';
+                    meta.style.fontSize = '0.9rem';
+                    meta.style.color = '#9ca3af';
+                    
+                    const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                    meta.innerHTML = `<div>Generated: <strong>${dateStr}</strong></div><div>Total Leads: <strong>${leads.length}</strong></div>`;
+
+                    header.appendChild(title);
+                    header.appendChild(meta);
+                    reportContainer.appendChild(header);
+
+                    // Table
+                    const table = document.createElement('table');
+                    table.style.width = '100%';
+                    table.style.borderCollapse = 'collapse';
+                    table.style.fontSize = '0.85rem';
+
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    headerRow.style.borderBottom = '2px solid #374151';
+                    headerRow.style.color = '#9ca3af';
+
+                    const cols = ['Name', 'Email', 'Phone', 'Message', 'Source URL', 'Date'];
+                    cols.forEach(col => {
+                        const th = document.createElement('th');
+                        th.textContent = col;
+                        th.style.textAlign = 'left';
+                        th.style.padding = '10px 8px';
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    leads.forEach((lead, index) => {
+                        const tr = document.createElement('tr');
+                        tr.style.borderBottom = '1px solid #1f2937';
+                        if (index % 2 === 1) {
+                            tr.style.backgroundColor = '#1f2937';
+                        }
+
+                        const formattedDate = lead.created_at ? new Date(lead.created_at).toLocaleDateString() : 'N/A';
+
+                        const fields = [
+                            lead.name || 'N/A',
+                            lead.email || 'N/A',
+                            lead.phone || 'N/A',
+                            lead.message || 'N/A',
+                            lead.url ? (lead.url.length > 30 ? lead.url.substring(0, 30) + '...' : lead.url) : 'N/A',
+                            formattedDate
+                        ];
+
+                        fields.forEach(field => {
+                            const td = document.createElement('td');
+                            td.textContent = field;
+                            td.style.padding = '10px 8px';
+                            td.style.color = '#cbd5e1';
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    reportContainer.appendChild(table);
+
+                    document.body.appendChild(reportContainer);
+
+                    const opt = {
+                        margin:       0.5,
+                        filename:     'localleads-captured-leads.pdf',
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { 
+                            scale: 2, 
+                            useCORS: true,
+                            backgroundColor: '#111827'
+                        },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+
+                    await html2pdf().set(opt).from(reportContainer).save();
+                    document.body.removeChild(reportContainer);
+                }
+            } catch (error) {
+                console.error('Error exporting PDF:', error);
+                alert('An unexpected error occurred while exporting PDF.');
+            } finally {
+                exportPdfBtn.disabled = false;
+                exportPdfBtn.innerHTML = originalText;
             }
         });
     }
@@ -3050,6 +3257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const facebookReviewLink = document.getElementById('facebook-review-link-input') ? document.getElementById('facebook-review-link-input').value : '';
             const yelpReviewLink = document.getElementById('yelp-review-link-input') ? document.getElementById('yelp-review-link-input').value : '';
             const weeklyReportEnabled = document.getElementById('weekly-report-enabled-checkbox') ? document.getElementById('weekly-report-enabled-checkbox').checked : true;
+            const reportFrequency = document.getElementById('report-frequency-select') ? document.getElementById('report-frequency-select').value : 'weekly';
             
             const autoResponderEnabled = document.getElementById('autoresponder-enabled-checkbox') ? document.getElementById('autoresponder-enabled-checkbox').checked : false;
             const autoResponderSubject = document.getElementById('autoresponder-subject-input') ? document.getElementById('autoresponder-subject-input').value : '';
@@ -3062,7 +3270,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
                     },
-                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, autoResponderEnabled, autoResponderSubject, autoResponderMessage })
+                    body: JSON.stringify({ webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, reportFrequency, autoResponderEnabled, autoResponderSubject, autoResponderMessage })
                 });
 
 

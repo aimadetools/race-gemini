@@ -27,11 +27,15 @@ export default async function handler(req, res) {
 
     const userId = decoded.userId;
 
-    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, autoResponderEnabled, autoResponderSubject, autoResponderMessage } = req.body;
+    const { webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, reportFrequency, autoResponderEnabled, autoResponderSubject, autoResponderMessage } = req.body;
     let isWeeklyReportEnabled = weeklyReportEnabled !== false;
     let isAutoResponderEnabled = !!autoResponderEnabled;
     let cleanAutoResponderSubject = autoResponderSubject ? autoResponderSubject.trim() : null;
     let cleanAutoResponderMessage = autoResponderMessage ? autoResponderMessage.trim() : null;
+    let cleanReportFrequency = reportFrequency ? reportFrequency.trim().toLowerCase() : 'weekly';
+    if (!['daily', 'weekly', 'monthly'].includes(cleanReportFrequency)) {
+      cleanReportFrequency = 'weekly';
+    }
 
     // Validate inputs
     let cleanWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
@@ -155,9 +159,10 @@ export default async function handler(req, res) {
            auto_responder_enabled = $12,
            auto_responder_subject = $13,
            auto_responder_message = $14,
+           report_frequency = $15,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $15`,
-      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, cleanGoogleVerificationCode, isWeeklyReportEnabled, isAutoResponderEnabled, cleanAutoResponderSubject, cleanAutoResponderMessage, userId]
+       WHERE id = $16`,
+      [cleanWebhookUrl, isWebhookEnabled, cleanGaTrackingId, cleanFbPixelId, isSmsEnabled, cleanSmsPhone, cleanGoogleReviewLink, cleanFacebookReviewLink, cleanYelpReviewLink, cleanGoogleVerificationCode, isWeeklyReportEnabled, isAutoResponderEnabled, cleanAutoResponderSubject, cleanAutoResponderMessage, cleanReportFrequency, userId]
     );
 
 

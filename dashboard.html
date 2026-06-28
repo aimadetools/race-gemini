@@ -765,9 +765,17 @@
                         <h2 style="margin: 0;">Captured Leads</h2>
                         <p style="margin: 0.25rem 0 0 0; color: #9ca3af; font-size: 0.95rem;">Leads captured from forms on your generated landing pages.</p>
                     </div>
-                    <button class="button button-small" id="export-leads-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                        <i class="fas fa-file-csv"></i> Export Leads
-                    </button>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="button button-small" id="export-leads-csv-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button class="button button-small" id="export-leads-json-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-file-code"></i> Export JSON
+                        </button>
+                        <button class="button button-small" id="export-leads-pdf-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </button>
+                    </div>
                 </div>
                 <div id="captured-leads" class="table-responsive">
                     <table class="data-table">
@@ -1436,11 +1444,19 @@
                     </div>
 
                     <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Weekly SEO Performance Reports</h3>
-                        <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">Control whether you receive weekly email summaries of your SEO pages' performance, views, and captured leads.</p>
+                        <h3 style="color: #fff; font-size: 1rem; margin-top: 0; margin-bottom: 10px;">Automated SEO Performance Reports</h3>
+                        <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">Control whether you receive automated email summaries of your SEO pages' performance, views, and captured leads.</p>
                         <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
                             <input id="weekly-report-enabled-checkbox" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;" />
-                            <label for="weekly-report-enabled-checkbox" style="font-weight: bold; font-size: 0.85rem; color: #ccc; cursor: pointer;">Enable Weekly SEO Reports</label>
+                            <label for="weekly-report-enabled-checkbox" style="font-weight: bold; font-size: 0.85rem; color: #ccc; cursor: pointer;">Enable Automated SEO Reports</label>
+                        </div>
+                        <div id="report-frequency-group" class="form-group" style="display: none; flex-direction: column; gap: 5px; margin-top: 12px;">
+                            <label for="report-frequency-select" style="font-weight: bold; font-size: 0.85rem; color: #ccc;">Report Frequency</label>
+                            <select id="report-frequency-select" style="background: #111827; color: #fff; border: 1px solid #444; padding: 0.5rem; border-radius: 4px; width: 100%; max-width: 200px; box-sizing: border-box; cursor: pointer;">
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
                         </div>
                     </div>
 

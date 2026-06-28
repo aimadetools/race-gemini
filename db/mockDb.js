@@ -283,6 +283,7 @@ export const originalMockQuery = async (text, params) => {
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
                     weekly_report_enabled: user.weekly_report_enabled !== false,
+                    report_frequency: user.report_frequency || 'weekly',
                     announcement_text: user.announcement_text || user.announcementText || null,
                     announcement_type: user.announcement_type || user.announcementType || 'news',
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
@@ -340,6 +341,7 @@ export const originalMockQuery = async (text, params) => {
                     facebook_review_link: user.facebook_review_link || user.facebookReviewLink || null,
                     yelp_review_link: user.yelp_review_link || user.yelpReviewLink || null,
                     weekly_report_enabled: user.weekly_report_enabled !== false,
+                    report_frequency: user.report_frequency || 'weekly',
                     announcement_text: user.announcement_text || user.announcementText || null,
                     announcement_type: user.announcement_type || user.announcementType || 'news',
                     announcement_coupon_code: user.announcement_coupon_code || user.announcementCouponCode || null,
@@ -771,7 +773,7 @@ export const originalMockQuery = async (text, params) => {
         }
         if (textLower.includes('webhook_url = $1') && textLower.includes('webhook_enabled = $2')) {
             if (textLower.includes('auto_responder_enabled = $12')) {
-                const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, autoResponderEnabled, autoResponderSubject, autoResponderMessage, userId] = params;
+                const [webhookUrl, webhookEnabled, gaTrackingId, fbPixelId, smsEnabled, smsPhone, googleReviewLink, facebookReviewLink, yelpReviewLink, googleVerificationCode, weeklyReportEnabled, autoResponderEnabled, autoResponderSubject, autoResponderMessage, reportFrequency, userId] = params;
                 const user = mockUsers.find(u => u.id.toString() === userId.toString());
                 if (user) {
                     user.webhook_url = webhookUrl;
@@ -788,6 +790,7 @@ export const originalMockQuery = async (text, params) => {
                     user.auto_responder_enabled = autoResponderEnabled;
                     user.auto_responder_subject = autoResponderSubject;
                     user.auto_responder_message = autoResponderMessage;
+                    user.report_frequency = reportFrequency;
                     return { rows: [user] };
                 }
             } else if (textLower.includes('weekly_report_enabled = $11')) {

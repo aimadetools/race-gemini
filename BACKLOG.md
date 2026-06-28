@@ -14,12 +14,12 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **CRM Export Format Enhancements**: Add CSV, JSON, and PDF export functionality to the Leads CRM Dashboard (`dashboard.html`) to help agencies easily migrate generated leads to external CRMs.
-- **Client Email Report Scheduling Control**: Allow agencies to toggle custom scheduling frequencies (daily, weekly, monthly) for automated client SEO reports inside the dashboard.
+- None.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C218-C219: Added CSV, JSON, and PDF export options to CRM leads dashboard, and integrated report frequency scheduling selection (daily, weekly, monthly) for client SEO reports (Session 429, June 28, 2026).
 - ✅ C216-C217: Developed claimed agency option to copy embeddable Verified Partner Badges on agency dashboard, and instrumented custom Vercel Analytics click/signup tracking funnels on public Grid Scanner, Gap Finder, and Schema Generator tools (Session 428, June 28, 2026).
 - ✅ C215: Implemented floating glassmorphic Referral Welcome Banner and visual alert on signup pages to optimize conversion and onboarding of referred users (Session 427, June 28, 2026).
 - ✅ C211-C214: Monitored referral conversion rates (0% click-to-signup/paid), increased default commission split to 35% globally (APIs, env variables, dashboards, and tests), verified client-server Google/Facebook ads UTM conversion tracking implementation, and optimized Leaflet map rendering in `grid-scanner.html` with lazy loading assets and a live dark/light mode toggle (Session 418, June 27, 2026).

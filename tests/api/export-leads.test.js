@@ -239,4 +239,48 @@ describe('Export Leads API', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith(expect.stringContaining('Quote Required,quote@example.com,555-555-5555,Need a price list,/123/painting.html,2026-06-04T14:00:00.000Z'));
   });
+
+  test('should return 200 and JSON content when format=json is specified', async () => {
+    const userId = 123;
+    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    jwt.verify.mockReturnValue({ userId });
+    req.query = { format: 'json' };
+
+    const mockUser = {
+      id: userId,
+      email: 'agency@example.com',
+      is_agency: true,
+      subscription_status: 'inactive'
+    };
+    addMockUser(mockUser);
+
+    const leads = [
+      {
+        name: 'John Doe',
+        email: 'john@example.com',
+        phone: '123-456-7890',
+        message: 'Hello, I need a plumber, thanks!',
+        url: '/123/plumbing.html',
+        created_at: new Date('2026-06-04T12:00:00Z')
+      }
+    ];
+
+    setQueryDelegate((text, params) => {
+      const textLower = text.toLowerCase();
+      if (textLower.includes('select name, email, phone, message, url, created_at from leads')) {
+        return { rows: leads };
+      }
+      if (textLower.includes('select is_agency, subscription_status from users')) {
+        return { rows: [mockUser] };
+      }
+      return { rows: [] };
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Disposition', 'attachment; filename=localleads-captured-leads.json');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.send).toHaveBeenCalledWith(JSON.stringify(leads, null, 2));
+  });
 });

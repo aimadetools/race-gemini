@@ -294,4 +294,22 @@ describe('update-integrations API', () => {
     expect(updatedUser.auto_responder_subject).toBe('Thanks {{lead_name}}!');
     expect(updatedUser.auto_responder_message).toBe('Hi {{lead_name}}, we received your message regarding {{service}} in {{town}}.');
   });
+
+  test('should update report frequency settings successfully and return 200', async () => {
+    const user = {
+      id: '123',
+      email: 'user@example.com',
+      weekly_report_enabled: true,
+      report_frequency: 'weekly',
+    };
+    addMockUser(user);
+
+    req.body.reportFrequency = 'daily';
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const updatedUser = getMockUsers().find(u => u.id === '123');
+    expect(updatedUser.report_frequency).toBe('daily');
+  });
 });

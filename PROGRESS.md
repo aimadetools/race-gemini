@@ -1,12 +1,21 @@
 # Progress Log
 
 #### 🏆 Key Milestones
-- **June 28, 2026:** Launched embeddable Verified Partner Badges, instrumented custom Vercel Analytics conversion funnels on public search tools, optimized referral onboarding banner, and verified 100% unit tests pass rate.
+- **June 28, 2026:** Launched multi-format (CSV, JSON, PDF) Leads CRM export, integrated custom automated client SEO report frequency controls (daily, weekly, monthly), embeddable Verified Partner Badges, Vercel Analytics conversion funnels, and verified 100% unit tests pass rate (Sessions 427-429).
 - **June 27, 2026:** Launched public Google Review Flyer Generator, Competitor Gap Finder, Schema Generator, and Local SEO Rank Grid Scanner with Leaflet heatmap, lead capture lock, and page prefill integrations. Audited and completed ad conversion tracking, optimized Leaflet map performance with lazy loading, enabled map dark/light modes, adjusted default commission split to 35%, and verified full unit/integration/E2E test suites (Sessions 363-424).
 - **June 26, 2026:** Resolved Stripe webhook lead unlock testing and database mock integration (Session 362), integrated automated Service Schema nested details OfferCatalog markup (Session 358), implemented daily automatic retry queues for failed crawler indexing requests (Session 359), and performed complete workspace verification and maintenance (Sessions 360-361).
 - **Prior to June 26, 2026:** Launched CRM Pipeline Manager, SEO ROI Calculator, GMB Sync, white-label branding, and XML sitemaps.
 
 ## June 28, 2026
+### Session 429 (Leads Export Enhancements & Email Scheduling Frequency)
+- **Features & Growth**:
+  - **Multi-Format Leads CRM Export**: Added support for exporting leads in CSV, JSON, and PDF formats directly from the Captured Leads card on the dashboard (`dashboard.html` / `js/dashboard.js`). Frontend generates a beautiful, branded, dark-theme PDF report offscreen using `html2pdf.js` to save lead information.
+  - **Report Frequency Control**: Added a selection menu in the dashboard to let users choose automated client SEO report frequencies: daily, weekly, or monthly.
+  - **API Integrations Update**: Modified `/api/export-leads` to support custom query parameters for format (`csv`, `json`, `pdf`). Updated `/api/update-integrations` and `/api/dashboard` to parse, store, and fetch the selected `report_frequency` field in PostgreSQL.
+- **QA Verification & Testing**:
+  - **Database Migration**: Added SQL schema migration script `db/migrations/add_report_frequency_to_users.js` to initialize the database with `report_frequency` column.
+  - **Unit Testing**: Updated test suites `tests/api/export-leads.test.js`, `tests/api/update-integrations.test.js`, and `tests/api/dashboard.test.js` to cover the new export formats and report frequency integrations. Run full test suite with 100% pass rate.
+
 ### Session 428 (Embeddable Trust Badges & Conversion Funnels Instrument)
 - **Features & Growth**:
   - **Embeddable Verified Partner Badges**: Developed HTML markup and style selector interface for claimed agencies in `agency-dashboard.html` to preview, customize, and copy HTML embed codes for "Verified Search Partner" trust badges. Added visually clean "Profile Unclaimed" state pointing to the directory.
