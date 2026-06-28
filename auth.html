@@ -306,6 +306,9 @@
             if (response.ok) {
                 // Clear the stored referral code once signup succeeds
                 localStorage.removeItem('referralCode');
+                if (typeof trackEvent === 'function') {
+                    trackEvent('signup_completed', { referrerId });
+                }
                 displayMessage(signupMessage, data.message, false); // false for success
                 signupForm.reset();
                 const redirectUrl = urlParams.get('redirect') || '/dashboard.html';

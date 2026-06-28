@@ -39,7 +39,7 @@ import { kv } from '@vercel/kv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import Stripe from 'stripe';
-import { clearMockUsers, addMockUser, addMockSeoPage } from '../../db/mockDb.js';
+import { clearMockUsers, addMockUser, addMockSeoPage, clearMockAgencyDirectory, addMockAgencyDirectory } from '../../db/mockDb.js';
 
 describe('agency-dashboard API', () => {
   let req;
@@ -66,6 +66,7 @@ describe('agency-dashboard API', () => {
 
     jest.clearAllMocks();
     clearMockUsers();
+    clearMockAgencyDirectory();
     Stripe.mockRetrieveCustomer.mockReset();
     Stripe.mockRetrieveSubscription.mockReset();
     cookie.parse.mockReturnValue({ auth: 'valid_token' });
@@ -248,5 +249,45 @@ describe('agency-dashboard API', () => {
 
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({ message: 'Authentication failed: Please log in again.' });
+  });
+
+  test('should return hasClaimedProfile true and agencySlug when agency has claimed a directory profile', async () => {
+    const agencyId = 'agency123';
+    addMockUser({
+      id: agencyId,
+      name: 'Test Agency',
+      email: 'agency@example.com',
+      credits: 100,
+      subscription_status: 'active',
+      stripe_subscription_id: 'sub_agency123',
+      is_agency: true,
+    });
+
+    addMockAgencyDirectory({
+      claimed_user_id: agencyId,
+      slug: 'test-agency-slug',
+    });
+
+    cookie.parse.mockReturnValue({ token: 'valid_token' });
+    jwt.verify.mockReturnValue({ agencyId });
+
+    Stripe.mockRetrieveSubscription.mockResolvedValueOnce({
+      status: 'active',
+      current_period_end: Date.now() / 1000 + 3600,
+      items: {
+        data: [{
+          price: {
+            id: 'price_BASIC_AGENCY_PLAN',
+          },
+        }],
+      },
+    });
+
+    await handler(req, res, mockKv);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const responseData = res.json.mock.calls[0][0];
+    expect(responseData.hasClaimedProfile).toBe(true);
+    expect(responseData.agencySlug).toBe('test-agency-slug');
   });
 });

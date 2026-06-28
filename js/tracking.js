@@ -24,12 +24,18 @@ function trackEvent(eventName, eventData = {}, userId = null) {
       }
       return response.json();
     })
-    .then(data => {
-      // console.log('Event tracking response:', data);
-    })
     .catch(error => {
       console.error('Error sending track event:', error);
     });
+
+  // Track to Vercel Web Analytics if available
+  if (typeof window !== 'undefined' && window.va) {
+    try {
+      window.va('event', { name: eventName, data: eventData });
+    } catch (err) {
+      console.error('Failed to send event to Vercel Analytics:', err);
+    }
+  }
 }
 
 // Track page-specific events on load and setup checkout initiation listeners
@@ -46,6 +52,88 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (path.includes('buy-credits.html') || path === '/buy-credits') {
     trackEvent('view_buy_credits', { path });
+  }
+
+  // --- Conversion Funnel Hooks for Tools ---
+
+  // 1. Grid Scanner Conversion Tracking
+  if (path.includes('grid-scanner.html') || path === '/grid-scanner') {
+    const scanForm = document.getElementById('scan-form');
+    if (scanForm) {
+      scanForm.addEventListener('submit', () => {
+        const businessName = document.getElementById('business-name')?.value;
+        const city = document.getElementById('city')?.value;
+        const service = document.getElementById('service')?.value;
+        trackEvent('grid_scanner_submit', { businessName, city, service });
+      });
+    }
+    const leadForm = document.getElementById('lead-form');
+    if (leadForm) {
+      leadForm.addEventListener('submit', () => {
+        trackEvent('grid_scanner_lead_captured');
+      });
+    }
+    const ctaGenerateBtn = document.getElementById('cta-generate-btn');
+    if (ctaGenerateBtn) {
+      ctaGenerateBtn.addEventListener('click', () => {
+        trackEvent('grid_scanner_cta_clicked');
+      });
+    }
+  }
+
+  // 2. Competitor Gap Finder Conversion Tracking
+  if (path.includes('competitor-gap.html') || path === '/competitor-gap') {
+    const gapForm = document.getElementById('gap-form');
+    if (gapForm) {
+      gapForm.addEventListener('submit', () => {
+        const userUrl = document.getElementById('user-url')?.value;
+        const competitorUrl = document.getElementById('competitor-url')?.value;
+        const city = document.getElementById('city')?.value;
+        const service = document.getElementById('service')?.value;
+        trackEvent('competitor_gap_submit', { userUrl, competitorUrl, city, service });
+      });
+    }
+    const leadForm = document.getElementById('lead-form');
+    if (leadForm) {
+      leadForm.addEventListener('submit', () => {
+        trackEvent('competitor_gap_lead_captured');
+      });
+    }
+    const ctaGenerateBtn = document.getElementById('cta-generate-btn');
+    if (ctaGenerateBtn) {
+      ctaGenerateBtn.addEventListener('click', () => {
+        trackEvent('competitor_gap_cta_clicked');
+      });
+    }
+  }
+
+  // 3. Schema Generator Conversion Tracking
+  if (path.includes('schema-generator.html') || path === '/schema-generator') {
+    const btnGeocode = document.getElementById('btn-geocode');
+    if (btnGeocode) {
+      btnGeocode.addEventListener('click', () => {
+        const bizAddress = document.getElementById('biz-address')?.value;
+        trackEvent('schema_geocode_clicked', { address: bizAddress });
+      });
+    }
+    const btnCopy = document.getElementById('btn-copy');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        trackEvent('schema_copied');
+      });
+    }
+    const btnDownload = document.getElementById('btn-download');
+    if (btnDownload) {
+      btnDownload.addEventListener('click', () => {
+        trackEvent('schema_downloaded');
+      });
+    }
+    const upsellBtn = document.querySelector('.upsell-btn');
+    if (upsellBtn) {
+      upsellBtn.addEventListener('click', () => {
+        trackEvent('schema_upsell_clicked');
+      });
+    }
   }
 
   // Capture and track referral clicks
