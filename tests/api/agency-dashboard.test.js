@@ -210,6 +210,7 @@ describe('agency-dashboard API', () => {
       agencyLeads: [],
       hasClaimedProfile: false,
       agencySlug: null,
+      userId: agencyId,
     });
   });
 

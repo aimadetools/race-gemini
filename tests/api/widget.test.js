@@ -234,4 +234,29 @@ describe('Embeddable Service Area Widget API', () => {
         expect(sentContent).toContain('ll-carousel-wrapper');
         expect(sentContent).toContain('ll-carousel-track');
     });
+
+    test('should return lead-gen widget when type is lead-gen', async () => {
+        req.query.clientId = '123';
+        req.query.type = 'lead-gen';
+        req.query.theme = 'glassmorphic';
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: null, primary_color: null, email: 'agency@leads.com', agency_slug: 'test-agency' }] };
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('theme = "glassmorphic"');
+        expect(sentContent).toContain('clientId = 123');
+        expect(sentContent).toContain('agencyEmail = "agency@leads.com"');
+        expect(sentContent).toContain('Free Local Search Audit');
+        expect(sentContent).toContain('ll-leadgen-container');
+    });
 });

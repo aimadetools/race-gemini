@@ -418,6 +418,41 @@
   </div>
 </section>
 
+<section class="dashboard" id="leadgen-widget-section">
+  <h2>Embeddable Audit & Lead-Gen Widget</h2>
+  <p style="margin-bottom: 1.25rem; color: #9ca3af; font-size: 0.95rem;">
+    Capture high-quality local SEO leads directly on your agency website. Embed this interactive local SEO rank grid scanner form on your site; when prospects scan their website, their lead details are automatically added to your client pipeline.
+  </p>
+  
+  <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+    <!-- Style & Settings -->
+    <div style="flex: 1; min-width: 250px;">
+      <label style="display: block; font-weight: bold; margin-bottom: 0.75rem; color: #fff;">Select Widget Theme</label>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #cbd5e1;">
+          <input type="radio" name="widget-theme" value="glassmorphic" checked style="accent-color: #10b981;"> Glassmorphic Dark
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #cbd5e1;">
+          <input type="radio" name="widget-theme" value="dark" style="accent-color: #10b981;"> Classic Dark
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #cbd5e1;">
+          <input type="radio" name="widget-theme" value="light" style="accent-color: #10b981;"> Minimalist Light
+        </label>
+      </div>
+    </div>
+    
+    <!-- Embed Code -->
+    <div style="flex: 1; min-width: 250px;">
+      <label style="display: block; font-weight: bold; margin-bottom: 0.5rem; color: #fff;">HTML Embed Code</label>
+      <textarea id="widget-code-output" readonly style="width: 100%; height: 110px; background: rgba(15, 23, 42, 0.6); color: #cbd5e1; border: 1px solid #444; border-radius: 4px; padding: 0.75rem; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: none;"></textarea>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+        <button class="button" id="copy-widget-code-btn" type="button">Copy Widget Code</button>
+        <span id="copy-widget-success-msg" style="color: #10b981; font-weight: bold; display: none;">Copied!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="dashboard">
 <h2>
      Billing History
@@ -566,6 +601,51 @@ function initializePartnerBadges(slug) {
     updateBadge();
 }
 
+function initializeLeadGenWidget(userId) {
+    const codeOutput = document.getElementById('widget-code-output');
+    const copyBtn = document.getElementById('copy-widget-code-btn');
+    const successMsg = document.getElementById('copy-widget-success-msg');
+    const themeRadios = document.getElementsByName('widget-theme');
+    
+    if (!codeOutput || !copyBtn) return;
+    
+    const domain = window.location.origin;
+    
+    function updateWidgetCode() {
+        let selectedTheme = 'glassmorphic';
+        for (const radio of themeRadios) {
+            if (radio.checked) {
+                selectedTheme = radio.value;
+                break;
+            }
+        }
+        const html = `<!-- LocalLeads Lead Generation Widget -->
+<div id="localseo-widget"></div>
+<script src="${domain}/api/widget.js?clientId=${userId}&type=lead-gen&theme=${selectedTheme}"></script>`;
+        codeOutput.value = html;
+    }
+
+    for (const radio of themeRadios) {
+        radio.addEventListener('change', updateWidgetCode);
+    }
+    
+    copyBtn.onclick = async () => {
+        try {
+            await navigator.clipboard.writeText(codeOutput.value);
+            if (successMsg) {
+                successMsg.style.display = 'inline';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Failed to copy widget code: ', err);
+        }
+    };
+
+    updateWidgetCode();
+}
+
 async function fetchBillingHistory() {
     const response = await fetch('/api/get-agency-billing-history');
     if (response.ok) {
@@ -665,6 +745,8 @@ if (data.hasClaimedProfile && data.agencySlug) {
     if (partnerBadgeSection) partnerBadgeSection.style.display = 'none';
     if (unclaimedBadgeSection) unclaimedBadgeSection.style.display = 'block';
 }
+
+initializeLeadGenWidget(data.userId);
 
 } else {
 window.location.href = 'agency-login.html';

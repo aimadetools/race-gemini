@@ -129,6 +129,7 @@ async function handler(req, res, currentKvClient) {
         }));
 
         return res.status(200).json({
+            userId: agencyUser.id,
             agencyName: agencyUser.name,
             email: agencyUser.email,
             clients,
