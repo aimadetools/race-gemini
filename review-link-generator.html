@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Google Review Link & QR Code Generator | LocalLeads</title>
+    <meta content="Generate a direct Google review link and scan-to-review QR code for your local business in seconds. Free tool by LocalLeads to boost reviews." name="description"/>
+    <meta content="google review link generator, qr code for google reviews, local business reviews, local seo review tool, get google reviews" name="keywords"/>
+    <meta content="Free Google Review Link & QR Code Generator | LocalLeads" property="og:title"/>
+    <meta content="Generate a direct Google review link and scan-to-review QR code for your local business in seconds. Free tool by LocalLeads." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/review-link-generator.html" property="og:url"/>
+    <link href="https://www.localseogen.com/review-link-generator.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        /* Premium style additions for Review Link Generator */
+        .scanner-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .scanner-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-grid-full {
+                grid-column: span 2;
+            }
+        }
+        .scanner-input {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+        .scanner-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(31, 41, 55, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .scanner-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+        .pulse-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+        .pulse-btn:hover {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        .pulse-btn:disabled {
+            background: rgba(75, 85, 99, 0.5);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading panel */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(99, 102, 241, 0.1);
+            border-top: 5px solid #6366f1;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-steps {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .loading-step {
+            color: #6b7280;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: color 0.3s ease;
+        }
+        .loading-step.active {
+            color: #6366f1;
+            font-weight: 600;
+        }
+        .loading-step.active i {
+            animation: spin 1.5s linear infinite;
+        }
+        .loading-step.completed {
+            color: #10b981;
+        }
+
+        /* Lead capture lock */
+        #lock-panel {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Results panel */
+        .results-container {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 992px) {
+            .results-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .results-card {
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .link-output-wrapper {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .link-output {
+            color: #a5b4fc;
+            font-family: monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-right: 1rem;
+            flex-grow: 1;
+        }
+        .link-output::-webkit-scrollbar {
+            height: 4px;
+        }
+        .link-output::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        .copy-btn {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .qr-display-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            width: fit-content;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .qr-image {
+            width: 220px;
+            height: 220px;
+            margin-bottom: 1rem;
+        }
+        .qr-label {
+            color: #1f2937;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Standing Holder Mockup Preview */
+        .mockup-container {
+            display: flex;
+            justify-content: center;
+            perspective: 1000px;
+            margin-top: 1.5rem;
+        }
+        .standee-mockup {
+            width: 200px;
+            height: 280px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 4px solid #3b82f6;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform: rotateX(10deg) rotateY(-5deg);
+            transform-style: preserve-3d;
+            position: relative;
+            padding: 1rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .standee-mockup::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: -20px;
+            right: -20px;
+            height: 15px;
+            background: #111827;
+            border-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+        }
+        .standee-headline {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 0.5rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+        }
+        .standee-stars {
+            color: #fbbf24;
+            font-size: 0.7rem;
+            margin-bottom: 0.75rem;
+        }
+        .standee-qr {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            padding: 4px;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+        .standee-qr img {
+            width: 100%;
+            height: 100%;
+        }
+        .standee-footer {
+            font-size: 0.55rem;
+            color: #9ca3af;
+            line-height: 1.3;
+        }
+
+        .cta-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .cta-box h3 {
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .cta-box p {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li>
+                        <a href="/generate.html">Generate Pages</a>
+                    </li>
+                    <li>
+                        <a href="/pricing.html">Pricing</a>
+                    </li>
+                    <li>
+                        <a href="/blog.html">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/audit.html">Free Audit</a>
+                    </li>
+                    <li>
+                        <a href="/seo-roi-calculator.html">ROI Calculator</a>
+                    </li>
+                    <li>
+                        <a href="/competitor-gap.html">Competitor Gap</a>
+                    </li>
+                    <li>
+                        <a href="/schema-generator.html">Schema Generator</a>
+                    </li>
+                    <li>
+                        <a href="/review-flyer.html">Review Flyer</a>
+                    </li>
+                    <li>
+                        <a href="/citation-scanner.html">Citation Scanner</a>
+                    </li>
+                    <li>
+                        <a href="/showcase.html">Showcase</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                    <li>
+                        <a href="/auth.html">Login/Signup</a>
+                    </li>
+                    <li>
+                        <a href="/buy-credits.html">Buy Credits</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" style="max-width: 900px; margin: 6rem auto 4rem; padding: 0 1.5rem;">
+        <div class="section-header">
+            <h1 id="page-main-heading">Google Review Link & QR Code Generator</h1>
+            <p>Generate a direct Google review link and a custom QR code for your local business in seconds. Make it effortless for your clients to leave reviews.</p>
+        </div>
+
+        <!-- Input Form Section -->
+        <div class="scanner-card" id="input-panel">
+            <form id="generator-form">
+                <div class="form-grid">
+                    <div>
+                        <label class="scanner-label" for="biz-name">Business Name <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="biz-name" placeholder="e.g. Apex Plumbing Solutions" required type="text"/>
+                    </div>
+                    <div>
+                        <label class="scanner-label" for="biz-address">Business City & State <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="biz-address" placeholder="e.g. Austin, TX" required type="text"/>
+                    </div>
+                    <div class="form-grid-full">
+                        <label class="scanner-label" for="custom-review-url">Already have a Google Review URL? (Optional)</label>
+                        <input class="scanner-input" id="custom-review-url" placeholder="e.g. https://g.page/r/example-cid/review (Leave blank to generate automatically)" type="url"/>
+                    </div>
+                </div>
+                <button class="pulse-btn" id="generate-btn" type="submit">
+                    <i class="fas fa-magic"></i> Generate Review Link & QR Code
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading Step Screen -->
+        <div class="scanner-card loading-container" id="loading-panel">
+            <div class="spinner"></div>
+            <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">Generating Review Assets</h2>
+            <div class="loading-steps">
+                <div class="loading-step" id="step-geolocate">
+                    <i class="fas fa-circle-notch"></i> Geolocating business address...
+                </div>
+                <div class="loading-step" id="step-review-link">
+                    <i class="fas fa-circle-notch"></i> Formatting Google write-review redirect...
+                </div>
+                <div class="loading-step" id="step-qr-gen">
+                    <i class="fas fa-circle-notch"></i> Generating custom high-res QR code...
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Lock Screen -->
+        <div class="scanner-card" id="lock-panel" style="display: none;">
+            <div style="max-width: 500px; margin: 0 auto; text-align: center; padding: 1.5rem 0;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 50%; color: #6366f1; font-size: 1.75rem; margin-bottom: 1.5rem;">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2 style="color: #fff; font-size: 1.85rem; font-weight: 800; margin-top: 0; margin-bottom: 0.75rem; background: linear-gradient(135deg, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Your Review Link & QR Code are Ready</h2>
+                <p style="color: #9ca3af; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                    We successfully generated Google review assets for <strong id="lock-biz-name" style="color: #818cf8;">Business</strong>. Enter your details below to unlock and download them.
+                </p>
+                <form id="lead-form">
+                    <div style="text-align: left; margin-bottom: 1.25rem;">
+                        <label class="scanner-label" for="lead-name">Your Name <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="lead-name" placeholder="John Doe" required type="text"/>
+                    </div>
+                    <div style="text-align: left; margin-bottom: 1.75rem;">
+                        <label class="scanner-label" for="lead-email">Business Email <span style="color: #ef4444;">*</span></label>
+                        <input class="scanner-input" id="lead-email" placeholder="john@company.com" required type="email"/>
+                    </div>
+                    <button class="pulse-btn" id="unlock-submit-btn" type="submit">
+                        <i class="fas fa-unlock"></i> Unlock & Download Review Assets
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Display Panel -->
+        <div class="results-container" id="results-panel">
+            <div class="alert-success">
+                <i class="fas fa-check-circle" style="font-size: 1.25rem;"></i>
+                <span>Review Link and QR Code generated successfully!</span>
+            </div>
+
+            <div class="results-grid">
+                <!-- Links and Code details -->
+                <div class="results-card">
+                    <h2 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-link" style="color: #6366f1;"></i> Direct Google Review Link
+                    </h2>
+                    <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                        Send this link directly to your customers via SMS, email, or chat. When clicked, it opens Google Maps search and immediately loads the 5-star review box for your business.
+                    </p>
+                    <div class="link-output-wrapper">
+                        <div class="link-output" id="final-review-url">https://search.google.com/local/writereview...</div>
+                        <button class="copy-btn" id="copy-url-btn">
+                            <i class="far fa-copy"></i> Copy Link
+                        </button>
+                    </div>
+
+                    <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 2rem; padding-top: 2rem;">
+                        <h2 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-lightbulb" style="color: #10b981;"></i> Best Practices for Getting Google Reviews
+                        </h2>
+                        <ul style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; padding-left: 1.25rem; margin-bottom: 0;">
+                            <li style="margin-bottom: 0.5rem;"><strong>Ask immediately:</strong> Request feedback right after completing service when the value is fresh in the customer's mind.</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Keep it personal:</strong> A personal request from the technician who did the job converts 3x better than an automated email.</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>Use the QR code:</strong> Put the generated QR code on your printed invoices, flyers, business cards, or vehicle window decal.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- QR Code Box and Preview -->
+                <div class="results-card" style="display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem; align-self: flex-start; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-qrcode" style="color: #6366f1;"></i> Scan-to-Review QR Code
+                    </h2>
+                    
+                    <div class="qr-display-box">
+                        <img src="" alt="Review QR Code" class="qr-image" id="result-qr-img"/>
+                        <span class="qr-label">Scan to Review</span>
+                    </div>
+
+                    <button class="pulse-btn" id="download-qr-btn" style="margin-bottom: 2rem;">
+                        <i class="fas fa-download"></i> Download QR Code
+                    </button>
+
+                    <h3 style="color: #fff; font-size: 1.1rem; font-weight: 600; margin-top: 0; margin-bottom: 1rem; align-self: flex-start;">Flyer Mockup Preview</h3>
+                    <div class="mockup-container">
+                        <div class="standee-mockup">
+                            <div class="standee-headline" id="mockup-biz-name">Business Name</div>
+                            <div class="standee-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="standee-qr">
+                                <img src="" alt="Mockup QR" id="mockup-qr-img"/>
+                            </div>
+                            <div class="standee-footer">
+                                Scan to leave a 5-star review!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inter-tool promo CTA -->
+            <div class="cta-box">
+                <h3>Need a Beautiful, Print-Ready Flyer?</h3>
+                <p>We pre-filled your business name and Google review link in our Google Review Flyer Generator. Customize the colors, add your logo, choose table-tents or decals, and export as PDF.</p>
+                <a href="" id="flyer-promo-link" class="button" style="display: inline-block; text-decoration: none; font-weight: 700;">
+                    <i class="fas fa-file-pdf"></i> Open Review Flyer Generator
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-cols" style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; padding: 4rem 0 2rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="footer-col" style="flex: 1.5; min-width: 250px;">
+                    <a class="logo" href="/" style="display: inline-block; margin-bottom: 1.5rem;">
+                        <img src="/images/logo.svg" alt="LocalLeads Logo" style="height: 32px;">
+                    </a>
+                    <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; margin: 0;">Get found in every town. We build high-ranking local landing pages for businesses looking to dominate neighborhood search.</p>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Free Tools</h2>
+                    <ul>
+                        <li><a href="seo-roi-calculator.html">ROI Calculator</a></li>
+                        <li><a href="competitor-gap.html">Competitor Gap</a></li>
+                        <li><a href="schema-generator.html">Schema Generator</a></li>
+                        <li><a href="review-flyer.html">Review Flyer</a></li>
+                        <li><a href="citation-scanner.html">Citation Scanner</a></li>
+                        <li><a href="review-link-generator.html" style="color: #6366f1; font-weight: 600;">Review Link Gen</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Legal</h2>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-size: 0.9rem;">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/review-link-generator.js"></script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>
