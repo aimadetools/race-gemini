@@ -849,6 +849,57 @@
                     <p id="gbp-sync-status" style="margin-top: 10px; font-size: 0.85rem; display: none; font-weight: bold;"></p>
                 </div>
 
+                <!-- Review Sentiment Breakdown Card Section -->
+                <div id="sentiment-breakdown-section" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 15px;">
+                    <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-chart-pie" style="color: #a5b4fc;"></i> Review Sentiment Breakdown
+                    </h3>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                        <!-- Average Rating Big Display -->
+                        <div style="text-align: center; background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px 25px; min-width: 120px;">
+                            <div id="avg-rating-display" style="font-size: 2.2rem; font-weight: 700; color: #fff; font-family: 'Outfit', sans-serif; line-height: 1.2;">0.0</div>
+                            <div id="avg-stars-display" style="color: #fbbf24; font-size: 0.95rem; margin: 4px 0;">☆☆☆☆☆</div>
+                            <div id="total-reviews-display" style="font-size: 0.8rem; color: #9ca3af;">0 reviews</div>
+                        </div>
+                        
+                        <!-- Progress Bars breakdown -->
+                        <div style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Positive Row -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px;">
+                                    <span style="color: #d1d5db; font-weight: 600;"><span style="color: #10b981;">🟢</span> Positive (4-5 ★)</span>
+                                    <span id="pos-percent" style="color: #9ca3af; font-weight: 600;">0% (0)</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div id="pos-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); transition: width 0.6s ease-in-out;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Neutral Row -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px;">
+                                    <span style="color: #d1d5db; font-weight: 600;"><span style="color: #f59e0b;">🟡</span> Neutral (3 ★)</span>
+                                    <span id="neu-percent" style="color: #9ca3af; font-weight: 600;">0% (0)</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div id="neu-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%); transition: width 0.6s ease-in-out;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Negative Row -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 3px;">
+                                    <span style="color: #d1d5db; font-weight: 600;"><span style="color: #ef4444;">🔴</span> Negative (1-2 ★)</span>
+                                    <span id="neg-percent" style="color: #9ca3af; font-weight: 600;">0% (0)</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                                    <div id="neg-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%); transition: width 0.6s ease-in-out;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="testimonials-list" class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -2167,6 +2218,15 @@
             <span id="ai-review-rating" style="color: #fbbf24;">★★★★★</span>
           </div>
           <p id="ai-review-text" style="margin: 0; font-size: 0.9rem; color: #d1d5db; line-height: 1.4; font-style: italic;">"Excellent work by the team! Highly recommend."</p>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label for="ai-review-tone" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #fff;">Reply Tone</label>
+          <select id="ai-review-tone" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; box-sizing: border-box; cursor: pointer;">
+            <option value="Enthusiastic">Enthusiastic & Friendly (Default)</option>
+            <option value="Formal">Formal & Professional</option>
+            <option value="Humorous">Humorous & Casual</option>
+          </select>
         </div>
 
         <div style="margin-bottom: 1.25rem;">

@@ -846,6 +846,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateSentimentBreakdown(testimonials) {
+        const total = testimonials.length;
+        
+        const avgRatingDisplay = document.getElementById('avg-rating-display');
+        const avgStarsDisplay = document.getElementById('avg-stars-display');
+        const totalReviewsDisplay = document.getElementById('total-reviews-display');
+        
+        const posPercent = document.getElementById('pos-percent');
+        const posBar = document.getElementById('pos-bar');
+        const neuPercent = document.getElementById('neu-percent');
+        const neuBar = document.getElementById('neu-bar');
+        const negPercent = document.getElementById('neg-percent');
+        const negBar = document.getElementById('neg-bar');
+        
+        if (!avgRatingDisplay) return;
+
+        if (total === 0) {
+            avgRatingDisplay.innerText = '0.0';
+            avgStarsDisplay.innerText = '☆☆☆☆☆';
+            totalReviewsDisplay.innerText = '0 reviews';
+            
+            posPercent.innerText = '0% (0)';
+            posBar.style.width = '0%';
+            
+            neuPercent.innerText = '0% (0)';
+            neuBar.style.width = '0%';
+            
+            negPercent.innerText = '0% (0)';
+            negBar.style.width = '0%';
+            return;
+        }
+        
+        let sum = 0;
+        let posCount = 0;
+        let neuCount = 0;
+        let negCount = 0;
+        
+        testimonials.forEach(t => {
+            const r = parseInt(t.rating, 10);
+            sum += r;
+            if (r >= 4) {
+                posCount++;
+            } else if (r === 3) {
+                neuCount++;
+            } else {
+                negCount++;
+            }
+        });
+        
+        const avg = (sum / total).toFixed(1);
+        const avgStars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+        
+        avgRatingDisplay.innerText = avg;
+        avgStarsDisplay.innerText = avgStars;
+        totalReviewsDisplay.innerText = `${total} review${total === 1 ? '' : 's'}`;
+        
+        const posPct = Math.round((posCount / total) * 100);
+        const neuPct = Math.round((neuCount / total) * 100);
+        const negPct = Math.round((negCount / total) * 100);
+        
+        posPercent.innerText = `${posPct}% (${posCount})`;
+        posBar.style.width = `${posPct}%`;
+        
+        neuPercent.innerText = `${neuPct}% (${neuCount})`;
+        neuBar.style.width = `${neuPct}%`;
+        
+        negPercent.innerText = `${negPct}% (${negCount})`;
+        negBar.style.width = `${negPct}%`;
+    }
+
     async function fetchTestimonials() {
         const testimonialsBody = document.querySelector('#testimonials-card tbody');
         if (!testimonialsBody) return;
@@ -860,6 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const data = await response.json();
                 userTestimonials = data.testimonials || [];
+                updateSentimentBreakdown(userTestimonials);
                 testimonialsBody.innerHTML = '';
 
                 if (data.testimonials && data.testimonials.length > 0) {
@@ -3582,13 +3653,22 @@ document.addEventListener('DOMContentLoaded', () => {
             gbpStatusText.innerHTML = '<span style="color: #9ca3af; font-weight: 600;">⚪ Saved Locally:</span> Connect Google Business Profile & sync to publish directly.';
         }
 
-        // Show loading state in options
+        const toneSelect = document.getElementById('ai-review-tone');
+        if (toneSelect) {
+            toneSelect.value = 'Enthusiastic';
+        }
+
+        aiReviewModal.style.display = 'flex';
+        await loadAiRepliesForReview(t);
+    }
+
+    async function loadAiRepliesForReview(t) {
         const replyOptionsContainer = document.getElementById('ai-reply-options');
         replyOptionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #9ca3af;"><i class="fas fa-spinner fa-spin"></i> Generating SEO-optimized replies...</div>';
 
-        aiReviewModal.style.display = 'flex';
+        const toneSelect = document.getElementById('ai-review-tone');
+        const selectedTone = toneSelect ? toneSelect.value : 'Enthusiastic';
 
-        // Fetch AI replies
         try {
             const response = await fetch('/api/generate-review-reply', {
                 method: 'POST',
@@ -3599,7 +3679,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     reviewText: t.review_text,
                     rating: t.rating,
-                    authorName: t.author_name
+                    authorName: t.author_name,
+                    tone: selectedTone
                 })
             });
 
@@ -3659,6 +3740,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error generating AI replies:', err);
             replyOptionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #f87171;"><i class="fas fa-exclamation-triangle"></i> Error generating replies.</div>';
         }
+    }
+
+    const toneSelectElement = document.getElementById('ai-review-tone');
+    if (toneSelectElement) {
+        toneSelectElement.addEventListener('change', () => {
+            const testimonialId = saveAiReplyBtn.getAttribute('data-id');
+            if (testimonialId) {
+                const t = userTestimonials.find(item => item.id.toString() === testimonialId.toString());
+                if (t) {
+                    loadAiRepliesForReview(t);
+                }
+            }
+        });
     }
 
     if (closeAiReviewModalBtn) {

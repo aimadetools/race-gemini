@@ -153,4 +153,40 @@ describe('Generate Review Reply API', () => {
     expect(responseData.replies[0].text).toContain('123-456-7890');
     expect(responseData.replies[0].text).toContain('plumber@test.com');
   });
+
+  test('should generate positive reviews with Formal tone', async () => {
+    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    jwt.verify.mockReturnValue({ userId: 1 });
+    const mockUser = {
+      id: 1,
+      email: 'plumber@test.com',
+      business_profile: { name: 'Plumbing Experts LLC', address: { addressLocality: 'Chicago' } }
+    };
+    addMockUser(mockUser);
+    req.body = { reviewText: 'Great!', rating: 5, authorName: 'John', tone: 'Formal' };
+
+    await handler(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    const responseData = res.json.mock.calls[0][0];
+    expect(responseData.replies[0].id).toBe('formal_seo');
+    expect(responseData.replies[0].text).toContain('Dear John');
+  });
+
+  test('should generate positive reviews with Humorous tone', async () => {
+    parseCookie.mockReturnValue({ authToken: 'valid_token' });
+    jwt.verify.mockReturnValue({ userId: 1 });
+    const mockUser = {
+      id: 1,
+      email: 'plumber@test.com',
+      business_profile: { name: 'Plumbing Experts LLC', address: { addressLocality: 'Chicago' } }
+    };
+    addMockUser(mockUser);
+    req.body = { reviewText: 'Great!', rating: 5, authorName: 'John', tone: 'Humorous' };
+
+    await handler(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    const responseData = res.json.mock.calls[0][0];
+    expect(responseData.replies[0].id).toBe('humorous_seo');
+    expect(responseData.replies[0].text).toContain('Hey John');
+  });
 });
