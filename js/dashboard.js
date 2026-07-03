@@ -868,12 +868,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         const ratingStars = '★'.repeat(t.rating) + '☆'.repeat(5 - t.rating);
                         const formattedDate = t.review_date ? new Date(t.review_date).toLocaleDateString() : 'N/A';
 
+                        let reviewTextHtml = `<div style="max-width: 300px; font-size: 0.9rem; color: #d1d5db; line-height: 1.4; word-break: break-word;">${t.review_text}</div>`;
+                        if (t.reply_text) {
+                            reviewTextHtml += `
+                                <div style="margin-top: 8px; font-size: 0.82rem; padding: 6px 10px; border-left: 2px solid #6366f1; background: rgba(99, 102, 241, 0.08); color: #a5b4fc; border-radius: 0 6px 6px 0; max-width: 300px; line-height: 1.4; word-break: break-word;">
+                                    <span style="color: #6366f1; font-weight: 700; font-size: 0.78rem; text-transform: uppercase; display: block; margin-bottom: 2px;">Our Response:</span>
+                                    ${t.reply_text}
+                                </div>
+                            `;
+                        }
+
                         row.innerHTML = `
-                            <td style="font-weight: 600; color: #fff;">${t.author_name}</td>
-                            <td style="color: #fbbf24; font-size: 1.1rem;">${ratingStars}</td>
-                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.review_text}">${t.review_text}</td>
-                            <td>${formattedDate}</td>
-                            <td>
+                            <td style="font-weight: 600; color: #fff; vertical-align: top;">${t.author_name}</td>
+                            <td style="color: #fbbf24; font-size: 1.1rem; vertical-align: top;">${ratingStars}</td>
+                            <td style="vertical-align: top; padding-bottom: 12px;">${reviewTextHtml}</td>
+                            <td style="vertical-align: top;">${formattedDate}</td>
+                            <td style="vertical-align: top; white-space: nowrap;">
+                                <button class="button button-small reply-review-btn" data-id="${t.id}" style="margin-right: 5px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); display: inline-flex; align-items: center; justify-content: center;">${t.reply_text ? 'Edit Reply' : 'Reply'}</button>
                                 <button class="button button-small generate-social-post-btn" data-id="${t.id}" style="margin-right: 5px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: inline-flex; align-items: center; justify-content: center;">Post Gen</button>
                                 <button class="button button-small button-danger delete-testimonial-btn" data-id="${t.id}">Delete</button>
                             </td>
@@ -3462,6 +3473,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (event.target.classList.contains('generate-social-post-btn')) {
                 const testimonialId = event.target.getAttribute('data-id');
                 openSocialPostModal(testimonialId);
+            } else if (event.target.classList.contains('reply-review-btn')) {
+                const testimonialId = event.target.getAttribute('data-id');
+                openAiReviewModal(testimonialId);
             }
         });
     }
@@ -3538,6 +3552,179 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelSocialPostBtn) {
         cancelSocialPostBtn.addEventListener('click', () => {
             socialPostModal.style.display = 'none';
+        });
+    }
+
+    // AI Review Responder Modal Functions
+    const aiReviewModal = document.getElementById('ai-review-modal');
+    const closeAiReviewModalBtn = document.getElementById('close-ai-review-modal');
+    const copyAiReplyBtn = document.getElementById('copy-ai-reply-btn');
+    const saveAiReplyBtn = document.getElementById('save-ai-reply-btn');
+
+    async function openAiReviewModal(testimonialId) {
+        const t = userTestimonials.find(item => item.id.toString() === testimonialId.toString());
+        if (!t) {
+            alert('Review not found.');
+            return;
+        }
+
+        document.getElementById('ai-review-author').innerText = t.author_name;
+        document.getElementById('ai-review-rating').innerText = '★'.repeat(t.rating) + '☆'.repeat(5 - t.rating);
+        document.getElementById('ai-review-text').innerText = `"${t.review_text}"`;
+        document.getElementById('ai-response-custom').value = t.reply_text || '';
+        saveAiReplyBtn.setAttribute('data-id', t.id);
+
+        // Update GBP connection status text
+        const gbpStatusText = document.getElementById('ai-review-gbp-status-text');
+        if (t.google_review_id && !t.google_review_id.startsWith('place-')) {
+            gbpStatusText.innerHTML = '<span style="color: #10b981; font-weight: 600;">🟢 Connected:</span> Saving will automatically publish to Google Business Profile.';
+        } else {
+            gbpStatusText.innerHTML = '<span style="color: #9ca3af; font-weight: 600;">⚪ Saved Locally:</span> Connect Google Business Profile & sync to publish directly.';
+        }
+
+        // Show loading state in options
+        const replyOptionsContainer = document.getElementById('ai-reply-options');
+        replyOptionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #9ca3af;"><i class="fas fa-spinner fa-spin"></i> Generating SEO-optimized replies...</div>';
+
+        aiReviewModal.style.display = 'flex';
+
+        // Fetch AI replies
+        try {
+            const response = await fetch('/api/generate-review-reply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                body: JSON.stringify({
+                    reviewText: t.review_text,
+                    rating: t.rating,
+                    authorName: t.author_name
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const replies = data.replies || [];
+                
+                let html = '';
+                replies.forEach((r, idx) => {
+                    html += `
+                        <div class="ai-reply-option-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; cursor: pointer; transition: all 0.25s ease;" data-text="${encodeURIComponent(r.text)}">
+                            <div style="font-weight: 700; font-size: 0.82rem; color: #a5b4fc; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between;">
+                                <span>${r.label}</span>
+                                <span style="font-size: 0.75rem; color: #6366f1; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-magic"></i> Use template</span>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #d1d5db; line-height: 1.4;">${r.text}</div>
+                        </div>
+                    `;
+                });
+
+                replyOptionsContainer.innerHTML = html;
+
+                // Add interactive behavior to option cards
+                const cards = replyOptionsContainer.querySelectorAll('.ai-reply-option-card');
+                cards.forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.style.borderColor = '#6366f1';
+                        card.style.background = 'rgba(99, 102, 241, 0.05)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.borderColor = 'rgba(255,255,255,0.1)';
+                        card.style.background = 'rgba(255,255,255,0.03)';
+                    });
+                    card.addEventListener('click', () => {
+                        const replyText = decodeURIComponent(card.getAttribute('data-text'));
+                        document.getElementById('ai-response-custom').value = replyText;
+                        
+                        // Select indicator
+                        cards.forEach(c => {
+                            c.style.background = 'rgba(255,255,255,0.03)';
+                            c.style.borderColor = 'rgba(255,255,255,0.1)';
+                        });
+                        card.style.background = 'rgba(99, 102, 241, 0.1)';
+                        card.style.borderColor = '#6366f1';
+                    });
+                });
+
+                // Auto-fill custom textarea with Option 1 if there isn't a reply yet
+                if (!t.reply_text && replies.length > 0) {
+                    document.getElementById('ai-response-custom').value = replies[0].text;
+                }
+
+            } else {
+                replyOptionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #f87171;"><i class="fas fa-exclamation-triangle"></i> Failed to generate replies.</div>';
+            }
+        } catch (err) {
+            console.error('Error generating AI replies:', err);
+            replyOptionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #f87171;"><i class="fas fa-exclamation-triangle"></i> Error generating replies.</div>';
+        }
+    }
+
+    if (closeAiReviewModalBtn) {
+        closeAiReviewModalBtn.addEventListener('click', () => {
+            aiReviewModal.style.display = 'none';
+        });
+    }
+
+    if (copyAiReplyBtn) {
+        copyAiReplyBtn.addEventListener('click', () => {
+            const textarea = document.getElementById('ai-response-custom');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                const originalHtml = copyAiReplyBtn.innerHTML;
+                copyAiReplyBtn.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i> Copied!';
+                setTimeout(() => {
+                    copyAiReplyBtn.innerHTML = originalHtml;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy reply text:', err);
+            });
+        });
+    }
+
+    if (saveAiReplyBtn) {
+        saveAiReplyBtn.addEventListener('click', async () => {
+            const testimonialId = saveAiReplyBtn.getAttribute('data-id');
+            const replyText = document.getElementById('ai-response-custom').value.trim();
+
+            if (!replyText) {
+                alert('Please enter or select a reply first.');
+                return;
+            }
+
+            saveAiReplyBtn.disabled = true;
+            saveAiReplyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                const response = await fetch('/api/save-review-reply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({
+                        id: testimonialId,
+                        replyText
+                    })
+                });
+
+                if (response.ok) {
+                    const resData = await response.json();
+                    alert(resData.gbpMessage || 'Reply saved successfully!');
+                    aiReviewModal.style.display = 'none';
+                    await fetchTestimonials();
+                } else {
+                    const errData = await response.json();
+                    alert(errData.message || 'Failed to save reply.');
+                }
+            } catch (err) {
+                console.error('Error saving review reply:', err);
+                alert('An unexpected error occurred while saving.');
+            } finally {
+                saveAiReplyBtn.disabled = false;
+                saveAiReplyBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Save & Publish';
+            }
         });
     }
 
@@ -3663,6 +3850,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (event.target === visualModal) {
             closeVisualEditor();
+        }
+        if (event.target === aiReviewModal) {
+            aiReviewModal.style.display = 'none';
         }
     });
 

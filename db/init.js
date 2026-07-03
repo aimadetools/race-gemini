@@ -36,6 +36,7 @@ import { addSiloSettingsToUsers } from './migrations/add_silo_settings_to_users.
 import { addAutoResponderToUsers } from './migrations/add_auto_responder_to_users.js';
 import { addCrmColumnsToLeads } from './migrations/add_crm_columns_to_leads.js';
 import { createIndexingRetryQueueTable } from './migrations/create_indexing_retry_queue_table.js';
+import { addReplyColumnsToTestimonials } from './migrations/add_reply_columns_to_testimonials.js';
 
 
 
@@ -154,6 +155,9 @@ export async function initializeDatabase() {
 
     console.log('Ensuring indexing retry queue table exists...');
     await createIndexingRetryQueueTable();
+
+    console.log('Ensuring reply and Google review ID columns exist in testimonials table...');
+    await addReplyColumnsToTestimonials();
 
     console.log('Database initialization completed.');
   } catch (error) {

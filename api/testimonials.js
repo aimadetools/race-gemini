@@ -30,7 +30,7 @@ async function handler(req, res) {
     if (req.method === 'GET') {
         try {
             const result = await query(
-                'SELECT id, author_name, author_avatar, rating, review_text, review_date FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
+                'SELECT id, author_name, author_avatar, rating, review_text, review_date, reply_text, reply_date, google_review_id FROM testimonials WHERE user_id = $1 ORDER BY created_at DESC',
                 [userId]
             );
             return res.status(200).json({ testimonials: result.rows });
@@ -41,7 +41,7 @@ async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-        const { authorName, authorAvatar, rating, reviewText, reviewDate } = req.body;
+        const { authorName, authorAvatar, rating, reviewText, reviewDate, googleReviewId } = req.body;
 
         if (!authorName || !rating || !reviewText) {
             return res.status(400).json({ message: 'Author name, rating, and review text are required.' });
@@ -56,8 +56,8 @@ async function handler(req, res) {
 
         try {
             const result = await query(
-                'INSERT INTO testimonials (user_id, author_name, author_avatar, rating, review_text, review_date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, author_name, author_avatar, rating, review_text, review_date',
-                [userId, authorName, authorAvatar || null, ratingNum, reviewText, rDate]
+                'INSERT INTO testimonials (user_id, author_name, author_avatar, rating, review_text, review_date, google_review_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, author_name, author_avatar, rating, review_text, review_date, google_review_id',
+                [userId, authorName, authorAvatar || null, ratingNum, reviewText, rDate, googleReviewId || null]
             );
             return res.status(201).json({
                 message: 'Testimonial added successfully',

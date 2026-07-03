@@ -2153,6 +2153,49 @@
       </div>
     </div>
 
+    <!-- AI Review Assistant Modal -->
+    <div id="ai-review-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
+      <div class="modal-content" style="background: rgba(31, 41, 55, 0.96); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 2rem; width: 90%; max-width: 600px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); color: #f3f4f6; position: relative;">
+        <span class="close-modal" id="close-ai-review-modal" style="position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer; color: #9ca3af;">&times;</span>
+        <h2 style="margin-top: 0; margin-bottom: 1rem; color: #fff; font-size: 1.5rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-magic" style="color: #6366f1;"></i> AI Review Responder
+        </h2>
+        
+        <div style="background: rgba(17, 24, 39, 0.4); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px;">
+            <span style="font-weight: 600; color: #fff;" id="ai-review-author">Alice Cooper</span>
+            <span id="ai-review-rating" style="color: #fbbf24;">★★★★★</span>
+          </div>
+          <p id="ai-review-text" style="margin: 0; font-size: 0.9rem; color: #d1d5db; line-height: 1.4; font-style: italic;">"Excellent work by the team! Highly recommend."</p>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #fff;">Select AI Generated Reply</label>
+          <div id="ai-reply-options" style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="text-align: center; padding: 20px; color: #9ca3af;"><i class="fas fa-spinner fa-spin"></i> Generating SEO replies...</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label for="ai-response-custom" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #fff;">Customize Response</label>
+          <textarea id="ai-response-custom" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(17, 24, 39, 0.8); color: #fff; font-size: 0.9rem; min-height: 100px; box-sizing: border-box; resize: vertical; line-height: 1.4;" placeholder="Response text..."></textarea>
+        </div>
+
+        <div id="ai-review-gbp-status" style="margin-bottom: 1.5rem; font-size: 0.85rem; color: #9ca3af; display: flex; align-items: center; gap: 6px;">
+          <i class="fas fa-info-circle"></i> <span id="ai-review-gbp-status-text">Only saving locally. Connect Google Business Profile for sync.</span>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+          <button type="button" id="copy-ai-reply-btn" class="button button-secondary" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="far fa-copy"></i> Copy
+          </button>
+          <button type="button" id="save-ai-reply-btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3); display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fas fa-paper-plane"></i> Save &amp; Publish
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- SEO Checklist Modal -->
     <div id="seo-checklist-modal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center;">
       <div class="modal-content" style="background: rgba(31, 41, 55, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; width: 90%; max-width: 650px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); color: #f3f4f6; position: relative; max-height: 85vh; overflow-y: auto;">
