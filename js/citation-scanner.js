@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingPanel = document.getElementById('loading-panel');
     const resultsPanel = document.getElementById('results-panel');
     const errorMessage = document.getElementById('error-message');
+    const leadForm = document.getElementById('lead-form');
+    const lockPanel = document.getElementById('lock-panel');
+
+    let scanData = null;
 
     // Loading steps
     const stepGeocode = document.getElementById('step-geocode');
@@ -90,7 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const data = await response.json();
-                renderResults(data);
+                scanData = data;
+
+                // Show lead lock panel instead of rendering results immediately
+                loadingPanel.style.display = 'none';
+                const lockBizName = document.getElementById('lock-biz-name');
+                if (lockBizName) {
+                    lockBizName.textContent = name;
+                }
+                if (lockPanel) {
+                    lockPanel.style.display = 'block';
+                }
 
             } catch (err) {
                 console.error(err);
@@ -200,5 +214,52 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ctaRedirect) {
             ctaRedirect.href = generatedRedirectUrl;
         }
+    }
+
+    if (leadForm) {
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('lead-name').value.trim();
+            const email = document.getElementById('lead-email').value.trim();
+
+            const submitBtn = leadForm.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Unlocking Report... <i class="fas fa-spinner fa-spin"></i>';
+
+            const bizName = document.getElementById('biz-name').value.trim();
+            const bizPhone = document.getElementById('biz-phone').value.trim();
+            const bizAddress = document.getElementById('biz-address').value.trim();
+
+            try {
+                await fetch('/api/capture-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        url: window.location.origin,
+                        phone: bizPhone,
+                        source: 'citation-scanner',
+                        message: `NAP Consistency Scan for business: ${bizName}. Address: ${bizAddress}. Phone: ${bizPhone}.`
+                    })
+                });
+            } catch (err) {
+                console.error('Error capturing lead:', err);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalHTML;
+
+            if (lockPanel) {
+                lockPanel.style.display = 'none';
+            }
+            if (scanData) {
+                renderResults(scanData);
+            }
+        });
     }
 });

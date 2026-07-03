@@ -513,6 +513,32 @@
                 </div>
             </div>
 
+            <!-- Lead capture Lock Panel -->
+            <div id="lock-panel" style="display: none; animation: fadeIn 0.6s ease forwards;">
+                <div style="max-width: 500px; margin: 0 auto; text-align: center; padding: 2rem 0;">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 50%; color: #6366f1; font-size: 1.75rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 style="color: #fff; font-size: 1.85rem; font-weight: 800; margin-top: 0; margin-bottom: 0.75rem; background: linear-gradient(135deg, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Unlock Listing Consistency Report</h2>
+                    <p style="color: #9ca3af; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                        We scanned <strong id="lock-biz-name" style="color: #818cf8;">Business</strong> across Google, Yelp, Facebook, Bing, and more. Enter your details below to unlock your full local consistency report.
+                    </p>
+                    <form id="lead-form">
+                        <div style="text-align: left; margin-bottom: 1.25rem;">
+                            <label class="scanner-label" for="lead-name">Your Name <span style="color: #ef4444;">*</span></label>
+                            <input class="scanner-input" id="lead-name" placeholder="John Doe" required type="text"/>
+                        </div>
+                        <div style="text-align: left; margin-bottom: 1.75rem;">
+                            <label class="scanner-label" for="lead-email">Business Email <span style="color: #ef4444;">*</span></label>
+                            <input class="scanner-input" id="lead-email" placeholder="john@company.com" required type="email"/>
+                        </div>
+                        <button class="pulse-btn" type="submit">
+                            <i class="fas fa-unlock"></i> Unlock Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             <!-- Dashboard Results Display Panel -->
             <div class="results-container" id="results-panel">
                 <div class="score-section">
