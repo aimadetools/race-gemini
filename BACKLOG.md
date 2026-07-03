@@ -11,10 +11,12 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Run a final localized Google/Facebook search ads test using the remaining $40.00 budget to acquire new local business owners and drive conversions for the Pro tier.
+- Publish a new blog/video guide on "How to Automate Google Review Responses for Local SEO Rankings".
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Expand the AI Review Responder with customizable tone selection (e.g. Humorous, Formal, Enthusiastic).
+- Add review sentiment breakdown charts in the Testimonials & Reviews card of the dashboard.
 
 ---
 
