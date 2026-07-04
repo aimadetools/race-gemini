@@ -351,4 +351,130 @@ document.addEventListener('DOMContentLoaded', () => {
             suggestedContainer.style.display = 'none';
         });
     }
+
+    // Bulk CSV Importer logic
+    const bulkCsvFile = document.getElementById('bulk-csv-file');
+    const bulkCsvFilename = document.getElementById('bulk-csv-filename');
+    const bulkCsvStatus = document.getElementById('bulk-csv-status');
+
+    if (bulkCsvFile) {
+        bulkCsvFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                bulkCsvFilename.textContent = 'No file chosen';
+                bulkCsvStatus.style.display = 'none';
+                return;
+            }
+
+            bulkCsvFilename.textContent = file.name;
+            bulkCsvStatus.style.display = 'block';
+            bulkCsvStatus.style.background = 'rgba(59, 130, 246, 0.1)';
+            bulkCsvStatus.style.border = '1px solid rgba(59, 130, 246, 0.2)';
+            bulkCsvStatus.style.color = '#60a5fa';
+            bulkCsvStatus.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 4px;"></i> Parsing CSV...';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const text = e.target.result;
+                    const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+                    
+                    if (lines.length < 2) {
+                        throw new Error('CSV file is empty or missing headers.');
+                    }
+
+                    // Simple CSV parser supporting quotes
+                    const parseCSVLine = (line) => {
+                        const result = [];
+                        let current = '';
+                        let inQuotes = false;
+                        for (let i = 0; i < line.length; i++) {
+                            const char = line[i];
+                            if (char === '"') {
+                                inQuotes = !inQuotes;
+                            } else if (char === ',' && !inQuotes) {
+                                result.push(current.trim());
+                                current = '';
+                            } else {
+                                current += char;
+                            }
+                        }
+                        result.push(current.trim());
+                        return result;
+                    };
+
+                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+                    
+                    const serviceHeaders = ['service', 'services'];
+                    const townHeaders = ['town', 'towns', 'city', 'cities', 'location', 'locations'];
+
+                    const serviceIdx = headers.findIndex(h => serviceHeaders.includes(h));
+                    const townIdx = headers.findIndex(h => townHeaders.includes(h));
+
+                    if (serviceIdx === -1 && townIdx === -1) {
+                        throw new Error('CSV must contain at least one column for services or towns.');
+                    }
+
+                    const parsedServices = new Set();
+                    const parsedTowns = new Set();
+
+                    for (let i = 1; i < lines.length; i++) {
+                        const cols = parseCSVLine(lines[i]);
+                        if (serviceIdx !== -1 && cols[serviceIdx]) {
+                            cols[serviceIdx].split(',').forEach(s => {
+                                const clean = s.trim();
+                                if (clean) parsedServices.add(clean);
+                            });
+                        }
+                        if (townIdx !== -1 && cols[townIdx]) {
+                            cols[townIdx].split(',').forEach(t => {
+                                const clean = t.trim();
+                                if (clean) parsedTowns.add(clean);
+                            });
+                        }
+                    }
+
+                    let importedServicesCount = 0;
+                    let importedTownsCount = 0;
+
+                    if (parsedServices.size > 0) {
+                        const currentServices = servicesInput.value
+                            .split(',')
+                            .map(s => s.trim())
+                            .filter(s => s !== '');
+                        const combinedServices = [...new Set([...currentServices, ...parsedServices])];
+                        servicesInput.value = combinedServices.join(', ');
+                        importedServicesCount = parsedServices.size;
+                    }
+
+                    if (parsedTowns.size > 0) {
+                        const currentTowns = townsInput.value
+                            .split(',')
+                            .map(t => t.trim())
+                            .filter(t => t !== '');
+                        const combinedTowns = [...new Set([...currentTowns, ...parsedTowns])];
+                        townsInput.value = combinedTowns.join(', ');
+                        importedTownsCount = parsedTowns.size;
+                    }
+
+                    // Trigger input event to update counters and estimates
+                    servicesInput.dispatchEvent(new Event('input'));
+                    townsInput.dispatchEvent(new Event('input'));
+
+                    bulkCsvStatus.style.background = 'rgba(16, 185, 129, 0.1)';
+                    bulkCsvStatus.style.border = '1px solid rgba(16, 185, 129, 0.2)';
+                    bulkCsvStatus.style.color = '#34d399';
+                    bulkCsvStatus.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 4px;"></i> Successfully imported ${importedServicesCount} services and ${importedTownsCount} towns!`;
+
+                } catch (err) {
+                    console.error('Error parsing CSV:', err);
+                    bulkCsvStatus.style.background = 'rgba(239, 68, 68, 0.1)';
+                    bulkCsvStatus.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+                    bulkCsvStatus.style.color = '#f87171';
+                    bulkCsvStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="margin-right: 4px;"></i> Error: ${err.message}`;
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
 });
