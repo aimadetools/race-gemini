@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Google Business Profile Post &amp; Update Generator | LocalLeads</title>
+    <meta content="Generate search-optimized updates, offers, and events for your Google Business Profile. Boost local SEO, rankings, and customer engagement on Google Maps." name="description"/>
+    <meta content="gbp post generator, google business profile post creator, gmb post tool, local seo post writer, google maps update generator" name="keywords"/>
+    <meta content="Free Google Business Profile Post &amp; Update Generator | LocalLeads" property="og:title"/>
+    <meta content="Generate search-optimized updates, offers, and events for your Google Business Profile. Boost local SEO, rankings, and customer engagement on Google Maps." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/gbp-post-generator.html" property="og:url"/>
+    <link href="https://www.localseogen.com/gbp-post-generator.html" rel="canonical"/>
+    <meta content="summary_large_image" name="twitter:card"/>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="style_calculator.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+    <style>
+        .gbp-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 992px) {
+            .gbp-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        .form-section-title {
+            font-size: 1.1rem;
+            color: #8b5cf6;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-section-title:first-of-type {
+            margin-top: 0;
+        }
+        .nested-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 576px) {
+            .nested-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Interactive Google Post Mockup Style */
+        .gbp-mockup-container {
+            position: sticky;
+            top: 6rem;
+        }
+        .gbp-mockup-card {
+            background: #ffffff;
+            color: #202124;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            font-family: Roboto, Arial, sans-serif;
+            overflow: hidden;
+            border: 1px solid #dadce0;
+            max-width: 480px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        .gbp-mockup-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f1f3f4;
+        }
+        .gbp-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 12px;
+            border: 1px solid #d2e3fc;
+        }
+        .gbp-biz-details {
+            flex-grow: 1;
+        }
+        .gbp-biz-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .gbp-verified-badge {
+            color: #1a73e8;
+            font-size: 0.85rem;
+        }
+        .gbp-biz-meta {
+            font-size: 0.75rem;
+            color: #5f6368;
+            margin: 2px 0 0 0;
+        }
+        .gbp-biz-timestamp {
+            font-size: 0.75rem;
+            color: #70757a;
+            margin-top: 1px;
+        }
+        .gbp-google-icon {
+            color: #4285f4;
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+        .gbp-mockup-body {
+            padding: 16px;
+        }
+        .gbp-post-type-tag {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .gbp-post-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #3c4043;
+            white-space: pre-wrap;
+            margin: 0 0 16px 0;
+            min-height: 80px;
+        }
+        .gbp-action-section {
+            border-top: 1px solid #f1f3f4;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        .gbp-cta-button {
+            background-color: #1a73e8;
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+        }
+        .gbp-cta-button:hover {
+            background-color: #1557b0;
+        }
+        .gbp-social-icons {
+            display: flex;
+            gap: 16px;
+            color: #5f6368;
+            font-size: 1.05rem;
+        }
+        .gbp-social-icons i {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .gbp-social-icons i:hover {
+            color: #1a73e8;
+        }
+
+        /* Lead Capture Lock Panel */
+        .lock-overlay-panel {
+            background: rgba(17, 24, 39, 0.88);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .lock-icon {
+            font-size: 2.5rem;
+            color: #8b5cf6;
+            margin-bottom: 1rem;
+            animation: pulse-lock 2s infinite;
+        }
+        @keyframes pulse-lock {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Publish Modal or Callouts */
+        .publish-callout-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-left-color: #8b5cf6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="background: radial-gradient(circle at top, rgba(139, 92, 246, 0.1) 0%, rgba(0, 0, 0, 0) 70%); padding: 5rem 0 3rem;">
+            <div class="container" style="text-align: center;">
+                <h1 style="font-size: 2.75rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Google Business Profile Post Generator</h1>
+                <p style="font-size: 1.15rem; color: #94a3b8; max-width: 800px; margin: 1rem auto 0; line-height: 1.6;">
+                    Instantly draft search-optimized updates, offers, and events for your Google Business Profile listing. Connect your listing to publish with a single click or copy to clipboard for free.
+                </p>
+            </div>
+        </section>
+
+        <div class="calculator-container" style="margin-top: 0; padding-top: 0;">
+            <div class="gbp-grid">
+                <!-- Generator Card -->
+                <div class="calc-card" style="padding: 2.5rem;">
+                    <form id="gbp-form">
+                        <div class="form-section-title">1. Business Info</div>
+                        <div class="nested-grid">
+                            <div class="form-group">
+                                <label for="biz-name">Business Name</label>
+                                <input class="calc-input" id="biz-name" placeholder="e.g. Apex Plumbing Solutions" required type="text" value="Apex Plumbing Solutions"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="biz-service">Service Category</label>
+                                <input class="calc-input" id="biz-service" placeholder="e.g. Water Heater Repair, Emergency Plumbing" required type="text" value="Plumber"/>
+                            </div>
+                        </div>
+
+                        <div class="nested-grid">
+                            <div class="form-group">
+                                <label for="biz-location">Location (City, State)</label>
+                                <input class="calc-input" id="biz-location" placeholder="e.g. Dallas, TX" required type="text" value="Dallas, TX"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="biz-tone">Tone of Voice</label>
+                                <select class="calc-input" id="biz-tone">
+                                    <option value="professional" selected>Professional</option>
+                                    <option value="promotional">Promotional &amp; Energetic</option>
+                                    <option value="helpful">Friendly &amp; Helpful</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="biz-keywords">Keywords to Include (Optional, comma-separated)</label>
+                            <input class="calc-input" id="biz-keywords" placeholder="e.g. fast plumber, water heater fix, cheap plumbing" type="text"/>
+                        </div>
+
+                        <div class="form-section-title">2. Post Configurations</div>
+                        <div class="form-group">
+                            <label for="post-type">Post Type</label>
+                            <select class="calc-input" id="post-type">
+                                <option value="update" selected>What's New (Update / Announcement)</option>
+                                <option value="offer">Offer / Special Deal</option>
+                                <option value="event">Event Promotion</option>
+                            </select>
+                        </div>
+
+                        <!-- What's New conditional fields -->
+                        <div id="section-update">
+                            <div class="form-group">
+                                <label for="announcement-text">Custom Announcement Detail (Optional)</label>
+                                <textarea class="calc-input" id="announcement-text" placeholder="e.g. We just added new thermal imaging tools to detect leaks without damage." rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Offer conditional fields -->
+                        <div id="section-offer" style="display: none;">
+                            <div class="form-group">
+                                <label for="offer-title">Offer Title</label>
+                                <input class="calc-input" id="offer-title" placeholder="e.g. $50 Off Water Heater Replacements" type="text"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="offer-discount">Discount Details</label>
+                                <input class="calc-input" id="offer-discount" placeholder="e.g. Get $50 off when you replace your home hot water system this month" type="text"/>
+                            </div>
+                            <div class="nested-grid">
+                                <div class="form-group">
+                                    <label for="offer-code">Coupon Code (Optional)</label>
+                                    <input class="calc-input" id="offer-code" placeholder="e.g. WATER50" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="offer-start">Start Date</label>
+                                    <input class="calc-input" id="offer-start" type="date"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="offer-end">End Date</label>
+                                <input class="calc-input" id="offer-end" type="date"/>
+                            </div>
+                        </div>
+
+                        <!-- Event conditional fields -->
+                        <div id="section-event" style="display: none;">
+                            <div class="form-group">
+                                <label for="event-title">Event Title</label>
+                                <input class="calc-input" id="event-title" placeholder="e.g. Free Plumbing Health Inspection Workshop" type="text"/>
+                            </div>
+                            <div class="nested-grid">
+                                <div class="form-group">
+                                    <label for="event-start">Start Date/Time</label>
+                                    <input class="calc-input" id="event-start" placeholder="e.g. July 15 at 10:00 AM" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-end">End Date/Time (Optional)</label>
+                                    <input class="calc-input" id="event-end" placeholder="e.g. July 15 at 12:00 PM" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="pulse-btn" id="btn-generate" style="width: 100%; margin-top: 1.5rem;" type="submit">
+                            <i class="fas fa-magic"></i> Generate Post Content
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Preview Card -->
+                <div class="gbp-mockup-container">
+                    <h3 style="color: #fff; font-size: 1.25rem; margin-top: 0; margin-bottom: 1.5rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fab fa-google" style="color: #4285f4;"></i> Live Google Search Preview
+                    </h3>
+                    
+                    <div class="gbp-mockup-card">
+                        <div class="gbp-mockup-header">
+                            <div class="gbp-avatar" id="mock-avatar">A</div>
+                            <div class="gbp-biz-details">
+                                <p class="gbp-biz-name" id="mock-biz-name">
+                                    Apex Plumbing Solutions
+                                    <i class="fas fa-check-circle gbp-verified-badge" title="Verified local listing"></i>
+                                </p>
+                                <p class="gbp-biz-meta"><span id="mock-biz-service">Plumber</span> in <span id="mock-biz-location">Dallas, TX</span></p>
+                                <p class="gbp-biz-timestamp">Posted on Google • Just now <i class="fab fa-google gbp-google-icon"></i></p>
+                            </div>
+                        </div>
+                        <div class="gbp-mockup-body">
+                            <span class="gbp-post-type-tag" id="mock-type-tag">What's New</span>
+                            <div class="gbp-post-text" id="mock-post-text">Looking for reliable Plumber in Dallas, TX? Apex Plumbing Solutions is here to help! Our team of experienced professionals is dedicated to providing top-quality service for all your plumbing needs. Contact us today to schedule a consultation.</div>
+                        </div>
+                        <div class="gbp-action-section">
+                            <div class="gbp-social-icons">
+                                <i class="far fa-thumbs-up" title="Like update"></i>
+                                <i class="fas fa-share-alt" title="Share update"></i>
+                            </div>
+                            <button class="gbp-cta-button" id="mock-cta-btn">Call Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Post Tools Actions -->
+                    <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <button class="button" id="btn-copy" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; color: #fff; cursor: pointer; padding: 0.75rem 1.5rem; border-radius: 8px;">
+                            <i class="far fa-copy"></i> Copy Post Text
+                        </button>
+                        
+                        <!-- Auto-Publish callout (Changes state based on user login) -->
+                        <div id="publish-section-container">
+                            <!-- Injected dynamically based on Auth state -->
+                        </div>
+                    </div>
+
+                    <!-- Lead Lock Panel (Shown when visitor hits generation limit) -->
+                    <div class="lock-overlay-panel" id="lock-panel" style="display: none; margin-top: 1.5rem;">
+                        <i class="fas fa-lock lock-icon"></i>
+                        <h3 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem;">Unlock Unlimited Post Drafts</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; max-width: 400px; margin: 0 auto 1.5rem auto; line-height: 1.5;">You've generated your 3 free Google Business Profile updates. Create a free account to unlock unlimited creations and publish directly to Google.</p>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 300px; margin: 0 auto;">
+                            <a href="/auth.html?signup=true" class="button" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); box-shadow: 0 4px 12px rgba(139,92,246,0.3); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; color: #fff; display: block;">
+                                Sign Up For Free
+                            </a>
+                            <a href="/auth.html" class="button" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; color: #fff; display: block;">
+                                Log In
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-cols" style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; padding: 4rem 0 2rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="footer-col" style="flex: 1.5; min-width: 250px;">
+                    <a class="logo" href="/" style="display: inline-block; margin-bottom: 1.5rem;">
+                        <img src="/images/logo.svg" alt="LocalLeads Logo" style="height: 32px;"/>
+                    </a>
+                    <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; margin: 0;">Get found in every town. We build high-ranking local landing pages for businesses looking to dominate neighborhood search.</p>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Free Tools</h2>
+                    <ul>
+                        <li><a href="seo-roi-calculator.html">ROI Calculator</a></li>
+                        <li><a href="competitor-gap.html">Competitor Gap</a></li>
+                        <li><a href="schema-generator.html">Schema Generator</a></li>
+                        <li><a href="review-flyer.html">Review Flyer</a></li>
+                        <li><a href="citation-scanner.html">Citation Scanner</a></li>
+                        <li><a href="review-link-generator.html">Review Link Gen</a></li>
+                        <li><a href="review-calculator.html">Review Calculator</a></li>
+                        <li><a href="gbp-audit.html">GBP Audit</a></li>
+                        <li><a href="local-keyword-planner.html">Keyword Planner</a></li>
+                        <li><a href="gbp-post-generator.html" style="color: #8b5cf6; font-weight: 600;">GBP Post Generator</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Legal</h2>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-size: 0.9rem;">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/gbp-post-generator.js"></script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>
