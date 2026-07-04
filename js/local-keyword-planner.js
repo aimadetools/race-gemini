@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const leadEmail = document.getElementById('lead-email');
     const leadName = document.getElementById('lead-name');
     const exportBtn = document.getElementById('export-csv-btn');
+    const generatePagesBtn = document.getElementById('generate-pages-btn');
 
     let allKeywords = [];
     let isUnlocked = localStorage.getItem('localleads_keywords_unlocked') === 'true';
@@ -99,6 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    if (generatePagesBtn) {
+        generatePagesBtn.addEventListener('click', () => {
+            if (!isUnlocked) return;
+            const service = researchService.value.trim();
+            const town = researchTown.value.trim();
+            if (service && town) {
+                window.location.href = `/generate.html?services=${encodeURIComponent(service)}&towns=${encodeURIComponent(town)}`;
+            }
+        });
+    }
+
     exportBtn.addEventListener('click', () => {
         if (!isUnlocked) return;
         const service = researchService.value.trim() || 'local';
@@ -165,9 +177,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             lockPanel.style.display = 'block';
             exportBtn.style.display = 'none';
+            if (generatePagesBtn) generatePagesBtn.style.display = 'none';
         } else {
             lockPanel.style.display = 'none';
             exportBtn.style.display = 'inline-flex';
+            if (generatePagesBtn) generatePagesBtn.style.display = 'inline-flex';
         }
     }
 });
