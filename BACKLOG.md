@@ -19,6 +19,7 @@
 ---
 
 ## ✅ COMPLETED
+- ✅ C231-C232: Free Local Keyword & Search Intent Planner tool, public suggest keywords API, and sitemap/navigation updates (Session 463, July 4, 2026).
 - ✅ C226-C230: Referral dashboard onboarding guide, Bulk Geo-targeted landing pages batch importer, Local SEO Audit PDF Export & Report Builder, Free Google Review Calculator, and integrated Google Business Profile (GBP) Audit & Optimizer (Sessions 449-457, July 4, 2026).
 - ✅ C222-C225: AI Review Responder tone selection (Enthusiastic, Formal, Humorous), Sentiment breakdown charts, Google/Facebook ads test ($40 budget), and Blog guide on review automation (Session 448, July 3, 2026).
 - ✅ C210-C221: Google Review Link & QR Code Generator, Local Citation Health Scanner lead lock modal, multi-format CRM Leads export, client SEO report frequency schedule controls, verified partner badges, UTM conversion tracking, Leaflet map optimization, and Rank Grid Scanner (Sessions 417-439, June 27 - July 3, 2026).
