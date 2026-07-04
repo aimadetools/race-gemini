@@ -666,6 +666,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     reviewLinkInput.value = `${window.location.origin}/review.html?client=${data.clientId}`;
                 }
 
+                // Populate feedback funnel link
+                const feedbackLinkInput = document.getElementById('feedback-link-input');
+                if (feedbackLinkInput && data.shareToken) {
+                    feedbackLinkInput.value = `${window.location.origin}/feedback.html?token=${data.shareToken}`;
+                }
+
+
                 // Populate print flyer and QR code buttons
                 const printFlyerBtn = document.getElementById('print-flyer-btn');
                 if (printFlyerBtn && data.clientId) {
@@ -3555,6 +3562,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
         });
     }
+
+    // Copy feedback link to clipboard
+    const copyFeedbackLinkBtn = document.getElementById('copy-feedback-link-btn');
+    const dashboardFeedbackLinkInput = document.getElementById('feedback-link-input');
+    if (copyFeedbackLinkBtn && dashboardFeedbackLinkInput) {
+        copyFeedbackLinkBtn.addEventListener('click', () => {
+            dashboardFeedbackLinkInput.select();
+            dashboardFeedbackLinkInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(dashboardFeedbackLinkInput.value);
+            const originalText = copyFeedbackLinkBtn.innerHTML;
+            copyFeedbackLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                copyFeedbackLinkBtn.innerHTML = originalText;
+            }, 2000);
+        });
+    }
+
 
     // Testimonial Modal Open/Close
     if (addTestimonialBtn && testimonialModal) {

@@ -280,7 +280,8 @@ describe('dashboard API', () => {
       autoResponderMessage: null,
       indexingRetryQueue: [],
       businessProfile: null,
-      phone: ''
+      phone: '',
+      shareToken: expect.any(String)
     });
   });
 
@@ -355,7 +356,8 @@ describe('dashboard API', () => {
       autoResponderMessage: null,
       indexingRetryQueue: [],
       businessProfile: null,
-      phone: ''
+      phone: '',
+      shareToken: expect.any(String)
     });
   });
 
