@@ -1,4 +1,96 @@
-document.addEventListener("DOMContentLoaded",function(){const navMenu=document.getElementById("nav-menu");const hamburgerIcon=document.getElementById("hamburger-icon");const mobileNavOverlay=document.getElementById("mobile-nav-overlay");const mobileMenuContainer=document.querySelector(".mobile-menu-container");const token=localStorage.getItem("token");const closeMenuBtn=document.getElementById("close-menu-btn");if(hamburgerIcon){hamburgerIcon.addEventListener("click",function(){if(mobileMenuContainer)mobileMenuContainer.classList.toggle("active");hamburgerIcon.classList.toggle("open");if(mobileNavOverlay)mobileNavOverlay.classList.toggle("active");document.body.classList.toggle("menu-open");hamburgerIcon.setAttribute("aria-expanded",hamburgerIcon.classList.contains("open"))});hamburgerIcon.addEventListener("keydown",function(event){if(event.key==="Enter"){if(mobileMenuContainer)mobileMenuContainer.classList.toggle("active");hamburgerIcon.classList.toggle("open");if(mobileNavOverlay)mobileNavOverlay.classList.toggle("active");document.body.classList.toggle("menu-open");hamburgerIcon.setAttribute("aria-expanded",hamburgerIcon.classList.contains("open"))}})}if(closeMenuBtn){closeMenuBtn.addEventListener("click",function(){if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");if(hamburgerIcon)hamburgerIcon.classList.remove("open");if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");document.body.classList.remove("menu-open");hamburgerIcon.setAttribute("aria-expanded","false")});closeMenuBtn.addEventListener("keydown",function(event){if(event.key==="Enter"){if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");if(hamburgerIcon)hamburgerIcon.classList.remove("open");if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");document.body.classList.remove("menu-open");hamburgerIcon.setAttribute("aria-expanded","false")}})}if(mobileNavOverlay){mobileNavOverlay.addEventListener("click",function(){if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");if(hamburgerIcon)hamburgerIcon.classList.remove("open");if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");document.body.classList.remove("menu-open");hamburgerIcon.setAttribute("aria-expanded","false")})}});document.addEventListener("DOMContentLoaded",function(){const cookieConsentBanner=document.createElement("div");cookieConsentBanner.id="cookieConsentBanner";cookieConsentBanner.innerHTML=`
+document.addEventListener("DOMContentLoaded",function(){
+  const navMenu=document.getElementById("nav-menu");
+  const hamburgerIcon=document.getElementById("hamburger-icon");
+  const mobileNavOverlay=document.getElementById("mobile-nav-overlay");
+  const mobileMenuContainer=document.querySelector(".mobile-menu-container");
+  const token=localStorage.getItem("token");
+  const closeMenuBtn=document.getElementById("close-menu-btn");
+
+  if(hamburgerIcon){
+    hamburgerIcon.addEventListener("click",function(){
+      if(mobileMenuContainer)mobileMenuContainer.classList.toggle("active");
+      hamburgerIcon.classList.toggle("open");
+      if(mobileNavOverlay)mobileNavOverlay.classList.toggle("active");
+      document.body.classList.toggle("menu-open");
+      hamburgerIcon.setAttribute("aria-expanded",hamburgerIcon.classList.contains("open"));
+    });
+    hamburgerIcon.addEventListener("keydown",function(event){
+      if(event.key==="Enter"){
+        if(mobileMenuContainer)mobileMenuContainer.classList.toggle("active");
+        hamburgerIcon.classList.toggle("open");
+        if(mobileNavOverlay)mobileNavOverlay.classList.toggle("active");
+        document.body.classList.toggle("menu-open");
+        hamburgerIcon.setAttribute("aria-expanded",hamburgerIcon.classList.contains("open"));
+      }
+    });
+  }
+
+  if(closeMenuBtn){
+    closeMenuBtn.addEventListener("click",function(){
+      if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");
+      if(hamburgerIcon)hamburgerIcon.classList.remove("open");
+      if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");
+      document.body.classList.remove("menu-open");
+      hamburgerIcon.setAttribute("aria-expanded","false");
+    });
+    closeMenuBtn.addEventListener("keydown",function(event){
+      if(event.key==="Enter"){
+        if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");
+        if(hamburgerIcon)hamburgerIcon.classList.remove("open");
+        if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");
+        document.body.classList.remove("menu-open");
+        hamburgerIcon.setAttribute("aria-expanded","false");
+      }
+    });
+  }
+
+  if(mobileNavOverlay){
+    mobileNavOverlay.addEventListener("click",function(){
+      if(mobileMenuContainer)mobileMenuContainer.classList.remove("active");
+      if(hamburgerIcon)hamburgerIcon.classList.remove("open");
+      if(mobileNavOverlay)mobileNavOverlay.classList.remove("active");
+      document.body.classList.remove("menu-open");
+      hamburgerIcon.setAttribute("aria-expanded","false");
+    });
+  }
+
+  // Dynamic Sign In / Dashboard link based on token
+  if(token){
+    const authLinks = document.querySelectorAll('a[href*="auth.html"]');
+    authLinks.forEach(link => {
+      link.href = "/dashboard.html";
+      link.textContent = "Dashboard";
+      link.classList.remove("nav-btn");
+      link.classList.add("nav-btn-dashboard");
+    });
+  }
+
+  // Mobile dropdown accordion toggler
+  const dropdownTriggers = document.querySelectorAll(".dropdown-trigger");
+  dropdownTriggers.forEach(trigger => {
+    trigger.addEventListener("click", function(e) {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        parent.classList.toggle("active");
+        const icon = this.querySelector(".fa-chevron-down");
+        if (icon) {
+          icon.style.transform = parent.classList.contains("active") ? "rotate(180deg)" : "";
+        }
+      }
+    });
+  });
+
+  // Auto-activate current navigation link
+  const currentPath = window.location.pathname;
+  const navLinksList = document.querySelectorAll(".nav-links a");
+  navLinksList.forEach(link => {
+    const linkPath = link.getAttribute("href");
+    if (linkPath === currentPath || (currentPath === "/" && (linkPath === "/" || linkPath === "/index.html"))) {
+      link.classList.add("active");
+    }
+  });
+});document.addEventListener("DOMContentLoaded",function(){const cookieConsentBanner=document.createElement("div");cookieConsentBanner.id="cookieConsentBanner";cookieConsentBanner.innerHTML=`
         <p>This website uses cookies to ensure you get the best experience on our website.
         <a href="/privacy.html" target="_blank">Learn more</a></p>
         <button id="acceptCookiesBtn">Got it!</button>

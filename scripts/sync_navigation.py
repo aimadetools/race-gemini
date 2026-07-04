@@ -1,26 +1,40 @@
-<!DOCTYPE html>
+import os
+import re
 
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Learn about LocalLeads' upcoming flexible usage-based pricing model, allowing you to buy credits and generate local SEO pages as you need them." name="description"/>
-<title>
-   Usage-Based Pricing - LocalLeads
-  </title>
-<link href="style.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
-<link href="/images/favicon.png" rel="icon" type="image/png"/>
-<link href="style_scroll_to_top.min.css" rel="stylesheet"/>
-</head>
-    <script>
-      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
-    </script>
-    <script src="/_vercel/insights/script.js" defer></script>
-<body>
-<div id="mobile-nav-overlay">
-</div>
-<header>
+# The files we want to update with the public menu
+FILES_TO_UPDATE = [
+    "index.html",
+    "about.html",
+    "pricing.html",
+    "blog.html",
+    "faq.html",
+    "contact.html",
+    "auth.html",
+    "generate.html",
+    "showcase.html",
+    "referral-program.html",
+    "buy-credits.html",
+    "local-keyword-planner.html",
+    "gbp-audit.html",
+    "citation-scanner.html",
+    "grid-scanner.html",
+    "competitor-gap.html",
+    "schema-generator.html",
+    "review-link-generator.html",
+    "review-calculator.html",
+    "seo-roi-calculator.html",
+    "audit.html",
+    "free-seo-audit.html",
+    "404.html",
+    "privacy.html",
+    "terms.html",
+    "case-studies.html",
+    "usage-based-pricing.html",
+    "forgot-password.html",
+    "reset-password.html"
+]
+
+NEW_HEADER = """<header>
       <nav>
         <div class="container">
           <a class="logo" href="/">
@@ -63,48 +77,29 @@
           </div>
         </div>
       </nav>
-    </header>
-<main>
-<section class="hero">
-<h1>
-     Usage-Based Pricing
-    </h1>
-<p>
-     A new, flexible pricing model is coming soon!
-    </p>
-</section>
-<section>
-<div class="container">
-<h2>
-      Pay for what you use
-     </h2>
-<p>
-      We are working on a new pricing model that will allow you to pay for credits to generate pages. This will be a great option for users who don't need a large number of pages at once.
-     </p>
-<p>
-      Stay tuned for more details!
-     </p>
-</div>
-</section>
-</main>
-<div class="sticky-cta-bar">
-<p>
-    Ready to get more local customers?
-   </p>
-<a class="button" href="generate.html">
-    Generate Pages Now
-   </a>
-<a class="button button-secondary" href="audit.html">
-    Get Free Audit
-   </a>
-</div>
-<footer>
-<div class="container">
-<p>
-     © 2026 LocalLeads. All rights reserved.
-    </p>
-</div>
-</footer>
-<script src="/js/app.min.js"></script> <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-</body>
-</html>
+    </header>"""
+
+def main():
+    workspace = "/home/race/race-gemini"
+    for filename in FILES_TO_UPDATE:
+        filepath = os.path.join(workspace, filename)
+        if not os.path.exists(filepath):
+            print(f"File not found: {filename}")
+            continue
+            
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        # Regex to find <header>...</header> (case-insensitive, dotall)
+        header_regex = re.compile(r'<header>.*?</header>', re.IGNORECASE | re.DOTALL)
+        
+        if header_regex.search(content):
+            new_content = header_regex.sub(NEW_HEADER, content)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"Updated: {filename}")
+        else:
+            print(f"No <header> block found in: {filename}")
+
+if __name__ == "__main__":
+    main()
