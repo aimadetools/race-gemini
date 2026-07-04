@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local SEO Keyword &amp; Search Intent Planner | LocalLeads</title>
+    <meta content="Generate high-intent local SEO search terms and keywords for any service and town. Uncover purchase-intent search volume and map out your content plan." name="description"/>
+    <meta content="local seo keyword research, local search intent planner, local keywords finder, local search volume, local lead generation keywords, local content marketing" name="keywords"/>
+    <meta content="Free Local SEO Keyword &amp; Search Intent Planner | LocalLeads" property="og:title"/>
+    <meta content="Generate high-intent local SEO search terms and keywords for any service and town. Discover commercial search intent in neighboring towns." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/local-keyword-planner.html" property="og:url"/>
+    <link href="https://www.localseogen.com/local-keyword-planner.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        .planner-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .planner-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .planner-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        @media (min-width: 992px) {
+            .planner-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .scanner-input {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+        .scanner-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(31, 41, 55, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .scanner-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+        .pulse-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        .pulse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .intent-transactional {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .intent-commercial {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .intent-info {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .vol-high {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .vol-medium {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        .vol-low {
+            background: rgba(107, 114, 128, 0.15);
+            color: #9ca3af;
+            border: 1px solid rgba(107, 114, 128, 0.3);
+        }
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        th {
+            background: rgba(31, 41, 55, 0.8);
+            color: #d1d5db;
+            font-weight: 600;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .blurred-row {
+            filter: blur(4px);
+            opacity: 0.4;
+            user-select: none;
+            pointer-events: none;
+        }
+        .lock-overlay-panel {
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            position: relative;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .lock-icon {
+            font-size: 2.5rem;
+            color: #6366f1;
+            margin-bottom: 1rem;
+            animation: pulse-lock 2s infinite;
+        }
+        @keyframes pulse-lock {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .cta-box {
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), rgba(0,0,0,0) 70%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .cta-box h3 {
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .cta-box p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg"/>
+                </a>
+                <div aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="free-seo-audit.html">Free Audit</a></li>
+                    <li><a href="auth.html" class="nav-btn">Sign In</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" style="padding-top: 8rem; padding-bottom: 5rem;">
+        <div class="section-header">
+            <h1>Free Local SEO Keyword &amp; Intent Planner</h1>
+            <p>Enter your service category and town to generate high-intent search queries that drive commercial customers to local service businesses.</p>
+        </div>
+
+        <div class="planner-layout">
+            <!-- Keyword Builder Form -->
+            <div class="planner-card">
+                <h2 style="color: #fff; font-size: 1.25rem; margin-top: 0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-search-location" style="color: #6366f1;"></i> Query Builder
+                </h2>
+                <form id="planner-form">
+                    <div class="form-grid">
+                        <div>
+                            <label class="scanner-label" for="research-service">Service Category</label>
+                            <input class="scanner-input" id="research-service" placeholder="e.g. Plumber, Roofers, House Cleaning" required="" type="text"/>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="research-town">Target Town / City</label>
+                            <input class="scanner-input" id="research-town" placeholder="e.g. Austin, Denver, Chicago" required="" type="text"/>
+                        </div>
+                    </div>
+                    <button class="pulse-btn" style="width: 100%;" type="submit">
+                        <i class="fas fa-magic"></i> Generate Local Keywords
+                    </button>
+                </form>
+            </div>
+
+            <!-- Loader -->
+            <div id="planner-loader" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 0;">
+                <div class="spinner" style="border: 4px solid rgba(255,255,255,0.1); border-left-color: #6366f1; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 1.5rem;"></div>
+                <p style="color: #9ca3af; font-size: 1rem;">Analyzing search patterns and intent classification...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="planner-empty" style="text-align: center; padding: 4rem 0; border: 2px dashed rgba(255,255,255,0.05); border-radius: 12px; background: rgba(31, 41, 55, 0.2);">
+                <i class="fas fa-keyboard" style="font-size: 3rem; color: #4b5563; margin-bottom: 1.5rem;"></i>
+                <h3 style="color: #d1d5db; font-size: 1.2rem; margin-bottom: 0.5rem;">Ready to Analyze Local Intent?</h3>
+                <p style="color: #6b7280; font-size: 0.95rem; max-width: 450px; margin: 0 auto;">Input your service vertical and service area above to discover target search queries with precise buying intent.</p>
+            </div>
+
+            <!-- Results Section -->
+            <div id="planner-results" style="display: none;">
+                <div class="planner-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                        <h2 style="color: #fff; font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-list-ul" style="color: #10b981;"></i> Suggested Local Keywords
+                        </h2>
+                        <button class="button button-small" id="export-csv-btn" style="display: none; background: linear-gradient(135deg, #10b981, #059669); font-size: 0.85rem; padding: 0.5rem 1rem; border-radius: 6px; align-items: center; gap: 6px; color: #fff; font-weight: bold; border: none; cursor: pointer;">
+                            <i class="fas fa-file-csv"></i> Export to CSV
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Keyword / Query</th>
+                                    <th>Search Intent</th>
+                                    <th>Search Volume</th>
+                                    <th>Strategic Value &amp; Explanation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keywords-table-body">
+                                <!-- Appended dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Lead Capture Lock Overlay -->
+                    <div class="lock-overlay-panel" id="lock-panel" style="display: none;">
+                        <i class="fas fa-lock lock-icon"></i>
+                        <h3 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Unlock the Full Keyword Report</h3>
+                        <p style="color: #9ca3af; font-size: 0.95rem; max-width: 500px; margin: 0 auto 1.5rem auto; line-height: 1.5;">We have generated 8 highly relevant local keywords. Enter your business details below to unlock all search queries, search intent metrics, and export them directly to CSV.</p>
+                        <form id="lead-capture-form" style="max-width: 450px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+                            <input class="scanner-input" id="lead-name" placeholder="Your Name" required="" type="text"/>
+                            <input class="scanner-input" id="lead-email" placeholder="Business Email Address" required="" type="email"/>
+                            <button class="pulse-btn" id="unlock-btn" style="width: 100%;" type="submit">
+                                <i class="fas fa-key"></i> Unlock All &amp; Download CSV
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Promo CTA box -->
+                    <div class="cta-box">
+                        <h3>Dominate Neighborhood Searches with Geo-targeted Landing Pages</h3>
+                        <p>Finding local keywords is only the first step. LocalLeads builds high-ranking, search-optimized pages for every town you service, turning searches into paying clients with zero hosting hassle.</p>
+                        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <a href="/auth.html?signup=true" class="button" style="background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 12px rgba(99,102,241,0.3); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 6px; font-weight: bold; color: #fff;">
+                                Start Free Account
+                            </a>
+                            <a href="/free-seo-audit.html" class="button" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 6px; font-weight: bold; color: #fff;">
+                                Get Free Audit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-cols" style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; padding: 4rem 0 2rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="footer-col" style="flex: 1.5; min-width: 250px;">
+                    <a class="logo" href="/" style="display: inline-block; margin-bottom: 1.5rem;">
+                        <img src="/images/logo.svg" alt="LocalLeads Logo" style="height: 32px;"/>
+                    </a>
+                    <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; margin: 0;">Get found in every town. We build high-ranking local landing pages for businesses looking to dominate neighborhood search.</p>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Free Tools</h2>
+                    <ul>
+                        <li><a href="seo-roi-calculator.html">ROI Calculator</a></li>
+                        <li><a href="competitor-gap.html">Competitor Gap</a></li>
+                        <li><a href="schema-generator.html">Schema Generator</a></li>
+                        <li><a href="review-flyer.html">Review Flyer</a></li>
+                        <li><a href="citation-scanner.html">Citation Scanner</a></li>
+                        <li><a href="review-link-generator.html">Review Link Gen</a></li>
+                        <li><a href="review-calculator.html">Review Calculator</a></li>
+                        <li><a href="gbp-audit.html">GBP Audit</a></li>
+                        <li><a href="local-keyword-planner.html" style="color: #6366f1; font-weight: 600;">Keyword Planner</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1; min-width: 150px;">
+                    <h2 style="font-size: 1.2rem; margin-bottom: 1rem; text-align: left; background: none; -webkit-text-fill-color: initial; color: #fff;">Legal</h2>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="audit.html">Free SEO Audit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-size: 0.9rem;">
+                <p>© 2026 LocalLeads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script src="js/local-keyword-planner.js"></script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>
