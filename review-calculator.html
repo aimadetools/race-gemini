@@ -395,6 +395,20 @@
     </header>
 
     <main class="container" style="max-width: 1000px; margin: 6rem auto 4rem; padding: 0 1.5rem;">
+        <!-- Print-only Plan Header -->
+        <div class="print-only-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6366f1; padding-bottom: 15px; margin-bottom: 25px;">
+                <div>
+                    <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; background: none; -webkit-text-fill-color: initial;">Google Review Campaign Plan</h1>
+                    <p style="font-size: 14px; color: #4b5563; margin: 5px 0 0 0;" id="print-biz-name-display">Reputation Building Schedule</p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="font-size: 14px; font-weight: 700; color: #6366f1; margin: 0;">LocalLeads</p>
+                    <p style="font-size: 12px; color: #6b7280; margin: 2px 0 0 0;">localseogen.com</p>
+                </div>
+            </div>
+        </div>
+
         <div class="section-header">
             <h1 id="page-main-heading">Google Review &amp; Reputation Goal Planner</h1>
             <p>Calculate exactly how many 5-star reviews you need to reach your target rating on Google Maps, and plan a week-by-week campaign to hit it.</p>
@@ -434,6 +448,17 @@
                                     <option value="4.9">4.9 Stars</option>
                                     <option value="5.0">5.0 Stars</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Print-only Summary -->
+                        <div class="print-only-summary" style="margin-bottom: 20px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #f9fafb;">
+                            <h3 style="margin-top: 0; font-size: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; color: #111827;">Campaign Parameters</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+                                <div><strong>Business Name:</strong> <span id="print-summary-biz-name" style="color: #374151;">-</span></div>
+                                <div><strong>Current Rating:</strong> <span id="print-summary-current-rating" style="color: #374151;">-</span></div>
+                                <div><strong>Current Total Reviews:</strong> <span id="print-summary-current-reviews" style="color: #374151;">-</span></div>
+                                <div><strong>Target Rating:</strong> <span id="print-summary-target-rating" style="color: #374151;">-</span></div>
                             </div>
                         </div>
 
@@ -524,6 +549,13 @@
                         <span style="font-size: 0.85rem; color: #a7f3d0; text-transform: uppercase; font-weight: 600;">Estimated Campaign Duration</span>
                         <div style="font-size: 1.6rem; font-weight: 800; color: #34d399; margin: 0.25rem 0;" id="weeks-needed-val">10 Weeks</div>
                         <p style="margin: 0; font-size: 0.8rem; color: #9ca3af;" id="rate-summary">Generating 3.0 new reviews per week.</p>
+                    </div>
+
+                    <!-- PDF Download Button -->
+                    <div style="margin-bottom: 2rem; text-align: center;" id="download-pdf-btn-container">
+                        <button id="download-plan-pdf-btn" class="pulse-btn" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35); font-size: 1rem; padding: 0.85rem 1.5rem; max-width: 320px; margin: 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa-solid fa-file-pdf"></i> Download PDF Campaign Plan
+                        </button>
                     </div>
 
                     <!-- Week-by-Week Action Plan -->

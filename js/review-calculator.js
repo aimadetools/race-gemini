@@ -84,6 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
         promoLinkGen.href = `/review-link-generator.html?biz_name=${encodedBizName}`;
         promoFlyer.href = `/review-flyer.html?biz_name=${encodedBizName}`;
         
+        // Update print-only summary and headers
+        const printBizName = document.getElementById('print-biz-name-display');
+        if (printBizName) {
+            printBizName.textContent = `Business Name: ${bizName}`;
+        }
+        const printSumName = document.getElementById('print-summary-biz-name');
+        if (printSumName) printSumName.textContent = bizName;
+        const printSumRating = document.getElementById('print-summary-current-rating');
+        if (printSumRating) printSumRating.textContent = `${currentRating} ★`;
+        const printSumReviews = document.getElementById('print-summary-current-reviews');
+        if (printSumReviews) printSumReviews.textContent = currentReviews;
+        const printSumTarget = document.getElementById('print-summary-target-rating');
+        if (printSumTarget) printSumTarget.textContent = `${targetRating} ★`;
+        
         // 4. If already unlocked, update schedules
         if (isUnlocked) {
             updateSchedulePlan();
@@ -238,6 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         box.appendChild(btn);
     });
+    
+    // Print PDF button listener
+    const downloadPlanPdfBtn = document.getElementById('download-plan-pdf-btn');
+    if (downloadPlanPdfBtn) {
+        downloadPlanPdfBtn.addEventListener('click', () => {
+            window.print();
+        });
+    }
     
     // Initial runs
     updateInstantMetrics();

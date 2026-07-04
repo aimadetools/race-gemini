@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             
+            const printDomain = document.getElementById('print-website-domain');
+            if (printDomain) {
+                printDomain.textContent = `Website: ${url}`;
+            }
+            
             displayResults(data);
 
         } catch (error) {
@@ -211,12 +216,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error('Failed to capture email.');
                 }
 
-                auditResults.innerHTML += '<p>Thank you! Your report is on its way.</p>';
                 emailCaptureForm.style.display = 'none';
+                
+                const captureSuccessHtml = `
+                    <div id="download-report-container" style="margin-top: 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <p style="color: #34d399; font-weight: 600; margin: 0;"><i class="fas fa-check-circle"></i> Email saved successfully!</p>
+                        <button id="download-pdf-btn" class="cta-button" style="max-width: 320px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+                        </button>
+                    </div>
+                `;
+                
+                const existingContainer = document.getElementById('download-report-container');
+                if (existingContainer) {
+                    existingContainer.remove();
+                }
+                
+                const ctaBox = document.querySelector('#audit-results .call-to-action');
+                if (ctaBox) {
+                    ctaBox.insertAdjacentHTML('beforeend', captureSuccessHtml);
+                } else {
+                    auditResults.insertAdjacentHTML('beforeend', captureSuccessHtml);
+                }
+                
+                const printBtn = document.getElementById('download-pdf-btn');
+                if (printBtn) {
+                    printBtn.addEventListener('click', () => {
+                        window.print();
+                    });
+                }
 
             } catch (error) {
                 console.error('Error capturing email:', error);
-                auditResults.innerHTML += '<p class="error">Could not save your email. Please try again later.</p>';
+                const errorMsg = document.createElement('p');
+                errorMsg.className = 'error';
+                errorMsg.textContent = 'Could not save your email. Please try again later.';
+                emailCaptureForm.after(errorMsg);
             }
         });
     }
