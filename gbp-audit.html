@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Google Business Profile (GBP) SEO Audit & Optimizer - LocalLeads</title>
+    <meta content="Audit and optimize your Google Business Profile for local SEO rankings. Discover missing details, get AI-optimized descriptions, GBP posts, and proactive Q&As." name="description">
+    <link href="style.min.css" rel="stylesheet">
+    <link href="style_scroll_to_top.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="/images/favicon.png" rel="icon" type="image/png">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .glass-card {
+            background: rgba(31, 41, 55, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+        /* Loader Overlay */
+        .loading-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #4b5563;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+        .loading-step.active {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        .loading-step.completed {
+            color: #34d399;
+        }
+        .loading-step i {
+            width: 18px;
+            text-align: center;
+        }
+        .loading-step.active i {
+            animation: spin 1s infinite linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Lock Panel */
+        .lock-panel {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 2.5rem;
+        }
+        /* Dashboard Layout */
+        .audit-dashboard {
+            display: none;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 992px) {
+            .audit-dashboard {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+        /* Score Gauge */
+        .score-circle {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-circle svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .score-circle circle {
+            fill: none;
+            stroke-width: 10;
+        }
+        .score-circle .bg-circle {
+            stroke: rgba(255, 255, 255, 0.05);
+        }
+        .score-circle .fg-circle {
+            stroke: url(#scoreGrad);
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+        .score-value {
+            position: absolute;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        /* Checks list */
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            text-align: left;
+        }
+        .check-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+            display: inline-block;
+        }
+        .badge-passed { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .badge-warning { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .badge-failed { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+        
+        /* Tabs navigation */
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn:hover {
+            color: #fff;
+        }
+        .tab-btn.active {
+            color: #60a5fa;
+            border-bottom-color: #60a5fa;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Keyword tags */
+        .kw-tag {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #93c5fd;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0.25rem;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+        .copy-btn:hover {
+            color: #fff;
+        }
+    </style>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+        <nav>
+            <div class="container">
+                <a class="logo" href="/">
+                    <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg">
+                </a>
+                <div aria-expanded="false" aria-label="Toggle navigation menu" class="hamburger-menu" id="hamburger-icon" role="button" tabindex="0">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <ul class="nav-links" id="nav-menu">
+                    <li class="close-menu-li">
+                        <button aria-label="Close mobile menu" id="close-menu-btn">×</button>
+                    </li>
+                    <li><a href="/generate.html">Generate Pages</a></li>
+                    <li><a href="/pricing.html">Pricing</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="/audit.html">Free Audit</a></li>
+                    <li><a href="/seo-roi-calculator.html">ROI Calculator</a></li>
+                    <li><a href="/competitor-gap.html">Competitor Gap</a></li>
+                    <li><a href="/schema-generator.html">Schema Generator</a></li>
+                    <li><a href="/review-flyer.html">Review Flyer</a></li>
+                    <li><a href="/review-link-generator.html">Review Link Gen</a></li>
+                    <li><a href="/citation-scanner.html">Citation Scanner</a></li>
+                    <li><a href="/gbp-audit.html" style="color: #6366f1; font-weight: 700;">GBP Audit</a></li>
+                    <li><a href="/showcase.html">Showcase</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/auth.html">Login/Signup</a></li>
+                    <li><a href="/buy-credits.html">Buy Credits</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <span style="background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 4px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">New Feature</span>
+            <h1 style="font-size: 2.75rem; font-weight: 800; margin: 10px 0 15px 0;"><span class="text-gradient">Google Business Profile</span> Audit & AI Optimizer</h1>
+            <p style="color: #9ca3af; font-size: 1.15rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">Maximize your local map rankings. Connect or enter your profile details to run an instant Google Business Profile audit and get AI recommendations.</p>
+        </div>
+
+        <!-- Form Panel -->
+        <div id="audit-form-panel" class="glass-card" style="max-width: 650px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0; font-size: 1.25rem;">Scan & Optimize Your Listing</h3>
+                <button type="button" id="btn-dashboard-import" class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; display: none;">
+                    <i class="fas fa-file-import"></i> Use My Saved Profile
+                </button>
+            </div>
+            
+            <form id="audit-form">
+                <div class="form-group">
+                    <label for="biz-name">Business Name</label>
+                    <input type="text" id="biz-name" class="form-control" placeholder="e.g. Springfield Plumbers" required>
+                </div>
+                <div class="form-group">
+                    <label for="biz-category">Primary Category</label>
+                    <select id="biz-category" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Plumber">Plumbing</option>
+                        <option value="House Cleaning Service">Cleaning</option>
+                        <option value="Electrician">Electrical</option>
+                        <option value="HVAC Contractor">HVAC</option>
+                        <option value="Landscaping Company">Landscaping</option>
+                        <option value="Roofer">Roofing</option>
+                        <option value="LocalBusiness">Other / Local Business</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="biz-address">Business Address / City & State</label>
+                    <input type="text" id="biz-address" class="form-control" placeholder="e.g. Springfield, IL" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="biz-phone">Telephone (Optional)</label>
+                        <input type="text" id="biz-phone" class="form-control" placeholder="e.g. (555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="biz-website">Website (Optional)</label>
+                        <input type="url" id="biz-website" class="form-control" placeholder="e.g. https://yoursite.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="biz-description">Current Profile Description (Optional)</label>
+                    <textarea id="biz-description" class="form-control" rows="3" placeholder="Describe your business services..."></textarea>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" id="btn-run-audit" class="btn-primary" style="width: 100%; justify-content: center; font-size: 1.05rem;">
+                        <i class="fas fa-search-location"></i> Run Audit & Generate Recommendations
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Loading Steps Panel -->
+        <div id="loading-panel" class="glass-card loading-overlay" style="max-width: 500px; margin: 0 auto; display: none;">
+            <div style="font-size: 3rem; color: #60a5fa; margin-bottom: 1rem;">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <h3 class="loading-title">Auditing Google Business Profile</h3>
+            <p class="loading-subtitle">Analysing listing details against local search ranking factors...</p>
+            <div class="loading-steps">
+                <div class="loading-step" id="step-retrieve">
+                    <i class="fas fa-circle-notch"></i> Retrieving listing metadata
+                </div>
+                <div class="loading-step" id="step- NAP">
+                    <i class="fas fa-circle-notch"></i> Verifying NAP address matching
+                </div>
+                <div class="loading-step" id="step-completeness">
+                    <i class="fas fa-circle-notch"></i> Checking completeness score
+                </div>
+                <div class="loading-step" id="step-ai">
+                    <i class="fas fa-circle-notch"></i> Synthesizing AI SEO optimizations
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Lock Panel -->
+        <div id="lock-panel" class="glass-card lock-panel">
+            <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); width: 64px; height: 64px; border-radius: 50px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="fas fa-lock" style="font-size: 1.5rem; color: #818cf8;"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff;">Audit Complete!</h3>
+            <p style="color: #9ca3af; font-size: 0.95rem; margin-bottom: 1.75rem; line-height: 1.5;">Enter your email to unlock your Google Business Profile score, checklists, local SEO keyword suggestions, and custom AI content recommendations.</p>
+            
+            <form id="lead-form" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
+                <div>
+                    <label for="lead-name" style="font-size: 0.85rem; font-weight: 600; color: #ccc; display: block; margin-bottom: 0.25rem;">Your Name</label>
+                    <input type="text" id="lead-name" class="form-control" placeholder="e.g. John Doe" required>
+                </div>
+                <div>
+                    <label for="lead-email" style="font-size: 0.85rem; font-weight: 600; color: #ccc; display: block; margin-bottom: 0.25rem;">Business Email Address</label>
+                    <input type="email" id="lead-email" class="form-control" placeholder="e.g. john@yourbiz.com" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; font-size: 1rem;">
+                    Unlock Audit Results <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Audit Dashboard Panel -->
+        <div id="audit-dashboard" class="audit-dashboard">
+            <!-- Left Panel: Score and Checks -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="glass-card" style="text-align: center;">
+                    <h3 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 1.5rem;">Optimization Score</h3>
+                    <div class="score-circle">
+                        <svg>
+                            <defs>
+                                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3b82f6" />
+                                    <stop offset="100%" stop-color="#10b981" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="bg-circle" cx="80" cy="80" r="70"></circle>
+                            <circle class="fg-circle" cx="80" cy="80" r="70" id="dash-score-circle"></circle>
+                        </svg>
+                        <div class="score-value" id="dash-score-text">0%</div>
+                    </div>
+                    <p style="color: #9ca3af; font-size: 0.85rem; line-height: 1.4; margin-bottom: 0;" id="dash-score-message">Your profile optimization health.</p>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 1rem;">Checklist Findings</h3>
+                    <div id="dash-checks-container">
+                        <!-- Checklist items inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: AI Recommendations and Tools -->
+            <div class="glass-card" style="display: flex; flex-direction: column;">
+                <div class="tabs-header" id="tabs-header">
+                    <button class="tab-btn active" data-tab="tab-desc">AI Business Description</button>
+                    <button class="tab-btn" data-tab="tab-keywords">SEO Keywords</button>
+                    <button class="tab-btn" data-tab="tab-posts">Local Updates & Offers</button>
+                    <button class="tab-btn" data-tab="tab-faqs">Proactive Q&As</button>
+                </div>
+
+                <div style="flex-grow: 1;">
+                    <!-- Tab: Description -->
+                    <div id="tab-desc" class="tab-content active">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Optimized GBP Description</h4>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" id="btn-save-desc" class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; display: none;">
+                                    <i class="fas fa-save"></i> Save to Profile
+                                </button>
+                                <button type="button" id="btn-copy-desc" class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem;">
+                                    <i class="fas fa-copy"></i> Copy Text
+                                </button>
+                            </div>
+                        </div>
+                        <p style="color: #9ca3af; font-size: 0.88rem; margin-bottom: 1rem; line-height: 1.4;">Insert this keyword-rich, localized description into your Google Business Profile admin panel to boost search relevance.</p>
+                        <div style="background: rgba(17, 24, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.25rem; border-radius: 8px; font-size: 0.95rem; line-height: 1.6; color: #e5e7eb; min-height: 150px; font-family: inherit;" id="dash-opt-desc">
+                            Generating description...
+                        </div>
+                        <div style="text-align: right; color: #6b7280; font-size: 0.8rem; margin-top: 0.5rem;" id="dash-desc-char-count">
+                            0 / 750 characters (Limit: 750)
+                        </div>
+                    </div>
+
+                    <!-- Tab: Keywords -->
+                    <div id="tab-keywords" class="tab-content">
+                        <h4 style="margin: 0 0 1rem 0; font-size: 1.1rem; color: #fff;">Top Local Search Keywords</h4>
+                        <p style="color: #9ca3af; font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.4;">These high-value local terms should be incorporated into your services list, posts, and Q&A section to increase organic visibility.</p>
+                        <div id="dash-keywords-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;">
+                            <!-- Keywords tags go here -->
+                        </div>
+                    </div>
+
+                    <!-- Tab: Posts -->
+                    <div id="tab-posts" class="tab-content">
+                        <h4 style="margin: 0 0 1rem 0; font-size: 1.1rem; color: #fff;">GBP Update & Offer Suggestions</h4>
+                        <p style="color: #9ca3af; font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.4;">Publishing posts regularly signals active presence to Google. Copy these AI-generated posts to your dashboard or publish directly.</p>
+                        <div id="dash-posts-container" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <!-- Post suggestions go here -->
+                        </div>
+                    </div>
+
+                    <!-- Tab: FAQs -->
+                    <div id="tab-faqs" class="tab-content">
+                        <h4 style="margin: 0 0 1rem 0; font-size: 1.1rem; color: #fff;">Proactive GBP Q&A Additions</h4>
+                        <p style="color: #9ca3af; font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.4;">You can proactively ask and answer your own questions in the GBP Q&A section. This satisfies customer inquiries and embeds important local keywords.</p>
+                        <div id="dash-faqs-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- FAQs go here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 2.5rem; padding-top: 1.5rem; text-align: center; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                    <div style="font-size: 0.9rem; color: #9ca3af;" id="dash-footer-message">Want to build hyper-local search pages matching your optimized profile?</div>
+                    <a href="/generate.html" id="dash-generator-cta" class="btn-primary">
+                        <i class="fas fa-magic"></i> Generate Optimized Service Pages Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="border-top: 1px solid rgba(255, 255, 255, 0.05); background: #070a13; padding: 4rem 0; color: #9ca3af; font-size: 0.9rem;">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
+            <div>
+                <img src="/images/logo.svg" alt="LocalLeads Logo" style="height: 24px; margin-bottom: 1rem;">
+                <p style="font-size: 0.85rem; line-height: 1.5;">Get found in every town. Hyper-local search engine optimization pages designed for small local businesses.</p>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 1rem;">Public SEO Tools</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li><a href="/audit.html" style="color: #9ca3af; text-decoration: none;">Free SEO Audit</a></li>
+                    <li><a href="/citation-scanner.html" style="color: #9ca3af; text-decoration: none;">Citation Health Scanner</a></li>
+                    <li><a href="/competitor-gap.html" style="color: #9ca3af; text-decoration: none;">Competitor Gap Finder</a></li>
+                    <li><a href="/grid-scanner.html" style="color: #9ca3af; text-decoration: none;">Local Rank Grid Scanner</a></li>
+                    <li><a href="/gbp-audit.html" style="color: #9ca3af; text-decoration: none;">GBP Listing Audit</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 1rem;">Review Utilities</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li><a href="/review-link-generator.html" style="color: #9ca3af; text-decoration: none;">Review Link & QR Generator</a></li>
+                    <li><a href="/review-flyer.html" style="color: #9ca3af; text-decoration: none;">Printable Review Flyers</a></li>
+                    <li><a href="/schema-generator.html" style="color: #9ca3af; text-decoration: none;">Local Schema Generator</a></li>
+                    <li><a href="/seo-roi-calculator.html" style="color: #9ca3af; text-decoration: none;">SEO ROI Calculator</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 1rem;">Company</h4>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li><a href="/about.html" style="color: #9ca3af; text-decoration: none;">About Us</a></li>
+                    <li><a href="/blog.html" style="color: #9ca3af; text-decoration: none;">SEO Blog</a></li>
+                    <li><a href="/contact.html" style="color: #9ca3af; text-decoration: none;">Get In Touch</a></li>
+                    <li><a href="/privacy.html" style="color: #9ca3af; text-decoration: none;">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container" style="border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 3rem; padding-top: 2rem; text-align: center; font-size: 0.8rem;">
+            © 2026 LocalLeads. All rights reserved. Dominate local search results.
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <a href="#" id="scroll-to-top" class="scroll-to-top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background: rgba(59, 130, 246, 0.8); color: white; cursor: pointer; padding: 15px; border-radius: 10px; font-size: 18px; text-decoration: none; align-items: center; justify-content: center; width: 50px; height: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: background-color 0.3s;"><i class="fas fa-chevron-up"></i></a>
+
+    <!-- Scripts -->
+    <script src="js/mobile-swipe-nav.min.js"></script>
+    <script src="js/gbp-audit.js"></script>
+</body>
+</html>
