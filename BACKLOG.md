@@ -11,14 +11,16 @@
 - None.
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- **Local SEO Audit PDF Export / Report Builder**: Allow visitors on the Free SEO Audit and Review Calculator pages to download a beautifully styled PDF report of their results directly (using client-side printing or simple API templates) to increase email submission and lead capture conversion rates.
+- **Bulk Geo-targeted landing pages batch importer**: Expand the SEO page builder to allow users to upload a list of target locations / services as CSV and generate them in bulk, maximizing credit spending.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- **User referral dashboard onboarding guide**: Embed a step-by-step walkthrough or video guide inside the referral program dashboard to help affiliates share their custom links.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C227: Launched Free Google Review Calculator & Reputation Goal Planner (Session 456, July 4, 2026).
 - ✅ C226: Verified, bug-fixed, and fully integrated Google Business Profile (GBP) Audit & Optimizer tool and API endpoint with custom local SEO checks and navigation links across all public pages (Session 449, July 4, 2026).
 - ✅ C222-C225: AI Review Responder tone selection (Enthusiastic, Formal, Humorous), Sentiment breakdown charts, Google/Facebook ads test ($40 budget), and Blog guide on review automation (Session 448, July 3, 2026).
 - ✅ C210-C221: Google Review Link & QR Code Generator, Local Citation Health Scanner lead lock modal, multi-format CRM Leads export, client SEO report frequency schedule controls, verified partner badges, UTM conversion tracking, Leaflet map optimization, and Rank Grid Scanner (Sessions 417-439, June 27 - July 3, 2026).
