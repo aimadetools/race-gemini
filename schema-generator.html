@@ -30,6 +30,126 @@
             gap: 2rem;
             margin-top: 2rem;
         }
+        /* Tabs Styles */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.25rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-btn.active {
+            color: white;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+        }
+
+        /* Validator Score circle and badges */
+        .score-circle-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-circle-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        .score-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 10px;
+        }
+        .score-circle-fill {
+            fill: none;
+            stroke: #8b5cf6;
+            stroke-width: 10px;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-in-out, stroke 1s;
+        }
+        .score-circle-text {
+            position: absolute;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .score-circle-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+        .audit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+        .audit-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .audit-status {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-pass {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .status-warn {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        .status-fail {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
         @media (max-width: 992px) {
             .schema-grid {
                 grid-template-columns: 1fr;
@@ -295,7 +415,13 @@
         </section>
 
         <div class="calculator-container" style="margin-top: 0; padding-top: 0;">
-            <div class="schema-grid">
+            <div class="tab-container">
+                <button class="tab-btn active" id="tab-btn-generator"><i class="fas fa-magic"></i> Schema Generator</button>
+                <button class="tab-btn" id="tab-btn-validator"><i class="fas fa-check-double"></i> Schema Validator</button>
+            </div>
+            
+            <div id="tab-content-generator" class="tab-content">
+                <div class="schema-grid">
                 <!-- Inputs Section -->
                 <div class="calc-card" style="padding: 2rem;">
                     <div class="form-section-title">1. Business Profile</div>
@@ -485,6 +611,94 @@
                             <li>Verify your code is error-free using the official Schema Validator.</li>
                             <li>Search engines will read this data to understand your services, address, and rating context.</li>
                         </ol>
+                    </div>
+                </div>
+            </div> <!-- End Generator Tab Content -->
+            
+            <div id="tab-content-validator" class="tab-content" style="display: none;">
+                <div class="schema-grid">
+                    <!-- Left side: Paste structured data -->
+                    <div class="calc-card" style="padding: 2rem;">
+                        <div class="form-section-title">Paste Your Structured Data</div>
+                        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0; margin-bottom: 1.25rem; line-height: 1.4;">
+                            Paste your JSON-LD schema script, or copy-paste your website's entire HTML code. We will automatically extract and check the structured data.
+                        </p>
+                        <div class="form-group">
+                            <label for="validator-input">JSON-LD Code or HTML Page Source</label>
+                            <textarea class="calc-input" id="validator-input" placeholder='Paste code here... e.g.
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Plumber",
+  "name": "Apex Plumbing Solutions",
+  "telephone": "+1-555-123-4567",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "1209 Red River St",
+    "addressLocality": "Austin",
+    "addressRegion": "TX",
+    "postalCode": "78701",
+    "addressCountry": "US"
+  }
+}
+</script>' rows="12" style="font-family: monospace; font-size: 0.85rem; resize: vertical; background: rgba(0,0,0,0.25);"></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" class="btn-action btn-copy" id="btn-validate-schema" style="flex: 1; justify-content: center; height: 45px; font-size: 1rem; border: none; cursor: pointer; background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                                <i class="fas fa-check-circle"></i> Validate Structured Data
+                            </button>
+                            <button type="button" class="btn-action btn-download" id="btn-clear-validator" style="width: auto; padding: 0 1rem; height: 45px; border-color: rgba(255,255,255,0.1); cursor: pointer;">
+                                Clear
+                            </button>
+                        </div>
+                        <div id="validator-error-box" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 1rem; color: #f87171; font-size: 0.9rem; margin-top: 1.25rem; line-height: 1.4;">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i> <strong id="validator-error-title">Parsing Error:</strong> <span id="validator-error-msg"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Right side: Score & Recommendations -->
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="calc-card" id="validator-results-card" style="padding: 2rem; display: none;">
+                            <h3 style="margin-top: 0; font-size: 1.25rem; color: white; text-align: center; font-weight: 700; border: none; padding-bottom: 0;">Local Schema Audit Report</h3>
+                            
+                            <div class="score-circle-container">
+                                <svg class="score-circle-svg" viewBox="0 0 160 160">
+                                    <circle class="score-circle-bg" cx="80" cy="80" r="70"></circle>
+                                    <circle class="score-circle-fill" id="validator-score-circle" cx="80" cy="80" r="70"></circle>
+                                </svg>
+                                <div class="score-circle-text">
+                                    <span id="validator-score-num">0%</span>
+                                    <span class="score-circle-label">NAP Score</span>
+                                </div>
+                            </div>
+                            
+                            <div id="validator-grade-alert" style="text-align: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 1.5rem; color: #a78bfa;">
+                                Standard Grade
+                            </div>
+
+                            <div id="validator-audit-list">
+                                <!-- Dynamically populated list of checks -->
+                            </div>
+                            
+                            <!-- Conversion Hook to Fix Schema -->
+                            <div id="validator-fix-section" style="display: none; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1.25rem; margin-top: 1.25rem; text-align: center;">
+                                <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 0; margin-bottom: 1rem; line-height: 1.45;">
+                                    We detected schema issues. You can automatically load this data into the generator to generate a fully compliant and optimized version.
+                                </p>
+                                <button type="button" id="btn-fix-parsed-schema" class="btn-action btn-copy" style="width: 100%; justify-content: center; background: #10b981; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">
+                                    <i class="fas fa-tools"></i> Load into Generator & Fix
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- General info box displayed when no scan has run -->
+                        <div class="calc-card" id="validator-placeholder-card" style="padding: 2rem; text-align: center; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px;">
+                            <i class="fas fa-shield-alt" style="font-size: 3rem; color: rgba(255,255,255,0.1); margin-bottom: 1rem;"></i>
+                            <h4 style="color: white; margin: 0 0 0.5rem 0; font-weight: 700; font-size: 1.1rem;">Awaiting Structured Data</h4>
+                            <p style="color: #94a3b8; font-size: 0.9rem; max-width: 320px; line-height: 1.5; margin: 0;">
+                                Paste your structured data structured data/HTML code on the left and click Validate to run a complete local search compliance audit.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -690,6 +904,434 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
+            });
+
+            // Tab switching logic
+            const tabBtnGenerator = document.getElementById('tab-btn-generator');
+            const tabBtnValidator = document.getElementById('tab-btn-validator');
+            const tabContentGenerator = document.getElementById('tab-content-generator');
+            const tabContentValidator = document.getElementById('tab-content-validator');
+
+            function switchTab(target) {
+                if (target === 'generator') {
+                    tabBtnGenerator.classList.add('active');
+                    tabBtnValidator.classList.remove('active');
+                    tabContentGenerator.style.display = 'block';
+                    tabContentValidator.style.display = 'none';
+                } else {
+                    tabBtnGenerator.classList.remove('active');
+                    tabBtnValidator.classList.add('active');
+                    tabContentGenerator.style.display = 'none';
+                    tabContentValidator.style.display = 'block';
+                }
+            }
+
+            tabBtnGenerator.addEventListener('click', () => switchTab('generator'));
+            tabBtnValidator.addEventListener('click', () => switchTab('validator'));
+
+            // Validator DOM elements
+            const validatorInput = document.getElementById('validator-input');
+            const btnValidateSchema = document.getElementById('btn-validate-schema');
+            const btnClearValidator = document.getElementById('btn-clear-validator');
+            const validatorErrorBox = document.getElementById('validator-error-box');
+            const validatorErrorMsg = document.getElementById('validator-error-msg');
+            const validatorResultsCard = document.getElementById('validator-results-card');
+            const validatorPlaceholderCard = document.getElementById('validator-placeholder-card');
+            const validatorScoreNum = document.getElementById('validator-score-num');
+            const validatorScoreCircle = document.getElementById('validator-score-circle');
+            const validatorGradeAlert = document.getElementById('validator-grade-alert');
+            const validatorAuditList = document.getElementById('validator-audit-list');
+            const validatorFixSection = document.getElementById('validator-fix-section');
+            const btnFixParsedSchema = document.getElementById('btn-fix-parsed-schema');
+
+            let parsedSchemaData = null; // Store successfully parsed schema data for "Fix Schema" loading
+
+            // Clear validator input
+            btnClearValidator.addEventListener('click', () => {
+                validatorInput.value = '';
+                validatorErrorBox.style.display = 'none';
+                validatorResultsCard.style.display = 'none';
+                validatorPlaceholderCard.style.display = 'flex';
+                parsedSchemaData = null;
+            });
+
+            // Validate Structured Data
+            btnValidateSchema.addEventListener('click', () => {
+                validatorErrorBox.style.display = 'none';
+                let inputVal = validatorInput.value.trim();
+
+                if (!inputVal) {
+                    showValidationError('Input is empty', 'Please paste your structured data or HTML code first.');
+                    return;
+                }
+
+                // If input is HTML, extract <script type="application/ld+json"> contents
+                if (inputVal.includes('<script') && inputVal.includes('application/ld+json')) {
+                    const match = inputVal.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+                    if (match && match[1]) {
+                        inputVal = match[1].trim();
+                    } else {
+                        showValidationError('Missing structured data block', 'Found script tags, but could not extract valid application/ld+json contents.');
+                        return;
+                    }
+                } else if (inputVal.startsWith('<')) {
+                    // Try regex to pull out anything resembling JSON-LD in script
+                    const match = inputVal.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+                    if (match && match[1]) {
+                        inputVal = match[1].trim();
+                    }
+                }
+
+                // Attempt to parse JSON
+                let schemaObj;
+                try {
+                    // Strip leading/trailing script tags if they survived
+                    inputVal = inputVal.replace(/^<script[^>]*>/i, '').replace(/<\/script>$/i, '').trim();
+                    schemaObj = JSON.parse(inputVal);
+                } catch (e) {
+                    showValidationError('Invalid JSON Syntax', `Failed to parse structured data. Details: ${e.message}. Check for missing quotes or double-commas.`);
+                    return;
+                }
+
+                parsedSchemaData = schemaObj;
+                runSchemaChecks(schemaObj);
+            });
+
+            function showValidationError(title, msg) {
+                validatorErrorBox.style.display = 'block';
+                document.getElementById('validator-error-title').textContent = title + ':';
+                validatorErrorMsg.textContent = msg;
+                validatorResultsCard.style.display = 'none';
+                validatorPlaceholderCard.style.display = 'flex';
+            }
+
+            function runSchemaChecks(schema) {
+                // If it is wrapped in @graph, extract first LocalBusiness type
+                let target = schema;
+                if (schema['@graph'] && Array.isArray(schema['@graph'])) {
+                    const localBiz = schema['@graph'].find(item => {
+                        const type = item['@type'] || '';
+                        return type.toLowerCase().includes('local') || type.toLowerCase().includes('business') || type.toLowerCase().includes('service');
+                    });
+                    if (localBiz) {
+                        target = localBiz;
+                    }
+                }
+
+                const checks = [];
+                let score = 0;
+
+                // 1. Primary @type check
+                const type = target['@type'] || '';
+                const genericTypes = ['localbusiness', 'organization', 'website'];
+                if (!type) {
+                    checks.push({
+                        name: 'Structured Data Type',
+                        status: 'fail',
+                        desc: 'No "@type" property defined. Recommends defining a specific category like Plumber or Dentist.'
+                    });
+                } else if (genericTypes.includes(type.toLowerCase())) {
+                    score += 5;
+                    checks.push({
+                        name: 'Structured Data Type',
+                        status: 'warn',
+                        desc: `Generic "@type": "${type}" used. Google recommends using a more specific category type (e.g., "Plumber", "Electrician") for better ranking relevance.`
+                    });
+                } else {
+                    score += 10;
+                    checks.push({
+                        name: 'Structured Data Type',
+                        status: 'pass',
+                        desc: `Optimized specific "@type": "${type}" used.`
+                    });
+                }
+
+                // 2. Business Name
+                const name = target.name || '';
+                if (!name) {
+                    checks.push({
+                        name: 'Business Name ("name")',
+                        status: 'fail',
+                        desc: 'Missing business name. This is a critical field for search matching.'
+                    });
+                } else {
+                    score += 15;
+                    checks.push({
+                        name: 'Business Name ("name")',
+                        status: 'pass',
+                        desc: `Name detected: "${name}".`
+                    });
+                }
+
+                // 3. Address details
+                const address = target.address || {};
+                const hasAddress = !!target.address;
+                const street = address.streetAddress || '';
+                const city = address.addressLocality || '';
+                const state = address.addressRegion || '';
+                const zip = address.postalCode || '';
+                const country = address.addressCountry || '';
+
+                if (!hasAddress) {
+                    checks.push({
+                        name: 'Physical Address ("address")',
+                        status: 'fail',
+                        desc: 'Missing address object. Critical for Local SEO search indexation.'
+                    });
+                } else {
+                    let addrScore = 0;
+                    let addrFields = [];
+                    if (street) { addrScore += 5; } else { addrFields.push('streetAddress'); }
+                    if (city) { addrScore += 5; } else { addrFields.push('addressLocality (city)'); }
+                    if (state) { addrScore += 5; } else { addrFields.push('addressRegion (state)'); }
+                    if (zip) { addrScore += 5; } else { addrFields.push('postalCode (zip)'); }
+                    if (country) { addrScore += 5; } else { addrFields.push('addressCountry'); }
+
+                    score += addrScore;
+
+                    if (addrScore === 25) {
+                        checks.push({
+                            name: 'Physical Address ("address")',
+                            status: 'pass',
+                            desc: 'Complete physical address NAP coordinates present.'
+                        });
+                    } else {
+                        checks.push({
+                            name: 'Physical Address ("address")',
+                            status: 'warn',
+                            desc: `Address is incomplete. Missing fields: ${addrFields.join(', ')}.`
+                        });
+                    }
+                }
+
+                // 4. Telephone
+                const telephone = target.telephone || '';
+                if (!telephone) {
+                    checks.push({
+                        name: 'Phone Number ("telephone")',
+                        status: 'fail',
+                        desc: 'Missing phone number. Recommends adding the same number as Google Business Profile.'
+                    });
+                } else {
+                    score += 15;
+                    checks.push({
+                        name: 'Phone Number ("telephone")',
+                        status: 'pass',
+                        desc: `Phone detected: "${telephone}".`
+                    });
+                }
+
+                // 5. Geo coordinates (lat/lng)
+                const geo = target.geo || {};
+                const lat = geo.latitude || target.latitude || '';
+                const lng = geo.longitude || target.longitude || '';
+                if (!lat || !lng) {
+                    checks.push({
+                        name: 'Map Coordinates ("geo")',
+                        status: 'fail',
+                        desc: 'Missing latitude & longitude coordinates. Highly recommended for accurate pin mapping.'
+                    });
+                } else {
+                    score += 20;
+                    checks.push({
+                        name: 'Map Coordinates ("geo")',
+                        status: 'pass',
+                        desc: `Coordinates: ${lat}, ${lng}. Perfect for local map pack relevance.`
+                    });
+                }
+
+                // 6. Opening hours
+                const hours = target.openingHoursSpecification || target.openingHours || '';
+                if (!hours || (Array.isArray(hours) && hours.length === 0)) {
+                    checks.push({
+                        name: 'Opening Hours',
+                        status: 'warn',
+                        desc: 'Missing opening hours. Adding opening hours increases trust and rank matching.'
+                    });
+                } else {
+                    score += 10;
+                    checks.push({
+                        name: 'Opening Hours',
+                        status: 'pass',
+                        desc: 'Opening hours specification detected.'
+                    });
+                }
+
+                // 7. Price Range
+                const priceRange = target.priceRange || '';
+                if (!priceRange) {
+                    checks.push({
+                        name: 'Price Range ("priceRange")',
+                        status: 'warn',
+                        desc: 'Missing price range. Recommends adding price category (e.g. "$$") to prevent Google warnings.'
+                    });
+                } else {
+                    score += 5;
+                    checks.push({
+                        name: 'Price Range ("priceRange")',
+                        status: 'pass',
+                        desc: `Price range category: "${priceRange}".`
+                    });
+                }
+
+                // Render Results
+                validatorPlaceholderCard.style.display = 'none';
+                validatorResultsCard.style.display = 'block';
+
+                // Animate score number and circle
+                animateScore(score);
+
+                // Grade alert text
+                let gradeText = '';
+                let gradeColor = '';
+                if (score >= 90) {
+                    gradeText = 'Excellent NAP Structured Data!';
+                    gradeColor = '#34d399';
+                } else if (score >= 70) {
+                    gradeText = 'Good (With Recommendations)';
+                    gradeColor = '#fbbf24';
+                } else {
+                    gradeText = 'Poor Local SEO Compliance';
+                    gradeColor = '#f87171';
+                }
+                validatorGradeAlert.textContent = gradeText;
+                validatorGradeAlert.style.color = gradeColor;
+
+                // Show Fix Section if there are failures/warnings
+                if (score < 100) {
+                    validatorFixSection.style.display = 'block';
+                } else {
+                    validatorFixSection.style.display = 'none';
+                }
+
+                // Populate checklist HTML
+                validatorAuditList.innerHTML = '';
+                checks.forEach(check => {
+                    const statusClass = check.status === 'pass' ? 'status-pass' : (check.status === 'warn' ? 'status-warn' : 'status-fail');
+                    const badgeText = check.status === 'pass' ? 'Pass' : (check.status === 'warn' ? 'Warning' : 'Critical');
+                    
+                    const auditItem = document.createElement('div');
+                    auditItem.className = 'audit-item';
+                    auditItem.innerHTML = `
+                        <div style="text-align: left; padding-right: 15px;">
+                            <h5 style="margin: 0 0 4px 0; color: #fff; font-size: 0.95rem; font-weight: 600;">${check.name}</h5>
+                            <p style="margin: 0; color: #94a3b8; font-size: 0.825rem; line-height: 1.45;">${check.desc}</p>
+                        </div>
+                        <span class="audit-status ${statusClass}">${badgeText}</span>
+                    `;
+                    validatorAuditList.appendChild(auditItem);
+                });
+            }
+
+            function animateScore(targetScore) {
+                let current = 0;
+                const duration = 1000; // 1s
+                const stepTime = 15;
+                const stepsCount = duration / stepTime;
+                const increment = targetScore / stepsCount;
+
+                // Set SVG circular progress
+                const circle = document.getElementById('validator-score-circle');
+                const radius = circle.r.baseVal.value;
+                const circumference = 2 * Math.PI * radius;
+                
+                // Color mapping
+                let strokeColor = '#8b5cf6'; // Violet default
+                if (targetScore >= 90) {
+                    strokeColor = '#10b981'; // Emerald
+                } else if (targetScore >= 70) {
+                    strokeColor = '#f59e0b'; // Amber
+                } else {
+                    strokeColor = '#ef4444'; // Rose
+                }
+                circle.style.stroke = strokeColor;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= targetScore) {
+                        current = targetScore;
+                        clearInterval(timer);
+                    }
+                    const displayVal = Math.round(current);
+                    validatorScoreNum.textContent = displayVal + '%';
+                    
+                    const offset = circumference - (displayVal / 100) * circumference;
+                    circle.style.strokeDashoffset = offset;
+                }, stepTime);
+            }
+
+            // Fix Schema logic: Load validated values into generator form
+            btnFixParsedSchema.addEventListener('click', () => {
+                if (!parsedSchemaData) return;
+
+                // Resolve the target object (graph extraction check)
+                let target = parsedSchemaData;
+                if (parsedSchemaData['@graph'] && Array.isArray(parsedSchemaData['@graph'])) {
+                    const localBiz = parsedSchemaData['@graph'].find(item => {
+                        const type = item['@type'] || '';
+                        return type.toLowerCase().includes('local') || type.toLowerCase().includes('business') || type.toLowerCase().includes('service');
+                    });
+                    if (localBiz) {
+                        target = localBiz;
+                    }
+                }
+
+                // Map values
+                if (target.name) inputs.bizName.value = target.name;
+                if (target['@type']) {
+                    // Check if category type exists in options
+                    const options = Array.from(inputs.bizType.options).map(o => o.value);
+                    if (options.includes(target['@type'])) {
+                        inputs.bizType.value = target['@type'];
+                    } else {
+                        inputs.bizType.value = 'LocalBusiness';
+                    }
+                }
+                if (target.description) inputs.bizDesc.value = target.description;
+                if (target.url) inputs.bizUrl.value = target.url;
+                if (target.logo || target.image) inputs.bizLogo.value = target.logo || target.image;
+                if (target.telephone) inputs.bizPhone.value = target.telephone;
+                if (target.email) inputs.bizEmail.value = target.email;
+                if (target.priceRange) inputs.bizPrice.value = target.priceRange;
+                
+                if (target.openingHours) {
+                    inputs.bizHours.value = target.openingHours;
+                } else if (target.openingHoursSpecification) {
+                    // Simple description helper mapping
+                    inputs.bizHours.value = 'Mo-Fr 09:00-18:00'; // Default fallback recommendation
+                }
+
+                const address = target.address || {};
+                if (address.streetAddress) inputs.bizStreet.value = address.streetAddress;
+                if (address.addressLocality) inputs.bizCity.value = address.addressLocality;
+                if (address.addressRegion) inputs.bizState.value = address.addressRegion;
+                if (address.postalCode) inputs.bizZip.value = address.postalCode;
+                if (address.addressCountry) inputs.bizCountry.value = address.addressCountry;
+
+                const geo = target.geo || {};
+                const lat = geo.latitude || target.latitude || '';
+                const lng = geo.longitude || target.longitude || '';
+                if (lat) inputs.bizLat.value = lat;
+                if (lng) inputs.bizLng.value = lng;
+
+                const socials = target.sameAs || [];
+                if (Array.isArray(socials)) {
+                    socials.forEach(s => {
+                        if (s.includes('facebook.com')) inputs.socialFacebook.value = s;
+                        if (s.includes('twitter.com') || s.includes('x.com')) inputs.socialTwitter.value = s;
+                        if (s.includes('linkedin.com')) inputs.socialLinkedin.value = s;
+                        if (s.includes('instagram.com')) inputs.socialInstagram.value = s;
+                    });
+                }
+
+                // Re-render generator schema
+                updateSchema();
+
+                // Switch back to generator tab
+                switchTab('generator');
+
+                // Scroll to top of generator
+                document.querySelector('.tab-container').scrollIntoView({ behavior: 'smooth' });
             });
         });
     </script>
