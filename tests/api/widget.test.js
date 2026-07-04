@@ -259,4 +259,49 @@ describe('Embeddable Service Area Widget API', () => {
         expect(sentContent).toContain('Free Local Search Audit');
         expect(sentContent).toContain('ll-leadgen-container');
     });
+
+    test('should return business-card widget when type is business-card', async () => {
+        req.query.clientId = '123';
+        req.query.type = 'business-card';
+        req.query.theme = 'light';
+        req.query.color = '00ff00';
+
+        const mockProfile = {
+            name: 'ACME Plumbers',
+            type: 'Plumber',
+            phone: '555-1234',
+            email: 'acme@plumbers.com',
+            description: 'Best plumbers in town',
+            address: {
+                streetAddress: '123 Main St',
+                addressLocality: 'Austin',
+                addressRegion: 'TX',
+                postalCode: '78701',
+                addressCountry: 'US'
+            },
+            hours: ['Mo-Fr 08:00-17:00']
+        };
+
+        setQueryDelegate(async (text, params) => {
+            if (text.includes('SELECT referral_code')) {
+                return { rows: [{ referral_code: 'ref123', custom_domain: null, primary_color: null, name: 'ACME Corp', google_review_link: 'https://g.page/acme', email: 'corp@acme.com', business_profile: mockProfile, phone: '555-1111' }] };
+            }
+            return { rows: [] };
+        });
+
+        await handler(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/javascript; charset=utf-8');
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        const sentContent = res.send.mock.calls[0][0];
+        expect(sentContent).toContain('theme = "light"');
+        expect(sentContent).toContain('baseColor = "#00ff00"');
+        expect(sentContent).toContain('__localseoCardLoaded_123');
+        expect(sentContent).toContain('ACME Plumbers');
+        expect(sentContent).toContain('acme@plumbers.com');
+        expect(sentContent).toContain('123 Main St');
+        expect(sentContent).toContain('Mo-Fr 08:00-17:00');
+        expect(sentContent).toContain('Powered by');
+    });
 });

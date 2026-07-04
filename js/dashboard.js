@@ -3011,6 +3011,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 previewBox.innerHTML = '';
                 previewBox.appendChild(iframe);
+            } else if (widgetType === 'business-card') {
+                if (layoutGroup) layoutGroup.style.display = 'none';
+                if (cssGroup) cssGroup.style.display = 'flex';
+
+                const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&color=${color}&type=business-card`;
+                const embedCode = `<!-- LocalLeads Local Business Schema & Card Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
+                embedCodeTextarea.value = embedCode;
+
+                updateBaseCssPreview(theme, 'grid', colorInput.value, 'business-card');
+                updateCssPreview();
+
+                renderPreview(pages, theme, 'grid', colorInput.value, 'business-card');
             } else {
                 if (layoutGroup) layoutGroup.style.display = 'flex';
                 if (cssGroup) cssGroup.style.display = 'flex';
@@ -3048,6 +3060,102 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewBox.style.background = 'rgba(31, 41, 55, 0.4)';
                 previewBox.style.backdropFilter = 'blur(10px)';
                 previewBox.style.color = '#f3f4f6';
+            }
+
+            if (widgetType === 'business-card') {
+                const profile = data.businessProfile || {};
+                const name = profile.name || data.businessName || 'Our Business';
+                const type = profile.type || 'LocalBusiness';
+                const desc = profile.description || 'Professional local services.';
+                const phone = profile.phone || data.phone || '';
+                const email = profile.email || data.email || '';
+                const address = profile.address || {};
+                const street = address.streetAddress || '';
+                const locality = address.addressLocality || '';
+                const region = address.addressRegion || '';
+                const zip = address.postalCode || '';
+                const hours = profile.hours || [];
+                const reviewLink = data.googleReviewLink || 'https://maps.google.com';
+
+                let hoursHtml = '';
+                if (hours && hours.length > 0) {
+                    const hoursList = Array.isArray(hours) ? hours : [hours];
+                    hoursHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; margin-top: 4px; opacity: 0.85;">
+                            <span style="color: ${baseColor}; width: 18px; text-align: center;"><i class="fas fa-clock"></i></span>
+                            <span>${hoursList.join(', ')}</span>
+                        </div>
+                    `;
+                }
+
+                let addressHtml = '';
+                if (street || locality) {
+                    addressHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; margin-top: 4px; opacity: 0.85;">
+                            <span style="color: ${baseColor}; width: 18px; text-align: center;"><i class="fas fa-map-marker-alt"></i></span>
+                            <span>${street}${street && locality ? ', ' : ''}${locality}${locality && region ? ', ' : ''}${region} ${zip}</span>
+                        </div>
+                    `;
+                }
+
+                let phoneHtml = '';
+                if (phone) {
+                    phoneHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; margin-top: 4px; opacity: 0.85;">
+                            <span style="color: ${baseColor}; width: 18px; text-align: center;"><i class="fas fa-phone"></i></span>
+                            <a href="tel:${phone}" style="color: inherit; text-decoration: none;">${phone}</a>
+                        </div>
+                    `;
+                }
+
+                let emailHtml = '';
+                if (email) {
+                    emailHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; margin-top: 4px; opacity: 0.85;">
+                            <span style="color: ${baseColor}; width: 18px; text-align: center;"><i class="fas fa-envelope"></i></span>
+                            <a href="mailto:${email}" style="color: inherit; text-decoration: none;">${email}</a>
+                        </div>
+                    `;
+                }
+
+                let actionsHtml = '';
+                if (locality) {
+                    actionsHtml += `
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' ' + street + ' ' + locality)}" target="_blank" style="flex: 1; text-align: center; background: rgba(128,128,128,0.08); border: 1px solid rgba(128,128,128,0.15); padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-decoration: none; color: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                            <i class="fas fa-directions"></i> Directions
+                        </a>
+                    `;
+                }
+                actionsHtml += `
+                    <a href="${reviewLink}" target="_blank" style="flex: 1; text-align: center; background: ${baseColor}; border: 1px solid ${baseColor}; padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-decoration: none; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-star"></i> Review
+                    </a>
+                `;
+
+                previewBox.innerHTML = `
+                    <div style="width: 100%; max-width: 380px; padding: 1.5rem; border-radius: 14px; border: 1px solid rgba(128,128,128,0.15); font-family: sans-serif; display: flex; flex-direction: column; gap: 14px; text-align: left; margin: 1rem auto; background: ${theme === 'light' ? '#fff' : (theme === 'dark' ? '#111827' : 'rgba(255,255,255,0.03)')}; color: inherit; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128,128,128,0.15); padding-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                            <h4 style="margin: 0; font-size: 1.1rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;">${name}</h4>
+                            <span style="font-size: 0.65rem; font-weight: bold; padding: 2px 6px; border-radius: 8px; background: ${baseColor}20; color: ${baseColor}; border: 1px solid ${baseColor}30; text-transform: uppercase;">${type}</span>
+                        </div>
+                        <div style="font-size: 0.85rem; opacity: 0.85; line-height: 1.45; margin: 0;">${desc}</div>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            ${addressHtml}
+                            ${phoneHtml}
+                            ${emailHtml}
+                            ${hoursHtml}
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 6px;">
+                            ${actionsHtml}
+                        </div>
+                        <div style="border-top: 1px solid rgba(128,128,128,0.15); padding-top: 8px; font-size: 0.7rem; opacity: 0.7; text-align: center;">
+                            <a href="#" onclick="return false;" style="color: inherit; text-decoration: none;">
+                                Powered by <span style="color: ${baseColor}; font-weight: 700;">LocalLeads</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
             }
 
             if (widgetType === 'reviews') {

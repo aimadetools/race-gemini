@@ -278,7 +278,9 @@ describe('dashboard API', () => {
       autoResponderEnabled: false,
       autoResponderSubject: null,
       autoResponderMessage: null,
-      indexingRetryQueue: []
+      indexingRetryQueue: [],
+      businessProfile: null,
+      phone: ''
     });
   });
 
@@ -351,7 +353,9 @@ describe('dashboard API', () => {
       autoResponderEnabled: false,
       autoResponderSubject: null,
       autoResponderMessage: null,
-      indexingRetryQueue: []
+      indexingRetryQueue: [],
+      businessProfile: null,
+      phone: ''
     });
   });
 

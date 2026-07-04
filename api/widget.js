@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     try {
         // Query user info
         const userResult = await query(
-            `SELECT referral_code, custom_domain, primary_color, widget_css, name, google_review_link, email,
+            `SELECT referral_code, custom_domain, primary_color, widget_css, name, google_review_link, email, business_profile, phone,
                     (SELECT slug FROM agency_directory WHERE claimed_user_id = users.id LIMIT 1) as agency_slug
              FROM users WHERE id = $1`,
             [parsedClientId]
@@ -1198,6 +1198,326 @@ export default async function handler(req, res) {
             </div>
         \`;
     }
+})();
+            `;
+        } else if (type === 'business-card') {
+            const profile = user.business_profile ? (typeof user.business_profile === 'string' ? JSON.parse(user.business_profile) : user.business_profile) : {};
+            const profileJson = JSON.stringify(profile);
+
+            scriptCode = `
+(function() {
+    if (window.__localseoCardLoaded_${parsedClientId}) return;
+    window.__localseoCardLoaded_${parsedClientId} = true;
+
+    const profile = ${profileJson};
+    const theme = "${theme}";
+    const baseColor = "${widgetColor}";
+    const referralUrl = "${referralUrl}";
+    const clientId = ${parsedClientId};
+    const widgetCss = ${JSON.stringify(widgetCss)};
+    const businessName = ${JSON.stringify(businessName)};
+    const reviewLink = "${reviewLink}";
+
+    // CSS Styles injection
+    const styleId = 'localseo-card-styles-' + clientId;
+    if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        
+        let styles = \`
+            .ll-card-wrapper-\${clientId} {
+                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                box-sizing: border-box;
+                width: 100%;
+                max-width: 480px;
+                margin: 1.5rem auto;
+                border-radius: 16px;
+                padding: 1.75rem;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+                border: 1px solid rgba(128,128,128,0.15);
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                gap: 1.25rem;
+                text-align: left;
+            }
+            .ll-card-wrapper-\${clientId} * {
+                box-sizing: border-box;
+            }
+            .ll-card-header-\${clientId} {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                border-bottom: 1px solid rgba(128,128,128,0.15);
+                padding-bottom: 0.75rem;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .ll-card-title-\${clientId} {
+                font-size: 1.3rem;
+                font-weight: 800;
+                margin: 0;
+                color: inherit;
+            }
+            .ll-card-badge-\${clientId} {
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 3px 8px;
+                border-radius: 12px;
+                background: \${baseColor}20;
+                color: \${baseColor};
+                border: 1px solid \${baseColor}40;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            .ll-card-desc-\${clientId} {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin: 0 0 1rem 0;
+                opacity: 0.85;
+            }
+            .ll-card-details-\${clientId} {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .ll-card-detail-item-\${clientId} {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 0.88rem;
+                line-height: 1.4;
+            }
+            .ll-card-detail-item-\${clientId} i {
+                color: \${baseColor};
+                width: 16px;
+                text-align: center;
+                font-size: 0.95rem;
+            }
+            .ll-card-detail-item-\${clientId} a {
+                color: inherit;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .ll-card-detail-item-\${clientId} a:hover {
+                color: \${baseColor};
+                text-decoration: underline;
+            }
+            .ll-card-actions-\${clientId} {
+                display: flex;
+                gap: 12px;
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+            }
+            .ll-card-btn-\${clientId} {
+                flex: 1;
+                min-width: 120px;
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                font-weight: 700;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                transition: all 0.2s;
+            }
+            .ll-card-btn-map-\${clientId} {
+                background: rgba(128,128,128,0.08);
+                color: inherit;
+                border: 1px solid rgba(128,128,128,0.15);
+            }
+            .ll-card-btn-map-\${clientId}:hover {
+                background: rgba(128,128,128,0.15);
+            }
+            .ll-card-btn-review-\${clientId} {
+                background: \${baseColor};
+                color: #ffffff;
+                border: 1px solid \${baseColor};
+            }
+            .ll-card-btn-review-\${clientId}:hover {
+                filter: brightness(1.1);
+            }
+            .ll-card-footer-\${clientId} {
+                border-top: 1px solid rgba(128,128,128,0.15);
+                padding-top: 0.75rem;
+                font-size: 0.75rem;
+                opacity: 0.75;
+                text-align: center;
+            }
+            .ll-card-footer-\${clientId} a {
+                color: inherit;
+                text-decoration: none;
+            }
+            .ll-card-footer-\${clientId} a:hover {
+                text-decoration: underline;
+            }
+
+            /* Themes */
+            .ll-theme-light-\${clientId} {
+                background: #ffffff;
+                color: #1f2937;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            }
+            .ll-theme-dark-\${clientId} {
+                background: #111827;
+                color: #f3f4f6;
+                border-color: #374151;
+            }
+            .ll-theme-glassmorphic-\${clientId} {
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                color: #ffffff;
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+        \`;
+        style.textContent = styles + '\\n' + widgetCss;
+        document.head.appendChild(style);
+    }
+
+    // FontAwesome Dynamic Loader
+    if (!document.querySelector('link[href*="font-awesome"]') && !document.querySelector('link[href*="all.min.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+        document.head.appendChild(link);
+    }
+
+    // Dynamic Schema injection
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": profile.type || "LocalBusiness",
+        "name": profile.name || businessName,
+        "description": profile.description || "",
+        "telephone": profile.phone || "",
+        "email": profile.email || "",
+        "url": profile.website || window.location.origin
+    };
+
+    if (profile.address) {
+        schema.address = {
+            "@type": "PostalAddress",
+            "streetAddress": profile.address.streetAddress || "",
+            "addressLocality": profile.address.addressLocality || "",
+            "addressRegion": profile.address.addressRegion || "",
+            "postalCode": profile.address.postalCode || "",
+            "addressCountry": profile.address.addressCountry || "US"
+        };
+    }
+
+    if (profile.coordinates && profile.coordinates.latitude && profile.coordinates.longitude) {
+        schema.geo = {
+            "@type": "GeoCoordinates",
+            "latitude": profile.coordinates.latitude,
+            "longitude": profile.coordinates.longitude
+        };
+    }
+
+    if (profile.hours && profile.hours.length > 0) {
+        schema.openingHours = profile.hours;
+    }
+
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.textContent = JSON.stringify(schema);
+    document.head.appendChild(schemaScript);
+
+    // Render HTML card inside target container
+    let container = document.getElementById('localseo-widget') || document.querySelector('.localseo-widget');
+    if (!container) return;
+
+    container.className = 'll-card-wrapper-' + clientId + ' ll-theme-' + theme + '-' + clientId;
+
+    const bizName = profile.name || businessName;
+    const bizType = profile.type || 'Local Business';
+    const bizDesc = profile.description || '';
+    const street = profile.address ? (profile.address.streetAddress || '') : '';
+    const locality = profile.address ? (profile.address.addressLocality || '') : '';
+    const region = profile.address ? (profile.address.addressRegion || '') : '';
+    const zip = profile.address ? (profile.address.postalCode || '') : '';
+    const phone = profile.phone || '';
+    const email = profile.email || '';
+    
+    let hoursHtml = '';
+    if (profile.hours && profile.hours.length > 0) {
+        const hoursList = Array.isArray(profile.hours) ? profile.hours : [profile.hours];
+        hoursHtml = \`
+            <div class="ll-card-detail-item-\${clientId}">
+                <i class="fas fa-clock"></i>
+                <span>\${hoursList.join(', ')}</span>
+            </div>
+        \`;
+    }
+
+    let addressHtml = '';
+    if (street || locality) {
+        addressHtml = \`
+            <div class="ll-card-detail-item-\${clientId}">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>\${street}\${street && locality ? ', ' : ''}\${locality}\${locality && region ? ', ' : ''}\${region} \${zip}</span>
+            </div>
+        \`;
+    }
+
+    let phoneHtml = '';
+    if (phone) {
+        phoneHtml = \`
+            <div class="ll-card-detail-item-\${clientId}">
+                <i class="fas fa-phone"></i>
+                <a href="tel:\${phone}">\${phone}</a>
+            </div>
+        \`;
+    }
+
+    let emailHtml = '';
+    if (email) {
+        emailHtml = \`
+            <div class="ll-card-detail-item-\${clientId}">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:\${email}">\${email}</a>
+            </div>
+        \`;
+    }
+
+    let actionsHtml = '';
+    if (locality) {
+        actionsHtml += \`
+            <a href="https://www.google.com/maps/search/?api=1&query=\${encodeURIComponent(bizName + ' ' + street + ' ' + locality)}" target="_blank" class="ll-card-btn-\${clientId} ll-card-btn-map-\${clientId}">
+                <i class="fas fa-directions"></i> Get Directions
+            </a>
+        \`;
+    }
+    actionsHtml += \`
+        <a href="\${reviewLink}" target="_blank" class="ll-card-btn-\${clientId} ll-card-btn-review-\${clientId}">
+            <i class="fas fa-star"></i> Write a Review
+        </a>
+    \`;
+
+    container.innerHTML = \`
+        <div class="ll-card-header-\${clientId}">
+            <h3 class="ll-card-title-\${clientId}">\${bizName}</h3>
+            <span class="ll-card-badge-\${clientId}">\${bizType}</span>
+        </div>
+        <div class="ll-card-body-\${clientId}">
+            \${bizDesc ? \`<p class="ll-card-desc-\${clientId}">\${bizDesc}</p>\` : ''}
+            <div class="ll-card-details-\${clientId}">
+                \${addressHtml}
+                \${phoneHtml}
+                \${emailHtml}
+                \${hoursHtml}
+            </div>
+        </div>
+        <div class="ll-card-actions-\${clientId}">
+            \${actionsHtml}
+        </div>
+        <div class="ll-card-footer-\${clientId}">
+            <a href="\${referralUrl}" target="_blank" style="text-decoration: none;">
+                Powered by <span style="color: \${baseColor}; font-weight: 700;">LocalLeads</span>
+            </a>
+        </div>
+    \`;
 })();
             `;
         } else {
