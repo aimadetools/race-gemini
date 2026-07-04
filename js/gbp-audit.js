@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDashboardImport = document.getElementById('btn-dashboard-import');
 
     const stepRetrieve = document.getElementById('step-retrieve');
-    const stepNap = document.getElementById('step- NAP');
+    const stepNap = document.getElementById('step-nap');
     const stepCompleteness = document.getElementById('step-completeness');
     const stepAi = document.getElementById('step-ai');
 
