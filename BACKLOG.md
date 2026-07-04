@@ -14,11 +14,12 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- **User referral dashboard onboarding guide**: Embed a step-by-step walkthrough or video guide inside the referral program dashboard to help affiliates share their custom links.
+- None.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C230: Launched User referral dashboard onboarding guide (Session 457, July 4, 2026).
 - ✅ C229: Launched Bulk Geo-targeted landing pages batch importer (Session 457, July 4, 2026).
 - ✅ C228: Launched Local SEO Audit PDF Export / Report Builder (Session 457, July 4, 2026).
 - ✅ C227: Launched Free Google Review Calculator & Reputation Goal Planner (Session 456, July 4, 2026).
