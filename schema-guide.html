@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Local SEO Schema & Content Modules Guide | LocalLeads</title>
+    <meta content="Comprehensive local SEO schema markup templates and copy-pasteable high-converting service page content modules. Boost local business rankings and search snippets." name="description"/>
+    <meta content="local seo schema, schema templates, local business structured data, local service page modules, conversion rate optimization, json-ld templates" name="keywords"/>
+    <meta content="Local SEO Schema & Content Modules Guide | LocalLeads" property="og:title"/>
+    <meta content="Comprehensive local SEO schema markup templates and copy-pasteable high-converting service page content modules." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/schema-guide.html" property="og:url"/>
+    <link href="https://www.localseogen.com/schema-guide.html" rel="canonical"/>
+    <meta content="summary_large_image" name="twitter:card"/>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="style_calculator.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+    <style>
+        /* Modern Guide-Specific Layout Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #e2e8f0;
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: 'Outfit', sans-serif;
+        }
+        .guide-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .tab-menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.25rem;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 10px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Guide Content Layout */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 992px) {
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card-premium {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.25rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
+        }
+        .card-premium:hover {
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+        .sidebar-box {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .highlight-text {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+        
+        /* Code blocks styling */
+        .code-block-wrapper {
+            position: relative;
+            background: #0b0f19;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.25rem 0;
+        }
+        .code-block-header {
+            background: #1e293b;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .code-lang {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .code-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .code-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .code-btn:hover {
+            color: white;
+        }
+        .code-content {
+            padding: 1.25rem;
+            overflow: auto;
+            max-height: 380px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+
+        /* Niche templates lists */
+        .niche-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+        .niche-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        .niche-item:hover, .niche-item.active {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+        .niche-item i {
+            color: #8b5cf6;
+            font-size: 1.15rem;
+        }
+
+        /* Module section preview styles */
+        .module-section {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+        }
+        .module-title-bar {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .module-title-bar h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: white;
+            font-weight: 700;
+        }
+        .module-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.6);
+            padding: 0.5rem 1rem 0;
+        }
+        .module-tab-btn {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .module-tab-btn:hover {
+            color: white;
+        }
+        .module-tab-btn.active {
+            color: #8b5cf6;
+            border-bottom-color: #8b5cf6;
+        }
+        .module-pane {
+            display: none;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.3);
+        }
+        .module-pane.active {
+            display: block;
+        }
+        .module-preview-area {
+            background: #111827;
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mock component live preview look */
+        .mock-hero {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        .mock-btn-phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+        .mock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .mock-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .mock-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        .mock-card i {
+            font-size: 1.75rem;
+            color: #8b5cf6;
+            margin-bottom: 12px;
+        }
+        .mock-faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 0;
+        }
+        .mock-faq-q {
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+        .mock-faq-a {
+            color: #94a3b8;
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Toast container and feedback styles */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.3s ease forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        .checklist-item i {
+            color: #10b981;
+            margin-top: 4px;
+        }
+        .cta-box-premium {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .cta-btn-premium {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+            transition: all 0.2s;
+        }
+        .cta-btn-premium:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/schema-guide.html"><i class="fas fa-book"></i> Schema Guide</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/seo-report-builder.html"><i class="fas fa-file-invoice"></i> Client Reports</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/widget-preview.html"><i class="fas fa-sliders-h"></i> Widget Builder</a></li>
+                  <li><a href="/wordpress-integration.html"><i class="fab fa-wordpress"></i> WordPress Guide</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="guide-container">
+        <section class="section-header" style="text-align: center; padding: 4rem 0 2rem;">
+            <h1 style="font-size: 2.85rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.75rem;">Local SEO Schema & Content Modules</h1>
+            <p style="font-size: 1.15rem; color: #94a3b8; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                Unleash the full power of structured data and high-converting copy. Use our ready-made schema templates and responsive HTML/CSS content modules to build service pages that rank and convert.
+            </p>
+        </section>
+
+        <div class="tab-menu">
+            <button class="tab-btn active" onclick="switchMainTab('tab-schema-guides')"><i class="fas fa-book-open"></i> Schema Guidelines</button>
+            <button class="tab-btn" onclick="switchMainTab('tab-niche-templates')"><i class="fas fa-code"></i> Niche Schema Templates</button>
+            <button class="tab-btn" onclick="switchMainTab('tab-content-modules')"><i class="fas fa-layer-group"></i> Service Page Modules</button>
+        </div>
+
+        <!-- TAB 1: SCHEMA GUIDELINES -->
+        <div id="tab-schema-guides" class="tab-pane active">
+            <div class="guide-grid">
+                <div>
+                    <div class="card-premium">
+                        <h2 style="font-size: 1.75rem; margin-top: 0; color: white;"><i class="fas fa-info-circle" style="color: #8b5cf6; margin-right: 10px;"></i> Why Local Schema Matters</h2>
+                        <p>
+                            Schema markup is structured data vocabulary that you add to your website. It helps search engines (like Google, Bing, and Yahoo) understand the context of your content, leading to richer search listings (snippets) and better local positioning.
+                        </p>
+                        <p>
+                            For local businesses, schema acts as a direct validation link between your website, physical location, and digital entities (such as your Google Business Profile).
+                        </p>
+                        
+                        <h3 style="font-size: 1.35rem; color: white; margin-top: 1.75rem;">Key Benefits of LocalBusiness Schema:</h3>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div><strong>Rich Search Results:</strong> Stand out in SERPs with star ratings, FAQs, and price ranges displayed directly on search results.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div><strong>Google Maps Authority:</strong> Provide exact <span class="highlight-text">GeoCoordinates</span> (Latitude & Longitude) to assist Google Maps in indexing your exact business location.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div><strong>Voice Search Optimization:</strong> Virtual assistants (Alexa, Siri, Google Assistant) rely heavily on structured data properties (like telephone, openingHours, and address) to answer local voice commands.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div><strong>NAP Validation Consistency:</strong> Verifies your Name, Address, and Phone Number across directories, reinforcing ranking algorithms.</div>
+                        </div>
+                    </div>
+
+                    <div class="card-premium">
+                        <h2 style="font-size: 1.75rem; margin-top: 0; color: white;"><i class="fas fa-tasks" style="color: #10b981; margin-right: 10px;"></i> Local Schema Optimization Checklist</h2>
+                        <p>When creating or validating your JSON-LD structured data block, check that these five critical parameters are satisfied:</p>
+                        
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <div><strong>1. Choose Specific Subtypes:</strong> Avoid using the generic <code>LocalBusiness</code> root type if possible. Instead, use specific types like <code>Plumber</code>, <code>Electrician</code>, <code>HVACBusiness</code>, or <code>Dentist</code>. This clarifies your vertical to crawlers.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <div><strong>2. Explicit Geocoding:</strong> Always include the <code>geo</code> block containing <code>latitude</code> and <code>longitude</code>. You can retrieve these values using our geocoding search tools or OpenCage API mapping.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <div><strong>3. Sync sameAs Profiles:</strong> Reference all your official local citation profiles (e.g. Facebook Page, Yelp Listing, LinkedIn Organization, Twitter Profile) inside the <code>sameAs</code> array. This links your authority.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <div><strong>4. Structured Opening Hours:</strong> Specify standard work schedules utilizing the <code>openingHoursSpecification</code> array, detailing opening/closing intervals rather than a loose string.</div>
+                        </div>
+                        <div class="checklist-item">
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <div><strong>5. Dynamic Schema Insertion:</strong> Inject the resulting script directly inside the HTML <code>&lt;head&gt;</code> tag of your target service pages to ensure instant crawlers detection.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar column -->
+                <div>
+                    <div class="sidebar-box">
+                        <h3 style="margin-top: 0; color: white;"><i class="fas fa-shield-alt" style="color: #8b5cf6; margin-right: 8px;"></i> OpenCage Geocoding</h3>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: #94a3b8;">
+                            Need the exact coordinates for your business schema? Our Schema Generator is pre-integrated with the OpenCage geocoding service.
+                        </p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: #94a3b8;">
+                            Simply type your address in the tool and click <strong>Get Coordinates</strong> to geocode instantly.
+                        </p>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 style="margin-top: 0; color: white;"><i class="fas fa-check-double" style="color: #10b981; margin-right: 8px;"></i> Schema Validator</h3>
+                        <p style="font-size: 0.9rem; line-height: 1.5; color: #94a3b8;">
+                            Before publishing, always paste your JSON-LD code block into our built-in validator to check for missing properties, structural errors, and optimization score.
+                        </p>
+                        <a href="/schema-generator.html" class="cta-btn-premium" style="display: block; text-align: center; font-size: 0.85rem; margin-top: 1rem;">Go to Validator</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: NICHE SCHEMA TEMPLATES -->
+        <div id="tab-niche-templates" class="tab-pane">
+            <div class="card-premium" style="margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.75rem; margin-top: 0; color: white;"><i class="fas fa-folder-open" style="color: #8b5cf6; margin-right: 10px;"></i> Local Niche Schema Templates</h2>
+                <p>
+                    Select an industry below to review and copy optimized schema templates. These structured blocks are pre-populated with standard local SEO attributes that you can customize or import.
+                </p>
+                
+                <div class="niche-grid">
+                    <div class="niche-item active" onclick="loadNicheTemplate('plumber')">
+                        <i class="fas fa-wrench"></i> Plumber
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('electrician')">
+                        <i class="fas fa-bolt"></i> Electrician
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('hvac')">
+                        <i class="fas fa-wind"></i> HVAC / AC Specialist
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('landscaping')">
+                        <i class="fas fa-leaf"></i> Landscaping & Lawn Care
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('cleaning')">
+                        <i class="fas fa-broom"></i> Cleaning Service
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('dentist')">
+                        <i class="fas fa-tooth"></i> Dentist / Medical
+                    </div>
+                    <div class="niche-item" onclick="loadNicheTemplate('roofer')">
+                        <i class="fas fa-home"></i> Roofing Contractor
+                    </div>
+                </div>
+
+                <div class="code-block-wrapper">
+                    <div class="code-block-header">
+                        <span class="code-lang">JSON-LD Schema Markup (Pre-formatted)</span>
+                        <div class="code-actions">
+                            <button class="code-btn" onclick="copyNicheCode()"><i class="fas fa-copy"></i> Copy JSON</button>
+                            <button class="code-btn" onclick="sendToTool('generator')" style="color: #a78bfa;"><i class="fas fa-magic"></i> Load in Generator</button>
+                            <button class="code-btn" onclick="sendToTool('validator')" style="color: #34d399;"><i class="fas fa-check-double"></i> Load in Validator</button>
+                        </div>
+                    </div>
+                    <pre class="code-content" id="niche-code-content"></pre>
+                </div>
+            </div>
+            
+            <div class="cta-box-premium">
+                <div>
+                    <h4 style="margin: 0 0 4px 0; font-size: 1.15rem; color: white;">Need a custom schema configuration?</h4>
+                    <p style="margin: 0; font-size: 0.9rem; color: #cbd5e1;">Use our interactive builder to fill in your values and download the schema.</p>
+                </div>
+                <a href="/schema-generator.html" class="cta-btn-premium">Open Schema Generator</a>
+            </div>
+        </div>
+
+        <!-- TAB 3: SERVICE PAGE CONTENT MODULES -->
+        <div id="tab-content-modules" class="tab-pane">
+            <div class="card-premium">
+                <h2 style="font-size: 1.75rem; margin-top: 0; color: white;"><i class="fas fa-boxes" style="color: #8b5cf6; margin-right: 10px;"></i> Service Page Content Modules</h2>
+                <p>
+                    These responsive, beautiful HTML and CSS code modules are designed specifically for local service landing pages. Copy these blocks directly into your website sections to establish immediate local authority and boost visitor contact conversion.
+                </p>
+                <p style="color: #a78bfa; font-weight: 600;">
+                    <i class="fas fa-lightbulb"></i> Tip: Use the tabs on each module to view the visual Mock Preview, HTML source code, or CSS stylesheet!
+                </p>
+            </div>
+
+            <!-- MODULE 1: HERO SECTION -->
+            <div class="module-section" id="module-hero">
+                <div class="module-title-bar">
+                    <h3>1. High-Converting Hero Section (NAP & Call-to-Action)</h3>
+                    <div class="code-actions">
+                        <button class="code-btn" onclick="copyModuleCode('hero-html')"><i class="fas fa-copy"></i> Copy HTML</button>
+                        <button class="code-btn" onclick="copyModuleCode('hero-css')"><i class="fas fa-copy"></i> Copy CSS</button>
+                    </div>
+                </div>
+                <div class="module-tabs">
+                    <button class="module-tab-btn active" onclick="switchModuleTab('hero', 'preview')">Visual Preview</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('hero', 'html')">HTML Code</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('hero', 'css')">CSS Code</button>
+                </div>
+                <div class="module-pane active" id="hero-preview">
+                    <div class="module-preview-area">
+                        <div class="mock-hero">
+                            <span style="color: #a78bfa; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em;">Your Trusted Local Professionals</span>
+                            <h2 style="font-size: 2.25rem; color: white; margin: 0.5rem 0 1rem; font-weight: 800;">Professional Plumbing Services in Austin, TX</h2>
+                            <p style="color: #94a3b8; max-width: 600px; margin: 0 auto 1.5rem; line-height: 1.5;">
+                                Reliable plumbing repair, maintenance, and emergency installations. Available 24/7. Call our local Austin team today for a transparent, upfront estimate.
+                            </p>
+                            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                <span style="font-size: 0.9rem; color: #cbd5e1;"><i class="fas fa-check" style="color: #10b981; margin-right: 5px;"></i> Licensed & Insured</span>
+                                <span style="font-size: 0.9rem; color: #cbd5e1;"><i class="fas fa-check" style="color: #10b981; margin-right: 5px;"></i> Upfront Pricing</span>
+                                <span style="font-size: 0.9rem; color: #cbd5e1;"><i class="fas fa-check" style="color: #10b981; margin-right: 5px;"></i> 24/7 Support</span>
+                            </div>
+                            <a href="tel:5125550199" class="mock-btn-phone"><i class="fas fa-phone-alt"></i> Call (512) 555-0199</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-pane" id="hero-html">
+                    <pre class="code-content" id="code-hero-html"><code>&lt;section class="local-hero"&gt;
+    &lt;div class="hero-container"&gt;
+        &lt;span class="hero-tagline"&gt;Your Trusted Local Professionals&lt;/span&gt;
+        &lt;h1 class="hero-title"&gt;Professional [Service Name] in [City, State]&lt;/h1&gt;
+        &lt;p class="hero-description"&gt;
+            Reliable [Service] repair, maintenance, and urgent installations. Available 24/7. Call our local [City] team today for a transparent, upfront estimate.
+        &lt;/p&gt;
+        &lt;div class="hero-badges"&gt;
+            &lt;span class="badge-item"&gt;&lt;i class="fas fa-check"&gt;&lt;/i&gt; Licensed & Insured&lt;/span&gt;
+            &lt;span class="badge-item"&gt;&lt;i class="fas fa-check"&gt;&lt;/i&gt; Upfront Pricing&lt;/span&gt;
+            &lt;span class="badge-item"&gt;&lt;i class="fas fa-check"&gt;&lt;/i&gt; 24/7 Support&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;a href="tel:[Phone]" class="btn-hero-phone"&gt;
+            &lt;i class="fas fa-phone-alt"&gt;&lt;/i&gt; Call [Phone]
+        &lt;/a&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                </div>
+                <div class="module-pane" id="hero-css">
+                    <pre class="code-content" id="code-hero-css"><code>.local-hero {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%), 
+                url('/images/hero-bg.jpg') center/cover no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.hero-tagline {
+    color: #8b5cf6;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+}
+.hero-title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin: 0.5rem 0 1.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+.hero-description {
+    color: #94a3b8;
+    max-width: 650px;
+    margin: 0 auto 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+.hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+.badge-item {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.badge-item i {
+    color: #10b981;
+}
+.btn-hero-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-hero-phone:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- MODULE 2: SERVICE CARDS GRID -->
+            <div class="module-section" id="module-services">
+                <div class="module-title-bar">
+                    <h3>2. Service Grid Card Layout</h3>
+                    <div class="code-actions">
+                        <button class="code-btn" onclick="copyModuleCode('services-html')"><i class="fas fa-copy"></i> Copy HTML</button>
+                        <button class="code-btn" onclick="copyModuleCode('services-css')"><i class="fas fa-copy"></i> Copy CSS</button>
+                    </div>
+                </div>
+                <div class="module-tabs">
+                    <button class="module-tab-btn active" onclick="switchModuleTab('services', 'preview')">Visual Preview</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('services', 'html')">HTML Code</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('services', 'css')">CSS Code</button>
+                </div>
+                <div class="module-pane active" id="services-preview">
+                    <div class="module-preview-area">
+                        <div class="mock-grid">
+                            <div class="mock-card">
+                                <i class="fas fa-tools"></i>
+                                <h4 style="color: white; margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 700;">Emergency Plumbing Repair</h4>
+                                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.4; margin: 0;">We diagnose and repair broken pipes, flooding, leaks, and clogged sewers instantly to prevent property damage.</p>
+                            </div>
+                            <div class="mock-card">
+                                <i class="fas fa-faucet"></i>
+                                <h4 style="color: white; margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 700;">Drain Cleaning & Unclogging</h4>
+                                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.4; margin: 0;">Stubborn clogs cleared safely using hydro-jetting and advanced cable cameras for long-lasting drain flow.</p>
+                            </div>
+                            <div class="mock-card">
+                                <i class="fas fa-fire-alt"></i>
+                                <h4 style="color: white; margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 700;">Water Heater Services</h4>
+                                <p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.4; margin: 0;">Expert repair and installation of energy-efficient tankless water heaters and traditional water systems.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-pane" id="services-html">
+                    <pre class="code-content" id="code-services-html"><code>&lt;div class="service-grid"&gt;
+    &lt;div class="service-card"&gt;
+        &lt;i class="fas fa-tools"&gt;&lt;/i&gt;
+        &lt;h3&gt;Emergency Repair Services&lt;/h3&gt;
+        &lt;p&gt;We diagnose and repair broken systems, leaks, and mechanical issues instantly to protect your home from damage.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="service-card"&gt;
+        &lt;i class="fas fa-wrench"&gt;&lt;/i&gt;
+        &lt;h3&gt;Routine Maintenance&lt;/h3&gt;
+        &lt;p&gt;Preventive service checkups, cleaning, and calibrations designed to keep your home systems running efficiently.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="service-card"&gt;
+        &lt;i class="fas fa-cog"&gt;&lt;/i&gt;
+        &lt;h3&gt;Professional Installation&lt;/h3&gt;
+        &lt;p&gt;Expert configurations and replacements of top-tier brands with full warranty support.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="module-pane" id="services-css">
+                    <pre class="code-content" id="code-services-css"><code>.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 1rem 0;
+}
+.service-card {
+    background: rgba(17, 24, 39, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.service-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+}
+.service-card i {
+    font-size: 2.25rem;
+    color: #8b5cf6;
+    margin-bottom: 1.25rem;
+}
+.service-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.25rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+.service-card p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- MODULE 3: FAQ ACCORDION -->
+            <div class="module-section" id="module-faq">
+                <div class="module-title-bar">
+                    <h3>3. FAQ Accordion (Crawlable & Schema-Ready)</h3>
+                    <div class="code-actions">
+                        <button class="code-btn" onclick="copyModuleCode('faq-html')"><i class="fas fa-copy"></i> Copy HTML</button>
+                        <button class="code-btn" onclick="copyModuleCode('faq-css')"><i class="fas fa-copy"></i> Copy CSS</button>
+                    </div>
+                </div>
+                <div class="module-tabs">
+                    <button class="module-tab-btn active" onclick="switchModuleTab('faq', 'preview')">Visual Preview</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('faq', 'html')">HTML Code</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('faq', 'css')">CSS Code</button>
+                </div>
+                <div class="module-pane active" id="faq-preview">
+                    <div class="module-preview-area">
+                        <div class="mock-faq-item">
+                            <div class="mock-faq-q" onclick="toggleMockFaq(this)">
+                                <span>Do you offer emergency response plumbing in Austin?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="mock-faq-a">Yes, our teams operate 24/7/365 to handle burst pipes, backing sewer drains, and boiler leak emergencies anywhere in Austin and neighboring areas.</div>
+                        </div>
+                        <div class="mock-faq-item">
+                            <div class="mock-faq-q" onclick="toggleMockFaq(this)">
+                                <span>What are your plumbing rates?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="mock-faq-a" style="display: none;">We charge flat diagnostic fees and present complete project estimates upfront before work starts. No hidden costs or mileage fees.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-pane" id="faq-html">
+                    <pre class="code-content" id="code-faq-html"><code>&lt;!-- Include FAQPage Schema in Head to match this module --&gt;
+&lt;div class="faq-accordion"&gt;
+    &lt;div class="faq-item"&gt;
+        &lt;button class="faq-question"&gt;
+            &lt;span&gt;Do you offer emergency services in [City]?&lt;/span&gt;
+            &lt;i class="fas fa-chevron-down"&gt;&lt;/i&gt;
+        &lt;/button&gt;
+        &lt;div class="faq-answer"&gt;
+            &lt;p&gt;Yes, our certified crews operate 24/7/365 to handle urgent leaks, equipment failures, and utility emergencies across [City] and adjacent zip codes.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="faq-item"&gt;
+        &lt;button class="faq-question"&gt;
+            &lt;span&gt;Are your pricing quotes guaranteed?&lt;/span&gt;
+            &lt;i class="fas fa-chevron-down"&gt;&lt;/i&gt;
+        &lt;/button&gt;
+        &lt;div class="faq-answer"&gt;
+            &lt;p&gt;Absolutely. We present complete upfront flat-rate quotes before any work begins, ensuring zero surprise fees on your invoice.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Simple script helper --&gt;
+&lt;script&gt;
+    document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+            const faqItem = button.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const icon = button.querySelector('i');
+            
+            // Toggle active class
+            faqItem.classList.toggle('active');
+            
+            if (faqItem.classList.contains('active')) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.style.maxHeight = '0';
+                icon.style.transform = 'rotate(0)';
+            }
+        });
+    });
+&lt;/script&gt;</code></pre>
+                </div>
+                <div class="module-pane" id="faq-css">
+                    <pre class="code-content" id="code-faq-css"><code>.faq-accordion {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 0.5rem;
+}
+.faq-question {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 1.25rem 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s;
+}
+.faq-question:hover {
+    color: #8b5cf6;
+}
+.faq-question i {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    transition: transform 0.3s ease;
+}
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.faq-answer p {
+    margin: 0;
+    padding-bottom: 1.25rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+.faq-item.active .faq-answer {
+    /* Height is computed dynamically in JS */
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- MODULE 4: MAP & NAP MODULE -->
+            <div class="module-section" id="module-nap">
+                <div class="module-title-bar">
+                    <h3>4. NAP & Map Embed Block</h3>
+                    <div class="code-actions">
+                        <button class="code-btn" onclick="copyModuleCode('nap-html')"><i class="fas fa-copy"></i> Copy HTML</button>
+                        <button class="code-btn" onclick="copyModuleCode('nap-css')"><i class="fas fa-copy"></i> Copy CSS</button>
+                    </div>
+                </div>
+                <div class="module-tabs">
+                    <button class="module-tab-btn active" onclick="switchModuleTab('nap', 'preview')">Visual Preview</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('nap', 'html')">HTML Code</button>
+                    <button class="module-tab-btn" onclick="switchModuleTab('nap', 'css')">CSS Code</button>
+                </div>
+                <div class="module-pane active" id="nap-preview">
+                    <div class="module-preview-area">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
+                            <div>
+                                <h4 style="color: white; margin: 0 0 10px 0; font-size: 1.25rem; font-weight: 700;">Local Office Details</h4>
+                                <p style="margin: 0 0 6px 0; color: #cbd5e1; font-size: 0.9rem;"><i class="fas fa-map-marker-alt" style="color: #8b5cf6; margin-right: 8px; width: 15px;"></i> Apex Plumbing Solutions</p>
+                                <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 0.9rem; padding-left: 23px;">123 Main St, Austin, TX 78701</p>
+                                <p style="margin: 0 0 6px 0; color: #cbd5e1; font-size: 0.9rem;"><i class="fas fa-phone-alt" style="color: #8b5cf6; margin-right: 8px; width: 15px;"></i> (512) 555-0199</p>
+                                <p style="margin: 0 0 6px 0; color: #cbd5e1; font-size: 0.9rem;"><i class="fas fa-clock" style="color: #8b5cf6; margin-right: 8px; width: 15px;"></i> Mon - Fri: 8:00 AM - 6:00 PM</p>
+                                <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 0.9rem; padding-left: 23px;">Saturday: 9:00 AM - 3:00 PM</p>
+                            </div>
+                            <div style="height: 150px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(255,255,255,0.15);">
+                                <span style="font-size: 0.85rem; color: #94a3b8; text-align: center;"><i class="fas fa-map" style="font-size: 1.5rem; color: #8b5cf6; margin-bottom: 5px;"></i><br/>Google Map Embed Container</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module-pane" id="nap-html">
+                    <pre class="code-content" id="code-nap-html"><code>&lt;section class="local-office-section"&gt;
+    &lt;div class="office-grid"&gt;
+        &lt;div class="office-details"&gt;
+            &lt;h2&gt;Local Office Contact&lt;/h2&gt;
+            &lt;div class="nap-info"&gt;
+                &lt;p class="biz-detail"&gt;&lt;i class="fas fa-map-marker-alt"&gt;&lt;/i&gt; &lt;strong&gt;[Business Legal Name]&lt;/strong&gt;&lt;/p&gt;
+                &lt;p class="biz-address"&gt;[Street Address, City, State ZipCode]&lt;/p&gt;
+                &lt;p class="biz-detail"&gt;&lt;i class="fas fa-phone-alt"&gt;&lt;/i&gt; [Phone]&lt;/p&gt;
+                &lt;p class="biz-detail"&gt;&lt;i class="fas fa-clock"&gt;&lt;/i&gt; Mon - Fri: 08:00 AM - 06:00 PM&lt;/p&gt;
+                &lt;p class="biz-detail-sub"&gt;Saturday: 09:00 AM - 03:00 PM&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="office-map"&gt;
+            &lt;!-- Replace the src URL with your specific Google Maps Embed URL --&gt;
+            &lt;iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3440.7077977461877!2d-97.74567868487612!3d30.267152981801267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8644b508a02f3231%3A0x378a8a61428b584e!2sAustin%2C%20TX!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus" 
+                width="100%" 
+                height="280" 
+                style="border:0; border-radius: 8px;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"&gt;
+            &lt;/iframe&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                </div>
+                <div class="module-pane" id="nap-css">
+                    <pre class="code-content" id="code-nap-css"><code>.local-office-section {
+    background: rgba(17, 24, 39, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2.5rem;
+}
+.office-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+    align-items: center;
+}
+@media (max-width: 768px) {
+    .office-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.office-details h2 {
+    margin: 0 0 1.25rem 0;
+    font-size: 1.75rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+.nap-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.biz-detail {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.biz-detail i {
+    color: #8b5cf6;
+    width: 20px;
+    text-align: center;
+}
+.biz-address {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    padding-left: 30px;
+}
+.biz-detail-sub {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    padding-left: 30px;
+}
+.office-map {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <footer style="background: #070a13; border-top: 1px solid rgba(255,255,255,0.05); padding: 3rem 0; margin-top: 4rem;">
+      <div class="container" style="text-align: center;">
+        <p style="color: #94a3b8; margin: 0;">&copy; 2026 LocalLeads. Dominate your local market, effortlessly.</p>
+      </div>
+    </footer>
+
+    <button id="scrollToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="/js/app.min.js"></script>
+    <script>
+        // Tab switching logic for the page
+        function switchMainTab(paneId) {
+            // Remove active classes
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Find current button and tab pane
+            const clickedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(paneId));
+            if (clickedBtn) clickedBtn.classList.add('active');
+
+            const targetPane = document.getElementById(paneId);
+            if (targetPane) targetPane.classList.add('active');
+        }
+
+        // Module inner tabs switcher (mock preview vs html code vs css code)
+        function switchModuleTab(moduleId, tabType) {
+            const container = document.getElementById(`module-${moduleId}`);
+            if (!container) return;
+
+            // Remove active tabs inside module
+            container.querySelectorAll('.module-tab-btn').forEach(btn => btn.classList.remove('active'));
+            container.querySelectorAll('.module-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Active clicked tab button
+            const clickedBtn = Array.from(container.querySelectorAll('.module-tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabType));
+            if (clickedBtn) clickedBtn.classList.add('active');
+
+            const targetPane = container.querySelector(`#${moduleId}-${tabType}`);
+            if (targetPane) targetPane.classList.add('active');
+        }
+
+        // FAQ interactive toggle preview
+        function toggleMockFaq(qElement) {
+            const item = qElement.parentElement;
+            const aElement = item.querySelector('.mock-faq-a');
+            const icon = qElement.querySelector('i');
+
+            if (aElement.style.display === 'none') {
+                aElement.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                aElement.style.display = 'none';
+                icon.style.transform = 'rotate(0)';
+            }
+        }
+
+        // Toast notifications utility
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'error') {
+                toast.style.background = 'rgba(239, 68, 68, 0.9)';
+            }
+            toast.textContent = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse forwards';
+                setTimeout(() => {
+                    if (toast.parentNode === container) {
+                        container.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Copy functionality for niche template code block
+        function copyNicheCode() {
+            const code = document.getElementById('niche-code-content').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('JSON-LD schema code copied to clipboard!');
+            }).catch(err => {
+                showToast('Failed to copy code: ' + err, 'error');
+            });
+        }
+
+        // Copy content modules code blocks
+        function copyModuleCode(paneId) {
+            const code = document.getElementById(`code-${paneId}`).innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Code block copied successfully!');
+            }).catch(err => {
+                showToast('Failed to copy: ' + err, 'error');
+            });
+        }
+
+        // Load templates into Generator or Validator in sessionStorage and redirect
+        function sendToTool(action) {
+            const code = document.getElementById('niche-code-content').textContent;
+            sessionStorage.setItem('loadedSchema', code);
+            sessionStorage.setItem('loadedSchemaTab', action);
+            showToast(`Loading schema into the ${action}... Redirecting...`);
+            setTimeout(() => {
+                window.location.href = '/schema-generator.html';
+            }, 1000);
+        }
+
+        // Predefined Niche Schema Templates
+        const templates = {
+            plumber: {
+                "@context": "https://schema.org",
+                "@type": "Plumber",
+                "name": "Apex Plumbing Solutions",
+                "image": "https://www.localseogen.com/images/og_webp/plumber_seo.webp",
+                "@id": "https://www.localseogen.com/#plumber",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0199",
+                "priceRange": "$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "123 Main St",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78701",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.2672,
+                    "longitude": -97.7431
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "08:00",
+                        "closes": "18:00"
+                    },
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Saturday"],
+                        "opens": "09:00",
+                        "closes": "15:00"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/ApexPlumbingSolutions",
+                    "https://www.instagram.com/ApexPlumbingSolutions"
+                ]
+            },
+            electrician: {
+                "@context": "https://schema.org",
+                "@type": "Electrician",
+                "name": "VoltCraft Electrical Services",
+                "image": "https://www.localseogen.com/images/og_webp/electrician_seo.webp",
+                "@id": "https://www.localseogen.com/#electrician",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0211",
+                "priceRange": "$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "456 Ampere Way",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78704",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.2458,
+                    "longitude": -97.7634
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "07:30",
+                        "closes": "17:30"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/VoltCraftAustin",
+                    "https://www.linkedin.com/company/voltcraft-austin"
+                ]
+            },
+            hvac: {
+                "@context": "https://schema.org",
+                "@type": "HVACBusiness",
+                "name": "PolarTemp Heating & AC",
+                "image": "https://www.localseogen.com/images/og_webp/hvac_seo.webp",
+                "@id": "https://www.localseogen.com/#hvac",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0322",
+                "priceRange": "$$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "789 Breeze Blvd",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78751",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.3015,
+                    "longitude": -97.7241
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                        "opens": "00:00",
+                        "closes": "23:59"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/PolarTempAustin"
+                ]
+            },
+            landscaping: {
+                "@context": "https://schema.org",
+                "@type": "LandscapingService",
+                "name": "GreenScapes Outdoor Design",
+                "image": "https://www.localseogen.com/images/og_webp/landscaper_seo.webp",
+                "@id": "https://www.localseogen.com/#landscaping",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0433",
+                "priceRange": "$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "321 Lawn Meadows Dr",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78745",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.2012,
+                    "longitude": -97.7945
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "07:00",
+                        "closes": "17:00"
+                    },
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Saturday"],
+                        "opens": "08:00",
+                        "closes": "13:00"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.instagram.com/greenscapes_austin",
+                    "https://www.facebook.com/GreenScapesAustin"
+                ]
+            },
+            cleaning: {
+                "@context": "https://schema.org",
+                "@type": "HousekeepingService",
+                "name": "SparkleBrite Maid & Cleaners",
+                "image": "https://www.localseogen.com/images/og_webp/cleaner_seo.webp",
+                "@id": "https://www.localseogen.com/#cleaning",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0544",
+                "priceRange": "$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "555 Sweep Ave",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78759",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.3842,
+                    "longitude": -97.7341
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                        "opens": "08:00",
+                        "closes": "18:00"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/SparkleBriteAustin"
+                ]
+            },
+            dentist: {
+                "@context": "https://schema.org",
+                "@type": "Dentist",
+                "name": "Metro Dental Care",
+                "image": "https://www.localseogen.com/images/og_webp/dentist_seo.webp",
+                "@id": "https://www.localseogen.com/#dentist",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0655",
+                "priceRange": "$$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "888 Smile Plaza",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78701",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.2711,
+                    "longitude": -97.7412
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+                        "opens": "08:00",
+                        "closes": "17:00"
+                    },
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Friday"],
+                        "opens": "08:00",
+                        "closes": "13:00"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/MetroDentalAustin",
+                    "https://www.instagram.com/MetroDentalAustin"
+                ]
+            },
+            roofer: {
+                "@context": "https://schema.org",
+                "@type": "RoofingContractor",
+                "name": "Apex Roofing Specialists",
+                "image": "https://www.localseogen.com/images/og_webp/roofer_seo.webp",
+                "@id": "https://www.localseogen.com/#roofer",
+                "url": "https://www.localseogen.com",
+                "telephone": "(512) 555-0766",
+                "priceRange": "$$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "999 Shingle Rd",
+                    "addressLocality": "Austin",
+                    "addressRegion": "TX",
+                    "postalCode": "78748",
+                    "addressCountry": "US"
+                },
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 30.1741,
+                    "longitude": -97.8015
+                },
+                "openingHoursSpecification": [
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                        "opens": "07:00",
+                        "closes": "18:00"
+                    },
+                    {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": ["Saturday"],
+                        "opens": "08:00",
+                        "closes": "14:00"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.facebook.com/ApexRoofingAustin"
+                ]
+            }
+        };
+
+        // Render selected niche template
+        function loadNicheTemplate(nicheKey) {
+            // Remove active styling from list items
+            document.querySelectorAll('.niche-item').forEach(item => item.classList.remove('active'));
+            
+            // Add active to current
+            const clickedItem = Array.from(document.querySelectorAll('.niche-item')).find(item => item.getAttribute('onclick').includes(nicheKey));
+            if (clickedItem) clickedItem.classList.add('active');
+
+            // Format JSON block
+            const data = templates[nicheKey];
+            const contentBox = document.getElementById('niche-code-content');
+            contentBox.textContent = JSON.stringify(data, null, 4);
+        }
+
+        // Initialize niche view on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNicheTemplate('plumber');
+        });
+    </script>
+</body>
+</html>

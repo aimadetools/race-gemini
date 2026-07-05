@@ -381,6 +381,7 @@
                   <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
                   <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
                   <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/schema-guide.html"><i class="fas fa-book"></i> Schema Guide</a></li>
                   <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
                   <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
                   <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
@@ -1350,6 +1351,98 @@
                 // Scroll to top of generator
                 document.querySelector('.tab-container').scrollIntoView({ behavior: 'smooth' });
             });
+
+            // Handle loading schema from session storage (e.g. from Schema Guide)
+            const loadedSchema = sessionStorage.getItem('loadedSchema');
+            const targetTab = sessionStorage.getItem('loadedSchemaTab');
+            if (loadedSchema) {
+                if (targetTab === 'validator') {
+                    if (validatorInput) {
+                        validatorInput.value = loadedSchema;
+                        switchTab('validator');
+                        // Trigger validation
+                        btnValidateSchema.click();
+                    }
+                } else if (targetTab === 'generator') {
+                    try {
+                        const parsed = JSON.parse(loadedSchema);
+                        
+                        // Extract LocalBusiness object if it's wrapped in a graph
+                        let target = parsed;
+                        if (parsed['@graph'] && Array.isArray(parsed['@graph'])) {
+                            const localBiz = parsed['@graph'].find(item => {
+                                const type = item['@type'] || '';
+                                return type.toLowerCase().includes('local') || type.toLowerCase().includes('business') || type.toLowerCase().includes('service');
+                            });
+                            if (localBiz) target = localBiz;
+                        }
+                        
+                        // Populate the form fields
+                        if (target.name) inputs.bizName.value = target.name;
+                        if (target['@type']) {
+                            const options = Array.from(inputs.bizType.options).map(o => o.value);
+                            if (options.includes(target['@type'])) {
+                                inputs.bizType.value = target['@type'];
+                            } else {
+                                inputs.bizType.value = 'LocalBusiness';
+                            }
+                        }
+                        if (target.description) inputs.bizDesc.value = target.description;
+                        if (target.url) inputs.bizUrl.value = target.url;
+                        if (target.logo || target.image) inputs.bizLogo.value = target.logo || target.image;
+                        if (target.telephone) inputs.bizPhone.value = target.telephone;
+                        if (target.email) inputs.bizEmail.value = target.email;
+                        if (target.priceRange) inputs.bizPrice.value = target.priceRange;
+                        
+                        if (target.openingHours) {
+                            inputs.bizHours.value = target.openingHours;
+                        } else if (target.openingHoursSpecification) {
+                            inputs.bizHours.value = 'Mo-Fr 09:00-18:00';
+                        }
+                        
+                        const address = target.address || {};
+                        if (address.streetAddress) inputs.bizStreet.value = address.streetAddress;
+                        if (address.addressLocality) inputs.bizCity.value = address.addressLocality;
+                        if (address.addressRegion) inputs.bizState.value = address.addressRegion;
+                        if (address.postalCode) inputs.bizZip.value = address.postalCode;
+                        if (address.addressCountry) inputs.bizCountry.value = address.addressCountry;
+                        
+                        const geo = target.geo || {};
+                        const lat = geo.latitude || target.latitude || '';
+                        const lng = geo.longitude || target.longitude || '';
+                        if (lat) inputs.bizLat.value = lat;
+                        if (lng) inputs.bizLng.value = lng;
+                        
+                        const socials = target.sameAs || [];
+                        if (Array.isArray(socials)) {
+                            // Reset existing socials first
+                            inputs.socialFacebook.value = '';
+                            inputs.socialTwitter.value = '';
+                            inputs.socialLinkedin.value = '';
+                            inputs.socialInstagram.value = '';
+                            
+                            socials.forEach(s => {
+                                if (s.includes('facebook.com')) inputs.socialFacebook.value = s;
+                                if (s.includes('twitter.com') || s.includes('x.com')) inputs.socialTwitter.value = s;
+                                if (s.includes('linkedin.com')) inputs.socialLinkedin.value = s;
+                                if (s.includes('instagram.com')) inputs.socialInstagram.value = s;
+                            });
+                        }
+                        
+                        // Re-render and switch tab
+                        updateSchema();
+                        switchTab('generator');
+                        
+                        // Scroll to the generator
+                        document.querySelector('.tab-container').scrollIntoView({ behavior: 'smooth' });
+                    } catch (e) {
+                        console.error('Failed to parse loaded schema JSON:', e);
+                    }
+                }
+                // Clear session storage
+                sessionStorage.removeItem('loadedSchema');
+                sessionStorage.removeItem('loadedSchemaTab');
+            }
         });
     </script>
 </body>

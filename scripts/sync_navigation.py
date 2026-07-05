@@ -36,7 +36,8 @@ FILES_TO_UPDATE = [
     "review-request-generator.html",
     "widget-preview.html",
     "wordpress-integration.html",
-    "seo-report-builder.html"
+    "seo-report-builder.html",
+    "schema-guide.html"
 ]
 
 NEW_HEADER = """<header>
@@ -61,6 +62,7 @@ NEW_HEADER = """<header>
                   <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
                   <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
                   <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/schema-guide.html"><i class="fas fa-book"></i> Schema Guide</a></li>
                   <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
                   <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
                   <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
