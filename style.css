@@ -2666,4 +2666,11 @@ body.menu-open {
     border: 1px solid #d1d5db !important;
     color: #111827 !important;
   }
+
+  /* Citation Scanner Print Adjustments */
+  #citation-form,
+  .no-print,
+  .section-header {
+    display: none !important;
+  }
 }

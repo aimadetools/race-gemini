@@ -128,6 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { score, scanResults, suggestedTowns, generatedRedirectUrl } = data;
 
+        const bizNameInput = document.getElementById('biz-name');
+        const printBizName = document.getElementById('print-biz-name-display');
+        if (printBizName && bizNameInput) {
+            printBizName.textContent = `Business Name: ${bizNameInput.value.trim()}`;
+        }
+
         // Circular progress score
         const scoreCircle = document.getElementById('score-circle');
         const scoreText = document.getElementById('score-text');
@@ -260,6 +266,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (scanData) {
                 renderResults(scanData);
             }
+        });
+    }
+
+    const exportPdfBtn = document.getElementById('export-citation-pdf-btn');
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', () => {
+            window.print();
         });
     }
 });
