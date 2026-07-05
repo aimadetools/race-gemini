@@ -12,14 +12,17 @@
 
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Add Review Widget WordPress plugin guides and onboarding documentation.
+- Implement referral-focused review request campaign strategies.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Build a dedicated widget preview and configuration page for review badges.
+- Standardize local citation tracker reporting templates.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C237: Developed a standalone Review Request Campaign Generator for SMS & Email templates supporting tone selection, sequence steps, live interactive mockup cards, and integration with lead capture (Session 502, July 5, 2026).
 - ✅ C236: Developed a standalone Google Business Profile Post & Update Creator tool supporting announcements, offers, and events; created an interactive Google Search mockup card preview; built the serverless generate-gbp-post API and Jest tests; integrated with the /api/publish-gbp-post endpoint; and synchronized headers across 30 public pages (Session 498, July 4, 2026).
 - ✅ C235: Developed a responsive Customer Feedback Funnel page with a Smart Review Gate (routing high reviews to Google/Facebook/Yelp and routing low reviews to a private feedback form), added the feedback details secure token api endpoint, and integrated the feedback link with clipboard copy on the dashboard (Session 489, July 4, 2026).
 - ✅ C234: Rebuilt widget query/logic and dashboard configurations to support the embeddable Contact Card & Structured Schema Widget with viral growth loops, and added a call-to-action block inside the Schema Generator tool (Session 488, July 4, 2026).
