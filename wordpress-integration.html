@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>WordPress Integration &amp; Onboarding Guide | LocalLeads</title>
+    <meta content="Learn how to host dynamic local SEO pages and embed Google Business Profile review widgets directly on your WordPress site." name="description"/>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        .integration-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-top: 1rem;
+        }
+        .integration-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            margin-bottom: 2rem;
+            transition: border-color 0.3s ease;
+        }
+        .integration-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Navigation tabs */
+        .tab-menu {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #9ca3af;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+        
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step cards */
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .step-item {
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 2rem;
+        }
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(99, 102, 241, 0.15);
+            border: 2px solid #6366f1;
+            color: #a5b4fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+        .step-content h3 {
+            color: #fff;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .step-content p {
+            color: #9ca3af;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .step-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+        .step-badge.critical {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+        .step-badge.optional {
+            background: rgba(156, 163, 175, 0.15);
+            border: 1px solid rgba(156, 163, 175, 0.3);
+            color: #d1d5db;
+        }
+        
+        /* Inner Sub-Tabs for builders */
+        .sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 1.5rem 0 1rem 0;
+            flex-wrap: wrap;
+        }
+        .sub-tab-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #9ca3af;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .sub-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+        .sub-tab-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+        }
+        .sub-tab-pane {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 1.5rem;
+        }
+        .sub-tab-pane.active {
+            display: block;
+        }
+
+        /* Troubleshooting/Accordeon style */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-align: left;
+            padding: 0;
+            cursor: pointer;
+        }
+        .faq-trigger i {
+            color: #6366f1;
+            transition: transform 0.3s ease;
+        }
+        .faq-content {
+            display: none;
+            padding-top: 1rem;
+            color: #9ca3af;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+        .faq-item.active .faq-trigger i {
+            transform: rotate(180deg);
+        }
+        .faq-item.active .faq-content {
+            display: block;
+        }
+
+        /* Action box styling */
+        .action-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(16, 185, 129, 0.08));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            gap: 1.5rem;
+        }
+        @media (max-width: 576px) {
+            .action-box {
+                flex-direction: column;
+                text-align: center;
+                align-items: stretch;
+            }
+        }
+        
+        /* Grid Layout for Widgets */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .widget-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .widget-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+        }
+        .widget-card:hover {
+            border-color: rgba(99, 102, 241, 0.25);
+            transform: translateY(-2px);
+        }
+        .widget-card h4 {
+            color: #fff;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+        }
+        .widget-card p {
+            color: #9ca3af;
+            margin: 0 0 1rem 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .widget-link-btn {
+            color: #a5b4fc;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        .widget-link-btn:hover {
+            color: #6366f1;
+        }
+
+        .code-block-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px;
+            color: #a5b4fc;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+        }
+        .copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #d1d5db;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/widget-preview.html"><i class="fas fa-sliders-h"></i> Widget Builder</a></li>
+                  <li><a href="/wordpress-integration.html"><i class="fab fa-wordpress"></i> WordPress Guide</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container section-padding">
+        <div class="integration-container">
+            <div class="section-header">
+                <h1>WordPress Integration Guide</h1>
+                <p>Connect your WordPress site with LocalLeads. Set up your automated local landing pages and display GBP review badges using our step-by-step onboarding walkthrough.</p>
+            </div>
+
+            <!-- Tab Menu -->
+            <div class="tab-menu" role="tablist">
+                <button type="button" class="tab-btn active" id="tab-btn-plugin" role="tab" aria-selected="true" aria-controls="pane-plugin" onclick="switchPane('plugin')">
+                    <i class="fab fa-wordpress"></i> 1. Custom Plugin Setup
+                </button>
+                <button type="button" class="tab-btn" id="tab-btn-reviews" role="tab" aria-selected="false" aria-controls="pane-reviews" onclick="switchPane('reviews')">
+                    <i class="fas fa-star"></i> 2. Reviews Widget
+                </button>
+                <button type="button" class="tab-btn" id="tab-btn-widgets" role="tab" aria-selected="false" aria-controls="pane-widgets" onclick="switchPane('widgets')">
+                    <i class="fas fa-shapes"></i> 3. Additional Widgets
+                </button>
+                <button type="button" class="tab-btn" id="tab-btn-trouble" role="tab" aria-selected="false" aria-controls="pane-trouble" onclick="switchPane('trouble')">
+                    <i class="fas fa-tools"></i> 4. Troubleshooting &amp; Tips
+                </button>
+            </div>
+
+            <!-- TAB 1: CUSTOM PLUGIN -->
+            <div class="tab-pane active" id="pane-plugin" role="tabpanel" aria-labelledby="tab-btn-plugin">
+                <div class="integration-card">
+                    <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem;">
+                        Serve Landing Pages Under Your Domain
+                    </h2>
+                    <p style="color: #9ca3af; line-height: 1.6; margin-bottom: 2rem; font-size: 0.95rem;">
+                        Our lightweight, custom WordPress plugin acts as a secure reverse-proxy. It allows all your generated "service + location" landing pages to load directly under your main WordPress domain (e.g., <code>yoursite.com/local/plumbing-in-boston.html</code>). This is highly recommended for maintaining consistent branding and building domain authority.
+                    </p>
+                    
+                    <ol class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Download Plugin Package</h3>
+                                <p>Get your customized plugin archive containing pre-configured settings tailored to your Client ID.</p>
+                                <div class="action-box">
+                                    <div>
+                                        <h4 style="color: #fff; margin: 0 0 5px 0; font-size: 1rem; font-weight: 600;">Custom WordPress Plugin</h4>
+                                        <p style="color: #9ca3af; margin: 0; font-size: 0.8rem; line-height: 1.4;">Pre-linked package containing your active credentials for plug-and-play setup.</p>
+                                    </div>
+                                    <button class="button" id="doc-download-wp-plugin-btn" style="min-width: 200px;">
+                                        <i class="fab fa-wordpress" style="margin-right: 6px;"></i> Download Plugin (.zip)
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Upload and Install</h3>
+                                <p>Navigate to your WordPress Admin Area, click on <strong>Plugins &gt; Add New &gt; Upload Plugin</strong>, choose the downloaded <code>localleads-seo.zip</code> file, and click <strong>Install Now</strong>.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Activate the Plugin</h3>
+                                <p>Once the installation process finishes, click the <strong>Activate Plugin</strong> link to initialize the LocalLeads integration panel.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3>Flush Permalinks <span class="step-badge critical">Critical</span></h3>
+                                <p>To ensure WordPress recognizes the new virtual landing page routes, you must flush the rewrite rules. Go to <strong>Settings &gt; Permalinks</strong> in your WordPress admin dashboard and click the <strong>Save Changes</strong> button once. <em>No modifications are needed on this screen; simply clicking save refreshes the routing table.</em></p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h3>Configure URL Folder Prefix <span class="step-badge optional">Optional</span></h3>
+                                <p>Navigate to <strong>Settings &gt; LocalLeads SEO</strong> in your WordPress panel. The default prefix is <code>local</code>, making your pages live at <code>yoursite.com/local/...</code>. You can customize this folder segment (e.g. <code>locations</code> or <code>services</code>). If changed, make sure to flush your Permalinks again.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- TAB 2: REVIEWS WIDGET -->
+            <div class="tab-pane" id="pane-reviews" role="tabpanel" aria-labelledby="tab-btn-reviews">
+                <div class="integration-card">
+                    <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 0; margin-bottom: 0.5rem;">
+                        Google Business Profile Reviews Widget
+                    </h2>
+                    <p style="color: #9ca3af; line-height: 1.6; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        Showcase verified customer reviews in a beautiful, glassmorphic layout. Choose your layout style in the <a href="/widget-preview.html" style="color: #a5b4fc; text-decoration: underline;">Widget Builder</a>, copy your embed snippet, and follow the guidelines below for your specific setup.
+                    </p>
+
+                    <div class="sub-tabs" role="tablist">
+                        <button type="button" class="sub-tab-btn active" id="sub-btn-gutenberg" role="tab" aria-selected="true" aria-controls="sub-pane-gutenberg" onclick="switchSubPane('gutenberg')">Block Editor (Gutenberg)</button>
+                        <button type="button" class="sub-tab-btn" id="sub-btn-sitewide" role="tab" aria-selected="false" aria-controls="sub-pane-sitewide" onclick="switchSubPane('sitewide')">Site-wide Footer</button>
+                        <button type="button" class="sub-tab-btn" id="sub-btn-builders" role="tab" aria-selected="false" aria-controls="sub-pane-builders" onclick="switchSubPane('builders')">Page Builders (Elementor/Divi)</button>
+                    </div>
+
+                    <!-- SUBTAB 2A: GUTENBERG -->
+                    <div class="sub-tab-pane active" id="sub-pane-gutenberg" role="tabpanel" aria-labelledby="sub-btn-gutenberg">
+                        <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem;">Gutenberg HTML Block Integration</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">Use the native Block Editor to embed reviews on specific landing pages, blogs, or home sections:</p>
+                        <ol style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; padding-left: 20px; margin: 0;">
+                            <li>Select your theme and styling parameters inside the <a href="/widget-preview.html" style="color: #a5b4fc; text-decoration: underline;">Widget Builder</a> and copy the script embed code.</li>
+                            <li>Open the target post or page in the WordPress editor.</li>
+                            <li>Click the <strong>+ (Add Block)</strong> button, type "Custom HTML", and add the block to your editor grid.</li>
+                            <li>Paste the copied script inside the text area of the block.</li>
+                            <li>Click <strong>Update</strong> or <strong>Publish</strong>. The reviews widget will automatically fetch and load your customer reviews dynamically.</li>
+                        </ol>
+                    </div>
+
+                    <!-- SUBTAB 2B: SITEWIDE -->
+                    <div class="sub-tab-pane" id="sub-pane-sitewide" role="tabpanel" aria-labelledby="sub-btn-sitewide">
+                        <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem;">Embed Site-wide Floating Review Badges</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">To display a floating reviews badge sticky on every page of your site:</p>
+                        <ol style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; padding-left: 20px; margin: 0;">
+                            <li>Choose the <strong>Floating Badge</strong> layout option in the Widget Builder and copy the generated snippet.</li>
+                            <li>Install a free script injection plugin, such as <strong>WPCode (Insert Headers and Footers)</strong> from the WordPress plugin registry.</li>
+                            <li>Go to <strong>Code Snippets &gt; Header &amp; Footer</strong> in your WordPress dashboard menu.</li>
+                            <li>Paste your script tag directly into the <strong>Footer</strong> input box (this ensures the widget scripts load asynchronously without blocking page rendering).</li>
+                            <li>Click <strong>Save Changes</strong>. The floating reviews badge will appear on all pages.</li>
+                        </ol>
+                    </div>
+
+                    <!-- SUBTAB 2C: BUILDERS -->
+                    <div class="sub-tab-pane" id="sub-pane-builders" role="tabpanel" aria-labelledby="sub-btn-builders">
+                        <h3 style="color: #fff; font-size: 1.1rem; margin-top: 0; margin-bottom: 0.75rem;">Elementor, Divi &amp; Beaver Builder</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">Add the reviews card grid or carousel sections in visual drag-and-drop builders:</p>
+                        <ol style="color: #9ca3af; font-size: 0.9rem; line-height: 1.6; padding-left: 20px; margin: 0;">
+                            <li>Copy the reviews widget layout embed script.</li>
+                            <li>Open the editor view in your site builder (e.g., click <strong>Edit with Elementor</strong>).</li>
+                            <li>Search your components list for the <strong>HTML</strong> block or <strong>Code</strong> module and drag it into your desired section columns.</li>
+                            <li>Paste the code snippet into the editor settings input box.</li>
+                            <li>Apply and save changes. The reviews grid will render inside the builder's preview structure.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: OTHER WIDGETS -->
+            <div class="tab-pane" id="pane-widgets" role="tabpanel" aria-labelledby="tab-btn-widgets">
+                <div class="integration-card">
+                    <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 0; margin-bottom: 0.5rem;">
+                        Additional Local SEO Widgets
+                    </h2>
+                    <p style="color: #9ca3af; line-height: 1.6; margin-bottom: 2rem; font-size: 0.95rem;">
+                        Boost conversions, simplify navigation, and inject local SEO schemas directly on WordPress pages.
+                    </p>
+
+                    <div class="widget-grid">
+                        <div class="widget-card">
+                            <h4><i class="fas fa-map-signs" style="color: #3b82f6;"></i> Service Area Listing</h4>
+                            <p>Renders a card grid or inline pill layout referencing all your generated town pages to spread link authority.</p>
+                            <a class="widget-link-btn" href="/widget-preview.html?type=service-area"><i class="fas fa-plus-circle"></i> Configure &amp; Copy Code</a>
+                        </div>
+                        <div class="widget-card">
+                            <h4><i class="fas fa-code" style="color: #10b981;"></i> Structured Card &amp; Schema</h4>
+                            <p>Displays a professional brand card and injects valid, structured JSON-LD <code>LocalBusiness</code> metadata directly into your page head.</p>
+                            <a class="widget-link-btn" href="/widget-preview.html?type=business-card"><i class="fas fa-plus-circle"></i> Configure &amp; Copy Code</a>
+                        </div>
+                        <div class="widget-card">
+                            <h4><i class="fas fa-search-plus" style="color: #8b5cf6;"></i> White-Label SEO Audit</h4>
+                            <p>Renders an audit tool frame allowing site visitors to perform free local audits, generating leads directly for you.</p>
+                            <a class="widget-link-btn" href="/widget-preview.html?type=seo-audit"><i class="fas fa-plus-circle"></i> Configure &amp; Copy Code</a>
+                        </div>
+                        <div class="widget-card">
+                            <h4><i class="fas fa-comments" style="color: #ec4899;"></i> SMS &amp; Email Requests</h4>
+                            <p>Generate optimized reviews request templates designed to prompt clients to mention services and cities for maximum SEO impact.</p>
+                            <a class="widget-link-btn" href="/review-request-generator.html"><i class="fas fa-arrow-right"></i> Open Generator</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: TROUBLESHOOTING -->
+            <div class="tab-pane" id="pane-trouble" role="tabpanel" aria-labelledby="tab-btn-trouble">
+                <div class="integration-card">
+                    <h2 style="color: #fff; font-size: 1.5rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem;">
+                        Troubleshooting &amp; Caching Tips
+                    </h2>
+                    
+                    <div class="faq-item">
+                        <button class="faq-trigger" onclick="toggleFaq(this)">
+                            <span>My reviews widget isn't loading or displays a placeholder card.</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content">
+                            Ensure you have generated pages in your account first. If you are using a new account with no pages or connected GBP reviews, the widget will render a placeholder block indicating configure status. Once reviews are imported or synced, they will appear dynamically.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-trigger" onclick="toggleFaq(this)">
+                            <span>How do I clear cache for widgets after updating styling parameters?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content">
+                            If you are running caching plugins like <strong>WP Rocket</strong>, <strong>LiteSpeed Cache</strong>, <strong>W3 Total Cache</strong>, or server-level caching:
+                            <ul style="padding-left: 20px; margin: 10px 0 0 0;">
+                                <li>Log into WordPress and click <strong>Clear Cache</strong> in your admin toolbar.</li>
+                                <li>If minification or JS combination features are enabled, exclude the LocalLeads script URL prefix (<code>*localseogen.com/api/widget*</code>) from optimizations.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-trigger" onclick="toggleFaq(this)">
+                            <span>I get a 404 error when clicking on location links.</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content">
+                            This typically happens if WordPress hasn't updated its internal rewrite rule table. Go to <strong>Settings &gt; Permalinks</strong> in your WordPress admin dashboard and click the <strong>Save Changes</strong> button. This flushes the permalinks and solves routing issues.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-trigger" onclick="toggleFaq(this)">
+                            <span>Excluding widgets from Script Deferral for maximum page speed.</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content">
+                            To maintain perfect scores in Core Web Vitals, our widget scripts run asynchronously. If your performance optimizer flags render-blocking assets, ensure the scripts are loaded right before the closing <code>&lt;/body&gt;</code> tag or in the footer, or marked with <code>defer</code> or <code>async</code> parameters.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="/privacy.html">Privacy Policy</a>
+          <a href="/terms.html">Terms of Service</a>
+          <a href="/contact.html">Contact Support</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        // Tab switching logic
+        function switchPane(paneId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const pane = document.getElementById('pane-' + paneId);
+            const btn = document.getElementById('tab-btn-' + paneId);
+            
+            if (pane) pane.classList.add('active');
+            if (btn) btn.classList.add('active');
+        }
+
+        // Subtab switching logic
+        function switchSubPane(subPaneId) {
+            document.querySelectorAll('.sub-tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const subPane = document.getElementById('sub-pane-' + subPaneId);
+            const subBtn = document.getElementById('sub-btn-' + subPaneId);
+            
+            if (subPane) subPane.classList.add('active');
+            if (subBtn) subBtn.classList.add('active');
+        }
+
+        // Accordion FAQ toggler
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+            
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+        
+        // Plugin Download click handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const wpDownloadBtn = document.getElementById('doc-download-wp-plugin-btn');
+            if (wpDownloadBtn) {
+                wpDownloadBtn.addEventListener('click', () => {
+                    wpDownloadBtn.disabled = true;
+                    const originalText = wpDownloadBtn.innerHTML;
+                    wpDownloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 6px;"></i> Preparing...';
+                    
+                    window.location.href = '/api/download-wp-plugin';
+                    
+                    localStorage.setItem('localleads_integrated', 'true');
+                    
+                    setTimeout(() => {
+                        wpDownloadBtn.disabled = false;
+                        wpDownloadBtn.innerHTML = originalText;
+                    }, 3000);
+                });
+            }
+        });
+    </script>
+    <script src="/js/app.min.js"></script>
+</body>
+</html>
