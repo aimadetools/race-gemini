@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inputLink = document.getElementById('input-link');
     const selectTone = document.getElementById('select-tone');
     const selectStep = document.getElementById('select-step');
+    const referralConfigContainer = document.getElementById('referral-config-container');
+    const inputReferralReward = document.getElementById('input-referral-reward');
+    const inputReferralFriend = document.getElementById('input-referral-friend');
     
     const generatorForm = document.getElementById('generator-form');
     const generateBtn = document.getElementById('generate-campaign-btn');
@@ -62,9 +65,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 last_chance: "Hey {CustName}! Final chance to claim your discount reward. Leave {BizName} an honest review for your {Service} at {Link} and we'll send it right over. Thank you for your support!"
             },
             referral: {
-                immediate: "Hi {CustName}! Thanks for choosing {BizName} for your {Service} in {City}! Leave a quick review at {Link}. If you refer a friend to us, you'll both get $20 off your next service!",
-                followup: "Hi {CustName}! Just checking in on your {Service}. If you're happy with {BizName}, please review us at {Link}. Remember, you can earn $20 cash rewards for every neighbor you refer!",
-                last_chance: "Hey {CustName}! We'd love your feedback on our {Service} at {Link}. Don't forget, if you refer a friend to {BizName} in {City}, both of you get $20 off. Thanks for supporting us!"
+                immediate: "Hi {CustName}! Thanks for choosing {BizName} for your {Service} in {City}! Leave a quick review at {Link}. If you refer a friend to us, you'll both get {Reward}!",
+                followup: "Hi {CustName}! Just checking in on your {Service}. If you're happy with {BizName}, please review us at {Link}. Remember, you can earn a {Reward} for every neighbor you refer!",
+                last_chance: "Hey {CustName}! We'd love your feedback on our {Service} at {Link}. Don't forget, if you refer a friend to {BizName} in {City}, both of you get {Reward}. Thanks for supporting us!"
             }
         },
         email: {
@@ -127,15 +130,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             referral: {
                 immediate: {
                     subject: "Share your feedback & earn referral rewards with {BizName}",
-                    body: "Hi {CustName},\n\nThank you for choosing {BizName} for your recent {Service} in {City}!\n\nWe hope you had a fantastic experience. If you did, could you write us a quick review here:\n\n{Link}\n\nWe'd also love to invite you to our Referral Program! When you refer a friend or neighbor to {BizName}, they will receive $20 off their first service, and you will receive a $20 credit or cash reward as a thank you.\n\nSimply share our contact details or forward them this email!\n\nThank you for helping our local business grow!\n\nWarmly,\n\nThe {BizName} Team"
+                    body: "Hi {CustName},\n\nThank you for choosing {BizName} for your recent {Service} in {City}!\n\nWe hope you had a fantastic experience. If you did, could you write us a quick review here:\n\n{Link}\n\nWe'd also love to invite you to our Referral Program! When you refer a friend or neighbor to {BizName}, they will receive {FriendReward}, and you will receive {Reward} as a thank you.\n\nSimply share our contact details or forward them this email!\n\nThank you for helping our local business grow!\n\nWarmly,\n\nThe {BizName} Team"
                 },
                 followup: {
                     subject: "Double rewards: Review {BizName} & refer a friend!",
-                    body: "Hi {CustName},\n\nWe wanted to follow up and ensure your {Service} was completed perfectly.\n\nOur local business in {City} relies on great customers like you. If you have 30 seconds, please share a review at the link below:\n\n{Link}\n\nAlso, a quick reminder about our referral program: refer a friend or neighbor to {BizName} and both of you will receive a $20 discount on your next service. It's a win-win!\n\nThank you for your support!\n\nBest,\n\nThe {BizName} Team"
+                    body: "Hi {CustName},\n\nWe wanted to follow up and ensure your {Service} was completed perfectly.\n\nOur local business in {City} relies on great customers like you. If you have 30 seconds, please share a review at the link below:\n\n{Link}\n\nAlso, a quick reminder about our referral program: refer a friend or neighbor to {BizName} and both of you will receive {Reward}. It's a win-win!\n\nThank you for your support!\n\nBest,\n\nThe {BizName} Team"
                 },
                 last_chance: {
                     subject: "Your feedback & referral invite from {BizName}",
-                    body: "Hi {CustName},\n\nWe hope you're doing well! This is our last follow-up regarding the {Service} we completed for you in {City}.\n\nIf you enjoyed our work, please leave a quick review here:\n\n{Link}\n\nWe'd also love to keep working with you! Don't forget that you can earn unlimited $20 credits by referring friends to {BizName}. Just have them mention your name when they book a service with us.\n\nThank you for being a valued client!\n\nWarmly,\n\n{BizName}"
+                    body: "Hi {CustName},\n\nWe hope you're doing well! This is our last follow-up regarding the {Service} we completed for you in {City}.\n\nIf you enjoyed our work, please leave a quick review here:\n\n{Link}\n\nWe'd also love to keep working with you! Don't forget that you can earn {Reward} by referring friends to {BizName}. Just have them mention your name when they book a service with us.\n\nThank you for being a valued client!\n\nWarmly,\n\n{BizName}"
                 }
             }
         }
@@ -209,10 +212,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Handle interactive form inputs
-    const inputElements = [inputBizName, inputCustName, inputCity, selectIndustry, inputService, inputLink, selectTone, selectStep];
+    const inputElements = [inputBizName, inputCustName, inputCity, selectIndustry, inputService, inputLink, selectTone, selectStep, inputReferralReward, inputReferralFriend];
     inputElements.forEach(el => {
-        el.addEventListener('input', updatePreview);
-        el.addEventListener('change', updatePreview);
+        if (el) {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        }
     });
 
     // Format fields with placeholders
@@ -226,12 +231,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             service = (selectIndustry.value + " services").toLowerCase();
         }
         const link = inputLink.value.trim() || "https://localseogen.com/feedback";
+        const rewardVal = inputReferralReward.value.trim() || "$20 discount";
+        const friendRewardVal = inputReferralFriend.value.trim() || "$20 off their first service";
 
         result = result.replace(/{BizName}/g, bizName);
         result = result.replace(/{CustName}/g, custName);
         result = result.replace(/{City}/g, city);
         result = result.replace(/{Service}/g, service);
         result = result.replace(/{Link}/g, link);
+        result = result.replace(/{Reward}/g, rewardVal);
+        result = result.replace(/{FriendReward}/g, friendRewardVal);
         return result;
     }
 
@@ -241,6 +250,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const step = selectStep.value;
         const bizName = inputBizName.value.trim() || "Apex Plumbing";
         const custName = inputCustName.value.trim() || "John";
+
+        // Show/hide referral customization based on tone
+        if (selectTone.value === 'referral') {
+            referralConfigContainer.style.display = 'block';
+        } else {
+            referralConfigContainer.style.display = 'none';
+        }
 
         // Update SMS avatar/letters
         smsSenderName.textContent = bizName;
