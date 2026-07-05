@@ -1271,6 +1271,79 @@
                                 <i class="far fa-copy" style="margin-right: 4px;"></i> Copy Code
                             </button>
                         </div>
+                        
+                        <!-- WordPress & CMS Integration Guide -->
+                        <div class="widget-integration-guide" style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 6px; padding: 15px; text-align: left;">
+                            <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fab fa-wordpress" style="color: #3b82f6;" id="widget-guide-icon"></i>
+                                <span id="widget-guide-title">WordPress &amp; CMS Integration Guide</span>
+                            </h4>
+                            <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">
+                                Select your platform to view step-by-step installation instructions:
+                            </p>
+                            <div class="widget-tabs" style="display: flex; gap: 6px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px; flex-wrap: wrap;">
+                                <button type="button" class="widget-tab active" data-widget-tab="wp-gutenberg" onclick="switchWidgetGuide('wp-gutenberg')" style="background: rgba(255, 255, 255, 0.08); border: none; color: #fff; font-size: 0.75rem; padding: 5px 10px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Gutenberg HTML</button>
+                                <button type="button" class="widget-tab" data-widget-tab="wp-header-footer" onclick="switchWidgetGuide('wp-header-footer')" style="background: transparent; border: none; color: #9ca3af; font-size: 0.75rem; padding: 5px 10px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Site-wide Footer</button>
+                                <button type="button" class="widget-tab" data-widget-tab="wp-elementor" onclick="switchWidgetGuide('wp-elementor')" style="background: transparent; border: none; color: #9ca3af; font-size: 0.75rem; padding: 5px 10px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Elementor &amp; Divi</button>
+                                <button type="button" class="widget-tab" data-widget-tab="html-embed" onclick="switchWidgetGuide('html-embed')" style="background: transparent; border: none; color: #9ca3af; font-size: 0.75rem; padding: 5px 10px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: all 0.2s;">Raw HTML</button>
+                            </div>
+                            
+                            <!-- Tab Content -->
+                            <div id="widget-guide-wp-gutenberg" class="widget-guide-content" style="display: block; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Open the page or post where you want the widget to appear in the WordPress editor.</li>
+                                    <li>Click the <strong>+ (Add Block)</strong> button and choose the <strong>Custom HTML</strong> block.</li>
+                                    <li>Paste the copied embed script into the text area of the block.</li>
+                                    <li>Click <strong>Update</strong> or <strong>Publish</strong> to save the changes.</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="widget-guide-wp-header-footer" class="widget-guide-content" style="display: none; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Install a header/footer plugin like <strong>WPCode</strong> from the WordPress Plugins repository.</li>
+                                    <li>Go to <strong>Code Snippets</strong> &gt; <strong>Header &amp; Footer</strong> in your WordPress admin menu.</li>
+                                    <li>Paste the copied embed script into the <strong>Footer</strong> text area. This is ideal for the <em>Floating Badge</em> reviews layout.</li>
+                                    <li>Click <strong>Save Changes</strong> to activate the widget site-wide.</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="widget-guide-wp-elementor" class="widget-guide-content" style="display: none; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>Edit your landing page using <strong>Elementor</strong>, <strong>Divi</strong>, or your preferred builder.</li>
+                                    <li>Drag an <strong>HTML Widget</strong> or <strong>Code Module</strong> into your page layout.</li>
+                                    <li>Paste the copied embed code snippet into the editor field.</li>
+                                    <li>Save and publish your layout changes.</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="widget-guide-html-embed" class="widget-guide-content" style="display: none; font-size: 0.8rem; line-height: 1.5; color: #d1d5db;">
+                                <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+                                    <li>For standard HTML/CSS sites, locate the target web page files.</li>
+                                    <li>Insert the container tag <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #3b82f6;">&lt;div id="localseo-widget"&gt;&lt;/div&gt;</code> exactly where you want the inline widget (Grid/List/Carousel) to render.</li>
+                                    <li>Place the script tag right before the closing <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #3b82f6;">&lt;/body&gt;</code> tag of your document.</li>
+                                </ol>
+                            </div>
+                            
+                            <script>
+                                function switchWidgetGuide(tabId) {
+                                    document.querySelectorAll('.widget-guide-content').forEach(el => el.style.display = 'none');
+                                    const activeEl = document.getElementById('widget-guide-' + tabId);
+                                    if (activeEl) activeEl.style.display = 'block';
+                                    
+                                    document.querySelectorAll('.widget-tab').forEach(btn => {
+                                        btn.classList.remove('active');
+                                        btn.style.color = '#9ca3af';
+                                        btn.style.background = 'transparent';
+                                    });
+                                    const activeBtn = document.querySelector(`.widget-tab[data-widget-tab="${tabId}"]`);
+                                    if (activeBtn) {
+                                        activeBtn.classList.add('active');
+                                        activeBtn.style.color = '#fff';
+                                        activeBtn.style.background = 'rgba(255, 255, 255, 0.08)';
+                                    }
+                                }
+                            </script>
+                        </div>
                     </div>
                     <div style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; display: flex; flex-direction: column;" id="widget-preview-container">
                         <h3 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Live Widget Preview</h3>

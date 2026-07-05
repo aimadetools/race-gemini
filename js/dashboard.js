@@ -2973,6 +2973,66 @@ document.addEventListener('DOMContentLoaded', () => {
         function updateEmbedCodeAndPreview() {
             const widgetType = typeSelect ? typeSelect.value : 'service-area';
             
+            // Update widget guide title and text dynamically
+            const guideTitleEl = document.getElementById('widget-guide-title');
+            const guideIconEl = document.getElementById('widget-guide-icon');
+            if (guideTitleEl) {
+                let widgetName = 'Widget';
+                if (widgetType === 'reviews') widgetName = 'Reviews Widget';
+                else if (widgetType === 'service-area') widgetName = 'Service Area Widget';
+                else if (widgetType === 'business-card') widgetName = 'Contact Card & Schema Widget';
+                else if (widgetType === 'seo-audit') widgetName = 'SEO Audit Widget';
+                guideTitleEl.textContent = `${widgetName} WordPress & CMS Guide`;
+            }
+            if (guideIconEl) {
+                if (widgetType === 'reviews') {
+                    guideIconEl.className = 'fas fa-star';
+                    guideIconEl.style.color = '#f59e0b';
+                } else if (widgetType === 'business-card') {
+                    guideIconEl.className = 'fas fa-address-card';
+                    guideIconEl.style.color = '#10b981';
+                } else if (widgetType === 'seo-audit') {
+                    guideIconEl.className = 'fas fa-search-plus';
+                    guideIconEl.style.color = '#6366f1';
+                } else {
+                    guideIconEl.className = 'fab fa-wordpress';
+                    guideIconEl.style.color = '#3b82f6';
+                }
+            }
+
+            const gutenbergEl = document.querySelector('#widget-guide-wp-gutenberg ol');
+            if (gutenbergEl) {
+                if (widgetType === 'reviews') {
+                    gutenbergEl.innerHTML = `
+                        <li>Open the page or post where you want the reviews widget to appear in the WordPress editor.</li>
+                        <li>Click the <strong>+ (Add Block)</strong> button and search for the <strong>Custom HTML</strong> block.</li>
+                        <li>Paste the copied reviews widget script embed code into the block.</li>
+                        <li>Click <strong>Update</strong> or <strong>Publish</strong> to see it render live on your website.</li>
+                    `;
+                } else if (widgetType === 'seo-audit') {
+                    gutenbergEl.innerHTML = `
+                        <li>Create a new page on your WordPress site (e.g., <code>/free-seo-audit/</code>).</li>
+                        <li>Click the <strong>+ (Add Block)</strong> button and search for <strong>Custom HTML</strong>.</li>
+                        <li>Paste the white-label SEO audit widget iframe embed snippet.</li>
+                        <li>Update or publish the page. Visitors can now run audits directly on your site!</li>
+                    `;
+                } else if (widgetType === 'business-card') {
+                    gutenbergEl.innerHTML = `
+                        <li>Edit the contact or home page of your WordPress site.</li>
+                        <li>Click the <strong>+ (Add Block)</strong> button and select <strong>Custom HTML</strong>.</li>
+                        <li>Paste the copied Contact Card &amp; Schema widget code.</li>
+                        <li>This will inject the visual contact card block AND the local SEO JSON-LD schema into your page head automatically!</li>
+                    `;
+                } else {
+                    gutenbergEl.innerHTML = `
+                        <li>Open the page or post where you want the service area widget to appear in the WordPress editor.</li>
+                        <li>Click the <strong>+ (Add Block)</strong> button and choose the <strong>Custom HTML</strong> block.</li>
+                        <li>Paste the copied service area script embed code into the text area of the block.</li>
+                        <li>Click <strong>Update</strong> or <strong>Publish</strong> to save the changes.</li>
+                    `;
+                }
+            }
+            
             // Toggle layout options based on widget type
             if (layoutSelect) {
                 const listOption = layoutSelect.querySelector('option[value="list"]');
