@@ -60,6 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 immediate: "Hey {CustName}! Thanks for choosing {BizName} for your {Service}. We'd love to offer you $15 off your next service or a $10 referral reward for your next review! Share your feedback here: {Link}",
                 followup: "Hi {CustName}! Just a reminder that we are offering a special discount for your feedback on our {Service}. Share your review of {BizName} in {City} at {Link} and reply to this message to claim your reward!",
                 last_chance: "Hey {CustName}! Final chance to claim your discount reward. Leave {BizName} an honest review for your {Service} at {Link} and we'll send it right over. Thank you for your support!"
+            },
+            referral: {
+                immediate: "Hi {CustName}! Thanks for choosing {BizName} for your {Service} in {City}! Leave a quick review at {Link}. If you refer a friend to us, you'll both get $20 off your next service!",
+                followup: "Hi {CustName}! Just checking in on your {Service}. If you're happy with {BizName}, please review us at {Link}. Remember, you can earn $20 cash rewards for every neighbor you refer!",
+                last_chance: "Hey {CustName}! We'd love your feedback on our {Service} at {Link}. Don't forget, if you refer a friend to {BizName} in {City}, both of you get $20 off. Thanks for supporting us!"
             }
         },
         email: {
@@ -117,6 +122,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 last_chance: {
                     subject: "Final chance to get your {BizName} reward",
                     body: "Hi {CustName},\n\nWe haven't received your review yet! Don't miss out on your $15 discount voucher for your next service with {BizName}.\n\nIt only takes 30 seconds to rate us for the {Service} we completed in {City}:\n\n{Link}\n\nWe appreciate your support and look forward to working with you again!\n\nBest regards,\n\nThe {BizName} Team"
+                }
+            },
+            referral: {
+                immediate: {
+                    subject: "Share your feedback & earn referral rewards with {BizName}",
+                    body: "Hi {CustName},\n\nThank you for choosing {BizName} for your recent {Service} in {City}!\n\nWe hope you had a fantastic experience. If you did, could you write us a quick review here:\n\n{Link}\n\nWe'd also love to invite you to our Referral Program! When you refer a friend or neighbor to {BizName}, they will receive $20 off their first service, and you will receive a $20 credit or cash reward as a thank you.\n\nSimply share our contact details or forward them this email!\n\nThank you for helping our local business grow!\n\nWarmly,\n\nThe {BizName} Team"
+                },
+                followup: {
+                    subject: "Double rewards: Review {BizName} & refer a friend!",
+                    body: "Hi {CustName},\n\nWe wanted to follow up and ensure your {Service} was completed perfectly.\n\nOur local business in {City} relies on great customers like you. If you have 30 seconds, please share a review at the link below:\n\n{Link}\n\nAlso, a quick reminder about our referral program: refer a friend or neighbor to {BizName} and both of you will receive a $20 discount on your next service. It's a win-win!\n\nThank you for your support!\n\nBest,\n\nThe {BizName} Team"
+                },
+                last_chance: {
+                    subject: "Your feedback & referral invite from {BizName}",
+                    body: "Hi {CustName},\n\nWe hope you're doing well! This is our last follow-up regarding the {Service} we completed for you in {City}.\n\nIf you enjoyed our work, please leave a quick review here:\n\n{Link}\n\nWe'd also love to keep working with you! Don't forget that you can earn unlimited $20 credits by referring friends to {BizName}. Just have them mention your name when they book a service with us.\n\nThank you for being a valued client!\n\nWarmly,\n\n{BizName}"
                 }
             }
         }
