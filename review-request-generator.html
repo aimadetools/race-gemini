@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Free Local Review Request SMS &amp; Email Generator | LocalLeads</title>
+    <meta content="Generate search-optimized, high-converting review request templates for SMS and Email. Boost your Google, Yelp, and Facebook reviews with SEO-optimized campaign follow-ups." name="description"/>
+    <meta content="review request generator, google reviews sms template, local seo review campaign, email review template, review invitation creator, get local reviews" name="keywords"/>
+    <meta content="Free Local Review Request SMS &amp; Email Generator | LocalLeads" property="og:title"/>
+    <meta content="Generate search-optimized review request templates for SMS and Email. Build local search relevance and drive more Google reviews." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/review-request-generator.html" property="og:url"/>
+    <link href="https://www.localseogen.com/review-request-generator.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 992px) {
+            .generator-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        .scanner-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.25rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s ease;
+        }
+        .scanner-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-grid-full {
+            grid-column: span 2;
+        }
+        @media (max-width: 576px) {
+            .form-grid-full {
+                grid-column: span 1;
+            }
+        }
+        .scanner-input {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+        .scanner-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(31, 41, 55, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .scanner-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+        .pulse-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 0.95rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        .pulse-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        .channel-tabs {
+            display: flex;
+            background: rgba(31, 41, 55, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+        .channel-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            font-weight: 600;
+            padding: 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+        .channel-tab.active {
+            background: #6366f1;
+            color: #fff;
+        }
+
+        /* Mockup Previews */
+        .preview-sticky {
+            position: sticky;
+            top: 6rem;
+        }
+        .preview-title {
+            font-size: 1.1rem;
+            color: #a5b4fc;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Phone SMS Mockup */
+        .phone-mockup {
+            background: #111827;
+            border: 12px solid #374151;
+            border-radius: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 340px;
+            margin: 0 auto;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+        .phone-header {
+            background: #1f2937;
+            padding: 14px 16px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #e5e7eb;
+        }
+        .phone-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .phone-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #4b5563;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        .phone-contact-info {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .phone-body {
+            height: 380px;
+            background: #000;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            box-sizing: border-box;
+        }
+        .sms-bubble-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+        .sms-bubble {
+            background: #2563eb;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 18px;
+            border-bottom-right-radius: 4px;
+            max-width: 85%;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .sms-link {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+        .sms-delivered {
+            font-size: 0.65rem;
+            color: #9ca3af;
+            margin-top: 4px;
+            margin-right: 2px;
+        }
+        .phone-footer {
+            background: #1f2937;
+            padding: 10px 16px;
+            border-top: 1px solid #374151;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .phone-input-placeholder {
+            flex: 1;
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        /* Email Mockup */
+        .email-mockup {
+            background: #ffffff;
+            color: #1f2937;
+            border-radius: 12px;
+            border: 1px solid #dadce0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .email-header {
+            background: #f1f3f4;
+            padding: 12px 16px;
+            border-bottom: 1px solid #dadce0;
+            font-size: 0.8rem;
+            color: #5f6368;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .email-header-row {
+            display: flex;
+            align-items: center;
+        }
+        .email-header-label {
+            font-weight: bold;
+            width: 60px;
+        }
+        .email-header-value {
+            color: #202124;
+        }
+        .email-subject-line {
+            border-bottom: 1px solid #dadce0;
+            padding-bottom: 6px;
+        }
+        .email-body {
+            padding: 24px;
+            min-height: 280px;
+            max-height: 380px;
+            overflow-y: auto;
+            background: #fff;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #3c4043;
+            white-space: pre-wrap;
+        }
+        .email-link {
+            display: inline-block;
+            background: #4f46e5;
+            color: #ffffff !important;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            border: none;
+        }
+        .email-link:hover {
+            background: #4338ca;
+        }
+
+        /* Clipboard UI */
+        .copy-controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.25);
+        }
+
+        /* Lead lock overlay integration */
+        #lock-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container section-padding">
+        <div class="section-header">
+            <h1>SEO-Optimized Review Request Generator</h1>
+            <p>Draft high-converting SMS and Email review request campaigns. Prompt customers to leave review texts mentioning your key services and location to boost local SEO rankings.</p>
+        </div>
+
+        <div class="generator-grid">
+            <!-- INPUT CARD -->
+            <div class="scanner-card" id="form-container">
+                <h2 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sliders-h" style="color: #6366f1;"></i> Campaign Settings
+                </h2>
+                
+                <div class="channel-tabs">
+                    <button class="channel-tab active" id="tab-sms">
+                        <i class="fas fa-comment-alt"></i> SMS Template
+                    </button>
+                    <button class="channel-tab" id="tab-email">
+                        <i class="fas fa-envelope"></i> Email Template
+                    </button>
+                </div>
+
+                <form id="generator-form" onsubmit="return false;">
+                    <div class="form-grid">
+                        <div>
+                            <label class="scanner-label" for="input-biz-name">Business Name</label>
+                            <input class="scanner-input" id="input-biz-name" placeholder="e.g. Apex Plumbing" required type="text" value="Apex Plumbing"/>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="input-cust-name">Customer Name</label>
+                            <input class="scanner-input" id="input-cust-name" placeholder="e.g. John" required type="text" value="John"/>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="input-city">City/Town Served</label>
+                            <input class="scanner-input" id="input-city" placeholder="e.g. Austin" required type="text" value="Austin"/>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="select-industry">Industry</label>
+                            <select class="scanner-input" id="select-industry" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="Plumber">Plumbing</option>
+                                <option value="Electrician">Electrical</option>
+                                <option value="HVAC Technician">HVAC / AC</option>
+                                <option value="House Cleaner">Cleaning</option>
+                                <option value="Landscaper">Landscaping</option>
+                                <option value="Roofer">Roofing</option>
+                                <option value="Home Services">Other Home Services</option>
+                            </select>
+                        </div>
+                        <div class="form-grid-full">
+                            <label class="scanner-label" for="input-service">Specific Service Done</label>
+                            <input class="scanner-input" id="input-service" placeholder="e.g. water heater replacement" required type="text" value="drain cleaning"/>
+                        </div>
+                        <div class="form-grid-full">
+                            <label class="scanner-label" for="input-link">Your Smart Feedback / Google Review Link</label>
+                            <input class="scanner-input" id="input-link" placeholder="e.g. https://localseogen.com/feedback/apex-plumbing" required type="url" value="https://localseogen.com/feedback/apex-plumbing"/>
+                            <span style="font-size: 0.75rem; color: #9ca3af; margin-top: 4px; display: block;">Don't have a feedback funnel yet? Create one in your dashboard or use our <a href="/review-link-generator.html" style="color: #6366f1; text-decoration: underline;">Review Link Gen</a>.</span>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="select-tone">Tone &amp; Strategy</label>
+                            <select class="scanner-input" id="select-tone" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="seo">SEO-Optimized (Local Keywords)</option>
+                                <option value="friendly">Friendly &amp; Casual</option>
+                                <option value="professional">Professional &amp; Polite</option>
+                                <option value="value">Value-Driven (Discount Reward)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="scanner-label" for="select-step">Sequence Step</label>
+                            <select class="scanner-input" id="select-step" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="immediate">Immediate (Right after job)</option>
+                                <option value="followup">Follow-up Reminder (24-48h later)</option>
+                                <option value="last_chance">Last Chance Request (1 week later)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="pulse-btn" id="generate-campaign-btn" type="submit">
+                        <i class="fas fa-magic"></i> Generate Request Templates
+                    </button>
+                </form>
+            </div>
+
+            <!-- PREVIEW CARD -->
+            <div class="preview-sticky">
+                <!-- Lead Lock overlay (hidden initially) -->
+                <div class="scanner-card" id="lock-panel" style="display: none; margin-bottom: 2rem;">
+                    <div style="text-align: center; padding: 0.75rem 0;">
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 50%; color: #6366f1; font-size: 1.5rem; margin-bottom: 1rem;">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 0.5rem;">Unlock Custom Campaigns</h3>
+                        <p style="color: #9ca3af; font-size: 0.85rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                            Submit your name and business email to unlock full access to SMS &amp; Email campaigns.
+                        </p>
+                        <form id="lead-form" style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
+                            <div>
+                                <label class="scanner-label" for="lead-name">Your Name *</label>
+                                <input class="scanner-input" id="lead-name" placeholder="John Doe" required type="text"/>
+                            </div>
+                            <div>
+                                <label class="scanner-label" for="lead-email">Business Email *</label>
+                                <input class="scanner-input" id="lead-email" placeholder="john@company.com" required type="email"/>
+                            </div>
+                            <button class="pulse-btn" id="unlock-submit-btn" type="submit">
+                                <i class="fas fa-unlock"></i> Unlock Campaign Templates
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Live Preview Display -->
+                <div id="results-panel">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i> Live Interactive Preview
+                    </div>
+
+                    <!-- SMS Preview -->
+                    <div id="sms-preview-container">
+                        <div class="phone-mockup">
+                            <div class="phone-header">
+                                <div class="phone-contact">
+                                    <div class="phone-avatar" id="sms-avatar-letters">AP</div>
+                                    <div class="phone-contact-info" id="sms-sender-name">Apex Plumbing</div>
+                                </div>
+                                <div style="font-size: 0.75rem;"><i class="fas fa-phone"></i></div>
+                            </div>
+                            <div class="phone-body">
+                                <div class="sms-bubble-container">
+                                    <div class="sms-bubble" id="sms-preview-text">SMS Message content goes here...</div>
+                                    <div class="sms-delivered">Delivered</div>
+                                </div>
+                            </div>
+                            <div class="phone-footer">
+                                <div class="phone-input-placeholder">Text Message</div>
+                                <div style="color: #6366f1; font-size: 1.1rem;"><i class="fas fa-arrow-circle-up"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Preview -->
+                    <div id="email-preview-container" style="display: none;">
+                        <div class="email-mockup">
+                            <div class="email-header">
+                                <div class="email-header-row">
+                                    <span class="email-header-label">From:</span>
+                                    <span class="email-header-value" id="email-sender-val">hello@apexplumbing.com</span>
+                                </div>
+                                <div class="email-header-row">
+                                    <span class="email-header-label">To:</span>
+                                    <span class="email-header-value" id="email-recipient-val">john@customer.com</span>
+                                </div>
+                                <div class="email-header-row email-subject-line">
+                                    <span class="email-header-label">Subject:</span>
+                                    <span class="email-header-value" id="email-subject-val">Subject text here...</span>
+                                </div>
+                            </div>
+                            <div class="email-body" id="email-body-val">Email body content goes here...</div>
+                        </div>
+                    </div>
+
+                    <div class="copy-controls">
+                        <button class="btn-secondary" id="copy-template-btn">
+                            <i class="far fa-copy"></i> Copy Content
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="section-padding" style="margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="container" style="max-width: 900px;">
+                <h2 style="color: #fff; font-size: 1.85rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">Why Review Request Campaigns Matter for SEO</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="color: #a5b4fc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem;"><i class="fas fa-key" style="color: #6366f1; margin-right: 6px;"></i> Location Signals</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin: 0;">When clients mention their town name (e.g. Austin) in their reviews, Google indexes that geographic confirmation, ranking your business higher for local searches in those specific regions.</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="color: #a5b4fc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem;"><i class="fas fa-tools" style="color: #10b981; margin-right: 6px;"></i> Service Keyword Density</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin: 0;">Reviews containing service keywords (e.g. "clogged drain", "furnace repair") act as powerful user-generated content that updates Google's classification of your core local service relevance.</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px;">
+                        <h3 style="color: #a5b4fc; font-size: 1.15rem; margin-top: 0; margin-bottom: 0.75rem;"><i class="fas fa-redo" style="color: #f59e0b; margin-right: 6px;"></i> High Response Rates</h3>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5; margin: 0;">Multi-step sequences ensure you catch clients at the perfect time. A polite 24-hour reminder can increase review collection rates by up to 140% compared to a single request.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="/privacy.html">Privacy Policy</a>
+          <a href="/terms.html">Terms of Service</a>
+          <a href="/contact.html">Contact Support</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/js/app.min.js"></script>
+    <script src="js/review-request-generator.js"></script>
+</body>
+</html>
