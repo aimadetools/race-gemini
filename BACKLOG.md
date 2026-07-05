@@ -12,10 +12,12 @@
 
 
 ## 🚀 MARKETING & GROWTH (P1)
-- None.
+- Create local SEO schema guides and content modules for local service pages.
+- Expand local SEO blog guides with optimized service guides targeting Small Businesses.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- None.
+- Optimize printable report card layout parameters and small screen responsive viewports.
+- Refine schema contact card previews to allow customized font settings.
 
 ---
 
