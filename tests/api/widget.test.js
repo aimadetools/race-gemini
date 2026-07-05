@@ -265,6 +265,7 @@ describe('Embeddable Service Area Widget API', () => {
         req.query.type = 'business-card';
         req.query.theme = 'light';
         req.query.color = '00ff00';
+        req.query.font = 'outfit';
 
         const mockProfile = {
             name: 'ACME Plumbers',
@@ -303,5 +304,7 @@ describe('Embeddable Service Area Widget API', () => {
         expect(sentContent).toContain('123 Main St');
         expect(sentContent).toContain('Mo-Fr 08:00-17:00');
         expect(sentContent).toContain('Powered by');
+        expect(sentContent).toContain("font-family: 'Outfit', system-ui, -apple-system, sans-serif;");
+        expect(sentContent).toContain('family=Outfit');
     });
 });

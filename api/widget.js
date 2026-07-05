@@ -1,13 +1,24 @@
 import { query } from '../db/index.js';
 import { logError } from '../lib/logger.js';
 
+function getFontFamily(font) {
+    const fontMapping = {
+        'sans-serif': 'system-ui, -apple-system, sans-serif',
+        'inter': "'Inter', system-ui, -apple-system, sans-serif",
+        'outfit': "'Outfit', system-ui, -apple-system, sans-serif",
+        'serif': 'Georgia, serif',
+        'monospace': 'monospace'
+    };
+    return fontMapping[(font || '').toLowerCase()] || 'system-ui, -apple-system, sans-serif';
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
         res.setHeader('Allow', ['GET']);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 
-    const { clientId, theme = 'glassmorphic', layout = 'badge', type = 'service-area' } = req.query;
+    const { clientId, theme = 'glassmorphic', layout = 'badge', type = 'service-area', font = 'sans-serif' } = req.query;
 
     if (!clientId) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
@@ -1203,6 +1214,7 @@ export default async function handler(req, res) {
         } else if (type === 'business-card') {
             const profile = user.business_profile ? (typeof user.business_profile === 'string' ? JSON.parse(user.business_profile) : user.business_profile) : {};
             const profileJson = JSON.stringify(profile);
+            const fontFamilyVal = getFontFamily(font);
 
             scriptCode = `
 (function() {
@@ -1218,6 +1230,19 @@ export default async function handler(req, res) {
     const businessName = ${JSON.stringify(businessName)};
     const reviewLink = "${reviewLink}";
 
+    // Google Font Loader if Inter or Outfit is selected
+    if ("${font}" === 'inter' && !document.querySelector('link[href*="family=Inter"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap';
+        document.head.appendChild(link);
+    } else if ("${font}" === 'outfit' && !document.querySelector('link[href*="family=Outfit"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap';
+        document.head.appendChild(link);
+    }
+
     // CSS Styles injection
     const styleId = 'localseo-card-styles-' + clientId;
     if (!document.getElementById(styleId)) {
@@ -1226,7 +1251,7 @@ export default async function handler(req, res) {
         
         let styles = \`
             .ll-card-wrapper-\${clientId} {
-                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                font-family: ${fontFamilyVal};
                 box-sizing: border-box;
                 width: 100%;
                 max-width: 480px;

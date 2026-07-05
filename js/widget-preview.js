@@ -13,8 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const layoutGroupContainer = document.getElementById('layout-group-container');
     const cssGroupContainer = document.getElementById('css-group-container');
+    const fontSelect = document.getElementById('widget-font-select');
+    const fontGroupContainer = document.getElementById('font-group-container');
 
-    if (!typeSelect || !layoutSelect || !themeSelect || !colorInput || !colorText || !clientIdInput || !cssInput || !embedCodeTextarea || !previewBox) {
+    if (!typeSelect || !layoutSelect || !themeSelect || !colorInput || !colorText || !clientIdInput || !cssInput || !embedCodeTextarea || !previewBox || !fontSelect || !fontGroupContainer) {
         return;
     }
 
@@ -124,12 +126,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             layoutGroupContainer.style.display = 'none';
         }
+
+        // Toggle font selector visibility
+        if (widgetType === 'business-card') {
+            fontGroupContainer.style.display = 'block';
+        } else {
+            fontGroupContainer.style.display = 'none';
+        }
         
         updateEmbedAndPreview();
     });
 
     layoutSelect.addEventListener('change', updateEmbedAndPreview);
     themeSelect.addEventListener('change', updateEmbedAndPreview);
+    fontSelect.addEventListener('change', updateEmbedAndPreview);
     clientIdInput.addEventListener('input', updateEmbedAndPreview);
     cssInput.addEventListener('input', updateCssPreview);
 
@@ -162,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const widgetType = typeSelect.value;
         const layout = layoutSelect.value;
         const theme = themeSelect.value;
+        const font = fontSelect.value;
         const color = colorInput.value.replace('#', '');
         const clientId = clientIdInput.value.trim() || '104';
         const origin = window.location.origin;
@@ -232,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const iframeUrl = `${origin}/audit-widget.html?agencyId=${clientId}&theme=${theme}&color=${color}`;
             embedCode = `<!-- LocalLeads White-Label SEO Audit Widget Embed -->\n<iframe src="${iframeUrl}" style="width: 100%; min-height: 600px; border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);" title="Local SEO Audit"></iframe>`;
         } else if (widgetType === 'business-card') {
-            const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&color=${color}&type=business-card`;
+            const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&color=${color}&type=business-card&font=${font}`;
             embedCode = `<!-- LocalLeads Local Business Schema & Card Embed -->\n<div id="localseo-widget"></div>\n<script src="${scriptUrl}"></script>`;
         } else {
             const scriptUrl = `${origin}/api/widget?clientId=${clientId}&theme=${theme}&layout=${layout}&color=${color}&type=${widgetType}`;
@@ -273,11 +284,20 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe.style.borderRadius = '8px';
             previewBox.appendChild(iframe);
         } else if (widgetType === 'business-card') {
+            const fontFamilyMap = {
+                'sans-serif': 'system-ui, -apple-system, sans-serif',
+                'inter': "'Inter', system-ui, -apple-system, sans-serif",
+                'outfit': "'Outfit', system-ui, -apple-system, sans-serif",
+                'serif': 'Georgia, serif',
+                'monospace': 'monospace'
+            };
+            const selectedFontFamily = fontFamilyMap[font] || 'system-ui, -apple-system, sans-serif';
+
             previewBox.innerHTML = `
-                <div style="width: 100%; border: 1px solid rgba(128,128,128,0.25); border-radius: 12px; padding: 1.5rem; text-align: left;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.15rem; color: #fff;">Apex Plumbing</h3>
-                    <p style="font-size: 0.8rem; color: #9ca3af; margin-bottom: 12px; line-height: 1.4;">Premium plumbing solutions in Austin. Certified, licensed, and highly rated.</p>
-                    <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
+                <div style="width: 100%; border: 1px solid rgba(128,128,128,0.25); border-radius: 12px; padding: 1.5rem; text-align: left; font-family: ${selectedFontFamily};">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.15rem; color: #fff; font-family: ${selectedFontFamily};">Apex Plumbing</h3>
+                    <p style="font-size: 0.8rem; color: #9ca3af; margin-bottom: 12px; line-height: 1.4; font-family: ${selectedFontFamily};">Premium plumbing solutions in Austin. Certified, licensed, and highly rated.</p>
+                    <div style="font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px; font-family: ${selectedFontFamily};">
                         <div>📞 (555) 123-4567</div>
                         <div>✉️ contact@apexplumbing.com</div>
                         <div>📍 Austin, Texas</div>

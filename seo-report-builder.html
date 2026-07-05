@@ -43,6 +43,64 @@
         @media (max-width: 1024px) {
             .report-page-container {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+            .customizer-panel {
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .report-card-canvas {
+                padding: 1.5rem 1rem;
+                border-radius: 12px;
+            }
+            .report-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+            .report-meta-box {
+                text-align: center;
+            }
+            .report-meta-grid {
+                justify-content: center;
+            }
+            .chart-container {
+                height: 240px;
+                padding: 0.75rem;
+            }
+            .reputation-summary-box {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.25rem;
+                padding: 1rem;
+            }
+            .rating-badge-large {
+                width: 100%;
+                min-width: 0;
+            }
+            .sentiment-bars {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .executive-summary-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 0.75rem;
+            }
+            .report-metric-card {
+                padding: 1rem 0.5rem;
+            }
+            .report-metric-card .metric-val {
+                font-size: 1.5rem;
             }
         }
 
@@ -431,6 +489,10 @@
 
         /* Print styles */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
             body {
                 background: white !important;
                 color: black !important;
@@ -454,6 +516,13 @@
                 box-shadow: none !important;
                 padding: 0 !important;
                 width: 100% !important;
+            }
+            .report-section {
+                page-break-inside: avoid;
+                margin-bottom: 2rem;
+            }
+            .report-metric-card, .reputation-summary-box, .chart-container, .report-table-wrapper, .recommendations-box {
+                page-break-inside: avoid;
             }
             .report-meta-box h1 {
                 color: black !important;

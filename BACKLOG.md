@@ -15,12 +15,12 @@
 - None.
 
 ## ⚙️ INFRASTRUCTURE & UX (P2)
-- Optimize printable report card layout parameters and small screen responsive viewports.
-- Refine schema contact card previews to allow customized font settings.
+- None.
 
 ---
 
 ## ✅ COMPLETED
+- ✅ C244: Optimized printable report card layouts, margins, page breaks, and added custom font family selection (sans-serif, Inter, Outfit, Georgia, Monospace) to the schema contact card widget (Session 510, July 5, 2026).
 - ✅ C243: Expanded local SEO blog guides with three optimized service guides targeting Cleaning Businesses, Pest Control, and Painting Contractors, updated the blog list index, and regenerated the sitemap (Session 509, July 5, 2026).
 - ✅ C242: Created local SEO schema guides page with JSON-LD templates, dynamic generator/validator load hooks, and responsive service page content modules (Hero, Service grid, FAQ, MAP & NAP embed) (Session 508, July 5, 2026).
 - ✅ C241: Standardized local citation tracker reporting templates with print-only header layout, `@media print` CSS configurations, and PDF print export button click handling (Session 502, July 5, 2026).
