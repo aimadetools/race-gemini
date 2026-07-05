@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Embeddable Widget Preview &amp; Builder | LocalLeads</title>
+    <meta content="Configure and preview your embeddable local SEO widgets, GBP review badges, and contact schema cards for your website." name="description"/>
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <style>
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 992px) {
+            .builder-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        .scanner-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.25rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s ease;
+        }
+        .scanner-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .section-header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .section-header p {
+            color: #9ca3af;
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-grid-full {
+                grid-column: span 2;
+            }
+        }
+        .scanner-input {
+            width: 100%;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+        .scanner-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: rgba(31, 41, 55, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .scanner-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+        .pulse-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 0.95rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        .pulse-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Preview container styling */
+        .preview-sticky {
+            position: sticky;
+            top: 6rem;
+        }
+        .preview-title {
+            font-size: 1.15rem;
+            color: #a5b4fc;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .widget-preview-box {
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(17, 24, 39, 0.4);
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow-y: auto;
+            max-height: 480px;
+        }
+
+        /* Widget Integration Guides Styles */
+        .widget-integration-guide {
+            margin-top: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 18px;
+            text-align: left;
+        }
+        .widget-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .widget-tab {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .widget-tab.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .widget-guide-content {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+        .widget-guide-content ol {
+            margin: 0;
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/widget-preview.html"><i class="fas fa-sliders-h"></i> Widget Builder</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container section-padding">
+        <div class="section-header">
+            <h1>Embeddable Local SEO Widget Builder</h1>
+            <p>Customize and preview reviews, schemas, and service widgets. Link them directly to your website to elevate trust and conversion rates instantly.</p>
+        </div>
+
+        <div class="builder-grid">
+            <!-- INPUT CARD -->
+            <div class="scanner-card" id="form-container">
+                <h2 style="color: #fff; font-size: 1.4rem; font-weight: 700; margin-top: 0; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-cog" style="color: #6366f1;"></i> Widget Settings
+                </h2>
+                
+                <form id="widget-preview-form" onsubmit="return false;">
+                    <div class="form-grid">
+                        <div class="form-grid-full">
+                            <label class="scanner-label" for="widget-type-select">Widget Type</label>
+                            <select class="scanner-input" id="widget-type-select" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="reviews">GBP Reviews Widget</option>
+                                <option value="service-area">Service Area Listing Widget</option>
+                                <option value="business-card">Structured Schema &amp; Contact Card</option>
+                                <option value="seo-audit">White-Label SEO Audit Widget</option>
+                            </select>
+                        </div>
+                        
+                        <div id="layout-group-container">
+                            <label class="scanner-label" for="widget-layout-select">Layout</label>
+                            <select class="scanner-input" id="widget-layout-select" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="badge">Floating Badge (Recommended)</option>
+                                <option value="grid">Modern Card Grid</option>
+                                <option value="carousel">Review Carousel (Reviews only)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="scanner-label" for="widget-theme-select">Theme</label>
+                            <select class="scanner-input" id="widget-theme-select" style="background: rgba(31, 41, 55, 0.9);">
+                                <option value="glassmorphic">Glassmorphic</option>
+                                <option value="light">Light Theme</option>
+                                <option value="dark">Dark Theme</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="scanner-label" for="widget-color-input">Brand Color</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input id="widget-color-input" type="color" value="#3b82f6" style="background: transparent; border: none; width: 45px; height: 38px; cursor: pointer; padding: 0;" />
+                                <input class="scanner-input" id="widget-color-text" type="text" value="#3B82F6" style="text-align: center; font-family: monospace;" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="scanner-label" for="widget-client-id">Client Account ID (UUID)</label>
+                            <input class="scanner-input" id="widget-client-id" placeholder="e.g. 104" type="text" value="104"/>
+                        </div>
+
+                        <div class="form-grid-full" id="css-group-container">
+                            <label class="scanner-label" for="widget-css-input">Custom CSS Override</label>
+                            <textarea class="scanner-input" id="widget-css-input" placeholder="/* Custom CSS here */&#10;.ll-reviews-title-104 { color: #f43f5e; }" rows="3" style="font-family: monospace; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+                </form>
+
+                <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;">
+                    <label class="scanner-label">Generated Embed Code</label>
+                    <textarea class="scanner-input" id="widget-embed-code" readonly rows="3" style="font-family: monospace; font-size: 0.8rem; background: rgba(0,0,0,0.25); color: #60a5fa; border-color: #3b82f6; resize: none;"></textarea>
+                    <button class="pulse-btn" id="copy-widget-code-btn" style="margin-top: 10px;">
+                        <i class="far fa-copy"></i> Copy Embed Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- PREVIEW CARD -->
+            <div>
+                <div class="preview-sticky">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i> Live Preview Area
+                    </div>
+
+                    <div class="widget-preview-box" id="widget-preview-box">
+                        <!-- Rendered live -->
+                    </div>
+
+                    <!-- WordPress & CMS Integration Guide -->
+                    <div class="widget-integration-guide">
+                        <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fab fa-wordpress" style="color: #3b82f6;" id="widget-guide-icon"></i>
+                            <span id="widget-guide-title">WordPress &amp; CMS Integration Guide</span>
+                        </h4>
+                        <p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 0.8rem; line-height: 1.4;">
+                            Select your platform to view step-by-step installation instructions:
+                        </p>
+                        <div class="widget-tabs">
+                            <button type="button" class="widget-tab active" data-widget-tab="wp-gutenberg" onclick="switchWidgetGuide('wp-gutenberg')">Gutenberg HTML</button>
+                            <button type="button" class="widget-tab" data-widget-tab="wp-header-footer" onclick="switchWidgetGuide('wp-header-footer')">Site-wide Footer</button>
+                            <button type="button" class="widget-tab" data-widget-tab="wp-elementor" onclick="switchWidgetGuide('wp-elementor')">Elementor &amp; Divi</button>
+                            <button type="button" class="widget-tab" data-widget-tab="html-embed" onclick="switchWidgetGuide('html-embed')">Raw HTML</button>
+                        </div>
+                        
+                        <!-- Tab Content -->
+                        <div id="widget-guide-wp-gutenberg" class="widget-guide-content" style="display: block;">
+                            <ol>
+                                <li>Open the page or post where you want the widget to appear in the WordPress editor.</li>
+                                <li>Click the <strong>+ (Add Block)</strong> button and choose the <strong>Custom HTML</strong> block.</li>
+                                <li>Paste the copied embed script into the text area of the block.</li>
+                                <li>Click <strong>Update</strong> or <strong>Publish</strong> to save the changes.</li>
+                            </ol>
+                        </div>
+                        
+                        <div id="widget-guide-wp-header-footer" class="widget-guide-content" style="display: none;">
+                            <ol>
+                                <li>Install a header/footer plugin like <strong>WPCode</strong> from the WordPress Plugins repository.</li>
+                                <li>Go to <strong>Code Snippets</strong> &gt; <strong>Header &amp; Footer</strong> in your WordPress admin menu.</li>
+                                <li>Paste the copied embed script into the <strong>Footer</strong> text area. This is ideal for the <em>Floating Badge</em> reviews layout.</li>
+                                <li>Click <strong>Save Changes</strong> to activate the widget site-wide.</li>
+                            </ol>
+                        </div>
+                        
+                        <div id="widget-guide-wp-elementor" class="widget-guide-content" style="display: none;">
+                            <ol>
+                                <li>Edit your landing page using <strong>Elementor</strong>, <strong>Divi</strong>, or your preferred builder.</li>
+                                <li>Drag an <strong>HTML Widget</strong> or <strong>Code Module</strong> into your page layout.</li>
+                                <li>Paste the copied embed code snippet into the editor field.</li>
+                                <li>Save and publish your layout changes.</li>
+                            </ol>
+                        </div>
+                        
+                        <div id="widget-guide-html-embed" class="widget-guide-content" style="display: none;">
+                            <ol>
+                                <li>For standard HTML/CSS sites, locate the target web page files.</li>
+                                <li>Insert the container tag <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #3b82f6;">&lt;div id="localseo-widget"&gt;&lt;/div&gt;</code> exactly where you want the inline widget (Grid/List/Carousel) to render.</li>
+                                <li>Place the script tag right before the closing <code style="background: rgba(255,255,255,0.08); padding: 2px 4px; border-radius: 3px; font-family: monospace; color: #3b82f6;">&lt;/body&gt;</code> tag of your document.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-content">
+        <p>&copy; 2026 LocalLeads. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="/privacy.html">Privacy Policy</a>
+          <a href="/terms.html">Terms of Service</a>
+          <a href="/contact.html">Contact Support</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        function switchWidgetGuide(tabId) {
+            document.querySelectorAll('.widget-guide-content').forEach(el => el.style.display = 'none');
+            const activeEl = document.getElementById('widget-guide-' + tabId);
+            if (activeEl) activeEl.style.display = 'block';
+            
+            document.querySelectorAll('.widget-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`.widget-tab[data-widget-tab="${tabId}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+    </script>
+    <script src="/js/app.min.js"></script>
+    <script src="js/widget-preview.js"></script>
+</body>
+</html>

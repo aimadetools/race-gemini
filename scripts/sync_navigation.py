@@ -33,7 +33,8 @@ FILES_TO_UPDATE = [
     "forgot-password.html",
     "reset-password.html",
     "gbp-post-generator.html",
-    "review-request-generator.html"
+    "review-request-generator.html",
+    "widget-preview.html"
 ]
 
 NEW_HEADER = """<header>
@@ -64,6 +65,7 @@ NEW_HEADER = """<header>
                   <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
                   <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
                   <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/widget-preview.html"><i class="fas fa-sliders-h"></i> Widget Builder</a></li>
                   <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
                 </ul>
               </li>
