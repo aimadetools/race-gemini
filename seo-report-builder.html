@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>White-Label Local SEO & Reputation Report Builder | LocalLeads</title>
+    <meta content="Generate professional, branded, client-ready local SEO and reputation performance reports with your own logo and brand colors." name="description"/>
+    <meta content="local seo report, seo report builder, white-label local seo, white-label client reports, reputation report, seo report card" name="keywords"/>
+    <meta content="White-Label Local SEO & Reputation Report Builder | LocalLeads" property="og:title"/>
+    <meta content="Generate professional, branded, client-ready local SEO and reputation performance reports with your own logo and brand colors." property="og:description"/>
+    <meta content="https://www.localseogen.com/images/og_webp/og-image.webp" property="og:image"/>
+    <meta content="https://www.localseogen.com/seo-report-builder.html" property="og:url"/>
+    <link href="https://www.localseogen.com/seo-report-builder.html" rel="canonical" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <link href="style.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet"/>
+    <link href="/images/favicon.png" rel="icon" type="image/png"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link href="style_scroll_to_top.min.css" rel="stylesheet"/>
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js" defer></script>
+    
+    <style>
+        :root {
+            --accent-color: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.2);
+            --card-bg: rgba(31, 41, 55, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+
+        .report-page-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .report-page-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .customizer-panel {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .customizer-panel h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-picker {
+            width: 45px;
+            height: 38px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #d1d5db;
+            cursor: pointer;
+        }
+
+        .toggle-item input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Report Preview Section */
+        .preview-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .preview-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(31, 41, 55, 0.4);
+            border: 1px solid var(--card-border);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .preview-header-bar h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            margin: 0;
+            text-align: left;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #1d4ed8 100%);
+            border: none;
+            box-shadow: 0 4px 14px 0 var(--accent-glow);
+            color: white;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px 0 var(--accent-glow);
+        }
+
+        /* The Printable/Visual Report Card */
+        .report-card-canvas {
+            background: #111827;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            color: #f3f4f6;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            gap: 1.5rem;
+        }
+
+        .report-logo-placeholder {
+            max-height: 50px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+
+        .report-meta-box {
+            text-align: right;
+        }
+
+        .report-meta-box h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            margin: 0 0 0.5rem 0;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .report-meta-grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 4px 15px;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            justify-content: end;
+        }
+
+        .report-meta-grid strong {
+            color: #e5e7eb;
+        }
+
+        .executive-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-metric-card {
+            background: rgba(31, 41, 55, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .report-metric-card .metric-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .report-metric-card .metric-lbl {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .report-section {
+            margin-bottom: 2.25rem;
+        }
+
+        .report-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .chart-container {
+            background: rgba(17, 24, 39, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            height: 300px;
+            position: relative;
+        }
+
+        .reputation-summary-box {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            background: rgba(31, 41, 55, 0.3);
+            border: 1px solid var(--card-border);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .rating-badge-large {
+            text-align: center;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem 1.75rem;
+            min-width: 140px;
+            box-sizing: border-box;
+        }
+
+        .rating-badge-large .number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .rating-badge-large .stars {
+            color: #fbbf24;
+            font-size: 1.1rem;
+            margin: 6px 0;
+        }
+
+        .rating-badge-large .count {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .sentiment-bars {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sentiment-row {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .sentiment-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #d1d5db;
+        }
+
+        .sentiment-bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .sentiment-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .recommendations-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        .report-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .report-table th {
+            background: rgba(31, 41, 55, 0.8);
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .report-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #d1d5db;
+        }
+
+        .report-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .report-footer {
+            border-top: 1px solid var(--card-border);
+            margin-top: 2rem;
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            header, footer, .customizer-panel, .preview-header-bar, #scrollToTopBtn, #cookieConsentBanner, .sticky-cta-bar {
+                display: none !important;
+            }
+            .report-page-container {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            .preview-panel {
+                width: 100% !important;
+            }
+            .report-card-canvas {
+                background: white !important;
+                color: black !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .report-meta-box h1 {
+                color: black !important;
+            }
+            .report-meta-grid strong {
+                color: black !important;
+            }
+            .report-metric-card {
+                background: #f9fafb !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            .report-metric-card .metric-val {
+                color: black !important;
+            }
+            .report-section h3 {
+                color: black !important;
+            }
+            .chart-container {
+                background: #f9fafb !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            .reputation-summary-box {
+                background: #f9fafb !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            .rating-badge-large {
+                background: white !important;
+                border: 1px solid #e5e7eb !important;
+            }
+            .rating-badge-large .number {
+                color: black !important;
+            }
+            .sentiment-bar-track {
+                background: #e5e7eb !important;
+            }
+            .recommendations-box {
+                background: #eff6ff !important;
+                border: 1px solid #bfdbfe !important;
+                color: #1e3a8a !important;
+            }
+            .report-table th {
+                background: #f3f4f6 !important;
+                color: black !important;
+                border-bottom: 1px solid #e5e7eb !important;
+            }
+            .report-table td {
+                color: #374151 !important;
+                border-bottom: 1px solid #e5e7eb !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-nav-overlay"></div>
+    <header>
+      <nav>
+        <div class="container">
+          <a class="logo" href="/">
+            <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+          </a>
+          <div class="mobile-menu-container">
+            <button class="close-menu-btn" id="close-menu-btn" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+            <ul class="nav-links" id="nav-menu">
+              <li><a href="/">Home</a></li>
+              <li><a href="/generate.html">Generate Pages</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false">Tools <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/local-keyword-planner.html"><i class="fas fa-search-location"></i> Keyword Planner</a></li>
+                  <li><a href="/gbp-audit.html"><i class="fas fa-building"></i> GBP Audit</a></li>
+                  <li><a href="/citation-scanner.html"><i class="fas fa-map-marker-alt"></i> Citation Scanner</a></li>
+                  <li><a href="/grid-scanner.html"><i class="fas fa-th"></i> Grid Scanner</a></li>
+                  <li><a href="/competitor-gap.html"><i class="fas fa-chart-bar"></i> Competitor Gap</a></li>
+                  <li><a href="/schema-generator.html"><i class="fas fa-code"></i> Schema Generator</a></li>
+                  <li><a href="/review-link-generator.html"><i class="fas fa-link"></i> Review Link Gen</a></li>
+                  <li><a href="/review-flyer.html"><i class="fas fa-file-image"></i> Review Flyer</a></li>
+                  <li><a href="/review-calculator.html"><i class="fas fa-calculator"></i> Review Calculator</a></li>
+                  <li><a href="/seo-roi-calculator.html"><i class="fas fa-chart-line"></i> ROI Calculator</a></li>
+                  <li><a href="/seo-report-builder.html"><i class="fas fa-file-invoice"></i> Client Reports</a></li>
+                  <li><a href="/gbp-post-generator.html"><i class="fas fa-paper-plane"></i> GBP Post Gen</a></li>
+                  <li><a href="/review-request-generator.html"><i class="fas fa-comments"></i> Review Request Gen</a></li>
+                  <li><a href="/widget-preview.html"><i class="fas fa-sliders-h"></i> Widget Builder</a></li>
+                  <li><a href="/wordpress-integration.html"><i class="fab fa-wordpress"></i> WordPress Guide</a></li>
+                  <li><a href="/audit.html"><i class="fas fa-search"></i> Free SEO Audit</a></li>
+                </ul>
+              </li>
+              <li><a href="/pricing.html">Pricing</a></li>
+              <li><a href="/showcase.html">Showcase</a></li>
+              <li><a href="/blog.html">Blog</a></li>
+              <li><a href="/referral-program.html">Referrals</a></li>
+              <li><a href="/auth.html" class="nav-btn">Sign In</a></li>
+            </ul>
+          </div>
+          <div class="hamburger-menu" id="hamburger-icon" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation menu" role="button" tabindex="0">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="padding: 4rem 1rem 3rem 1rem;">
+            <h1 style="font-size: 2.8rem; font-family: 'Outfit', sans-serif;">Branded SEO Report Builder</h1>
+            <p style="font-size: 1.1rem; max-width: 700px; margin-bottom: 0;">
+                Compile your local SEO pages traffic, indexing console status, and customer reviews sentiment into a stunning, professional PDF report to deliver to clients.
+            </p>
+        </section>
+
+        <div class="report-page-container">
+            <!-- Left Panel: Customizer Options -->
+            <aside class="customizer-panel">
+                <h3><i class="fas fa-sliders-h" style="color: var(--accent-color);"></i> Customize Report</h3>
+                <p style="font-size: 0.8rem; color: #9ca3af; margin-bottom: 1.25rem;">
+                    Configure the white-label branding and data modules below. The preview will refresh automatically.
+                </p>
+
+                <div class="form-group">
+                    <label for="rep-client-name">Prepared For (Business Name)</label>
+                    <input type="text" id="rep-client-name" class="form-input" placeholder="e.g. Springfield Plumbing" value="Springfield Plumbing"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-prepared-by">Prepared By (Agency/Your Name)</label>
+                    <input type="text" id="rep-prepared-by" class="form-input" placeholder="e.g. Acme Marketing Agency" value="LocalLeads"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-logo-url">Client Logo URL (Optional)</label>
+                    <input type="text" id="rep-logo-url" class="form-input" placeholder="e.g. https://domain.com/logo.png"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Report Accent Color</label>
+                    <div class="color-picker-group">
+                        <input type="color" id="rep-color-picker" class="color-picker" value="#3b82f6"/>
+                        <input type="text" id="rep-color-hex" class="form-input" style="font-family: monospace;" value="#3b82f6"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-filter-town">Filter by Town</label>
+                    <select id="rep-filter-town" class="form-input">
+                        <option value="">All Towns</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-filter-service">Filter by Service</label>
+                    <select id="rep-filter-service" class="form-input">
+                        <option value="">All Services</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-custom-notes">Recommendations & Comments</label>
+                    <textarea id="rep-custom-notes" class="form-input" rows="4" style="resize: vertical;" placeholder="Add specific SEO recommendations, next steps, or project updates..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Included Report Modules</label>
+                    <div class="toggle-group">
+                        <label class="toggle-item">
+                            <input type="checkbox" id="mod-summary" checked />
+                            Executive Performance Summary
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="mod-chart" checked />
+                            Traffic & Conversions Trend Chart
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="mod-reputation" checked />
+                            Reputation & Reviews Breakdown
+                        </label>
+                        <label class="toggle-item">
+                            <input type="checkbox" id="mod-table" checked />
+                            Top Location Service Pages
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Panel: Live Preview -->
+            <div class="preview-panel">
+                <div class="preview-header-bar">
+                    <h2><i class="fas fa-eye" style="color: var(--accent-color);"></i> Live Report Preview</h2>
+                    <div class="preview-actions">
+                        <button id="btn-trigger-print" class="btn-print">
+                            <i class="fas fa-file-pdf"></i> Generate & Print PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Printable Visual Area -->
+                <div class="report-card-canvas" id="printable-report-card">
+                    <!-- Report Header -->
+                    <div class="report-header">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <img src="/images/logo.svg" alt="Company Logo" class="report-logo-placeholder" id="report-img-logo"/>
+                        </div>
+                        <div class="report-meta-box">
+                            <h1 id="report-title-display">Performance Report</h1>
+                            <div class="report-meta-grid">
+                                <span>Prepared For:</span>
+                                <strong id="report-client-display">Springfield Plumbing</strong>
+                                <span>Prepared By:</span>
+                                <strong id="report-by-display">LocalLeads</strong>
+                                <span>Report Date:</span>
+                                <strong id="report-date-display">July 5, 2026</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Executive Summary Module -->
+                    <div class="report-section" id="report-sec-summary">
+                        <h3>Executive Summary</h3>
+                        <div class="executive-summary-grid">
+                            <div class="report-metric-card">
+                                <div class="metric-val" id="ms-total-pages">0</div>
+                                <div class="metric-lbl">Active SEO Pages</div>
+                            </div>
+                            <div class="report-metric-card">
+                                <div class="metric-val" id="ms-indexing-rate">0%</div>
+                                <div class="metric-lbl">Google Index Rate</div>
+                            </div>
+                            <div class="report-metric-card">
+                                <div class="metric-val" id="ms-total-views">0</div>
+                                <div class="metric-lbl">Total Page Views</div>
+                            </div>
+                            <div class="report-metric-card">
+                                <div class="metric-val" id="ms-leads-captured">0</div>
+                                <div class="metric-lbl">Leads Captured</div>
+                            </div>
+                            <div class="report-metric-card">
+                                <div class="metric-val" id="ms-conversion-rate">0%</div>
+                                <div class="metric-lbl">Conversion Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Module -->
+                    <div class="report-section" id="report-sec-chart">
+                        <h3>Traffic & Conversion Trend</h3>
+                        <p style="font-size: 0.85rem; color: #9ca3af; margin-top: -10px; margin-bottom: 12px;" id="report-chart-subtitle">
+                            Daily page views and lead acquisitions recorded over the last 30 days.
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="reportChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Reputation Module -->
+                    <div class="report-section page-break" id="report-sec-reputation">
+                        <h3>Reputation & Reviews Summary</h3>
+                        <div class="reputation-summary-box">
+                            <div class="rating-badge-large">
+                                <div class="number" id="rep-rating-num">0.0</div>
+                                <div class="stars" id="rep-rating-stars">☆☆☆☆☆</div>
+                                <div class="count" id="rep-rating-count">0 reviews</div>
+                            </div>
+
+                            <div class="sentiment-bars">
+                                <div class="sentiment-row">
+                                    <div class="sentiment-header">
+                                        <span>Positive (4-5 ★)</span>
+                                        <span id="rep-pos-text">0% (0)</span>
+                                    </div>
+                                    <div class="sentiment-bar-track">
+                                        <div class="sentiment-bar-fill" id="rep-pos-bar" style="width: 0%; background: #10b981;"></div>
+                                    </div>
+                                </div>
+                                <div class="sentiment-row">
+                                    <div class="sentiment-header">
+                                        <span>Neutral (3 ★)</span>
+                                        <span id="rep-neu-text">0% (0)</span>
+                                    </div>
+                                    <div class="sentiment-bar-track">
+                                        <div class="sentiment-bar-fill" id="rep-neu-bar" style="width: 0%; background: #f59e0b;"></div>
+                                    </div>
+                                </div>
+                                <div class="sentiment-row">
+                                    <div class="sentiment-header">
+                                        <span>Negative (1-2 ★)</span>
+                                        <span id="rep-neg-text">0% (0)</span>
+                                    </div>
+                                    <div class="sentiment-bar-track">
+                                        <div class="sentiment-bar-fill" id="rep-neg-bar" style="width: 0%; background: #ef4444;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pages Table Module -->
+                    <div class="report-section" id="report-sec-table">
+                        <h3>Top Location Service Pages</h3>
+                        <div class="report-table-wrapper">
+                            <table class="report-table" id="report-top-pages-table">
+                                <thead>
+                                    <tr>
+                                        <th>Target Area</th>
+                                        <th>Service Category</th>
+                                        <th>Total Views</th>
+                                        <th>Unique Visitors</th>
+                                        <th>Google Index Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #6b7280; padding: 1.5rem;">No pages found.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Custom Recommendations Module -->
+                    <div class="report-section" id="report-sec-recommendations">
+                        <h3>Recommendations & Strategy</h3>
+                        <div class="recommendations-box" id="report-notes-display">
+                            No custom recommendations provided. Add notes in the customizer panel on the left.
+                        </div>
+                    </div>
+
+                    <!-- Report Footer -->
+                    <div class="report-footer">
+                        <span>LocalLeads SEO Report — Branded Copy</span>
+                        <span>Generated: <span id="report-footer-date">July 5, 2026</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col branding-col">
+            <a class="logo" href="/">
+              <img src="/images/logo.svg" alt="LocalLeads Logo" class="logo-svg" />
+            </a>
+            <p>Get found in every town. Reaching local customers has never been this simple.</p>
+          </div>
+          <div class="footer-col">
+            <h2>Features</h2>
+            <ul>
+              <li><a href="generate.html">Generate Pages</a></li>
+              <li><a href="widget-preview.html">Embeddable Widgets</a></li>
+              <li><a href="wordpress-integration.html">WordPress Plugin</a></li>
+              <li><a href="referral-dashboard.html">Referral Program</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h2>Free Tools</h2>
+            <ul>
+              <li><a href="review-link-generator.html">Review Link Gen</a></li>
+              <li><a href="review-calculator.html">Review Calculator</a></li>
+              <li><a href="gbp-audit.html">GBP Audit</a></li>
+              <li><a href="local-keyword-planner.html">Keyword Planner</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h2>Solutions</h2>
+            <ul>
+              <li><a href="landing-plumbers.html">SEO for Plumbers</a></li>
+              <li><a href="landing-cleaners.html">SEO for Cleaners</a></li>
+              <li><a href="landing-electricians.html">SEO for Electricians</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 LocalLeads. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/app.min.js"></script>
+    <script src="/js/seo-report-builder.js"></script>
+    <button id="scrollToTopBtn" title="Go to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+</body>
+</html>
