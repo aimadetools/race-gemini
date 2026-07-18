@@ -1,0 +1,5 @@
+{
+  "permissions": {
+    "allow": ["command(*)", "file(*)", "read_file(*)", "write_file(*)", "execute(*)", "list_directory(*)"]
+  }
+}

@@ -1,1 +1,14 @@
-/root/.gemini/config/projects/5909eb1d-b2bc-4f49-b031-52b483c69d00.json
+{
+  "id": "5909eb1d-b2bc-4f49-b031-52b483c69d00",
+  "name": "/home/race/race-gemini",
+  "projectResources": {
+    "resources": [
+      {
+        "gitFolder": {
+          "folderUri": "file:///home/race/race-gemini",
+          "allowWrite": true
+        }
+      }
+    ]
+  }
+}
