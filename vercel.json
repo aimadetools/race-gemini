@@ -47,32 +47,5 @@
       "source": "/:fileName([^/]+\\.html)",
       "destination": "/api/[[...slug]]?slug=custom&slug=:fileName"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/low-balance-alert",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron-followup",
-      "schedule": "0 1 * * *"
-    },
-    {
-      "path": "/api/cron-gsc-check",
-      "schedule": "0 2 * * 0"
-    },
-    {
-      "path": "/api/cron-seo-report",
-      "schedule": "0 8 * * 1"
-    },
-    {
-      "path": "/api/cron-gbp-sync",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron-indexing-retry",
-      "schedule": "0 4 * * *"
-    }
   ]
 }
-
